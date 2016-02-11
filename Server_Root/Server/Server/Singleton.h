@@ -3,10 +3,6 @@
 template <class T>
 class Singleton
 {
-private:
-	Singleton();
-	virtual ~Singleton();
-
 public:
 	static T* Instance();
 	static void Destroy();

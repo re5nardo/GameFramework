@@ -52,10 +52,6 @@ int _tmain(int argc, _TCHAR* argv[])
 	if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0)
 		ErrorHandling("WSAStartup() error!");
 
-	hServSock = socket(PF_INET, SOCK_STREAM, 0);
-	if (hServSock == INVALID_SOCKET)
-		ErrorHandling("socket() error!");
-
 	hComport = CreateIoCompletionPort(INVALID_HANDLE_VALUE, NULL, 0, 0);
 	GetSystemInfo(&sysInfo);
 	for (i = 0; i < sysInfo.dwNumberOfProcessors; ++i)
@@ -109,13 +105,13 @@ unsigned int WINAPI EchoThreadMain(LPVOID CompletionPortIO)
 	HANDLE hComPort = (HANDLE)CompletionPortIO;
 	SOCKET sock;
 	DWORD bytesTrans;
-	LPPER_HANDLE_DATA handleInfo;
+	LPPER_HANDLE_DATA handleInfo = NULL;
 	LPPER_IO_DATA ioInfo;
 	DWORD flags = 0;
 
 	while (1)
 	{
-		GetQueuedCompletionStatus(hComPort, &bytesTrans, (LPDWORD)&handleInfo, (LPOVERLAPPED*)&ioInfo, INFINITE);
+		GetQueuedCompletionStatus(hComPort, &bytesTrans, (LPDWORD)handleInfo, (LPOVERLAPPED*)&ioInfo, INFINITE);
 		sock = handleInfo->hclntSock;
 
 		if (ioInfo->rwMode == READ)

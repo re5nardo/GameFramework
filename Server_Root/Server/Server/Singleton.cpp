@@ -2,16 +2,6 @@
 #include "Singleton.h"
 
 template <class T>
-Singleton<T>::Singleton()
-{
-}
-
-template <class T>
-Singleton<T>::~Singleton()
-{
-}
-
-template <class T>
 T* Singleton<T>::Instance()
 {
 	if (m_pInstance == NULL)
