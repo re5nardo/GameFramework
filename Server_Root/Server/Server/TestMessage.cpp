@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "TestMessage.h"
-#include "Defines.h"
+#include "NetworkDefines.h"
 #include "../../rapidjson/document.h"
 #include "../../rapidjson/stringbuffer.h"
 #include "../../rapidjson/writer.h"

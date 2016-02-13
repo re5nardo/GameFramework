@@ -54,23 +54,23 @@
     <ClInclude Include="Singleton.h">
       <Filter>헤더 파일\Common</Filter>
     </ClInclude>
-    <ClInclude Include="Room.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="Lobby.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Player.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="NetworkCore.h">
+    <ClInclude Include="Accepter.h">
+      <Filter>헤더 파일\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="NetworkDefines.h">
       <Filter>헤더 파일\Network</Filter>
     </ClInclude>
     <ClInclude Include="Network.h">
       <Filter>헤더 파일\Network</Filter>
     </ClInclude>
-    <ClInclude Include="Accepter.h">
-      <Filter>헤더 파일\Network</Filter>
+    <ClInclude Include="Room.h">
+      <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -95,13 +95,10 @@
     <ClCompile Include="Player.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="NetworkCore.cpp">
+    <ClCompile Include="Accepter.cpp">
       <Filter>소스 파일\Network</Filter>
     </ClCompile>
     <ClCompile Include="Network.cpp">
-      <Filter>소스 파일\Network</Filter>
-    </ClCompile>
-    <ClCompile Include="Accepter.cpp">
       <Filter>소스 파일\Network</Filter>
     </ClCompile>
   </ItemGroup>

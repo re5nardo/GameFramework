@@ -85,7 +85,7 @@
     <ClInclude Include="IMessage.h" />
     <ClInclude Include="Lobby.h" />
     <ClInclude Include="Network.h" />
-    <ClInclude Include="NetworkCore.h" />
+    <ClInclude Include="NetworkDefines.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Room.h" />
     <ClInclude Include="Singleton.h" />
@@ -97,7 +97,6 @@
     <ClCompile Include="Accepter.cpp" />
     <ClCompile Include="Lobby.cpp" />
     <ClCompile Include="Network.cpp" />
-    <ClCompile Include="NetworkCore.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Room.cpp" />
     <ClCompile Include="Server.cpp" />
