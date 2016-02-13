@@ -34,14 +34,14 @@ public class Network : MonoSingleton<Network>
 	public void Send(IMessage msg)
 	{
 		string strSerializedData = msg.Serialize ();
-		byte[] byteSerializedData = Encoding.ASCII.GetBytes (strSerializedData);
-		int nCount = 2 + 2 + byteSerializedData.Length;
-		byte[] byteData = new byte[nCount];
+		byte[] byteSerializedData = Encoding.Default.GetBytes (strSerializedData); 
+		int nTotalSize = 2 + 2 + byteSerializedData.Length;		//	msg id(2) + msg length info(2)
+		byte[] byteData = new byte[nTotalSize];
 
-		byteData [0] = BitConverter.GetBytes (msg.GetID ()) [0];
-		byteData [1] = BitConverter.GetBytes (msg.GetID ()) [1];
-		byteData [2] = BitConverter.GetBytes ((ushort)msg.Serialize ().Length)[0];
-		byteData [3] = BitConverter.GetBytes ((ushort)msg.Serialize ().Length)[1];
+		byteData [0] = BitConverter.GetBytes (msg.GetID ()) [1];
+		byteData [1] = BitConverter.GetBytes (msg.GetID ()) [0];
+		byteData [2] = BitConverter.GetBytes (nTotalSize)[1];
+		byteData [3] = BitConverter.GetBytes (nTotalSize)[0];
 
 		int nIndex = 4;
 		foreach(byte data in byteSerializedData)

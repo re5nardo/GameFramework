@@ -31,45 +31,45 @@ public class TestMessage : IMessage
 	public string Serialize()
 	{
 		JSONObject jsonObj = new JSONObject (JSONObject.Type.OBJECT);
-		jsonObj.AddField ("m_strName", m_strName);
-		jsonObj.AddField ("m_nAge", m_nAge);
+		jsonObj.AddField ("name", m_strName);
+		jsonObj.AddField ("age", m_nAge);
 		JSONObject arrNumbers = new JSONObject (JSONObject.Type.ARRAY);
 		foreach (int nNumber in m_listFavoriteNumbers)
 		{
 			arrNumbers.Add (nNumber);
 		}
-		jsonObj.AddField ("m_listFavoriteNumbers", arrNumbers);
+		jsonObj.AddField ("favoriteNumbers", arrNumbers);
 		JSONObject dicOptions = new JSONObject (m_dicOptions);
-		jsonObj.AddField ("m_dicOptions", dicOptions);
-			
-		return jsonObj.Print ();
+		jsonObj.AddField ("options", dicOptions);
+
+		return jsonObj.Print () + '\0';
 	}
 
 	public bool Deserialize(string strJson)
 	{
 		JSONObject jsonObj = new JSONObject (strJson);
 
-		if (jsonObj.HasField ("m_strName") && jsonObj.GetField ("m_strName").IsString)
+		if (jsonObj.HasField ("name") && jsonObj.GetField ("name").IsString)
 		{
-			jsonObj.GetField (ref m_strName, "m_strName");
+			jsonObj.GetField (ref m_strName, "name");
 		} 
 		else
 		{
 			return false;
 		}
 			
-		if (jsonObj.HasField ("m_nAge") && jsonObj.GetField ("m_nAge").IsNumber)
+		if (jsonObj.HasField ("age") && jsonObj.GetField ("age").IsNumber)
 		{
-			jsonObj.GetField (ref m_nAge, "m_nAge");
+			jsonObj.GetField (ref m_nAge, "age");
 		} 
 		else
 		{
 			return false;
 		}
 			
-		if (jsonObj.HasField ("m_listFavoriteNumbers") && jsonObj.GetField ("m_listFavoriteNumbers").IsArray)
+		if (jsonObj.HasField ("favoriteNumbers") && jsonObj.GetField ("favoriteNumbers").IsArray)
 		{
-			foreach (JSONObject j in jsonObj.GetField("m_listFavoriteNumbers").list)
+			foreach (JSONObject j in jsonObj.GetField("favoriteNumbers").list)
 			{
 				m_listFavoriteNumbers.Add ((int)j.i);
 			}
@@ -79,9 +79,9 @@ public class TestMessage : IMessage
 			return false;
 		}
 
-		if (jsonObj.HasField ("m_dicOptions") && jsonObj.GetField ("m_dicOptions").IsObject)
+		if (jsonObj.HasField ("options") && jsonObj.GetField ("options").IsObject)
 		{
-			foreach (KeyValuePair<string, string> kv in jsonObj.GetField("m_dicOptions").ToDictionary())
+			foreach (KeyValuePair<string, string> kv in jsonObj.GetField("options").ToDictionary())
 			{
 				m_dicOptions.Add (kv.Key, kv.Value);
 			}
