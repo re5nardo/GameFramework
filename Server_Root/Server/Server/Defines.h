@@ -1,10 +1,7 @@
 #pragma once
 
-void(*DefaultHandler)(void);
-void(*BoolHandler)(bool);
-void(*MessageHandler)(IMessage*);
+class IMessage;
 
-enum Messages
-{
-	TEST_MESSAGE_ID = 0,
-};
+typedef void(*DefaultHandler)(void);
+typedef void(*BoolHandler)(bool);
+typedef void(*MessageHandler)(IMessage*);
