@@ -12,6 +12,7 @@ Network::Network(const USHORT nPort)
 	m_hComport = NULL;
 	m_bRunning = false;
 	m_nPort = nPort;
+	m_pListener = NULL;
 	m_RecvMessageCallback = NULL;
 }
 
@@ -58,8 +59,9 @@ void Network::Stop()
 	WSACleanup();
 }
 
-void Network::SetRecvMessageCallback(void(*handler)(SOCKET socket, IMessage* pMsg))
+void Network::SetRecvMessageCallback(void* pListener, void(*handler)(void* pListener, SOCKET socket, IMessage* pMsg))
 {
+	m_pListener = pListener;
 	m_RecvMessageCallback = handler;
 }
 
@@ -80,6 +82,41 @@ IMessage* Network::GetIMessage(USHORT nMessageID, string strJson)
 	return pMsg;
 }
 
+void Network::Send(SOCKET socket, IMessage* pMsg)
+{
+	string strSerializedData = pMsg->Serialize();
+	vector<BYTE> byteSerializedData(strSerializedData.begin(), strSerializedData.end());
+	int nTotalSize = MESSAGE_HEADER_SIZE + byteSerializedData.size();
+	BYTE* byteData = new byte[nTotalSize];
+
+	byteData[0] = pMsg->GetID() >> 8;
+	byteData[1] = pMsg->GetID() & 0x00FF;
+	byteData[2] = nTotalSize >> 8;
+	byteData[3] = nTotalSize & 0x00FF;
+
+	int nIndex = MESSAGE_HEADER_SIZE;
+	for (vector<BYTE>::iterator itr = byteSerializedData.begin(); itr != byteSerializedData.end(); itr++)
+	{
+		byteData[nIndex++] = *itr;
+	}
+
+	LPPER_IO_DATA ioInfo = (LPPER_IO_DATA)malloc(sizeof(PER_IO_DATA));
+	memset(&(ioInfo->Overlapped), 0, sizeof(OVERLAPPED));
+	ioInfo->WsaBuf.len = nTotalSize;
+	ioInfo->WsaBuf.buf = (char*)byteData;
+	ioInfo->Mode = IOMode::Write;
+
+	int nResult = WSASend(socket, &(ioInfo->WsaBuf), 1, NULL, 0, &(ioInfo->Overlapped), NULL);
+	if (nResult == SOCKET_ERROR && (WSAGetLastError() != ERROR_IO_PENDING))
+	{
+		closesocket(socket);
+		free(ioInfo);
+	}
+
+	delete pMsg;
+}
+
+#pragma region
 void Network::AccepterThread()
 {
 	while (m_bRunning)
@@ -135,22 +172,22 @@ void Network::WorkerThread()
 			{
 				if (ioInfo->CurPos == 0)
 				{
-					ioInfo->CurMessageID = (UINT)ioInfo->Buffer[i] << 8;
+					ioInfo->CurMessageID = (USHORT)ioInfo->Buffer[i] << 8;
 					ioInfo->CurPos++;
 				}
 				else if (ioInfo->CurPos == 1)
 				{
-					ioInfo->CurMessageID += (UINT)ioInfo->Buffer[i];
+					ioInfo->CurMessageID += (USHORT)ioInfo->Buffer[i];
 					ioInfo->CurPos++;
 				}
 				else if (ioInfo->CurPos == 2)
 				{
-					ioInfo->TotalSize = (UINT)ioInfo->Buffer[i] << 8;
+					ioInfo->TotalSize = (USHORT)ioInfo->Buffer[i] << 8;
 					ioInfo->CurPos++;
 				}
 				else if (ioInfo->CurPos == 3)
 				{
-					ioInfo->TotalSize += (UINT)ioInfo->Buffer[i];
+					ioInfo->TotalSize += (USHORT)ioInfo->Buffer[i];
 					ioInfo->CurMessage = new char[ioInfo->TotalSize];
 					ioInfo->CurPos++;
 				}
@@ -163,7 +200,7 @@ void Network::WorkerThread()
 
 						if (m_RecvMessageCallback != NULL)
 						{
-							m_RecvMessageCallback(socket, GetIMessage(ioInfo->CurMessageID, ioInfo->CurMessage));
+							m_RecvMessageCallback(m_pListener, socket, GetIMessage(ioInfo->CurMessageID, ioInfo->CurMessage));
 						}
 						
 						delete ioInfo->CurMessage;
@@ -187,8 +224,9 @@ void Network::WorkerThread()
 		}
 		else
 		{
-			//puts("message sent!");
-			//free(ioInfo);
+			puts("message sent!");
+			delete ioInfo->WsaBuf.buf;
+			free(ioInfo);
 		}
 	}
 }
@@ -210,3 +248,4 @@ UINT WINAPI Network::WorkerThreadStart(void* param)
 
 	return 0;
 }
+#pragma endregion Threads

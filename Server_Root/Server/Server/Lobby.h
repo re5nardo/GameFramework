@@ -13,6 +13,9 @@ private:
 	Network*	m_pNetwork;
 
 private:
-	static void OnRecvMessage(unsigned int socket, IMessage* pMsg);
+	void OnRecvMessage(unsigned int socket, IMessage* pMsg);
+
+private:
+	static void OnRecvMessage(void* pLobby, unsigned int socket, IMessage* pMsg);
 };
 

@@ -19,12 +19,14 @@ private:
 	HANDLE			m_hComport;
 	bool			m_bRunning;
 	USHORT			m_nPort;
-	void			(*m_RecvMessageCallback)(SOCKET socket, IMessage* pMsg);
+	void*			m_pListener;
+	void			(*m_RecvMessageCallback)(void* pListener, SOCKET socket, IMessage* pMsg);
 
 public:
 	int			Start();
 	void		Stop();
-	void		SetRecvMessageCallback(void(*handler)(SOCKET socket, IMessage* pMsg));
+	void		SetRecvMessageCallback(void* pListener, void(*handler)(void* pListener, SOCKET socket, IMessage* pMsg));
+	void		Send(SOCKET socket, IMessage* pMsg);
 
 private:
 	IMessage*	GetIMessage(USHORT nMessageID, string strJson);
