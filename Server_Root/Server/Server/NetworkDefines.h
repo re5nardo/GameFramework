@@ -7,7 +7,7 @@ enum Messages
 	TEST_MESSAGE_ID = 0,
 };
 
-#define BUF_SIZE				128
+#define BUF_SIZE				256
 #define MESSAGE_HEADER_SIZE		4		//	msg id(2) + msg length info(2)
 
 enum IOMode
