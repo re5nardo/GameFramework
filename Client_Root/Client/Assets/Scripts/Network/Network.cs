@@ -152,9 +152,9 @@ public class Network : MonoSingleton<Network>
 					{
 						state.CurMessage[state.CurPos - NetworkDefines.MESSAGE_HEADER_SIZE] = state.Buffer[i];
 
-						if (m_RecvMessageCallback != null)
+						lock (m_MessagesReceived)
 						{
-							m_RecvMessageCallback(GetIMessage(state.CurMessageID, Encoding.Default.GetString(state.CurMessage)));
+							m_MessagesReceived.Enqueue(GetIMessage(state.CurMessageID, Encoding.Default.GetString(state.CurMessage)));
 						}
 
 						state.CurMessage = null;
@@ -184,6 +184,10 @@ public class Network : MonoSingleton<Network>
 		{
 			msg = new TestMessage();
 		}
+		else if (nMessageID == (ushort)Messages.REQ_MOVE_ID)
+		{
+			msg = new ReqMove();
+		}
 
 		if (msg != null)
 		{
@@ -191,7 +195,6 @@ public class Network : MonoSingleton<Network>
 		}
 
 		return msg;
-
 	}
 
 	public void Send(IMessage msg)

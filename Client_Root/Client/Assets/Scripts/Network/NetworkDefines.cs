@@ -20,6 +20,7 @@ public class StateObject
 public enum Messages
 {
 	TEST_MESSAGE_ID = 0,
+	REQ_MOVE_ID,
 }
 
 class NetworkDefines

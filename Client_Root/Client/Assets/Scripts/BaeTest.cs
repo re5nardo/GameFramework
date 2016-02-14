@@ -8,27 +8,44 @@ public class BaeTest : MonoBehaviour
 	// Use this for initialization
 	void Start ()
 	{	
-		StringBuilder 	CurMessage = new StringBuilder();
-
+		
 		Network.Instance.ConnectToServer ("127.0.0.1", 9110, OnConnected, OnRecvMessage);
-
-		byte A = 65;
-		byte B = 66;
-		byte C = 67;
-
-		CurMessage.Append ((char)A);
-		CurMessage.Append ((char)B);
-		CurMessage.Append ((char)C);
-
-		string str = CurMessage.ToString();
-
-		Debug.Log (CurMessage);
-		Debug.Log (str);
 	}
-	
+
+	private float speed = 0.1F;
+	public GameObject goCharacter;
+	private Vector3 vec3Dest;
+
 	// Update is called once per frame
 	void Update ()
 	{
+		if (Input.touchCount > 0 && Input.GetTouch (0).phase == TouchPhase.Began)
+		{
+			// Get movement of the finger since last frame
+			vec3Dest = Camera.main.ScreenToWorldPoint(Input.GetTouch(0).position);
+
+			ReqMove msg = new ReqMove ();
+			msg.m_vec3Position = vec3Dest;
+
+			Network.Instance.Send (msg);
+		}
+
+		if (Input.GetMouseButtonDown(0))
+		{
+			// Get movement of the finger since last frame
+			vec3Dest = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+
+			ReqMove msg = new ReqMove ();
+			msg.m_vec3Position = vec3Dest;
+
+			Network.Instance.Send (msg);
+		}
+
+
+
+		// Move object across XY plane
+		//transform.Translate(-touchDeltaPosition.x * speed, -touchDeltaPosition.y * speed, 0);
+
 		if(Input.GetKeyDown(KeyCode.Q))
 		{
 			TestMessage testMsg = new TestMessage ();
