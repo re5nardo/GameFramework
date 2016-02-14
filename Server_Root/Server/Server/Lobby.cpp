@@ -23,14 +23,10 @@ Lobby::~Lobby()
 
 void Lobby::OnRecvMessage(unsigned int socket, IMessage* pMsg)
 {
-	if (pMsg->GetID() == Messages::TEST_MESSAGE_ID)
-	{
-		//	temp
-		TestMessage* pTestMsg = (TestMessage*)pMsg;
-		printf("%s", pTestMsg->Serialize().c_str());
+	//	temp
+	printf("%s", pMsg->Serialize().c_str());
 
-		m_pNetwork->Send(socket, pMsg);
-	}
+	m_pNetwork->Send(socket, pMsg);
 }
 
 void Lobby::OnRecvMessage(void* pLobby, unsigned int socket, IMessage* pMsg)

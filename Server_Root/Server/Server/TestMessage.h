@@ -10,7 +10,7 @@ class TestMessage : public IMessage
 {
 public:
 	TestMessage();
-	~TestMessage();
+	virtual ~TestMessage();
 
 private:
 	string 						m_strName;					//	json field name : name

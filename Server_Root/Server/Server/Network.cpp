@@ -4,6 +4,7 @@
 #include "NetworkDefines.h"
 #include "IMessage.h"
 #include "TestMessage.h"
+#include "ReqMove.h"
 #include <process.h>
 
 Network::Network(const USHORT nPort)
@@ -70,8 +71,12 @@ IMessage* Network::GetIMessage(USHORT nMessageID, string strJson)
 	IMessage* pMsg = NULL;
 
 	if (nMessageID == Messages::TEST_MESSAGE_ID)
-	{
+	{ 
 		pMsg = new TestMessage();
+	}
+	else if (nMessageID == Messages::REQ_MOVE_ID)
+	{
+		pMsg = new ReqMove();
 	}
 
 	if (pMsg != NULL)

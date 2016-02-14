@@ -5,6 +5,7 @@
 enum Messages
 {
 	TEST_MESSAGE_ID = 0,
+	REQ_MOVE_ID,
 };
 
 #define BUF_SIZE				256
