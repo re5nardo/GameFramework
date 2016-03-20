@@ -9,7 +9,7 @@
 //          An edge has an associated cost.
 //-----------------------------------------------------------------------------
 
-public class GraphEdge
+public class GraphEdge : IEdge
 {
 	//An edge connects two nodes. Valid node indices are always positive.
 	protected int 		m_iFrom;
@@ -36,8 +36,8 @@ public class GraphEdge
 	public GraphEdge()
 	{
 		m_dCost = 1.0;
-		m_iFrom = Navigation.INVALID_NODE_INDEX;
-		m_iTo = Navigation.INVALID_NODE_INDEX;
+		m_iFrom = Navigation.Defines.INVALID_NODE_INDEX;
+		m_iTo = Navigation.Defines.INVALID_NODE_INDEX;
 	}
 
 	public int   From(){return m_iFrom;}

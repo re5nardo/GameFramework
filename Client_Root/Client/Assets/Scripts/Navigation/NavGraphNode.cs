@@ -1,11 +1,10 @@
-﻿using UnityEngine;
-
-//-----------------------------------------------------------------------------
+﻿//-----------------------------------------------------------------------------
 //
 //  Graph node for use in creating a navigation graph.This node contains
 //  the position of the node and a pointer to a BaseGameEntity... useful
 //  if you want your nodes to represent health packs, gold mines and the like
 //-----------------------------------------------------------------------------
+using UnityEngine;
 
 public class NavGraphNode<extra_info> : GraphNode
 {
@@ -24,13 +23,13 @@ public class NavGraphNode<extra_info> : GraphNode
 	//ctors
 	public NavGraphNode()
 	{
-		//m_ExtraInfo = extra_info();
+		m_ExtraInfo = default(extra_info);
 	}
 
 	public NavGraphNode(int idx, Vector2 pos) : base(idx)
 	{
 		m_vPosition = pos;
-		//m_ExtraInfo = extra_info();
+		m_ExtraInfo = default(extra_info);
 	}
 
 	public Vector2    Pos(){return m_vPosition;}

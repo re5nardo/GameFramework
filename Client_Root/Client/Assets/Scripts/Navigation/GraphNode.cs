@@ -7,14 +7,14 @@
 //  Desc:   Node classes to be used with graphs
 //-----------------------------------------------------------------------------
 
-public class GraphNode
+public class GraphNode : INode
 {
 	//every node has an index. A valid index is >= 0
 	protected int m_iIndex;
 
 	public GraphNode()
 	{
-		m_iIndex = Navigation.INVALID_NODE_INDEX;
+		m_iIndex = Navigation.Defines.INVALID_NODE_INDEX;
 	}
 
 	public GraphNode(int idx)
