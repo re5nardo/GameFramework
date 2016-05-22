@@ -1,11 +1,5 @@
 ﻿using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
-
-public class Polygon
-{
-    public List<Vector3> m_listVertex = new List<Vector3>();
-}
 
 public class Map
 {
