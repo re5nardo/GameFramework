@@ -6,19 +6,28 @@ public class XmlEditor : Singleton<XmlEditor>
 {
 	public XmlDocument LoadXml(string strFilePath)
 	{
-//		TextAsset textAsset = (TextAsset)Resources.Load (strFilePath, typeof(TextAsset));
-//		if (textAsset == null)
-//		{
-//			Debug.LogError ("textAsset is null!, strFileName : " + strFilePath);
-//			return null;
-//		}
-
 		XmlDocument xmlDoc = new XmlDocument();
-		//xmlDoc.LoadXml (textAsset.text.Trim());
+
         xmlDoc.Load(strFilePath);
 
 		return xmlDoc;
 	}
+
+    public XmlDocument LoadXmlFromResources(string strFilePath)
+    {
+        TextAsset textXML = Resources.Load<TextAsset>(strFilePath);
+        if (textXML == null)
+        {
+            Debug.LogError("textXML is null!, strFilePath : " + strFilePath);
+            return null;
+        }
+
+        XmlDocument xmlDoc = new XmlDocument();
+        xmlDoc.LoadXml (textXML.text);
+        //xmlDoc.LoadXml (textXML.text.Trim());
+
+        return xmlDoc;
+    }
 
 	public void SaveXml(string strFilePath, XmlDocument xmlDoc)
 	{
