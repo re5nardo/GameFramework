@@ -591,12 +591,20 @@ public class MapEditor : EditorWindow
     {
         foreach (Polygon obstacle in m_Map.m_listObstacle)
         {
-            if (obstacle.m_listVertex.Count < 3)
+            if (obstacle.m_listVertex.Count == 0)
             {
                 continue;
             }
 
             List<Vector3> listVertex = new List<Vector3>(obstacle.m_listVertex);
+
+            //  draw vertex
+            for (int nIndex = 0; nIndex < listVertex.Count; ++nIndex)
+            {
+                Handles.SphereCap(nIndex, listVertex[nIndex], Quaternion.identity, 1);
+            }
+
+            //  draw line
             listVertex.Add(obstacle.m_listVertex[0]);
 
             Handles.DrawPolyLine(listVertex.ToArray());
