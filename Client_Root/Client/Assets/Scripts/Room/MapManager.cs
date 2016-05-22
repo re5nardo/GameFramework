@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Xml;
+using UnityEngine.SceneManagement;
 
 public class MapManager : MonoBehaviour
 {
@@ -19,29 +20,32 @@ public class MapManager : MonoBehaviour
         AddNode(node.m_vec3Pos, node);
 
         List<Node> listNode = m_qtNode.QueryRange(new Rect2D(node.m_vec3Pos.x, node.m_vec3Pos.z, INTERVAL_OF_NODE * 2, INTERVAL_OF_NODE * 2));
-
         foreach(Node oldNode in listNode)
         {
             node.m_listNeighborNode.Add(oldNode);
             oldNode.m_listNeighborNode.Add(node);
         }
     }
-    public void RemoveNode()
+    public void RemoveNode(Node node)
     {
+        if (!m_dicNode.ContainsKey(node.m_vec3Pos))
+        {
+            Debug.LogWarning("node is not contained!");
+            return;
+        }
+
+        if (node.m_bFixed)
+        {
+            return;
+        }
+
+        m_qtNode.Remove(node);
+        m_dicNode.Remove(node.m_vec3Pos);
     }
 
     public IEnumerator LoadMap(int nID)
 	{
         m_Map = new Map();
-
-		if (m_goLoadedScene != null)
-		{
-			// unload map scene
-            GameObject.Destroy(m_goLoadedScene);
-		}
-
-        //  load map scene
-        //  SceneManager.Load(Scene);
 
         //  Set Map Data
         XmlDocument xmlDoc = XmlEditor.Instance.LoadXmlFromResources("Map" + Path.DirectorySeparatorChar + "map_" + nID.ToString());
@@ -52,6 +56,9 @@ public class MapManager : MonoBehaviour
         }
 
         SetMapFromXML(m_Map, xmlDoc);
+
+        //  load map scene
+        yield return SceneManager.LoadSceneAsync(m_Map.m_strSceneName, LoadSceneMode.Additive);
 
         //  Set Map Nodes
         yield return StartCoroutine(SeedingNode(Vector3.zero));
@@ -176,7 +183,7 @@ public class MapManager : MonoBehaviour
     {
         if (m_dicNode.ContainsKey(vec3Pos))
         {
-            Debug.LogWarning("m_dicNode already contains!");
+            Debug.LogWarning("m_dicNode already contains!, vec3Pos : " + vec3Pos);
             return false;
         }
 
