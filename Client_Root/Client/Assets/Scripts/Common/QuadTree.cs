@@ -70,6 +70,36 @@ public class QuadTree
         }
     }
 
+    // Remove a node in the QuadTree
+    public bool Remove(Node node)
+    {
+        // Check objects at this quad level
+        for (int p = 0; p < m_listNode.Count; p++)
+        {
+            if (m_listNode[p] == node)
+            {
+                m_listNode.Remove(node);
+                return true;
+            }
+        }
+
+        // Terminate here, if there are no children
+        if (northWest == null)
+            return false;
+
+        // Otherwise, add the points from the children
+        if(northWest.Remove(node))
+            return true;
+        if(northEast.Remove(node))
+            return true;
+        if(southWest.Remove(node))
+            return true;
+        if(southEast.Remove(node))
+            return true;
+        
+        return false;
+    }
+
     // Create four children that fully divide this quad into four quads of equal area
     private void Subdivide()
     {
