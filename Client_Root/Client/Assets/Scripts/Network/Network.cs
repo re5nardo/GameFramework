@@ -39,7 +39,7 @@ public class Network : MonoSingleton<Network>
 		m_ConnectCallback = connectHandler;
 		m_RecvMessageCallback = recvMessageHandler;
 
-		Connect ("127.0.0.1", 9110);
+        Connect (strIP, 9110);
 	}
 
 	private void OnDestroy()

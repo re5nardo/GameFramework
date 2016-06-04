@@ -21,6 +21,12 @@ public enum Messages
 {
 	TEST_MESSAGE_ID = 0,
 	REQ_MOVE_ID,
+
+    //  ToS
+    READY_FOR_START_TOS,
+
+    //  ToC
+    GAME_START_TOC,
 }
 
 class NetworkDefines
