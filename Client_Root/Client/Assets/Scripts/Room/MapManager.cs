@@ -201,7 +201,7 @@ public class MapManager : MonoBehaviour
         return true;
     }
 
-    private bool IsMovable(Vector3 start, Vector3 dest)
+    public bool IsMovable(Vector3 start, Vector3 dest)
     {
         if (!(dest.x < m_Map.m_fWidth * 0.5f && dest.x > m_Map.m_fWidth * -0.5f && dest.z < m_Map.m_fHeight * 0.5f && dest.z > m_Map.m_fHeight * -0.5f))
         {
@@ -220,6 +220,16 @@ public class MapManager : MonoBehaviour
         }
 
         return true;
+    }
+
+    public float GetWidth()
+    {
+        return m_Map.m_fWidth;
+    }
+
+    public float GetHeight()
+    {
+        return m_Map.m_fHeight;
     }
 
     private Vector3 GetRandomSpawnPoint()
