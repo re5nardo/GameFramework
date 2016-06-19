@@ -5,7 +5,6 @@ using System.Collections.Generic;
 public class SurvivalGame : IGame
 {
     private AStarAlgorithm      m_AStarAlgorithm = new AStarAlgorithm();
-    //private ICharacter[]        m_arrCharacter = new ICharacter[5]();
     public QuerySDMecanimController m_Query = null;
     private Coroutine m_crRun = null;
 
@@ -28,23 +27,32 @@ public class SurvivalGame : IGame
         m_InputManager.Work(m_MapManager.GetWidth(), m_MapManager.GetHeight(), m_CameraMain, OnClicked);
 
         m_CameraController.FollowTarget(m_Query.transform);
-
 	}
 
     public override void OnRecvMessage(IMessage msg)
     {
-        if (msg.GetID() == (ushort)Messages.REQ_MOVE_ID)
+        if (msg.GetID() == (ushort)Messages.Game_Event_Move_ToC)
         {
-            Move((msg as ReqMove).m_vec3Position);
+            OnRecvGameEvent(msg);
+        }
+    }
+
+    private void OnRecvGameEvent(IMessage msg)
+    {
+        if (msg.GetID() == (ushort)Messages.Game_Event_Move_ToC)
+        {
+            Move((msg as GameEvent_Move_ToC).m_vec3Dest);
         }
     }
 
     private void OnClicked(Vector3 vec3Pos)
     {
-        ReqMove req = new ReqMove();
-        req.m_vec3Position = vec3Pos;
+        GameEvent_Move_ToS moveToS = new GameEvent_Move_ToS();
+        moveToS.m_nPlayerIndex = 0;
+        moveToS.m_nElapsedTime = 0;
+        moveToS.m_vec3Dest = vec3Pos;
 
-        Network.Instance.Send(req);
+        Network.Instance.Send(moveToS);
     }
 
     private void Move(Vector3 vec3Pos)

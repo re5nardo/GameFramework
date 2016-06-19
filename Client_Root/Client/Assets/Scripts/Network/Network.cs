@@ -154,6 +154,8 @@ public class Network : MonoSingleton<Network>
 
 						lock (m_MessagesReceived)
 						{
+                            BaeTest.listLatency.Add(DateTime.Now - BaeTest.sentTime);
+
 							m_MessagesReceived.Enqueue(GetIMessage(state.CurMessageID, Encoding.Default.GetString(state.CurMessage)));
 						}
 
@@ -184,10 +186,10 @@ public class Network : MonoSingleton<Network>
 		{
 			msg = new TestMessage();
 		}
-		else if (nMessageID == (ushort)Messages.REQ_MOVE_ID)
-		{
-			msg = new ReqMove();
-		}
+        else if (nMessageID == (ushort)Messages.Game_Event_Move_ToC)
+        {
+            msg = new GameEvent_Move_ToC();
+        }
 
 		if (msg != null)
 		{
@@ -217,6 +219,8 @@ public class Network : MonoSingleton<Network>
 				byteData [nIndex++] = data;
 			}
 				
+            BaeTest.sentTime = DateTime.Now;
+            
 			// Begin sending the data to the remote device.
 			m_Socket.BeginSend(byteData, 0, byteData.Length, 0, new AsyncCallback(SendCallback), m_Socket);
 		}

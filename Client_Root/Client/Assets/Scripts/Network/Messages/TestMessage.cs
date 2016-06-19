@@ -2,10 +2,10 @@
 
 public class TestMessage : IMessage
 {
-	private string 				m_strName;			//	json field name : name
-	public int 				m_nAge;				//	json field name : age
-	public List<int>			m_listFavoriteNumbers;		//	json field name : favoriteNumbers	
-	public Dictionary<string, string> 	m_dicOptions;			//	json field name : options
+	private string 				        m_strName;			        //	json field name : name
+	public int 				            m_nAge;				        //	json field name : age
+	public List<int>			        m_listFavoriteNumbers;		//	json field name : favoriteNumbers	
+	public Dictionary<string, string> 	m_dicOptions;			    //	json field name : options
 
 	public TestMessage()
 	{

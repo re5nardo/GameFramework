@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System;
 
 public class Room : MonoBehaviour
 {
@@ -7,25 +8,54 @@ public class Room : MonoBehaviour
 
     private bool m_bConnected = false;
     private string m_strIP = "175.197.228.126";
-    private string m_strState = "";
+    private string m_strAverage = "";
+    private string m_strBest = "";
+    private string m_strWorst = "";
 
     private void OnGUI()
     {
-        if (m_bConnected)
+        if(m_bConnected == false)
         {
-            return;
-        }
-            
-        m_strIP = GUILayout.TextField(m_strIP);
+            m_strIP = GUILayout.TextField(m_strIP);
 
-        if (GUILayout.Button("Connect"))
-        {
-            Network.Instance.ConnectToServer (m_strIP, 9110, OnConnected, OnRecvMessage);
-
-            m_strState += "Try Connect\n";
+            if (GUILayout.Button("Connect"))
+            {
+                Network.Instance.ConnectToServer (m_strIP, 9110, OnConnected, OnRecvMessage);
+            }
         }
 
-        GUILayout.TextArea(m_strState);
+        if (GUILayout.Button("average"))
+        {
+            double total = 0;
+            double best = double.MaxValue;
+            double worst = double.MinValue;
+
+            foreach (TimeSpan span in BaeTest.listLatency)
+            {
+                if (span.TotalMilliseconds > worst)
+                    worst = span.TotalMilliseconds;
+
+                if (span.TotalMilliseconds < best)
+                    best = span.TotalMilliseconds;
+
+                total += span.TotalMilliseconds;
+            }
+
+            if (BaeTest.listLatency.Count == 0)
+            {
+                m_strAverage = m_strBest = m_strWorst = "";
+            }
+            else
+            {
+                m_strAverage = (total / BaeTest.listLatency.Count).ToString();
+                m_strBest = best.ToString();
+                m_strWorst = worst.ToString();
+            }
+        }
+
+        GUILayout.TextField(m_strAverage);
+        GUILayout.TextField(m_strBest);
+        GUILayout.TextField(m_strWorst);
     }
 
     private void Start()
@@ -38,7 +68,6 @@ public class Room : MonoBehaviour
     private void OnConnected(bool bSuccess)
     {
         Debug.Log ("OnConnected! Success : " + bSuccess);
-        m_strState += ("OnConnected! Success : " + bSuccess);
 
         if (bSuccess)
         {
@@ -52,16 +81,9 @@ public class Room : MonoBehaviour
 
         m_Game.OnRecvMessage(msg);
 
-        if (msg.GetID () == (ushort)Messages.REQ_MOVE_ID)
+        if (msg.GetID () == (ushort)Messages.TEST_MESSAGE_ID)
         {
-//            ReqMove moveMsg = msg as ReqMove;
-//            vec3Dest = new Vector3(moveMsg.m_vec3Position.x, moveMsg.m_vec3Position.y, 0f);
-//
-//            if (curCoroutine != null)
-//            {
-//                StopCoroutine (curCoroutine);
-//            }
-//            curCoroutine = StartCoroutine (MoveCoroutine ());
+            //  ...
         }
     }
 

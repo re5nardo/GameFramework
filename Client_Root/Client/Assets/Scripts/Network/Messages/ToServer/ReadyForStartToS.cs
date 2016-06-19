@@ -5,7 +5,7 @@ public class ReadyForStartToS : IMessage
 
     public ushort GetID()
     {
-        return (ushort)Messages.READY_FOR_START_TOS;
+        return (ushort)Messages.Ready_For_Start_ToS;
     }
 
     public string Serialize()

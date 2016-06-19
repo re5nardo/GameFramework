@@ -20,13 +20,14 @@ public class StateObject
 public enum Messages
 {
 	TEST_MESSAGE_ID = 0,
-	REQ_MOVE_ID,
 
     //  ToS
-    READY_FOR_START_TOS,
+    Ready_For_Start_ToS,
+    Game_Event_Move_ToS,
 
     //  ToC
-    GAME_START_TOC,
+    Game_Start_ToC,
+    Game_Event_Move_ToC,
 }
 
 class NetworkDefines
