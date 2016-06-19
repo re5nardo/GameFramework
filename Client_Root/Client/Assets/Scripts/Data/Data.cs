@@ -68,6 +68,29 @@ public struct Rect2D
     }
 }
 
+public struct Rect3D
+{
+    public Vector3 center;
+    public float width;     //  x - axis
+    public float height;    //  z = axis
+    public float xMin;
+    public float xMax;
+    public float zMin;
+    public float zMax;
+
+    public Rect3D(Vector3 center, float width, float height)
+    {
+        this.center = center;
+        this.width = width;
+        this.height = height;
+
+        xMin = center.x - width * 0.5f;
+        xMax = center.x + width * 0.5f;
+        zMin = center.z - height * 0.5f;
+        zMax = center.z + height * 0.5f;
+    }
+}
+
 public class Polygon
 {
     public List<Vector3> m_listVertex = new List<Vector3>();

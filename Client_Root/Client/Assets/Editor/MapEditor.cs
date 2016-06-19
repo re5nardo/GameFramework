@@ -33,6 +33,7 @@ public class MapEditor : EditorWindow
     private enum State
     {
         Normal,
+        AddCheckPoint,
         AddSpawnPoint,
         AddObstacleVertex,
     }
@@ -42,6 +43,8 @@ public class MapEditor : EditorWindow
 
     private Vector3 m_vec3MouseDownPos = Vector3.zero;
 
+    private Vector2 m_vec2MainScrollPos = Vector2.zero;
+    private Vector2 m_vec2CheckPointsScrollPos = Vector2.zero;
     private Vector2 m_vec2SpawnPointsScrollPos = Vector2.zero;
     private Vector2 m_vec2ObstaclesScrollPos = Vector2.zero;
 
@@ -80,7 +83,7 @@ public class MapEditor : EditorWindow
     {
         XmlNode Map = xmlDoc.SelectSingleNode("Map");
 
-        //  general info
+        //  General info
         XmlNode ID = Map.SelectSingleNode("ID");
         XmlNode SceneName = Map.SelectSingleNode("SceneName");
         XmlNode Width = Map.SelectSingleNode("Width");
@@ -91,7 +94,38 @@ public class MapEditor : EditorWindow
         map.m_fWidth = float.Parse(Width.InnerText);
         map.m_fHeight = float.Parse(Height.InnerText);
 
-        //  spawn points
+        //  Start area
+        XmlNode StartArea = Map.SelectSingleNode("StartArea");
+        string[] arrRect = StartArea.InnerText.Split(',');
+        if (arrRect.Length != 5)
+        {
+            Debug.LogWarning("arrRect.Length is not 5!");
+            return;
+        }
+
+        map.m_rectStartArea = new Rect3D(new Vector3(float.Parse(arrRect[0]), float.Parse(arrRect[1]), float.Parse(arrRect[2])), float.Parse(arrRect[3]), float.Parse(arrRect[4]));
+
+        //  Check points
+        XmlNode CheckPoints = Map.SelectSingleNode("CheckPoints");
+        XmlNodeList listCheckPoint = CheckPoints.SelectNodes("CheckPoint");
+        foreach (XmlNode CheckPoint in listCheckPoint)
+        {
+            string[] arrPos = CheckPoint.InnerText.Split(',');
+            if (arrPos.Length != 3)
+            {
+                Debug.LogWarning("arrPos.Length is not 3!");
+                continue;
+            }
+
+            Vector3 vec3CheckPoint = Vector3.zero;
+            vec3CheckPoint.x = float.Parse(arrPos[0]);
+            vec3CheckPoint.y = float.Parse(arrPos[1]);
+            vec3CheckPoint.z = float.Parse(arrPos[2]);
+
+            AddCheckPoint(vec3CheckPoint);
+        }
+
+        //  Spawn points
         XmlNode SpawnPoints = Map.SelectSingleNode("SpawnPoints");
         XmlNodeList listSpawnPoint = SpawnPoints.SelectNodes("SpawnPoint");
         foreach (XmlNode SpawnPoint in listSpawnPoint)
@@ -111,7 +145,7 @@ public class MapEditor : EditorWindow
             AddSpawnPoint(vec3SpawnPoint);
         }
 
-        //  obstacles
+        //  Obstacles
         XmlNode Obstacles = Map.SelectSingleNode("Obstacles");
         XmlNodeList listObstacle = Obstacles.SelectNodes("Obstacle");
         foreach (XmlNode Obstacle in listObstacle)
@@ -168,6 +202,22 @@ public class MapEditor : EditorWindow
         XmlNode Height = xmlDoc.CreateElement("Height");
         Height.InnerText = m_Map.m_fHeight.ToString();
         Map.AppendChild(Height);
+
+        //  start area
+        XmlNode StartArea = xmlDoc.CreateElement("StartArea");
+        StartArea.InnerText = m_Map.m_rectStartArea.center.x.ToString() + "," + m_Map.m_rectStartArea.center.y.ToString() + "," + m_Map.m_rectStartArea.center.z.ToString() + "," + m_Map.m_rectStartArea.width.ToString() + "," + m_Map.m_rectStartArea.height.ToString();
+        Map.AppendChild(StartArea);
+
+        //  check points
+        XmlNode CheckPoints = xmlDoc.CreateElement("CheckPoints");
+        Map.AppendChild(CheckPoints);
+
+        foreach (Vector3 vec3CheckPoint in m_Map.m_listCheckPoint)
+        {
+            XmlNode CheckPoint = xmlDoc.CreateElement("CheckPoint");
+            CheckPoint.InnerText = vec3CheckPoint.x.ToString() + "," + vec3CheckPoint.y.ToString() + "," + vec3CheckPoint.z.ToString();
+            CheckPoints.AppendChild(CheckPoint);
+        }
 
         //  spawn points
         XmlNode SpawnPoints = xmlDoc.CreateElement("SpawnPoints");
@@ -265,6 +315,16 @@ public class MapEditor : EditorWindow
         }
     }
 
+    private void AddCheckPoint(Vector3 vec3Pos = default(Vector3))
+    {
+        m_Map.m_listCheckPoint.Add(vec3Pos);
+    }
+
+    private void RemoveCheckPoint(int nIndex)
+    {
+        m_Map.m_listCheckPoint.RemoveAt(nIndex);
+    }
+
     private void AddSpawnPoint(Vector3 vec3Pos = default(Vector3))
     {
         m_Map.m_listSpawnPoint.Add(vec3Pos);
@@ -330,6 +390,18 @@ public class MapEditor : EditorWindow
         DrawGeneralInfo();
 
         EditorGUILayout.Space();
+
+        DrawStartArea();
+
+        EditorGUILayout.Space();
+        EditorGUILayout.Space();
+        EditorGUILayout.Space();
+
+        m_vec2MainScrollPos = EditorGUILayout.BeginScrollView(m_vec2MainScrollPos, GUILayout.Height(600f));
+
+        DrawCheckPointsUI();
+
+        EditorGUILayout.Space();
         EditorGUILayout.Space();
        
         DrawSpawnPointsUI();
@@ -338,6 +410,8 @@ public class MapEditor : EditorWindow
         EditorGUILayout.Space();
 
         DrawObstaclesUI();
+
+        EditorGUILayout.EndScrollView();
 
         EditorGUILayout.Space();
 
@@ -360,6 +434,42 @@ public class MapEditor : EditorWindow
         m_Map.m_strSceneName = EditorGUILayout.TextField("Map Scene Name", m_Map.m_strSceneName);
         m_Map.m_fWidth = EditorGUILayout.FloatField("Map Width", m_Map.m_fWidth);
         m_Map.m_fHeight = EditorGUILayout.FloatField("Map Height", m_Map.m_fHeight);
+    }
+
+    private void DrawStartArea()
+    {
+        EditorGUILayout.LabelField("[Start Area]", EditorStyles.boldLabel);
+        m_Map.m_rectStartArea.center = EditorGUILayout.Vector3Field("Start Area Center", m_Map.m_rectStartArea.center);
+        m_Map.m_rectStartArea.width = EditorGUILayout.FloatField("Start Area Width", m_Map.m_rectStartArea.width);
+        m_Map.m_rectStartArea.height = EditorGUILayout.FloatField("Start Area Height", m_Map.m_rectStartArea.height);
+    }
+
+    private void DrawCheckPointsUI()
+    {
+        EditorGUILayout.BeginHorizontal();
+        {
+            EditorGUILayout.LabelField("[Check Points]", EditorStyles.boldLabel, GUILayout.Width(150f));
+
+            if (GUILayout.Button("Add", GUILayout.Width(150f)))
+            {
+                OnCheckPointAddClicked();
+            }
+
+            if (GUILayout.Button("Add From Click", GUILayout.Width(150f)))
+            {
+                OnCheckPointAddFromClickClicked();
+            }
+        }
+        EditorGUILayout.EndHorizontal();
+
+        GUILayout.Space(10f);
+
+        m_vec2CheckPointsScrollPos = EditorGUILayout.BeginScrollView(m_vec2CheckPointsScrollPos, GUILayout.Height(300f));
+        for (int nIndex = 0; nIndex < m_Map.m_listCheckPoint.Count; ++nIndex)
+        {
+            DrawCheckPointItem(nIndex);
+        }
+        EditorGUILayout.EndScrollView();
     }
 
     private void DrawSpawnPointsUI()
@@ -411,6 +521,33 @@ public class MapEditor : EditorWindow
             DrawObstacleItem(nIndex);
         }
         EditorGUILayout.EndScrollView();
+    }
+
+    private void DrawCheckPointItem(int nIndex)
+    {
+        EditorGUILayout.BeginHorizontal();
+        {
+            EditorGUILayout.LabelField("Position", GUILayout.MaxWidth(50f));
+
+            GUILayout.Space(5f);
+
+            Vector3 vec3OldValue = m_Map.m_listCheckPoint[nIndex];
+            m_Map.m_listCheckPoint[nIndex] = EditorGUILayout.Vector3Field("", m_Map.m_listCheckPoint[nIndex]);
+            if (vec3OldValue != m_Map.m_listCheckPoint[nIndex])
+            {
+                SceneView.RepaintAll();
+            }
+
+            GUILayout.Space(10f);
+
+            if (GUILayout.Button("Remove", GUILayout.Width(150f)))
+            {
+                OnCheckPointRemoveClicked(nIndex);
+            }
+
+            GUILayout.Space(10f);
+        }
+        EditorGUILayout.EndHorizontal();
     }
 
     private void DrawSpawnPointItem(int nIndex)
@@ -572,6 +709,8 @@ public class MapEditor : EditorWindow
     private void DrawGeometry()
     {
         DrawMapBorder();
+        DrawStartAreaBorder();
+        DrawCheckPoints();
         DrawObstacleBorders();
         DrawSpawnPoints();
     }
@@ -585,6 +724,27 @@ public class MapEditor : EditorWindow
 
         Handles.DrawPolyLine(new Vector3[]{new Vector3(m_Map.m_fWidth * -0.5f, 0, m_Map.m_fHeight * 0.5f), new Vector3(m_Map.m_fWidth * 0.5f, 0, m_Map.m_fHeight * 0.5f), 
             new Vector3(m_Map.m_fWidth * 0.5f, 0, m_Map.m_fHeight * -0.5f), new Vector3(m_Map.m_fWidth * -0.5f, 0, m_Map.m_fHeight * -0.5f), new Vector3(m_Map.m_fWidth * -0.5f, 0, m_Map.m_fHeight * 0.5f)});
+    }
+
+    private void DrawStartAreaBorder()
+    {
+        if (m_Map.m_rectStartArea.width == 0 && m_Map.m_rectStartArea.height == 0)
+        {
+            return;
+        }
+
+        Vector3 vec3TopLeft = new Vector3(m_Map.m_rectStartArea.width * -0.5f + m_Map.m_rectStartArea.center.x, 0, m_Map.m_rectStartArea.height * 0.5f + m_Map.m_rectStartArea.center.z);
+        Vector3 vec3TopRight = new Vector3(m_Map.m_rectStartArea.width * 0.5f + m_Map.m_rectStartArea.center.x, 0, m_Map.m_rectStartArea.height * 0.5f + m_Map.m_rectStartArea.center.z);
+        Vector3 vec3BottomRight = new Vector3(m_Map.m_rectStartArea.width * 0.5f + m_Map.m_rectStartArea.center.x, 0, m_Map.m_rectStartArea.height * -0.5f + m_Map.m_rectStartArea.center.z);
+        Vector3 vec3BottomLeft = new Vector3(m_Map.m_rectStartArea.width * -0.5f + m_Map.m_rectStartArea.center.x, 0, m_Map.m_rectStartArea.height * -0.5f + m_Map.m_rectStartArea.center.z);
+       
+        Color colorOld = Handles.color;
+
+        Handles.color = Color.red;
+
+        Handles.DrawPolyLine(new Vector3[]{vec3TopLeft, vec3TopRight, vec3BottomRight, vec3BottomLeft, vec3TopLeft});
+
+        Handles.color = colorOld;
     }
 
     private void DrawObstacleBorders()
@@ -611,11 +771,25 @@ public class MapEditor : EditorWindow
         }
     }
 
+    private void DrawCheckPoints()
+    {
+        for (int nIndex = 0; nIndex < m_Map.m_listCheckPoint.Count; ++nIndex)
+        {
+            Color colorOld = Handles.color;
+
+            Handles.color = Color.green;
+
+            Handles.SphereCap(nIndex, m_Map.m_listCheckPoint[nIndex], Quaternion.identity, 1);
+
+            Handles.color = colorOld;
+        }
+    }
+
     private void DrawSpawnPoints()
     {
         for (int nIndex = 0; nIndex < m_Map.m_listSpawnPoint.Count; ++nIndex)
         {
-            Color colorOld = Handles.selectedColor;
+            Color colorOld = Handles.color;
 
             if (m_listSpawnPointsHighlight[nIndex])
             {
@@ -651,6 +825,10 @@ public class MapEditor : EditorWindow
     {
         if (m_State == State.Normal)
         {
+        }
+        else if (m_State == State.AddCheckPoint)
+        {
+            AddCheckPoint(vec3Pos);
         }
         else if (m_State == State.AddSpawnPoint)
         {
@@ -719,6 +897,25 @@ public class MapEditor : EditorWindow
     private void OnObstacleVertexRemoveClicked(int nObstacleIndex, int nVertexIndex)
     {
         RemoveObstacleVertex(nObstacleIndex, nVertexIndex);
+
+        SceneView.RepaintAll();
+    }
+
+    private void OnCheckPointAddClicked()
+    {
+        AddCheckPoint();
+
+        SceneView.RepaintAll();
+    }
+
+    private void OnCheckPointAddFromClickClicked()
+    {
+        m_State = State.AddCheckPoint;
+    }
+
+    private void OnCheckPointRemoveClicked(int nIndex)
+    {
+        RemoveCheckPoint(nIndex);
 
         SceneView.RepaintAll();
     }
