@@ -68,7 +68,7 @@ public class MapManager : MonoBehaviour
     {
         XmlNode Map = xmlDoc.SelectSingleNode("Map");
 
-        //  general info
+        //  General info
         XmlNode ID = Map.SelectSingleNode("ID");
         XmlNode SceneName = Map.SelectSingleNode("SceneName");
         XmlNode Width = Map.SelectSingleNode("Width");
@@ -79,7 +79,38 @@ public class MapManager : MonoBehaviour
         map.m_fWidth = float.Parse(Width.InnerText);
         map.m_fHeight = float.Parse(Height.InnerText);
 
-        //  spawn points
+        //  Start area
+        XmlNode StartArea = Map.SelectSingleNode("StartArea");
+        string[] arrRect = StartArea.InnerText.Split(',');
+        if (arrRect.Length != 5)
+        {
+            Debug.LogWarning("arrRect.Length is not 5!");
+            return;
+        }
+
+        map.m_rectStartArea = new Rect3D(new Vector3(float.Parse(arrRect[0]), float.Parse(arrRect[1]), float.Parse(arrRect[2])), float.Parse(arrRect[3]), float.Parse(arrRect[4]));
+
+        //  Check points
+        XmlNode CheckPoints = Map.SelectSingleNode("CheckPoints");
+        XmlNodeList listCheckPoint = CheckPoints.SelectNodes("CheckPoint");
+        foreach (XmlNode CheckPoint in listCheckPoint)
+        {
+            string[] arrPos = CheckPoint.InnerText.Split(',');
+            if (arrPos.Length != 3)
+            {
+                Debug.LogWarning("arrPos.Length is not 3!");
+                continue;
+            }
+
+            Vector3 vec3CheckPoint = Vector3.zero;
+            vec3CheckPoint.x = float.Parse(arrPos[0]);
+            vec3CheckPoint.y = float.Parse(arrPos[1]);
+            vec3CheckPoint.z = float.Parse(arrPos[2]);
+
+            m_Map.m_listCheckPoint.Add(vec3CheckPoint);
+        }
+
+        //  Spawn points
         XmlNode SpawnPoints = Map.SelectSingleNode("SpawnPoints");
         XmlNodeList listSpawnPoint = SpawnPoints.SelectNodes("SpawnPoint");
         foreach (XmlNode SpawnPoint in listSpawnPoint)
@@ -99,7 +130,7 @@ public class MapManager : MonoBehaviour
             m_Map.m_listSpawnPoint.Add(vec3SpawnPoint);
         }
 
-        //  obstacles
+        //  Obstacles
         XmlNode Obstacles = Map.SelectSingleNode("Obstacles");
         XmlNodeList listObstacle = Obstacles.SelectNodes("Obstacle");
         foreach (XmlNode Obstacle in listObstacle)
