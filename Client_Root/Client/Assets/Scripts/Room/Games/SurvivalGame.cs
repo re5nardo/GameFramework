@@ -27,6 +27,9 @@ public class SurvivalGame : IGame
         m_InputManager.Work(m_MapManager.GetWidth(), m_MapManager.GetHeight(), m_CameraMain, OnClicked);
 
         m_CameraController.FollowTarget(m_Query.transform);
+
+        GameObject goCharacter = new GameObject("MisterBae");
+        goCharacter.AddComponent<MisterBae>();
 	}
 
     public override void OnRecvMessage(IMessage msg)
