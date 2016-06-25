@@ -7,8 +7,8 @@ public abstract class ICharacter : MonoBehaviour    //  Inherit MonoBehaviour fo
     protected List<IBehavior>       m_listBehavior = new List<IBehavior>(8);
 
     protected Vector3               m_vec3Position = Vector3.zero;
-    protected Stat                  m_DefaultStat;
-    protected Stat                  m_CurrentStat;
+    protected Stat                  m_DefaultStat = default(Stat);
+    protected Stat                  m_CurrentStat = default(Stat);
 
     public abstract void Idle();
     public abstract void Stop();
@@ -17,8 +17,9 @@ public abstract class ICharacter : MonoBehaviour    //  Inherit MonoBehaviour fo
     public abstract void Emotion();
 
     protected abstract void CreateUI();
+    public abstract void Initialize(params object[] arrParam);
 
-    public ICharacter()
+    protected virtual void Awake()
     {
         CreateUI();
     }
@@ -36,8 +37,13 @@ public abstract class ICharacter : MonoBehaviour    //  Inherit MonoBehaviour fo
         }
     }
 
-    private void OnDestroy()
+    protected virtual void OnDestroy()
     {
         StopAllCoroutines();
+
+        if (m_CharacterUI != null)
+        {
+            Destroy(m_CharacterUI.gameObject);
+        }
     }
 }

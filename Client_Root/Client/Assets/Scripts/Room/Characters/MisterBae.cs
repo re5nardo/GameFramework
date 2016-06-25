@@ -3,15 +3,15 @@ using System.Collections;
 
 public class MisterBae : ICharacter
 {
-    public MisterBae(Stat stat)
-    {
-        m_DefaultStat = m_CurrentStat = stat;
-    }
-
 #region ICharacter
     protected override void CreateUI()
     {
-        
+        m_CharacterUI = (Instantiate(Resources.Load("CharacterUI/MisterBaeUI")) as GameObject).GetComponent<MisterBaeUI>();
+    }
+
+    public override void Initialize(params object[] arrParam)
+    {
+        m_DefaultStat = m_CurrentStat = (Stat)arrParam[0];
     }
 
     public override void Idle()
@@ -22,7 +22,7 @@ public class MisterBae : ICharacter
         }
         m_listBehavior.Clear();
 
-        IdleBehavior idleBehavior = new IdleBehavior(this, OnBehaviorEnd);
+        IdleBehavior idleBehavior = new IdleBehavior(this, OnBehaviorEnd, "WAIT01");
 
         m_listBehavior.Add(idleBehavior);
 
@@ -54,7 +54,7 @@ public class MisterBae : ICharacter
         }
         m_listBehavior.Remove(oldMoveBehavior);
 
-        MoveBehavior moveBehavior = new MoveBehavior(this, OnBehaviorEnd, null);
+        MoveBehavior moveBehavior = new MoveBehavior(this, OnBehaviorEnd, null, "RUN00_F");
 
         m_listBehavior.Add(moveBehavior);
 

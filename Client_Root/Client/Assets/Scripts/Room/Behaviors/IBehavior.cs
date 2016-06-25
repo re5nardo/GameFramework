@@ -53,7 +53,7 @@ public abstract class IBehavior
 
     protected virtual void OnStop()
     {
-        m_Character.m_CharacterUI.StopAni();
+        m_Character.m_CharacterUI.StopAnimation();
     }
 }
     

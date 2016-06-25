@@ -11,7 +11,7 @@ public class StopBehavior : IBehavior
 
     protected override IEnumerator Body()
     {
-        m_Character.m_CharacterUI.StopAni();
+        m_Character.m_CharacterUI.StopAnimation();
 
         yield return new WaitForSeconds(STOP_DURATION);
     }

@@ -7,8 +7,9 @@ public class MoveBehavior : IBehavior
     private List<Node>                  m_listPath = null;
     private Dictionary<int, float>      m_dicDistance = new Dictionary<int, float>();   //  Node index and accumulated distance
     private float                       m_fDistanceToMove = 0f;
+    private string                      m_strMoveClipName = "";
 
-    public MoveBehavior(ICharacter Character, BehaviorDelegate OnBehaviorEnd, LinkedList<Node> listPath) : base(Character, OnBehaviorEnd)
+    public MoveBehavior(ICharacter Character, BehaviorDelegate OnBehaviorEnd, LinkedList<Node> listPath, string strMoveClipName) : base(Character, OnBehaviorEnd)
     {
         m_listPath = new List<Node>(listPath);
 
@@ -25,11 +26,13 @@ public class MoveBehavior : IBehavior
         }
 
         m_fDistanceToMove = m_dicDistance[m_listPath.Count - 1];
+
+        m_strMoveClipName = strMoveClipName;
     }
 
     protected override IEnumerator Body()
     {
-        m_Character.m_CharacterUI.PlayAni("move");
+        m_Character.m_CharacterUI.PlayAnimation(m_strMoveClipName);
         m_Character.m_CharacterUI.SetPosition(m_listPath[0].m_vec3Pos);
 
         float fMovedDistance = 0f;

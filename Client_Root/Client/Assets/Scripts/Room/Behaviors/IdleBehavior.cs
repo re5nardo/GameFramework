@@ -1,18 +1,29 @@
-﻿using System.Collections;
+﻿using UnityEngine;
+using System.Collections;
 
 public class IdleBehavior : IBehavior
 {
-    public IdleBehavior(ICharacter Character, BehaviorDelegate OnBehaviorEnd) : base(Character, OnBehaviorEnd)
+    private string                      m_strIdleClipName = "";
+
+    public IdleBehavior(ICharacter Character, BehaviorDelegate OnBehaviorEnd, string strIdleClipName) : base(Character, OnBehaviorEnd)
     {
+        m_strIdleClipName = strIdleClipName;
     }
 
     protected override IEnumerator Body()
     {
-        m_Character.m_CharacterUI.PlayAni("idle");
-       
+        float fClipLength = m_Character.m_CharacterUI.GetAnimationClipLegth(m_strIdleClipName);
+        float fElapsedTime = 0f;
+
         while (true)
         {
+            fElapsedTime = fElapsedTime % fClipLength;
+
+            m_Character.m_CharacterUI.SampleAnimation(m_strIdleClipName, fElapsedTime / fClipLength);
+
             yield return null;
+
+            fElapsedTime += Time.deltaTime;
         }
     }
 }
