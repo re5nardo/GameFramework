@@ -96,3 +96,15 @@ public class Polygon
     public List<Vector3> m_listVertex = new List<Vector3>();
 }
 
+public struct Sphere
+{
+    public Vector3 center;
+    public float radius;
+
+    public Sphere(Vector3 center, float radius)
+    {
+        this.center = center;
+        this.radius = radius;
+    }
+}
+
