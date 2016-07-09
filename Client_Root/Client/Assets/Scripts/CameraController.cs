@@ -29,7 +29,7 @@ public class CameraController : MonoBehaviour
         m_trCamera.localScale = Vector3.one;
 	}
 
-    private void Update()
+    private void LateUpdate()
     {
         if (m_bFollow)
         {
