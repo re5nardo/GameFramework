@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class MisterBae : ICharacter
 {
@@ -44,17 +45,17 @@ public class MisterBae : ICharacter
         stopBehavior.Start();
     }
 
-    public override void Move(Vector3 vec3Pos)
+    public override void Move(LinkedList<Node> listPath)
     {
-        IBehavior oldMoveBehavior = m_listBehavior.Find(behavior => behavior is MoveBehavior);
+        List<IBehavior> listBehavior = m_listBehavior.FindAll(behavior => behavior is MoveBehavior || behavior is IdleBehavior );
 
-        if (oldMoveBehavior != null)
+        foreach(IBehavior behavior in listBehavior)
         {
-            oldMoveBehavior.Stop();
+            behavior.Stop();
+            m_listBehavior.Remove(behavior);
         }
-        m_listBehavior.Remove(oldMoveBehavior);
 
-        MoveBehavior moveBehavior = new MoveBehavior(this, OnBehaviorEnd, null, "RUN00_F");
+        MoveBehavior moveBehavior = new MoveBehavior(this, OnBehaviorEnd, listPath, "RUN00_F");
 
         m_listBehavior.Add(moveBehavior);
 

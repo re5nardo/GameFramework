@@ -7,7 +7,7 @@ public class Room : MonoBehaviour
     [SerializeField] private IGame m_Game = null;
 
     private bool m_bConnected = false;
-    private string m_strIP = "175.197.228.126";
+    private string m_strIP = "175.197.227.196";
     private string m_strAverage = "";
     private string m_strBest = "";
     private string m_strWorst = "";

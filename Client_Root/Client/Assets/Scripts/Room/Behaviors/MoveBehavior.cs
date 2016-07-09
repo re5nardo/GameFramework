@@ -32,8 +32,8 @@ public class MoveBehavior : IBehavior
 
     protected override IEnumerator Body()
     {
-        m_Character.m_CharacterUI.PlayAnimation(m_strMoveClipName);
-        m_Character.m_CharacterUI.SetPosition(m_listPath[0].m_vec3Pos);
+        float fClipLength = m_Character.m_CharacterUI.GetAnimationClipLegth(m_strMoveClipName);
+        float fElapsedTime = 0f;
 
         float fMovedDistance = 0f;
         int nPrev = 0;
@@ -41,9 +41,9 @@ public class MoveBehavior : IBehavior
 
         while (true)
         {
-            yield return null;
+            m_Character.m_CharacterUI.SampleAnimation(m_strMoveClipName, (fElapsedTime % fClipLength) / fClipLength);
+            m_Character.m_CharacterUI.transform.LookAt(m_listPath[nNext].m_vec3Pos);
 
-            fMovedDistance += m_Character.GetSpeed() * Time.deltaTime;
             if (fMovedDistance >= m_fDistanceToMove)
             {
                 break;
@@ -57,9 +57,14 @@ public class MoveBehavior : IBehavior
 
             float t = (fMovedDistance - m_dicDistance[nPrev]) / (m_dicDistance[nNext] - m_dicDistance[nPrev]);
 
-            m_Character.m_CharacterUI.SetPosition(Util.Math.Lerp(m_listPath[nPrev].m_vec3Pos, m_listPath[nNext].m_vec3Pos, t));
+            m_Character.SetPosition(Util.Math.Lerp(m_listPath[nPrev].m_vec3Pos, m_listPath[nNext].m_vec3Pos, t));
+
+            yield return null;
+
+            fElapsedTime += Time.deltaTime;
+            fMovedDistance += m_Character.GetSpeed() * Time.deltaTime;
         }
 
-        m_Character.m_CharacterUI.SetPosition(m_listPath[m_listPath.Count - 1].m_vec3Pos);
+        m_Character.SetPosition(m_listPath[m_listPath.Count - 1].m_vec3Pos);
     }
 }

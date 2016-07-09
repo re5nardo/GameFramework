@@ -5,8 +5,8 @@ using System.Collections.Generic;
 public class SurvivalGame : IGame
 {
     private AStarAlgorithm      m_AStarAlgorithm = new AStarAlgorithm();
-    public QuerySDMecanimController m_Query = null;
-    private Coroutine m_crRun = null;
+
+    private MisterBae           m_MisterBae = null;
 
     private void Start()
     {
@@ -26,10 +26,16 @@ public class SurvivalGame : IGame
 
         m_InputManager.Work(m_MapManager.GetWidth(), m_MapManager.GetHeight(), m_CameraMain, OnClicked);
 
-        m_CameraController.FollowTarget(m_Query.transform);
-
+        //  temp
         GameObject goCharacter = new GameObject("MisterBae");
-        goCharacter.AddComponent<MisterBae>();
+        m_MisterBae = goCharacter.AddComponent<MisterBae>();
+
+        Stat stat = new Stat();
+        stat.fSpeed = 4f;
+
+        m_MisterBae.Initialize(stat); 
+
+        m_CameraController.FollowTarget(m_MisterBae.m_CharacterUI.transform);
 	}
 
     public override void OnRecvMessage(IMessage msg)
@@ -60,17 +66,12 @@ public class SurvivalGame : IGame
 
     private void Move(Vector3 vec3Pos)
     {
-        if (!m_MapManager.IsMovable(m_Query.transform.position, vec3Pos))
+        if (!m_MapManager.IsPositionValidToMove(vec3Pos))
         {
             return;
         }
 
-        if (m_crRun != null)
-        {
-            StopCoroutine(m_crRun);
-        }
-
-        Node start = new Node(m_Query.transform.position, false);
+        Node start = new Node(m_MisterBae.GetPosition(), false);
         Node end = new Node(vec3Pos, false);
 
         m_MapManager.InsertNode(start);
@@ -81,37 +82,7 @@ public class SurvivalGame : IGame
         m_MapManager.RemoveNode(start);
         m_MapManager.RemoveNode(end);
 
-        m_crRun = StartCoroutine(Run(SmoothPathQuick(listPath)));
-    }
-
-    float fSpeed = 4f / 1f;
-    private IEnumerator Run(LinkedList<Node> listPath)
-    {
-        m_Query.ChangeAnimation(QuerySDMecanimController.QueryChanSDAnimationType.NORMAL_RUN);
-
-        LinkedListNode<Node> node = new LinkedList<Node>(listPath).First;
-
-        while (node.Next != null)
-        {
-            Vector3 start = node.Value.m_vec3Pos;
-            Vector3 end = node.Next.Value.m_vec3Pos;
-
-            float fDistance = Vector3.Distance(start, end);
-            float fTime = fDistance / fSpeed;
-            float fElapsedTime = 0f;
-
-            while (fElapsedTime < fTime)
-            {
-                m_Query.transform.position = Vector3.Lerp(start, end, fElapsedTime / fTime);
-
-                fElapsedTime += Time.deltaTime;
-
-                yield return null;
-            }
-
-            m_Query.transform.position = end;
-            node = node.Next;
-        }
+        m_MisterBae.Move(SmoothPathQuick(listPath));
     }
 
     private LinkedList<Node> SmoothPathQuick(LinkedList<Node> listPath)
@@ -128,7 +99,7 @@ public class SurvivalGame : IGame
         while (node3 != null)
         {
             //  check user can walk between 1, 3
-            if (m_MapManager.IsMovable(node1.Value.m_vec3Pos, node3.Value.m_vec3Pos))
+            if (m_MapManager.CanMoveStraightly(node1.Value.m_vec3Pos, node3.Value.m_vec3Pos))
             {
                 listPath.Remove(node2);
 

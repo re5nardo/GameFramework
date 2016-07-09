@@ -7,6 +7,11 @@ public class ICharacterUI : MonoBehaviour
 
     private Transform m_trCharacterUI = null;
 
+    protected virtual void Awake()
+    {
+        m_trCharacterUI = transform;
+    }
+
     public float PlayAnimation(string strClipName, float fFadeLength = 0.2f)
     {
         m_animCharacterUI.CrossFadeQueued(strClipName, fFadeLength, QueueMode.PlayNow, PlayMode.StopSameLayer);

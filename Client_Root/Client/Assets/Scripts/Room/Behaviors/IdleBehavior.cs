@@ -17,9 +17,7 @@ public class IdleBehavior : IBehavior
 
         while (true)
         {
-            fElapsedTime = fElapsedTime % fClipLength;
-
-            m_Character.m_CharacterUI.SampleAnimation(m_strIdleClipName, fElapsedTime / fClipLength);
+            m_Character.m_CharacterUI.SampleAnimation(m_strIdleClipName, (fElapsedTime % fClipLength) / fClipLength);
 
             yield return null;
 

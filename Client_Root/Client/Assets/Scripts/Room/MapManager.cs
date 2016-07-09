@@ -190,7 +190,7 @@ public class MapManager : MonoBehaviour
 
                 Vector3 vec3Dest = new Vector3(node.m_vec3Pos.x + nHorizon * INTERVAL_OF_NODE, node.m_vec3Pos.y, node.m_vec3Pos.z + nVertical * INTERVAL_OF_NODE);
 
-                if(IsMovable(node.m_vec3Pos, vec3Dest))
+                if(CanMoveStraightly(node.m_vec3Pos, vec3Dest))
                 {
                     if (m_dicNode.ContainsKey(vec3Dest))
                     {
@@ -232,19 +232,37 @@ public class MapManager : MonoBehaviour
         return true;
     }
 
-    public bool IsMovable(Vector3 start, Vector3 dest)
+    public bool CanMoveStraightly(Vector3 start, Vector3 dest)
     {
-        if (!(dest.x < m_Map.m_fWidth * 0.5f && dest.x > m_Map.m_fWidth * -0.5f && dest.z < m_Map.m_fHeight * 0.5f && dest.z > m_Map.m_fHeight * -0.5f))
+        if (!IsPositionValidToMove(dest))
         {
             return false;
         }
-            
+
         Line2D line = new Line2D(new Vector2(start.x, start.z), new Vector2(dest.x, dest.z));
         Vector2 intersectionPos = Vector2.zero;
 
         foreach (Polygon polygon in m_Map.m_listObstacle)
         {
             if (PhysicsHelper.Collision.FindLineAndPolygonIntersection(line, polygon, ref intersectionPos))
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public bool IsPositionValidToMove(Vector3 vec3Pos)
+    {
+        if (!(vec3Pos.x < m_Map.m_fWidth * 0.5f && vec3Pos.x > m_Map.m_fWidth * -0.5f && vec3Pos.z < m_Map.m_fHeight * 0.5f && vec3Pos.z > m_Map.m_fHeight * -0.5f))
+        {
+            return false;
+        }
+
+        foreach (Polygon polygon in m_Map.m_listObstacle)
+        {
+            if (PhysicsHelper.Collision.PointInConvexPolygon(vec3Pos, polygon))
             {
                 return false;
             }
