@@ -1,11 +1,13 @@
 #pragma once
 
 #include <string>
+#include "ISerializable.h"
+#include "IDeserializable.h"
 
 using namespace std;
 
 //	JSON format
-class IMessage
+class IMessage : public ISerializable, public IDeserializable
 {
 public:
 	IMessage(){};
@@ -13,6 +15,4 @@ public:
 
 public:
 	virtual unsigned short GetID() = 0;
-	virtual string Serialize() = 0;
-	virtual bool Deserialize(string strJson) = 0;
 };

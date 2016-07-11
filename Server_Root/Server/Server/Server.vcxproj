@@ -80,14 +80,24 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Data.h" />
     <ClInclude Include="Accepter.h" />
     <ClInclude Include="Defines.h" />
+    <ClInclude Include="GameEvent_Move_ToC.h" />
+    <ClInclude Include="GameEvent_Move_ToS.h" />
+    <ClInclude Include="GameStartToC.h" />
+    <ClInclude Include="IDeserializable.h" />
+    <ClInclude Include="IGameEvent.h" />
+    <ClInclude Include="IJSONObjectable.h" />
     <ClInclude Include="IMessage.h" />
+    <ClInclude Include="ISerializable.h" />
+    <ClInclude Include="JoinLobbyToC.h" />
+    <ClInclude Include="JoinLobbyToS.h" />
     <ClInclude Include="Lobby.h" />
     <ClInclude Include="Network.h" />
     <ClInclude Include="NetworkDefines.h" />
     <ClInclude Include="Player.h" />
-    <ClInclude Include="ReqMove.h" />
+    <ClInclude Include="ReadyForStartToS.h" />
     <ClInclude Include="Room.h" />
     <ClInclude Include="Singleton.h" />
     <ClInclude Include="stdafx.h" />
@@ -96,10 +106,16 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Accepter.cpp" />
+    <ClCompile Include="GameEvent_Move_ToC.cpp" />
+    <ClCompile Include="GameEvent_Move_ToS.cpp" />
+    <ClCompile Include="GameStartToC.cpp" />
+    <ClCompile Include="IGameEvent.cpp" />
+    <ClCompile Include="JoinLobbyToC.cpp" />
+    <ClCompile Include="JoinLobbyToS.cpp" />
     <ClCompile Include="Lobby.cpp" />
     <ClCompile Include="Network.cpp" />
     <ClCompile Include="Player.cpp" />
-    <ClCompile Include="ReqMove.cpp" />
+    <ClCompile Include="ReadyForStartToS.cpp" />
     <ClCompile Include="Room.cpp" />
     <ClCompile Include="Server.cpp" />
     <ClCompile Include="Singleton.cpp" />

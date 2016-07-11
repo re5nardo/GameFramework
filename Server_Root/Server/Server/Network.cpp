@@ -4,17 +4,20 @@
 #include "NetworkDefines.h"
 #include "IMessage.h"
 #include "TestMessage.h"
-#include "ReqMove.h"
+#include "GameEvent_Move_ToS.h"
+#include "ReadyForStartToS.h"
+#include "JoinLobbyToS.h"
 #include <process.h>
 
-Network::Network(const USHORT nPort)
+Network::Network(void* pListener, const USHORT nPort)
 {
 	m_pAccepter = NULL;
 	m_hComport = NULL;
 	m_bRunning = false;
-	m_nPort = nPort;
-	m_pListener = NULL;
 	m_RecvMessageCallback = NULL;
+
+	m_pListener = pListener;
+	m_nPort = nPort;
 }
 
 Network::~Network()
@@ -60,10 +63,14 @@ void Network::Stop()
 	WSACleanup();
 }
 
-void Network::SetRecvMessageCallback(void* pListener, void(*handler)(void* pListener, SOCKET socket, IMessage* pMsg))
+void Network::SetRecvMessageCallback(void(*handler)(void* pListener, SOCKET socket, IMessage* pMsg))
 {
-	m_pListener = pListener;
 	m_RecvMessageCallback = handler;
+}
+
+void Network::SetAcceptCallback(void(*handler)(void* pListener, SOCKET socket))
+{
+	m_AcceptCallback = handler;
 }
 
 IMessage* Network::GetIMessage(USHORT nMessageID, string strJson)
@@ -74,9 +81,17 @@ IMessage* Network::GetIMessage(USHORT nMessageID, string strJson)
 	{ 
 		pMsg = new TestMessage();
 	}
-	else if (nMessageID == Messages::REQ_MOVE_ID)
+	else if (nMessageID == Messages::Ready_For_Start_ToS)
 	{
-		pMsg = new ReqMove();
+		pMsg = new ReadyForStartToS();
+	}
+	else if (nMessageID == Messages::Game_Event_Move_ToS)
+	{
+		pMsg = new GameEvent_Move_ToS();
+	}
+	else if (nMessageID == Messages::Join_Lobby_ToS)
+	{
+		pMsg = new JoinLobbyToS();
 	}
 
 	if (pMsg != NULL)
@@ -145,6 +160,8 @@ void Network::AccepterThread()
 			free(handleInfo);
 			free(ioInfo);
 		}
+
+		m_AcceptCallback(m_pListener, handleInfo->Socket);
 	}
 }
 

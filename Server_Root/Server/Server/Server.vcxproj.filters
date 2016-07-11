@@ -31,6 +31,27 @@
     <Filter Include="소스 파일\Network">
       <UniqueIdentifier>{53bc7684-3f9f-4256-910b-a01d48b79ff9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="헤더 파일\Messages\ToClient">
+      <UniqueIdentifier>{d9ae330b-a1ed-421e-bee6-980805a143ef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Messages\ToServer">
+      <UniqueIdentifier>{7d59cd35-fb35-4a4b-a808-ef9cd7687c68}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Messages\ToServer">
+      <UniqueIdentifier>{699fe5b2-1ddf-434c-a3c2-7e897ad9dae3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Messages\ToClient">
+      <UniqueIdentifier>{21dba2c7-db18-4096-9026-787d82d216a9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Room">
+      <UniqueIdentifier>{775cd21d-0e33-4270-b12d-3317cea8c306}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Data">
+      <UniqueIdentifier>{d8deeefd-d6aa-43f2-a900-155e991bd43d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Room">
+      <UniqueIdentifier>{cc8c3770-3f46-4ef6-aa0c-2baa78014229}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -43,9 +64,6 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="IMessage.h">
-      <Filter>헤더 파일\Messages</Filter>
-    </ClInclude>
-    <ClInclude Include="TestMessage.h">
       <Filter>헤더 파일\Messages</Filter>
     </ClInclude>
     <ClInclude Include="Defines.h">
@@ -69,11 +87,44 @@
     <ClInclude Include="Network.h">
       <Filter>헤더 파일\Network</Filter>
     </ClInclude>
-    <ClInclude Include="Room.h">
-      <Filter>헤더 파일</Filter>
+    <ClInclude Include="ReadyForStartToS.h">
+      <Filter>헤더 파일\Messages\ToServer</Filter>
     </ClInclude>
-    <ClInclude Include="ReqMove.h">
+    <ClInclude Include="ISerializable.h">
       <Filter>헤더 파일\Messages</Filter>
+    </ClInclude>
+    <ClInclude Include="IDeserializable.h">
+      <Filter>헤더 파일\Messages</Filter>
+    </ClInclude>
+    <ClInclude Include="TestMessage.h">
+      <Filter>헤더 파일\Messages</Filter>
+    </ClInclude>
+    <ClInclude Include="GameStartToC.h">
+      <Filter>헤더 파일\Messages\ToClient</Filter>
+    </ClInclude>
+    <ClInclude Include="IJSONObjectable.h">
+      <Filter>헤더 파일\Messages</Filter>
+    </ClInclude>
+    <ClInclude Include="Room.h">
+      <Filter>헤더 파일\Room</Filter>
+    </ClInclude>
+    <ClInclude Include="Data.h">
+      <Filter>헤더 파일\Data</Filter>
+    </ClInclude>
+    <ClInclude Include="IGameEvent.h">
+      <Filter>헤더 파일\Messages</Filter>
+    </ClInclude>
+    <ClInclude Include="GameEvent_Move_ToS.h">
+      <Filter>헤더 파일\Messages\ToServer</Filter>
+    </ClInclude>
+    <ClInclude Include="GameEvent_Move_ToC.h">
+      <Filter>헤더 파일\Messages\ToClient</Filter>
+    </ClInclude>
+    <ClInclude Include="JoinLobbyToS.h">
+      <Filter>헤더 파일\Messages\ToServer</Filter>
+    </ClInclude>
+    <ClInclude Include="JoinLobbyToC.h">
+      <Filter>헤더 파일\Messages\ToClient</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -89,9 +140,6 @@
     <ClCompile Include="Singleton.cpp">
       <Filter>소스 파일\Common</Filter>
     </ClCompile>
-    <ClCompile Include="Room.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="Lobby.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
@@ -104,8 +152,29 @@
     <ClCompile Include="Network.cpp">
       <Filter>소스 파일\Network</Filter>
     </ClCompile>
-    <ClCompile Include="ReqMove.cpp">
+    <ClCompile Include="ReadyForStartToS.cpp">
+      <Filter>소스 파일\Messages\ToServer</Filter>
+    </ClCompile>
+    <ClCompile Include="GameStartToC.cpp">
+      <Filter>소스 파일\Messages\ToClient</Filter>
+    </ClCompile>
+    <ClCompile Include="Room.cpp">
+      <Filter>소스 파일\Room</Filter>
+    </ClCompile>
+    <ClCompile Include="IGameEvent.cpp">
       <Filter>소스 파일\Messages</Filter>
+    </ClCompile>
+    <ClCompile Include="GameEvent_Move_ToS.cpp">
+      <Filter>소스 파일\Messages\ToServer</Filter>
+    </ClCompile>
+    <ClCompile Include="GameEvent_Move_ToC.cpp">
+      <Filter>소스 파일\Messages\ToClient</Filter>
+    </ClCompile>
+    <ClCompile Include="JoinLobbyToS.cpp">
+      <Filter>소스 파일\Messages\ToServer</Filter>
+    </ClCompile>
+    <ClCompile Include="JoinLobbyToC.cpp">
+      <Filter>소스 파일\Messages\ToClient</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

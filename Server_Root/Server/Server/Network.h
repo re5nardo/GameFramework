@@ -11,7 +11,7 @@ class Accepter;
 class Network
 {
 public:
-	Network(const USHORT nPort);
+	Network(void* pListener, const USHORT nPort);
 	virtual ~Network();
 
 private:
@@ -20,12 +20,14 @@ private:
 	bool			m_bRunning;
 	USHORT			m_nPort;
 	void*			m_pListener;
+	void			(*m_AcceptCallback)(void* pListener, SOCKET socket);
 	void			(*m_RecvMessageCallback)(void* pListener, SOCKET socket, IMessage* pMsg);
 
 public:
 	int			Start();
 	void		Stop();
-	void		SetRecvMessageCallback(void* pListener, void(*handler)(void* pListener, SOCKET socket, IMessage* pMsg));
+	void		SetAcceptCallback(void(*handler)(void* pListener, SOCKET socket));
+	void		SetRecvMessageCallback(void(*handler)(void* pListener, SOCKET socket, IMessage* pMsg));
 	void		Send(SOCKET socket, IMessage* pMsg);
 
 private:
