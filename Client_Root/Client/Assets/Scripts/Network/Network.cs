@@ -42,6 +42,11 @@ public class Network : MonoSingleton<Network>
         Connect (strIP, 9110);
 	}
 
+    public void SetRecvMessageHandler(MessageHandler recvMessageHandler)
+    {
+        m_RecvMessageCallback = recvMessageHandler;
+    }
+
 	private void OnDestroy()
 	{
 		Close ();
@@ -189,6 +194,10 @@ public class Network : MonoSingleton<Network>
         else if (nMessageID == (ushort)Messages.Game_Event_Move_ToC)
         {
             msg = new GameEvent_Move_ToC();
+        }
+        else if (nMessageID == (ushort)Messages.Join_Lobby_ToC)
+        {
+            msg = new JoinLobbyToC();
         }
 
 		if (msg != null)

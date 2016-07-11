@@ -13,7 +13,7 @@ public abstract class IGameEvent : IMessage, IJSONObjectable
         return jsonObj;
     }
 
-    public virtual bool SetJSONObject(JSONObject jsonObj)
+    public virtual bool SetByJSONObject(JSONObject jsonObj)
     {
         if (jsonObj.HasField ("PlayerIndex") && jsonObj.GetField ("PlayerIndex").IsNumber)
         {

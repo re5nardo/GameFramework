@@ -8,7 +8,7 @@ public abstract class IGame : MonoBehaviour
     [SerializeField] protected Camera               m_CameraMain = null;
     [SerializeField] protected CameraController     m_CameraController;
 
-    protected Dictionary<int, ICharacter>           m_dicCharacter = new Dictionary<int, ICharacter>();
+    protected Dictionary<ulong, ICharacter>         m_dicCharacter = new Dictionary<ulong, ICharacter>();
 
     public abstract void OnRecvMessage(IMessage msg);
 }

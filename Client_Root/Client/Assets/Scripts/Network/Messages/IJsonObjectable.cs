@@ -2,5 +2,5 @@
 public interface IJSONObjectable
 {
     JSONObject GetJSONObject();
-    bool SetJSONObject(JSONObject jsonObj);
+    bool SetByJSONObject(JSONObject jsonObj);
 }

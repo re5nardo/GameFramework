@@ -24,10 +24,12 @@ public enum Messages
     //  ToS
     Ready_For_Start_ToS,
     Game_Event_Move_ToS,
+    Join_Lobby_ToS,
 
     //  ToC
     Game_Start_ToC,
     Game_Event_Move_ToC,
+    Join_Lobby_ToC,
 }
 
 class NetworkDefines

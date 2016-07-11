@@ -44,6 +44,14 @@ public class SurvivalGame : IGame
         {
             OnRecvGameEvent(msg);
         }
+        else if (msg.GetID() == (ushort)Messages.Game_Start_ToC)
+        {
+            GameStartToC resp = (GameStartToC)msg;
+
+
+
+            StartGame();
+        }
     }
 
     private void OnRecvGameEvent(IMessage msg)

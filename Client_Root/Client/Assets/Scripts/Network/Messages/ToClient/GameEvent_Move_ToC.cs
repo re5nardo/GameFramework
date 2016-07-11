@@ -18,7 +18,7 @@ public class GameEvent_Move_ToC : IGameEvent
     {
         JSONObject jsonObj = new JSONObject (strJson);
 
-        return SetJSONObject(jsonObj);
+        return SetByJSONObject(jsonObj);
     }
 
     public override JSONObject GetJSONObject()
@@ -33,9 +33,9 @@ public class GameEvent_Move_ToC : IGameEvent
         return jsonObj;
     }
 
-    public override bool SetJSONObject(JSONObject jsonObj)
+    public override bool SetByJSONObject(JSONObject jsonObj)
     {
-        if (!base.SetJSONObject(jsonObj))
+        if (!base.SetByJSONObject(jsonObj))
         {
             return false;
         }
