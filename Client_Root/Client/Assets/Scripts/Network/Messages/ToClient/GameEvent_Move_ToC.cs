@@ -1,71 +1,39 @@
 ﻿using UnityEngine;
+using System.Text;
 
-public class GameEvent_Move_ToC : IGameEvent
+public class GameEvent_Move_ToC : IMessage
 {
-    public Vector3 m_vec3Dest = Vector3.zero;   //  Json field name : Pos_X, Pos_Y, Pos_Z
+    public int m_nPlayerIndex = 0;                          //  json field name : PlayerIndex
+    public int m_nElapsedTime = 0;                          //  json field name : ElapsedTime
+    public Vector3 m_vec3Dest = Vector3.zero;               //  Json field name : Pos_X, Pos_Y, Pos_Z
 
-    public override ushort GetID()
+    public ushort GetID()
     {
         return (ushort)Messages.Game_Event_Move_ToC;
     }
 
-    public override string Serialize()
+    public byte[] Serialize()
     {
-        return GetJSONObject().Print() + '\0';
+        JSONObject jsonObj = new JSONObject(JSONObject.Type.OBJECT);
+
+        JSONHelper.AddField(jsonObj, "PlayerIndex", m_nPlayerIndex);
+        JSONHelper.AddField(jsonObj, "ElapsedTime", m_nElapsedTime);
+        JSONHelper.AddField(jsonObj, "Pos_X", m_vec3Dest.x);
+        JSONHelper.AddField(jsonObj, "Pos_Y", m_vec3Dest.y);
+        JSONHelper.AddField(jsonObj, "Pos_Z", m_vec3Dest.z);
+
+        return Encoding.Default.GetBytes(jsonObj.Print());
     }
 
-    public override bool Deserialize(string strJson)
+    public bool Deserialize(byte[] bytes)
     {
-        JSONObject jsonObj = new JSONObject (strJson);
+        JSONObject jsonObj = new JSONObject(Encoding.Default.GetString(bytes));
 
-        return SetByJSONObject(jsonObj);
-    }
-
-    public override JSONObject GetJSONObject()
-    {
-        JSONObject jsonObj = base.GetJSONObject();
-
-        jsonObj.AddField ("BasicInfo", base.GetJSONObject());
-        jsonObj.AddField ("Pos_X", m_vec3Dest.x);
-        jsonObj.AddField ("Pos_Y", m_vec3Dest.y);
-        jsonObj.AddField ("Pos_Z", m_vec3Dest.z);
-
-        return jsonObj;
-    }
-
-    public override bool SetByJSONObject(JSONObject jsonObj)
-    {
-        if (!base.SetByJSONObject(jsonObj))
-        {
-            return false;
-        }
-
-        if (jsonObj.HasField ("Pos_X") && jsonObj.GetField ("Pos_X").IsNumber)
-        {
-            jsonObj.GetField (ref m_vec3Dest.x, "Pos_X");
-        } 
-        else
-        {
-            return false;
-        }
-
-        if (jsonObj.HasField ("Pos_Y") && jsonObj.GetField ("Pos_Y").IsNumber)
-        {
-            jsonObj.GetField (ref m_vec3Dest.y, "Pos_Y");
-        } 
-        else
-        {
-            return false;
-        }
-
-        if (jsonObj.HasField ("Pos_Z") && jsonObj.GetField ("Pos_Z").IsNumber)
-        {
-            jsonObj.GetField (ref m_vec3Dest.z, "Pos_Z");
-        } 
-        else
-        {
-            return false;
-        }
+        if(!JSONHelper.GetField(jsonObj, "PlayerIndex", ref m_nPlayerIndex)) return false;
+        if(!JSONHelper.GetField(jsonObj, "ElapsedTime", ref m_nElapsedTime)) return false;
+        if(!JSONHelper.GetField(jsonObj, "Pos_X", ref m_vec3Dest.x)) return false;
+        if(!JSONHelper.GetField(jsonObj, "Pos_Y", ref m_vec3Dest.y)) return false;
+        if(!JSONHelper.GetField(jsonObj, "Pos_Z", ref m_vec3Dest.z)) return false;
 
         return true;
     }

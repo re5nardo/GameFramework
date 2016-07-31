@@ -1,5 +1,5 @@
 ﻿
 public interface IDeserializable
 {
-    bool Deserialize(string strJson);
+    bool Deserialize(byte[] bytes);
 }

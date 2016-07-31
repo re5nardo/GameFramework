@@ -1,5 +1,5 @@
 ﻿
 public interface ISerializable
 {
-    string Serialize();
+    byte[] Serialize();
 }

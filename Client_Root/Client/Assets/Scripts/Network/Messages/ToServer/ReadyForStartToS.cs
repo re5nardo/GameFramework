@@ -1,4 +1,5 @@
-﻿
+﻿using System.Text;
+
 public class ReadyForStartToS : IMessage
 {
     public ulong m_nPlayerNumber;     //  json field name : PlayerNumber
@@ -8,29 +9,20 @@ public class ReadyForStartToS : IMessage
         return (ushort)Messages.Ready_For_Start_ToS;
     }
 
-    public string Serialize()
+    public byte[] Serialize()
     {
-        JSONObject jsonObj = new JSONObject (JSONObject.Type.OBJECT);
-        jsonObj.AddField ("PlayerNumber", m_nPlayerNumber.ToString());
+        JSONObject jsonObj = new JSONObject(JSONObject.Type.OBJECT);
 
-        return jsonObj.Print () + '\0';
+        JSONHelper.AddField(jsonObj, "PlayerNumber", m_nPlayerNumber);
+
+        return Encoding.Default.GetBytes(jsonObj.Print());
     }
 
-    public bool Deserialize(string strJson)
+    public bool Deserialize(byte[] bytes)
     {
-        JSONObject jsonObj = new JSONObject (strJson);
+        JSONObject jsonObj = new JSONObject(Encoding.Default.GetString(bytes));
 
-        if (jsonObj.HasField ("PlayerNumber") && jsonObj.GetField ("PlayerNumber").IsString)
-        {
-            string strPlayerNumber = "";
-            jsonObj.GetField (ref strPlayerNumber, "PlayerIndex");
-
-            m_nPlayerNumber = uint.Parse(strPlayerNumber);
-        } 
-        else
-        {
-            return false;
-        }
+        if(!JSONHelper.GetField(jsonObj, "PlayerNumber", ref m_nPlayerNumber)) return false;
 
         return true;
     }

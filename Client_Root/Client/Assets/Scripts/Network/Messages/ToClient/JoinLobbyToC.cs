@@ -1,4 +1,5 @@
-﻿
+﻿using System.Text;
+
 public class JoinLobbyToC : IMessage
 {
     public int m_nResult;     //  json field name : Result
@@ -8,26 +9,20 @@ public class JoinLobbyToC : IMessage
         return (ushort)Messages.Join_Lobby_ToC;
     }
 
-    public string Serialize()
+    public byte[] Serialize()
     {
-        JSONObject jsonObj = new JSONObject (JSONObject.Type.OBJECT);
-        jsonObj.AddField ("Result", m_nResult);
+        JSONObject jsonObj = new JSONObject(JSONObject.Type.OBJECT);
 
-        return jsonObj.Print () + '\0';
+        JSONHelper.AddField(jsonObj, "Result", m_nResult);
+
+        return Encoding.Default.GetBytes(jsonObj.Print());
     }
 
-    public bool Deserialize(string strJson)
+    public bool Deserialize(byte[] bytes)
     {
-        JSONObject jsonObj = new JSONObject (strJson);
+        JSONObject jsonObj = new JSONObject(Encoding.Default.GetString(bytes));
 
-        if (jsonObj.HasField ("Result") && jsonObj.GetField ("Result").IsNumber)
-        {
-            jsonObj.GetField (ref m_nResult, "Result");
-        } 
-        else
-        {
-            return false;
-        }
+        if(!JSONHelper.GetField(jsonObj, "Result", ref m_nResult)) return false;
 
         return true;
     }

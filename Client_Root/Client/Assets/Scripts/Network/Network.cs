@@ -161,7 +161,7 @@ public class Network : MonoSingleton<Network>
 						{
                             BaeTest.listLatency.Add(DateTime.Now - BaeTest.sentTime);
 
-							m_MessagesReceived.Enqueue(GetIMessage(state.CurMessageID, Encoding.Default.GetString(state.CurMessage)));
+							m_MessagesReceived.Enqueue(GetIMessage(state.CurMessageID, state.CurMessage));
 						}
 
 						state.CurMessage = null;
@@ -183,7 +183,7 @@ public class Network : MonoSingleton<Network>
 		}
 	}
 
-	private IMessage GetIMessage(ushort nMessageID, string strJson)
+    private IMessage GetIMessage(ushort nMessageID, byte[] data)
 	{
 		IMessage msg = null;
 
@@ -202,7 +202,7 @@ public class Network : MonoSingleton<Network>
 
 		if (msg != null)
 		{
-			msg.Deserialize(strJson);
+			msg.Deserialize(data);
 		}
 
 		return msg;
@@ -212,9 +212,9 @@ public class Network : MonoSingleton<Network>
 	{
 		try
 		{
-			string strSerializedData = msg.Serialize ();
-			byte[] byteSerializedData = Encoding.Default.GetBytes (strSerializedData); 
-			int nTotalSize = NetworkDefines.MESSAGE_HEADER_SIZE + byteSerializedData.Length;		//	msg id(2) + msg length info(2)
+			//string strSerializedData = msg.Serialize () + '\0'; //  for server..
+            byte[] byteSerializedData = msg.Serialize();
+            int nTotalSize = NetworkDefines.MESSAGE_HEADER_SIZE + byteSerializedData.Length;		//	msg id(2) + msg length info(2)
 			byte[] byteData = new byte[nTotalSize];
 
 			byteData [0] = BitConverter.GetBytes (msg.GetID ()) [1];
@@ -225,7 +225,7 @@ public class Network : MonoSingleton<Network>
 			int nIndex = NetworkDefines.MESSAGE_HEADER_SIZE;
 			foreach(byte data in byteSerializedData)
 			{
-				byteData [nIndex++] = data;
+				byteData[nIndex++] = data;
 			}
 				
             BaeTest.sentTime = DateTime.Now;

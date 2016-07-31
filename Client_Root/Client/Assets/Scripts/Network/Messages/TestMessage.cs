@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Text;
 
 public class TestMessage : IMessage
 {
@@ -28,7 +29,7 @@ public class TestMessage : IMessage
 		return (ushort)Messages.TEST_MESSAGE_ID;
 	}
 
-	public string Serialize()
+	public byte[] Serialize()
 	{
 		JSONObject jsonObj = new JSONObject (JSONObject.Type.OBJECT);
 		jsonObj.AddField ("name", m_strName);
@@ -42,12 +43,12 @@ public class TestMessage : IMessage
 		JSONObject dicOptions = new JSONObject (m_dicOptions);
 		jsonObj.AddField ("options", dicOptions);
 
-		return jsonObj.Print () + '\0';
+        return Encoding.Default.GetBytes(jsonObj.Print());
 	}
 
-	public bool Deserialize(string strJson)
+    public bool Deserialize(byte[] bytes)
 	{
-		JSONObject jsonObj = new JSONObject (strJson);
+        JSONObject jsonObj = new JSONObject (Encoding.Default.GetString(bytes));
 
 		if (jsonObj.HasField ("name") && jsonObj.GetField ("name").IsString)
 		{

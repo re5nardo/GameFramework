@@ -6,6 +6,10 @@ public class PlayerInfo : IJSONObjectable
     public ulong m_nPlayerNumber = 0;                        //  json field name : PlayerNumber
     public int m_nCharacterNumber = 0;                       //  json field name : CharacterNumber
 
+    public PlayerInfo()
+    {
+    }
+
     public PlayerInfo(JSONObject jsonObj)
     {
         SetByJSONObject(jsonObj);

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Text;
 
 public class GameStartToC : IMessage
 {
@@ -10,41 +11,22 @@ public class GameStartToC : IMessage
         return (ushort)Messages.Game_Start_ToC;
     }
 
-    public string Serialize()
+    public byte[] Serialize()
     {
-        JSONObject jsonObj = new JSONObject (JSONObject.Type.OBJECT);
-        jsonObj.AddField ("GameElapsedTime", m_lGameElapsedTime);
+        JSONObject jsonObj = new JSONObject(JSONObject.Type.OBJECT);
+
+        JSONHelper.AddField(jsonObj, "GameElapsedTime", m_lGameElapsedTime);
         JSONHelper.AddField<PlayerInfo>(jsonObj, "PlayerInfoList", m_listPlayerInfo);
 
-        return jsonObj.Print () + '\0';
+        return Encoding.Default.GetBytes(jsonObj.Print());
     }
 
-    public bool Deserialize(string strJson)
+    public bool Deserialize(byte[] bytes)
     {
-        JSONObject jsonObj = new JSONObject (strJson);
+        JSONObject jsonObj = new JSONObject(Encoding.Default.GetString(bytes));
 
-        if (jsonObj.HasField ("GameElapsedTime") && jsonObj.GetField ("GameElapsedTime").IsNumber)
-        {
-            jsonObj.GetField (ref m_lGameElapsedTime, "GameElapsedTime");
-        } 
-        else
-        {
-            return false;
-        }
-
-        if (jsonObj.HasField ("PlayerInfoList") && jsonObj.GetField ("PlayerInfoList").IsArray)
-        {
-            m_listPlayerInfo.Clear();
-
-            foreach(JSONObject playerInfo in jsonObj.list)
-            {
-                m_listPlayerInfo.Add(new PlayerInfo(playerInfo));
-            }
-        } 
-        else
-        {
-            return false;
-        }
+        if(!JSONHelper.GetField(jsonObj, "GameElapsedTime", ref m_lGameElapsedTime)) return false;
+        if(!JSONHelper.GetField(jsonObj, "PlayerInfoList", m_listPlayerInfo)) return false;
 
         return true;
     }

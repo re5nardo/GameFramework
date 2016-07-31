@@ -1,6 +1,6 @@
 ﻿
-//	JSON format
+
 public interface IMessage : ISerializable, IDeserializable
 {
-	ushort GetID ();
+	ushort GetID();
 }
