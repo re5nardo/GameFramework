@@ -121,6 +121,23 @@ public static class JSONHelper
         return jsonObject.GetField(ref value, strFieldName);
     }
 
+    public static bool GetField(JSONObject jsonObject, string strFieldName, ref string value)
+    {
+        if(!jsonObject.HasField(strFieldName))
+        {
+            Debug.LogWarning("JSONObject does not have field, field name : " + strFieldName);
+            return false;
+        }
+
+        if(!jsonObject.GetField(strFieldName).IsString)
+        {
+            Debug.LogWarning("Data type is invalid! It's not string");
+            return false;
+        } 
+
+        return jsonObject.GetField(ref value, strFieldName);
+    }
+
     public static bool GetField(JSONObject jsonObject, string strFieldName, JSONObject value)
     {
         if(!jsonObject.HasField(strFieldName))

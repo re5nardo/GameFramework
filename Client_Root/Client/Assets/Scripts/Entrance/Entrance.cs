@@ -3,7 +3,7 @@ using UnityEngine.SceneManagement;
 
 public class Entrance : MonoBehaviour
 {
-    private string m_strIP = "175.197.227.196";
+    private string m_strIP = "175.197.228.153";
     private int m_nPort = 9110;
 
     private void Start()
@@ -41,7 +41,7 @@ public class Entrance : MonoBehaviour
     public void OnJoinLobbyBtnClicked()
     {
         JoinLobbyToS msgToS = new JoinLobbyToS ();
-        msgToS.m_nPlayerNumber = 1;
+        msgToS.m_strPlayerKey = SystemInfo.deviceUniqueIdentifier;
         msgToS.m_nAuthKey = 0;
 
         Network.Instance.Send (msgToS);
