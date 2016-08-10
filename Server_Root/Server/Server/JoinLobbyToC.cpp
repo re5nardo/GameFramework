@@ -1,20 +1,19 @@
 #include "stdafx.h"
 #include "JoinLobbyToC.h"
 #include "NetworkDefines.h"
-#include "../../rapidjson/document.h"
-#include "../../rapidjson/stringbuffer.h"
-#include "../../rapidjson/writer.h"
-
-using namespace rapidjson;
+#include "JSONHelper.h"
 
 
 JoinLobbyToC::JoinLobbyToC()
 {
+	m_buffer = new GenericStringBuffer<UTF8<>>();
+	m_writer = new Writer<StringBuffer, UTF8<>>(*m_buffer);
 }
-
 
 JoinLobbyToC::~JoinLobbyToC()
 {
+	delete m_buffer;
+	delete m_writer;
 }
 
 unsigned short JoinLobbyToC::GetID()
@@ -22,38 +21,28 @@ unsigned short JoinLobbyToC::GetID()
 	return (unsigned short)Messages::Join_Lobby_ToC;
 }
 
-string JoinLobbyToC::Serialize()
+const char* JoinLobbyToC::Serialize()
 {
 	Document document;
 	document.SetObject();
 
-	Value Result(m_nResult);
-	document.AddMember("Result", Result, document.GetAllocator());
+	JSONHelper::AddField(&document, "Result", m_nResult);
 
-	GenericStringBuffer<UTF8<>> buffer;
-	Writer<StringBuffer, UTF8<>> writer(buffer);
-	document.Accept(writer);
+	document.Accept(*m_writer);
 
-	return buffer.GetString();
+	return m_buffer->GetString();
 }
 
-bool JoinLobbyToC::Deserialize(string strJson)
+bool JoinLobbyToC::Deserialize(const char* pChar)
 {
 	Document document;
-	document.Parse<0>(strJson.c_str());
+	document.Parse<0>(pChar);
 	if (!document.IsObject())
 	{
 		return false;
 	}
 
-	if (document.HasMember("Result") && document["Result"].IsInt())
-	{
-		m_nResult = document["Result"].GetInt();
-	}
-	else
-	{
-		return false;
-	}
+	if (!JSONHelper::GetField(&document, "Result", &m_nResult)) return false;
 
 	return true;
 }

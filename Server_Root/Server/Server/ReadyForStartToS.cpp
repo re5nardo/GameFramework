@@ -1,20 +1,19 @@
 #include "stdafx.h"
 #include "ReadyForStartToS.h"
 #include "NetworkDefines.h"
-#include "../../rapidjson/document.h"
-#include "../../rapidjson/stringbuffer.h"
-#include "../../rapidjson/writer.h"
-
-using namespace rapidjson;
+#include "JSONHelper.h"
 
 
 ReadyForStartToS::ReadyForStartToS()
 {
+	m_buffer = new GenericStringBuffer<UTF8<>>();
+	m_writer = new Writer<StringBuffer, UTF8<>>(*m_buffer);
 }
-
 
 ReadyForStartToS::~ReadyForStartToS()
 {
+	delete m_buffer;
+	delete m_writer;
 }
 
 unsigned short ReadyForStartToS::GetID()
@@ -22,38 +21,28 @@ unsigned short ReadyForStartToS::GetID()
 	return (unsigned short)Messages::Ready_For_Start_ToS;
 }
 
-string ReadyForStartToS::Serialize()
+const char* ReadyForStartToS::Serialize()
 {
 	Document document;
 	document.SetObject();
 
-	Value PlayerIndex(m_nPlayerIndex);
-	document.AddMember("PlayerIndex", PlayerIndex, document.GetAllocator());
+	JSONHelper::AddField(&document, "PlayerIndex", m_nPlayerIndex);
 
-	GenericStringBuffer<UTF8<>> buffer;
-	Writer<StringBuffer, UTF8<>> writer(buffer);
-	document.Accept(writer);
+	document.Accept(*m_writer);
 
-	return buffer.GetString();
+	return m_buffer->GetString();
 }
 
-bool ReadyForStartToS::Deserialize(string strJson)
+bool ReadyForStartToS::Deserialize(const char* pChar)
 {
 	Document document;
-	document.Parse<0>(strJson.c_str());
+	document.Parse<0>(pChar);
 	if (!document.IsObject())
 	{
 		return false;
 	}
 
-	if (document.HasMember("PlayerIndex") && document["PlayerIndex"].IsInt())
-	{
-		m_nPlayerIndex = document["PlayerIndex"].GetInt();
-	}
-	else
-	{
-		return false;
-	}
+	if (!JSONHelper::GetField(&document, "PlayerIndex", &m_nPlayerIndex)) return false;
 
 	return true;
 }

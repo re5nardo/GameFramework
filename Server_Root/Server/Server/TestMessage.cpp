@@ -22,7 +22,7 @@ unsigned short TestMessage::GetID()
 	return (unsigned short)Messages::TEST_MESSAGE_ID;
 }
 
-string TestMessage::Serialize()
+const char* TestMessage::Serialize()
 {
 	Document document;
 	document.SetObject();
@@ -56,10 +56,10 @@ string TestMessage::Serialize()
 	return buffer.GetString();
 }
 
-bool TestMessage::Deserialize(string strJson)
+bool TestMessage::Deserialize(const char* pChar)
 {
 	Document document;
-	document.Parse<0>(strJson.c_str());
+	document.Parse<0>(pChar);
 	if (!document.IsObject())
 	{
 		return false;

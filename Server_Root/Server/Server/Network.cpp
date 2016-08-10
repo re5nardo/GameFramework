@@ -73,7 +73,7 @@ void Network::SetAcceptCallback(void(*handler)(void* pListener, SOCKET socket))
 	m_AcceptCallback = handler;
 }
 
-IMessage* Network::GetIMessage(USHORT nMessageID, string strJson)
+IMessage* Network::GetIMessage(USHORT nMessageID, char* pChar)
 {
 	IMessage* pMsg = NULL;
 
@@ -96,7 +96,7 @@ IMessage* Network::GetIMessage(USHORT nMessageID, string strJson)
 
 	if (pMsg != NULL)
 	{
-		pMsg->Deserialize(strJson);
+		pMsg->Deserialize(pChar);
 	}
 
 	return pMsg;
@@ -104,32 +104,32 @@ IMessage* Network::GetIMessage(USHORT nMessageID, string strJson)
 
 void Network::Send(SOCKET socket, IMessage* pMsg)
 {
-	string strSerializedData = pMsg->Serialize();
-	vector<BYTE> byteSerializedData(strSerializedData.begin(), strSerializedData.end());
-	int nTotalSize = MESSAGE_HEADER_SIZE + byteSerializedData.size();
-	BYTE* byteData = new byte[nTotalSize];
+	const char* pCharSerializedData = pMsg->Serialize();
+	int nSerializedDSize = strlen(pCharSerializedData);
+	int nTotalSize = MESSAGE_HEADER_SIZE + nSerializedDSize;
 
-	byteData[0] = pMsg->GetID() >> 8;
-	byteData[1] = pMsg->GetID() & 0x00FF;
-	byteData[2] = nTotalSize >> 8;
-	byteData[3] = nTotalSize & 0x00FF;
+	char* pCharCopiedData = new char[nTotalSize];
 
-	int nIndex = MESSAGE_HEADER_SIZE;
-	for (vector<BYTE>::iterator itr = byteSerializedData.begin(); itr != byteSerializedData.end(); itr++)
+	*pCharCopiedData = pMsg->GetID() >> 8;
+	*(pCharCopiedData + 1) = pMsg->GetID() & 0x00FF;
+	*(pCharCopiedData + 2) = nTotalSize >> 8;
+	*(pCharCopiedData + 3) = nTotalSize & 0x00FF;
+	for (int i = 0; i < strlen(pCharSerializedData); ++i)
 	{
-		byteData[nIndex++] = *itr;
+		*(pCharCopiedData + 4 + i) = *(pCharSerializedData + i);
 	}
 
 	LPPER_IO_DATA ioInfo = (LPPER_IO_DATA)malloc(sizeof(PER_IO_DATA));
 	memset(&(ioInfo->Overlapped), 0, sizeof(OVERLAPPED));
 	ioInfo->WsaBuf.len = nTotalSize;
-	ioInfo->WsaBuf.buf = (char*)byteData;
+	ioInfo->WsaBuf.buf = pCharCopiedData;
 	ioInfo->Mode = IOMode::Write;
 
 	int nResult = WSASend(socket, &(ioInfo->WsaBuf), 1, NULL, 0, &(ioInfo->Overlapped), NULL);
 	if (nResult == SOCKET_ERROR && (WSAGetLastError() != ERROR_IO_PENDING))
 	{
 		closesocket(socket);
+		delete ioInfo->WsaBuf.buf;
 		free(ioInfo);
 	}
 
@@ -148,7 +148,7 @@ void Network::AccepterThread()
 		LPPER_IO_DATA ioInfo = (LPPER_IO_DATA)malloc(sizeof(PER_IO_DATA));
 		memset(&(ioInfo->Overlapped), 0, sizeof(OVERLAPPED));
 		ioInfo->WsaBuf.len = BUF_SIZE;
-		ioInfo->WsaBuf.buf = (char*)ioInfo->Buffer;
+		ioInfo->WsaBuf.buf = new char[BUF_SIZE];
 		ioInfo->Mode = IOMode::Read;
 		ioInfo->CurPos = 0;
 		DWORD flags = 0;
@@ -194,23 +194,23 @@ void Network::WorkerThread()
 			{
 				if (ioInfo->CurPos == 0)
 				{
-					ioInfo->CurMessageID = (USHORT)ioInfo->Buffer[i] << 8;
+					ioInfo->CurMessageID = (USHORT)ioInfo->WsaBuf.buf[i] << 8;
 					ioInfo->CurPos++;
 				}
 				else if (ioInfo->CurPos == 1)
 				{
-					ioInfo->CurMessageID += (USHORT)ioInfo->Buffer[i];
+					ioInfo->CurMessageID += (USHORT)ioInfo->WsaBuf.buf[i];
 					ioInfo->CurPos++;
 				}
 				else if (ioInfo->CurPos == 2)
 				{
-					ioInfo->TotalSize = (USHORT)ioInfo->Buffer[i] << 8;
+					ioInfo->TotalSize = (USHORT)ioInfo->WsaBuf.buf[i] << 8;
 					ioInfo->CurPos++;
 				}
 				else if (ioInfo->CurPos == 3)
 				{
-					ioInfo->TotalSize += (USHORT)ioInfo->Buffer[i];
-					ioInfo->CurMessage = new char[ioInfo->TotalSize];
+					ioInfo->TotalSize += (USHORT)ioInfo->WsaBuf.buf[i];
+					ioInfo->CurMessage = new char[ioInfo->TotalSize - MESSAGE_HEADER_SIZE + 1/*'\0'*/];
 					ioInfo->CurPos++;
 				}
 				else
@@ -218,7 +218,8 @@ void Network::WorkerThread()
 					//	last index
 					if (ioInfo->CurPos == ioInfo->TotalSize - 1)
 					{
-						ioInfo->CurMessage[ioInfo->CurPos - MESSAGE_HEADER_SIZE] = ioInfo->Buffer[i];
+						ioInfo->CurMessage[ioInfo->CurPos - MESSAGE_HEADER_SIZE] = ioInfo->WsaBuf.buf[i];
+						ioInfo->CurMessage[ioInfo->CurPos - MESSAGE_HEADER_SIZE + 1] = '\0';
 
 						if (m_RecvMessageCallback != NULL)
 						{
@@ -230,7 +231,7 @@ void Network::WorkerThread()
 					}
 					else
 					{
-						ioInfo->CurMessage[ioInfo->CurPos - MESSAGE_HEADER_SIZE] = ioInfo->Buffer[i];
+						ioInfo->CurMessage[ioInfo->CurPos - MESSAGE_HEADER_SIZE] = ioInfo->WsaBuf.buf[i];
 						ioInfo->CurPos++;
 					}
 				}
@@ -241,6 +242,7 @@ void Network::WorkerThread()
 			{
 				closesocket(handleInfo->Socket);
 				free(handleInfo);
+				delete ioInfo->WsaBuf.buf;
 				free(ioInfo);
 			}
 		}

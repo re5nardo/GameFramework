@@ -36,7 +36,6 @@ typedef struct
 {
 	OVERLAPPED		Overlapped;
 	WSABUF			WsaBuf;
-	BYTE			Buffer[BUF_SIZE];
 	USHORT			CurMessageID;
 	USHORT			CurPos;
 	USHORT			TotalSize;

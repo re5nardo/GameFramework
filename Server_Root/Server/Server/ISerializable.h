@@ -11,5 +11,5 @@ public:
 	virtual ~ISerializable(){};
 
 public:
-	virtual string Serialize() = 0;
+	virtual const char* Serialize() = 0;
 };

@@ -1,10 +1,13 @@
 #pragma once
 
 #include <map>
+#include <string>
 
 class Network;
 class IMessage;
 class JoinLobbyToS;
+
+using namespace std;
 
 class Lobby
 {
@@ -13,8 +16,8 @@ public:
 	virtual ~Lobby();
 
 private:
-	Network*									m_pNetwork;
-	std::map<unsigned __int64, unsigned int>		m_mapPlayer;
+	Network*							m_pNetwork;
+	map<string, unsigned int>			m_mapPlayer;
 
 private:
 	void OnAccept(unsigned int socket);

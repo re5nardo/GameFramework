@@ -1,21 +1,31 @@
 #pragma once
 
-#include "IGameEvent.h"
+#include "IMessage.h"
+#include "../../rapidjson/document.h"
+#include "../../rapidjson/stringbuffer.h"
+#include "../../rapidjson/writer.h"
+#include "Data.h"
 
-class GameEvent_Move_ToS : public IGameEvent
+using namespace rapidjson;
+
+class GameEvent_Move_ToS : public IMessage
 {
 public:
 	GameEvent_Move_ToS();
 	virtual ~GameEvent_Move_ToS();
 
+private:
+	GenericStringBuffer<UTF8<>>*	m_buffer;
+	Writer<StringBuffer, UTF8<>>*	m_writer;
+
 public:
-	Vector3 m_vec3Dest;   //  json field name : Pos_X, Pos_Y, Pos_Z
+	int m_nPlayerIndex;				//  json field name : PlayerIndex
+	int m_nElapsedTime;				//  json field name : ElapsedTime
+	Vector3 m_vec3Dest;				//  json field name : Pos_X, Pos_Y, Pos_Z
 
 public:
 	unsigned short GetID() override;
-	string Serialize() override;
-	bool Deserialize(string strJson) override;
-	void GetJSONObject(Document* pJsonObj) override;
-	bool SetByJSONObject(Document* pJsonObj) override;
+	const char* Serialize() override;
+	bool Deserialize(const char* pChar) override;
 };
 

@@ -31,7 +31,7 @@ public:
 	void		Send(SOCKET socket, IMessage* pMsg);
 
 private:
-	IMessage*	GetIMessage(USHORT nMessageID, string strJson);
+	IMessage*	GetIMessage(USHORT nMessageID, char* pChar);
 
 private:
 	void		AccepterThread();

@@ -10,6 +10,7 @@
 #include "JoinLobbyToC.h"
 #include "NetworkDefines.h"
 #include <time.h>
+//#include <math.h>
 
 Lobby::Lobby(const unsigned short nPort)
 {
@@ -28,13 +29,14 @@ Lobby::~Lobby()
 
 void Lobby::OnAccept(unsigned int socket)
 {
+	//	glicko - 2
 	
 }
 
 void Lobby::OnRecvMessage(unsigned int socket, IMessage* pMsg)
 {
 	//	temp
-	printf("%s", pMsg->Serialize().c_str());
+	//printf("%s", pMsg->Serialize());
 
 	if (pMsg->GetID() == Messages::Join_Lobby_ToS)
 	{
@@ -74,7 +76,7 @@ void Lobby::OnJoinLobbyToS(JoinLobbyToS* pMsg, unsigned int socket)
 	}
 	*/
 
-	m_mapPlayer[pMsg->m_nPlayerNumber] = socket;
+	m_mapPlayer[pMsg->m_strPlayerKey] = socket;
 
 	JoinLobbyToC* pMsgToC = new JoinLobbyToC();
 	pMsgToC->m_nResult = 0;

@@ -1,20 +1,19 @@
 #include "stdafx.h"
 #include "JoinLobbyToS.h"
 #include "NetworkDefines.h"
-#include "../../rapidjson/document.h"
-#include "../../rapidjson/stringbuffer.h"
-#include "../../rapidjson/writer.h"
-
-using namespace rapidjson;
+#include "JSONHelper.h"
 
 
 JoinLobbyToS::JoinLobbyToS()
 {
+	m_buffer = new GenericStringBuffer<UTF8<>>();
+	m_writer = new Writer<StringBuffer, UTF8<>>(*m_buffer);
 }
-
 
 JoinLobbyToS::~JoinLobbyToS()
 {
+	delete m_buffer;
+	delete m_writer;
 }
 
 unsigned short JoinLobbyToS::GetID()
@@ -22,50 +21,30 @@ unsigned short JoinLobbyToS::GetID()
 	return (unsigned short)Messages::Join_Lobby_ToS;
 }
 
-string JoinLobbyToS::Serialize()
+const char* JoinLobbyToS::Serialize()
 {
 	Document document;
 	document.SetObject();
 
-	Value PlayerNumber(m_nPlayerNumber);
-	document.AddMember("PlayerNumber", PlayerNumber, document.GetAllocator());
+	JSONHelper::AddField(&document, "PlayerKey", m_strPlayerKey);
+	JSONHelper::AddField(&document, "AuthKey", m_nAuthKey);
 
-	Value AuthKey(m_nAuthKey);
-	document.AddMember("AuthKey", AuthKey, document.GetAllocator());
+	document.Accept(*m_writer);
 
-	GenericStringBuffer<UTF8<>> buffer;
-	Writer<StringBuffer, UTF8<>> writer(buffer);
-	document.Accept(writer);
-
-	return buffer.GetString();
+	return m_buffer->GetString();
 }
 
-bool JoinLobbyToS::Deserialize(string strJson)
+bool JoinLobbyToS::Deserialize(const char* pChar)
 {
 	Document document;
-	document.Parse<0>(strJson.c_str());
+	document.Parse<0>(pChar);
 	if (!document.IsObject())
 	{
 		return false;
 	}
 
-	if (document.HasMember("PlayerNumber") && document["PlayerNumber"].IsUint64())
-	{
-		m_nPlayerNumber = document["PlayerIndex"].GetUint64();
-	}
-	else
-	{
-		return false;
-	}
-
-	if (document.HasMember("AuthKey") && document["AuthKey"].IsInt())
-	{
-		m_nAuthKey = document["AuthKey"].GetInt();
-	}
-	else
-	{
-		return false;
-	}
+	if (!JSONHelper::GetField(&document, "PlayerKey", &m_strPlayerKey)) return false;
+	if (!JSONHelper::GetField(&document, "AuthKey", &m_nAuthKey)) return false;
 
 	return true;
 }

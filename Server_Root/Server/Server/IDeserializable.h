@@ -11,6 +11,6 @@ public:
 	virtual ~IDeserializable(){};
 
 public:
-	virtual bool Deserialize(string strJson) = 0;
+	virtual bool Deserialize(const char* pChar) = 0;
 };
 

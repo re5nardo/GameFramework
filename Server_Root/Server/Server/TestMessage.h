@@ -22,8 +22,8 @@ public:
 	
 public:
 	unsigned short GetID() override;
-	string Serialize() override;
-	bool Deserialize(string strJson) override;
+	const char* Serialize() override;
+	bool Deserialize(const char* pChar) override;
 
 public:
 	void SetName(string strName);
