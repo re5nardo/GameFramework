@@ -15,7 +15,7 @@ public class JoinLobbyToC : IMessage
 
         JSONHelper.AddField(jsonObj, "Result", m_nResult);
 
-        return Encoding.Default.GetBytes(jsonObj.Print());
+        return Encoding.UTF8.GetBytes(jsonObj.Print());
     }
 
     public bool Deserialize(byte[] bytes)

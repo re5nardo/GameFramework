@@ -147,7 +147,7 @@ public class Network : MonoSingleton<Network>
 				else if (state.CurPos == 3)
 				{
 					state.TotalSize += (ushort)state.Buffer[i];
-					state.CurMessage = new byte[state.TotalSize];
+                    state.CurMessage = new byte[state.TotalSize - NetworkDefines.MESSAGE_HEADER_SIZE];
 					state.CurPos++;
 				}
 				else
@@ -212,15 +212,14 @@ public class Network : MonoSingleton<Network>
 	{
 		try
 		{
-			//string strSerializedData = msg.Serialize () + '\0'; //  for server..
             byte[] byteSerializedData = msg.Serialize();
             int nTotalSize = NetworkDefines.MESSAGE_HEADER_SIZE + byteSerializedData.Length;		//	msg id(2) + msg length info(2)
 			byte[] byteData = new byte[nTotalSize];
 
-			byteData [0] = BitConverter.GetBytes (msg.GetID())[1];
-			byteData [1] = BitConverter.GetBytes (msg.GetID())[0];
-			byteData [2] = BitConverter.GetBytes (nTotalSize)[1];
-			byteData [3] = BitConverter.GetBytes (nTotalSize)[0];
+			byteData [0] = BitConverter.GetBytes(msg.GetID())[1];
+			byteData [1] = BitConverter.GetBytes(msg.GetID())[0];
+			byteData [2] = BitConverter.GetBytes(nTotalSize)[1];
+			byteData [3] = BitConverter.GetBytes(nTotalSize)[0];
 
 			int nIndex = NetworkDefines.MESSAGE_HEADER_SIZE;
 			foreach(byte data in byteSerializedData)
