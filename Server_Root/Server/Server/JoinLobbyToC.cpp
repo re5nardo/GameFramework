@@ -28,6 +28,7 @@ const char* JoinLobbyToC::Serialize()
 
 	JSONHelper::AddField(&document, "Result", m_nResult);
 
+	m_buffer->Clear();
 	document.Accept(*m_writer);
 
 	return m_buffer->GetString();

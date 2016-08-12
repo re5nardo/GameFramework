@@ -102,7 +102,7 @@ IMessage* Network::GetIMessage(USHORT nMessageID, char* pChar)
 	return pMsg;
 }
 
-void Network::Send(SOCKET socket, IMessage* pMsg)
+void Network::Send(SOCKET socket, IMessage* pMsg, bool bDelete)
 {
 	const char* pCharSerializedData = pMsg->Serialize();
 	int nSerializedDSize = strlen(pCharSerializedData);
@@ -133,7 +133,8 @@ void Network::Send(SOCKET socket, IMessage* pMsg)
 		free(ioInfo);
 	}
 
-	delete pMsg;
+	if (bDelete)
+		delete pMsg;
 }
 
 #pragma region

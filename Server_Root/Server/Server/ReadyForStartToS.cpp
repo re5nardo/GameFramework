@@ -28,6 +28,7 @@ const char* ReadyForStartToS::Serialize()
 
 	JSONHelper::AddField(&document, "PlayerIndex", m_nPlayerIndex);
 
+	m_buffer->Clear();
 	document.Accept(*m_writer);
 
 	return m_buffer->GetString();

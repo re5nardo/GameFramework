@@ -23,6 +23,9 @@ private:
 	void OnAccept(unsigned int socket);
 	void OnRecvMessage(unsigned int socket, IMessage* pMsg);
 
+private:
+	void SendToAllUsers(IMessage* pMsg);
+
 	//	Protocol Handler
 	void OnJoinLobbyToS(JoinLobbyToS* pMsg, unsigned int socket);
 

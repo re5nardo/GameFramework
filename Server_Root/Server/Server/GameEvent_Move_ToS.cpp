@@ -26,6 +26,7 @@ const char* GameEvent_Move_ToS::Serialize()
 	Document document;
 	document.SetObject();
 
+	m_buffer->Clear();
 	document.Accept(*m_writer);
 
 	return m_buffer->GetString();

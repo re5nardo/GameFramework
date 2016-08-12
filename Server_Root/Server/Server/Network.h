@@ -28,7 +28,7 @@ public:
 	void		Stop();
 	void		SetAcceptCallback(void(*handler)(void* pListener, SOCKET socket));
 	void		SetRecvMessageCallback(void(*handler)(void* pListener, SOCKET socket, IMessage* pMsg));
-	void		Send(SOCKET socket, IMessage* pMsg);
+	void		Send(SOCKET socket, IMessage* pMsg, bool bDelete = true);
 
 private:
 	IMessage*	GetIMessage(USHORT nMessageID, char* pChar);

@@ -28,6 +28,7 @@ const char* GameStartToC::Serialize()
 
 	JSONHelper::AddField(&document, "GameElapsedTime", m_lGameElapsedTime);
 
+	m_buffer->Clear();
 	document.Accept(*m_writer);
 
 	return m_buffer->GetString();

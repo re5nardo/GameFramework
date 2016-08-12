@@ -11,41 +11,41 @@ JSONHelper::~JSONHelper()
 }
 
 #pragma region AddField
-void JSONHelper::AddField(Document* pJsonObj, string strFieldName, __int32 value)
+void JSONHelper::AddField(Document* pJsonObj, const char* pCharFieldName, __int32 value)
 {
-	pJsonObj->AddMember<__int32>(strFieldName.c_str(), value, pJsonObj->GetAllocator());
+	pJsonObj->AddMember<__int32>(pCharFieldName, value, pJsonObj->GetAllocator());
 }
 
-void JSONHelper::AddField(Document* pJsonObj, string strFieldName, __int64 value)
+void JSONHelper::AddField(Document* pJsonObj, const char* pCharFieldName, __int64 value)
 {
-	pJsonObj->AddMember<__int64>(strFieldName.c_str(), value, pJsonObj->GetAllocator());
+	pJsonObj->AddMember<__int64>(pCharFieldName, value, pJsonObj->GetAllocator());
 }
 
-void JSONHelper::AddField(Document* pJsonObj, string strFieldName, unsigned __int64 value)
+void JSONHelper::AddField(Document* pJsonObj, const char* pCharFieldName, unsigned __int64 value)
 {
-	pJsonObj->AddMember<unsigned __int64>(strFieldName.c_str(), value, pJsonObj->GetAllocator());
+	pJsonObj->AddMember<unsigned __int64>(pCharFieldName, value, pJsonObj->GetAllocator());
 }
 
-void JSONHelper::AddField(Document* pJsonObj, string strFieldName, float value)
+void JSONHelper::AddField(Document* pJsonObj, const char* pCharFieldName, float value)
 {
-	pJsonObj->AddMember<float>(strFieldName.c_str(), value, pJsonObj->GetAllocator());
+	pJsonObj->AddMember<float>(pCharFieldName, value, pJsonObj->GetAllocator());
 }
 
-void JSONHelper::AddField(Document* pJsonObj, string strFieldName, string value)
+void JSONHelper::AddField(Document* pJsonObj, const char* pCharFieldName, string value)
 {
 	Value field;
 	field.SetString(value.c_str(), value.length(), pJsonObj->GetAllocator());
 
-	pJsonObj->AddMember(strFieldName.c_str(), field, pJsonObj->GetAllocator());
+	pJsonObj->AddMember(pCharFieldName, field, pJsonObj->GetAllocator());
 }
 
-void JSONHelper::AddField(Document* pJsonObj, string strFieldName, Value value)
+void JSONHelper::AddField(Document* pJsonObj, const char* pCharFieldName, Value value)
 {
-	pJsonObj->AddMember(strFieldName.c_str(), value, pJsonObj->GetAllocator());
+	pJsonObj->AddMember(pCharFieldName, value, pJsonObj->GetAllocator());
 }
 
 template<typename T>
-void JSONHelper::AddField(Document* pJsonObj, string strFieldName, list<T> value)
+void JSONHelper::AddField(Document* pJsonObj, const char* pCharFieldName, list<T> value)
 {
 	Value field(kArrayType);
 
@@ -54,7 +54,7 @@ void JSONHelper::AddField(Document* pJsonObj, string strFieldName, list<T> value
 		field<T>.PushBack(*it, pJsonObj->GetAllocator());
 	}
 
-	pJsonObj->AddMember(strFieldName.c_str(), field, pJsonObj->GetAllocator());
+	pJsonObj->AddMember(pCharFieldName, field, pJsonObj->GetAllocator());
 }
 #pragma endregion
 

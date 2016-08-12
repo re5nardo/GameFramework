@@ -27,6 +27,18 @@ Lobby::~Lobby()
 	delete m_pNetwork;
 }
 
+void Lobby::SendToAllUsers(IMessage* pMsg)
+{
+	for (map<string, unsigned int>::iterator it = m_mapPlayer.begin(); it != m_mapPlayer.end(); it++)
+	{
+		m_pNetwork->Send(it->second, pMsg, false);
+	}
+	
+	delete pMsg;
+}
+
+
+
 void Lobby::OnAccept(unsigned int socket)
 {
 	//	glicko - 2

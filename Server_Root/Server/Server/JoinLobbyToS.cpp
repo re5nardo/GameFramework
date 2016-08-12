@@ -29,6 +29,7 @@ const char* JoinLobbyToS::Serialize()
 	JSONHelper::AddField(&document, "PlayerKey", m_strPlayerKey);
 	JSONHelper::AddField(&document, "AuthKey", m_nAuthKey);
 
+	m_buffer->Clear();
 	document.Accept(*m_writer);
 
 	return m_buffer->GetString();
