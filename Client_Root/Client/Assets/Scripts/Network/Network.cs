@@ -191,11 +191,11 @@ public class Network : MonoSingleton<Network>
 		{
 			msg = new TestMessage();
 		}
-        else if (nMessageID == (ushort)Messages.Game_Event_Move_ToC)
+        else if (nMessageID == (ushort)Messages.GameEventMoveToC_ID)
         {
-            msg = new GameEvent_Move_ToC();
+            msg = new GameEventMoveToC();
         }
-        else if (nMessageID == (ushort)Messages.Join_Lobby_ToC)
+        else if (nMessageID == (ushort)Messages.JoinLobbyToC_ID)
         {
             msg = new JoinLobbyToC();
         }

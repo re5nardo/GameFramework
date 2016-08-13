@@ -8,7 +8,7 @@ public class GameStartToC : IMessage
    
     public ushort GetID()
     {
-        return (ushort)Messages.Game_Start_ToC;
+        return (ushort)Messages.GameStartToC_ID;
     }
 
     public byte[] Serialize()

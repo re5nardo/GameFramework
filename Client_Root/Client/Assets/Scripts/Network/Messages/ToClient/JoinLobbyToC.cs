@@ -6,7 +6,7 @@ public class JoinLobbyToC : IMessage
 
     public ushort GetID()
     {
-        return (ushort)Messages.Join_Lobby_ToC;
+        return (ushort)Messages.JoinLobbyToC_ID;
     }
 
     public byte[] Serialize()

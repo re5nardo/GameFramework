@@ -7,7 +7,7 @@ public class JoinLobbyToS : IMessage
 
     public ushort GetID()
     {
-        return (ushort)Messages.Join_Lobby_ToS;
+        return (ushort)Messages.JoinLobbyToS_ID;
     }
 
     public byte[] Serialize()
@@ -22,7 +22,7 @@ public class JoinLobbyToS : IMessage
 
     public bool Deserialize(byte[] bytes)
     {
-        JSONObject jsonObj = new JSONObject(Encoding.Default.GetString(bytes));
+        JSONObject jsonObj = new JSONObject(Encoding.UTF8.GetString(bytes));
 
         if(!JSONHelper.GetField(jsonObj, "PlayerNumber", ref m_strPlayerKey)) return false;
         if(!JSONHelper.GetField(jsonObj, "AuthKey", ref m_nAuthKey)) return false;

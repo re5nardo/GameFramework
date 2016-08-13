@@ -6,7 +6,7 @@ public class ReadyForStartToS : IMessage
 
     public ushort GetID()
     {
-        return (ushort)Messages.Ready_For_Start_ToS;
+        return (ushort)Messages.ReadyForStartToS_ID;
     }
 
     public byte[] Serialize()

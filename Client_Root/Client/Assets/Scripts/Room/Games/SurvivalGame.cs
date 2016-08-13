@@ -40,11 +40,11 @@ public class SurvivalGame : IGame
 
     public override void OnRecvMessage(IMessage msg)
     {
-        if (msg.GetID() == (ushort)Messages.Game_Event_Move_ToC)
+        if (msg.GetID() == (ushort)Messages.GameEventMoveToC_ID)
         {
             OnRecvGameEvent(msg);
         }
-        else if (msg.GetID() == (ushort)Messages.Game_Start_ToC)
+        else if (msg.GetID() == (ushort)Messages.GameStartToC_ID)
         {
             GameStartToC resp = (GameStartToC)msg;
 
@@ -56,15 +56,15 @@ public class SurvivalGame : IGame
 
     private void OnRecvGameEvent(IMessage msg)
     {
-        if (msg.GetID() == (ushort)Messages.Game_Event_Move_ToC)
+        if (msg.GetID() == (ushort)Messages.GameEventMoveToC_ID)
         {
-            Move((msg as GameEvent_Move_ToC).m_vec3Dest);
+            Move((msg as GameEventMoveToC).m_vec3Dest);
         }
     }
 
     private void OnClicked(Vector3 vec3Pos)
     {
-        GameEvent_Move_ToS moveToS = new GameEvent_Move_ToS();
+        GameEventMoveToS moveToS = new GameEventMoveToS();
         moveToS.m_nPlayerIndex = 0;
         moveToS.m_nElapsedTime = 0;
         moveToS.m_vec3Dest = vec3Pos;
