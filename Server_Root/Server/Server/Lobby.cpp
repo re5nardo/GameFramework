@@ -4,8 +4,8 @@
 #include "IMessage.h"
 #include "TestMessage.h"
 #include "GameStartToC.h"
-#include "GameEvent_Move_ToC.h"
-#include "GameEvent_Move_ToS.h"
+#include "GameEventMoveToC.h"
+#include "GameEventMoveToS.h"
 #include "JoinLobbyToS.h"
 #include "JoinLobbyToC.h"
 #include "NetworkDefines.h"
@@ -50,11 +50,11 @@ void Lobby::OnRecvMessage(unsigned int socket, IMessage* pMsg)
 	//	temp
 	//printf("%s", pMsg->Serialize());
 
-	if (pMsg->GetID() == Messages::Join_Lobby_ToS)
+	if (pMsg->GetID() == Messages::JoinLobbyToS_ID)
 	{
 		OnJoinLobbyToS((JoinLobbyToS*)pMsg, socket);
 	}
-	else if (pMsg->GetID() == Messages::Ready_For_Start_ToS)
+	else if (pMsg->GetID() == Messages::ReadyForStartToS_ID)
 	{
 		GameStartToC* pTest = new GameStartToC();
 		pTest->m_lGameElapsedTime = 0;
@@ -64,12 +64,12 @@ void Lobby::OnRecvMessage(unsigned int socket, IMessage* pMsg)
 
 		m_pNetwork->Send(socket, pTest);
 	}
-	else if (pMsg->GetID() == Messages::Game_Event_Move_ToS)
+	else if (pMsg->GetID() == Messages::GameEventMoveToS_ID)
 	{
-		GameEvent_Move_ToC* pMsgToC = new GameEvent_Move_ToC();
+		GameEventMoveToC* pMsgToC = new GameEventMoveToC();
 		pMsgToC->m_nPlayerIndex = 0;
 		pMsgToC->m_nElapsedTime = 0;
-		pMsgToC->m_vec3Dest = ((GameEvent_Move_ToS*)pMsg)->m_vec3Dest;
+		pMsgToC->m_vec3Dest = ((GameEventMoveToS*)pMsg)->m_vec3Dest;
 
 		m_pNetwork->Send(socket, pMsgToC);
 	}

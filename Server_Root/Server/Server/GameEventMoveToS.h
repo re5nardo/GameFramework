@@ -8,11 +8,11 @@
 
 using namespace rapidjson;
 
-class GameEvent_Move_ToS : public IMessage
+class GameEventMoveToS : public IMessage
 {
 public:
-	GameEvent_Move_ToS();
-	virtual ~GameEvent_Move_ToS();
+	GameEventMoveToS();
+	virtual ~GameEventMoveToS();
 
 private:
 	GenericStringBuffer<UTF8<>>*	m_buffer;

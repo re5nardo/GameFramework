@@ -7,14 +7,14 @@ enum Messages
 	TEST_MESSAGE_ID = 0,
 
 	//  ToS
-	Ready_For_Start_ToS,
-	Game_Event_Move_ToS,
-	Join_Lobby_ToS,
+	ReadyForStartToS_ID = 0,
+	GameEventMoveToS_ID,
+	JoinLobbyToS_ID,
 
 	//  ToC
-	Game_Start_ToC,
-	Game_Event_Move_ToC,
-	Join_Lobby_ToC,
+	GameStartToC_ID = 30000,
+	GameEventMoveToC_ID,
+	JoinLobbyToC_ID,
 };
 
 #define BUF_SIZE				256

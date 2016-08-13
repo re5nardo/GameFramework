@@ -18,7 +18,7 @@ JoinLobbyToS::~JoinLobbyToS()
 
 unsigned short JoinLobbyToS::GetID()
 {
-	return (unsigned short)Messages::Join_Lobby_ToS;
+	return (unsigned short)Messages::JoinLobbyToS_ID;
 }
 
 const char* JoinLobbyToS::Serialize()

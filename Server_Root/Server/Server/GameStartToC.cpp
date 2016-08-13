@@ -18,7 +18,7 @@ GameStartToC::~GameStartToC()
 
 unsigned short GameStartToC::GetID()
 {
-	return (unsigned short)Messages::Game_Start_ToC;
+	return (unsigned short)Messages::GameStartToC_ID;
 }
 
 const char* GameStartToC::Serialize()

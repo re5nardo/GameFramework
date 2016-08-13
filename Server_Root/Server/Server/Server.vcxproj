@@ -83,8 +83,8 @@
     <ClInclude Include="Data.h" />
     <ClInclude Include="Accepter.h" />
     <ClInclude Include="Defines.h" />
-    <ClInclude Include="GameEvent_Move_ToC.h" />
-    <ClInclude Include="GameEvent_Move_ToS.h" />
+    <ClInclude Include="GameEventMoveToC.h" />
+    <ClInclude Include="GameEventMoveToS.h" />
     <ClInclude Include="GameStartToC.h" />
     <ClInclude Include="Glicko2.h" />
     <ClInclude Include="IDeserializable.h" />
@@ -107,8 +107,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Accepter.cpp" />
-    <ClCompile Include="GameEvent_Move_ToC.cpp" />
-    <ClCompile Include="GameEvent_Move_ToS.cpp" />
+    <ClCompile Include="GameEventMoveToC.cpp" />
+    <ClCompile Include="GameEventMoveToS.cpp" />
     <ClCompile Include="GameStartToC.cpp" />
     <ClCompile Include="Glicko2.cpp" />
     <ClCompile Include="JoinLobbyToC.cpp" />

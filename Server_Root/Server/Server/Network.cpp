@@ -4,7 +4,7 @@
 #include "NetworkDefines.h"
 #include "IMessage.h"
 #include "TestMessage.h"
-#include "GameEvent_Move_ToS.h"
+#include "GameEventMoveToS.h"
 #include "ReadyForStartToS.h"
 #include "JoinLobbyToS.h"
 #include <process.h>
@@ -81,15 +81,15 @@ IMessage* Network::GetIMessage(USHORT nMessageID, char* pChar)
 	{ 
 		pMsg = new TestMessage();
 	}
-	else if (nMessageID == Messages::Ready_For_Start_ToS)
+	else if (nMessageID == Messages::ReadyForStartToS_ID)
 	{
 		pMsg = new ReadyForStartToS();
 	}
-	else if (nMessageID == Messages::Game_Event_Move_ToS)
+	else if (nMessageID == Messages::GameEventMoveToS_ID)
 	{
-		pMsg = new GameEvent_Move_ToS();
+		pMsg = new GameEventMoveToS();
 	}
-	else if (nMessageID == Messages::Join_Lobby_ToS)
+	else if (nMessageID == Messages::JoinLobbyToS_ID)
 	{
 		pMsg = new JoinLobbyToS();
 	}

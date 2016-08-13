@@ -18,7 +18,7 @@ ReadyForStartToS::~ReadyForStartToS()
 
 unsigned short ReadyForStartToS::GetID()
 {
-	return (unsigned short)Messages::Ready_For_Start_ToS;
+	return (unsigned short)Messages::ReadyForStartToS_ID;
 }
 
 const char* ReadyForStartToS::Serialize()

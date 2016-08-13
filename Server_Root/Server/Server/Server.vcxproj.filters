@@ -111,12 +111,6 @@
     <ClInclude Include="Data.h">
       <Filter>헤더 파일\Data</Filter>
     </ClInclude>
-    <ClInclude Include="GameEvent_Move_ToS.h">
-      <Filter>헤더 파일\Messages\ToServer</Filter>
-    </ClInclude>
-    <ClInclude Include="GameEvent_Move_ToC.h">
-      <Filter>헤더 파일\Messages\ToClient</Filter>
-    </ClInclude>
     <ClInclude Include="JoinLobbyToS.h">
       <Filter>헤더 파일\Messages\ToServer</Filter>
     </ClInclude>
@@ -128,6 +122,12 @@
     </ClInclude>
     <ClInclude Include="JSONHelper.h">
       <Filter>헤더 파일\Messages</Filter>
+    </ClInclude>
+    <ClInclude Include="GameEventMoveToC.h">
+      <Filter>헤더 파일\Messages\ToClient</Filter>
+    </ClInclude>
+    <ClInclude Include="GameEventMoveToS.h">
+      <Filter>헤더 파일\Messages\ToServer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -164,12 +164,6 @@
     <ClCompile Include="Room.cpp">
       <Filter>소스 파일\Room</Filter>
     </ClCompile>
-    <ClCompile Include="GameEvent_Move_ToS.cpp">
-      <Filter>소스 파일\Messages\ToServer</Filter>
-    </ClCompile>
-    <ClCompile Include="GameEvent_Move_ToC.cpp">
-      <Filter>소스 파일\Messages\ToClient</Filter>
-    </ClCompile>
     <ClCompile Include="JoinLobbyToS.cpp">
       <Filter>소스 파일\Messages\ToServer</Filter>
     </ClCompile>
@@ -181,6 +175,12 @@
     </ClCompile>
     <ClCompile Include="JSONHelper.cpp">
       <Filter>소스 파일\Messages</Filter>
+    </ClCompile>
+    <ClCompile Include="GameEventMoveToC.cpp">
+      <Filter>소스 파일\Messages\ToClient</Filter>
+    </ClCompile>
+    <ClCompile Include="GameEventMoveToS.cpp">
+      <Filter>소스 파일\Messages\ToServer</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
