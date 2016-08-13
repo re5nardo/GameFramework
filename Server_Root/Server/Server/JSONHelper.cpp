@@ -62,7 +62,7 @@ void JSONHelper::AddField(Document* pJsonObj, const char* pCharFieldName, list<T
 #pragma region GetField
 bool JSONHelper::GetField(Document* pJsonObj, string strFieldName, __int32* pValue)
 {
-	if (pJsonObj->HasMember(strFieldName.c_str()))
+	if (!pJsonObj->HasMember(strFieldName.c_str()))
 	{
 		//Debug.LogWarning("JSONObject does not have field, field name : " + strFieldName);
 		return false;
@@ -81,7 +81,7 @@ bool JSONHelper::GetField(Document* pJsonObj, string strFieldName, __int32* pVal
 
 bool JSONHelper::GetField(Document* pJsonObj, string strFieldName, __int64* pValue)
 {
-	if (pJsonObj->HasMember(strFieldName.c_str()))
+	if (!pJsonObj->HasMember(strFieldName.c_str()))
 	{
 		//Debug.LogWarning("JSONObject does not have field, field name : " + strFieldName);
 		return false;
@@ -100,7 +100,7 @@ bool JSONHelper::GetField(Document* pJsonObj, string strFieldName, __int64* pVal
 
 bool JSONHelper::GetField(Document* pJsonObj, string strFieldName, unsigned __int64* pValue)
 {
-	if (pJsonObj->HasMember(strFieldName.c_str()))
+	if (!pJsonObj->HasMember(strFieldName.c_str()))
 	{
 		//Debug.LogWarning("JSONObject does not have field, field name : " + strFieldName);
 		return false;
@@ -119,7 +119,7 @@ bool JSONHelper::GetField(Document* pJsonObj, string strFieldName, unsigned __in
 
 bool JSONHelper::GetField(Document* pJsonObj, string strFieldName, float* pValue)
 {
-	if (pJsonObj->HasMember(strFieldName.c_str()))
+	if (!pJsonObj->HasMember(strFieldName.c_str()))
 	{
 		//Debug.LogWarning("JSONObject does not have field, field name : " + strFieldName);
 		return false;
@@ -138,7 +138,7 @@ bool JSONHelper::GetField(Document* pJsonObj, string strFieldName, float* pValue
 
 bool JSONHelper::GetField(Document* pJsonObj, string strFieldName, string* pValue)
 {
-	if (pJsonObj->HasMember(strFieldName.c_str()))
+	if (!pJsonObj->HasMember(strFieldName.c_str()))
 	{
 		//Debug.LogWarning("JSONObject does not have field, field name : " + strFieldName);
 		return false;
@@ -157,7 +157,7 @@ bool JSONHelper::GetField(Document* pJsonObj, string strFieldName, string* pValu
 
 bool JSONHelper::GetField(Document* pJsonObj, string strFieldName, list<__int32>* pValue)
 {
-	if (pJsonObj->HasMember(strFieldName.c_str()))
+	if (!pJsonObj->HasMember(strFieldName.c_str()))
 	{
 		//Debug.LogWarning("JSONObject does not have field, field name : " + strFieldName);
 		return false;
