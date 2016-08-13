@@ -20,7 +20,7 @@ public class ReadyForStartToS : IMessage
 
     public bool Deserialize(byte[] bytes)
     {
-        JSONObject jsonObj = new JSONObject(Encoding.Default.GetString(bytes));
+        JSONObject jsonObj = new JSONObject(Encoding.UTF8.GetString(bytes));
 
         if(!JSONHelper.GetField(jsonObj, "PlayerNumber", ref m_nPlayerNumber)) return false;
 

@@ -23,7 +23,7 @@ public class GameStartToC : IMessage
 
     public bool Deserialize(byte[] bytes)
     {
-        JSONObject jsonObj = new JSONObject(Encoding.Default.GetString(bytes));
+        JSONObject jsonObj = new JSONObject(Encoding.UTF8.GetString(bytes));
 
         if(!JSONHelper.GetField(jsonObj, "GameElapsedTime", ref m_lGameElapsedTime)) return false;
         if(!JSONHelper.GetField(jsonObj, "PlayerInfoList", m_listPlayerInfo)) return false;

@@ -27,7 +27,7 @@ public class GameEventMoveToC : IMessage
 
     public bool Deserialize(byte[] bytes)
     {
-        JSONObject jsonObj = new JSONObject(Encoding.Default.GetString(bytes));
+        JSONObject jsonObj = new JSONObject(Encoding.UTF8.GetString(bytes));
 
         if(!JSONHelper.GetField(jsonObj, "PlayerIndex", ref m_nPlayerIndex)) return false;
         if(!JSONHelper.GetField(jsonObj, "ElapsedTime", ref m_nElapsedTime)) return false;

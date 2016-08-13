@@ -15,12 +15,12 @@ public class JoinLobbyToC : IMessage
 
         JSONHelper.AddField(jsonObj, "Result", m_nResult);
 
-        return Encoding.UTF8.GetBytes(jsonObj.Print());
+        return Encoding.Default.GetBytes(jsonObj.Print());
     }
 
     public bool Deserialize(byte[] bytes)
     {
-        JSONObject jsonObj = new JSONObject(Encoding.Default.GetString(bytes));
+        JSONObject jsonObj = new JSONObject(Encoding.UTF8.GetString(bytes));
 
         if(!JSONHelper.GetField(jsonObj, "Result", ref m_nResult)) return false;
 
