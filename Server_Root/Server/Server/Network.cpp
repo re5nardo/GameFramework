@@ -3,10 +3,7 @@
 #include "Accepter.h"
 #include "NetworkDefines.h"
 #include "IMessage.h"
-#include "TestMessage.h"
-#include "GameEventMoveToS.h"
-#include "ReadyForStartToS.h"
-#include "JoinLobbyToS.h"
+#include "MessagesHeader.h"
 #include <process.h>
 
 Network::Network(void* pListener, const USHORT nPort)
@@ -92,6 +89,10 @@ IMessage* Network::GetIMessage(USHORT nMessageID, char* pChar)
 	else if (nMessageID == Messages::JoinLobbyToS_ID)
 	{
 		pMsg = new JoinLobbyToS();
+	}
+	else if (nMessageID == Messages::SelectNormalGameToS_ID)
+	{
+		pMsg = new SelectNormalGameToS();
 	}
 
 	if (pMsg != NULL)

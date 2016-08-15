@@ -26,6 +26,12 @@ const char* GameEventMoveToC::Serialize()
 	Document document;
 	document.SetObject();
 
+	JSONHelper::AddField(&document, "PlayerIndex", m_nPlayerIndex);
+	JSONHelper::AddField(&document, "ElapsedTime", m_nElapsedTime);
+	JSONHelper::AddField(&document, "Pos_X", m_vec3Dest.x);
+	JSONHelper::AddField(&document, "Pos_Y", m_vec3Dest.y);
+	JSONHelper::AddField(&document, "Pos_Z", m_vec3Dest.z);
+
 	m_buffer->Clear();
 	document.Accept(*m_writer);
 
@@ -40,6 +46,12 @@ bool GameEventMoveToC::Deserialize(const char* pChar)
 	{
 		return false;
 	}
+
+	if (!JSONHelper::GetField(&document, "PlayerIndex", &m_nPlayerIndex)) return false;
+	if (!JSONHelper::GetField(&document, "ElapsedTime", &m_nElapsedTime)) return false;
+	if (!JSONHelper::GetField(&document, "Pos_X", &m_vec3Dest.x)) return false;
+	if (!JSONHelper::GetField(&document, "Pos_Y", &m_vec3Dest.y)) return false;
+	if (!JSONHelper::GetField(&document, "Pos_Z", &m_vec3Dest.z)) return false;
 
 	return true;
 }

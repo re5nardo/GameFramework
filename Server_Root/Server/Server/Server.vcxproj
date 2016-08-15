@@ -95,11 +95,14 @@
     <ClInclude Include="JoinLobbyToS.h" />
     <ClInclude Include="JSONHelper.h" />
     <ClInclude Include="Lobby.h" />
+    <ClInclude Include="MessagesHeader.h" />
     <ClInclude Include="Network.h" />
     <ClInclude Include="NetworkDefines.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="ReadyForStartToS.h" />
     <ClInclude Include="Room.h" />
+    <ClInclude Include="SelectNormalGameToC.h" />
+    <ClInclude Include="SelectNormalGameToS.h" />
     <ClInclude Include="Singleton.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
@@ -119,6 +122,8 @@
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="ReadyForStartToS.cpp" />
     <ClCompile Include="Room.cpp" />
+    <ClCompile Include="SelectNormalGameToC.cpp" />
+    <ClCompile Include="SelectNormalGameToS.cpp" />
     <ClCompile Include="Server.cpp" />
     <ClCompile Include="Singleton.cpp" />
     <ClCompile Include="stdafx.cpp">

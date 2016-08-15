@@ -6,6 +6,7 @@
 class Network;
 class IMessage;
 class JoinLobbyToS;
+class SelectNormalGameToS;
 
 using namespace std;
 
@@ -28,6 +29,7 @@ private:
 
 	//	Protocol Handler
 	void OnJoinLobbyToS(JoinLobbyToS* pMsg, unsigned int socket);
+	void OnSelectNormalGameToS(SelectNormalGameToS* pMsg, unsigned int socket);
 
 private:
 	static void OnAccept(void* pLobby, unsigned int socket);

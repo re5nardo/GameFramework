@@ -2,12 +2,7 @@
 #include "Lobby.h"
 #include "Network.h"
 #include "IMessage.h"
-#include "TestMessage.h"
-#include "GameStartToC.h"
-#include "GameEventMoveToC.h"
-#include "GameEventMoveToS.h"
-#include "JoinLobbyToS.h"
-#include "JoinLobbyToC.h"
+#include "MessagesHeader.h"
 #include "NetworkDefines.h"
 #include <time.h>
 //#include <math.h>
@@ -73,6 +68,10 @@ void Lobby::OnRecvMessage(unsigned int socket, IMessage* pMsg)
 
 		m_pNetwork->Send(socket, pMsgToC);
 	}
+	else if (pMsg->GetID() == Messages::SelectNormalGameToS_ID)
+	{
+		OnSelectNormalGameToS((SelectNormalGameToS*)pMsg, socket);
+	}
 }
 
 
@@ -91,6 +90,14 @@ void Lobby::OnJoinLobbyToS(JoinLobbyToS* pMsg, unsigned int socket)
 	m_mapPlayer[pMsg->m_strPlayerKey] = socket;
 
 	JoinLobbyToC* pMsgToC = new JoinLobbyToC();
+	pMsgToC->m_nResult = 0;
+
+	m_pNetwork->Send(socket, pMsgToC);
+}
+
+void Lobby::OnSelectNormalGameToS(SelectNormalGameToS* pMsg, unsigned int socket)
+{
+	SelectNormalGameToC* pMsgToC = new SelectNormalGameToC();
 	pMsgToC->m_nResult = 0;
 
 	m_pNetwork->Send(socket, pMsgToC);

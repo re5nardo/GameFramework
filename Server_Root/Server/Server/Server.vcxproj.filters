@@ -129,6 +129,15 @@
     <ClInclude Include="GameEventMoveToS.h">
       <Filter>헤더 파일\Messages\ToServer</Filter>
     </ClInclude>
+    <ClInclude Include="SelectNormalGameToC.h">
+      <Filter>헤더 파일\Messages\ToClient</Filter>
+    </ClInclude>
+    <ClInclude Include="SelectNormalGameToS.h">
+      <Filter>헤더 파일\Messages\ToServer</Filter>
+    </ClInclude>
+    <ClInclude Include="MessagesHeader.h">
+      <Filter>헤더 파일\Messages</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -180,6 +189,12 @@
       <Filter>소스 파일\Messages\ToClient</Filter>
     </ClCompile>
     <ClCompile Include="GameEventMoveToS.cpp">
+      <Filter>소스 파일\Messages\ToServer</Filter>
+    </ClCompile>
+    <ClCompile Include="SelectNormalGameToC.cpp">
+      <Filter>소스 파일\Messages\ToClient</Filter>
+    </ClCompile>
+    <ClCompile Include="SelectNormalGameToS.cpp">
       <Filter>소스 파일\Messages\ToServer</Filter>
     </ClCompile>
   </ItemGroup>
