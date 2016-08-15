@@ -2,10 +2,39 @@
 
 public class Lobby : MonoBehaviour
 {
-    private void OnGUI()
+    private void Start()
     {
-        GUI.Label(new Rect(new Vector2(Screen.width * 0.5f, Screen.height * 0.3f), new Vector2(200f, 100f)), "Welcom To Lobby");
-
-        GUI.Button(new Rect(new Vector2(Screen.width * 0.4f, Screen.height * 0.5f), new Vector2(200f, 100f)), "Normal Game");
+        Network.Instance.AddRecvMessageHandler(OnRecvMessage);
     }
+
+    private void OnRecvMessage(IMessage iMsg)
+    {
+        if (iMsg.GetID() == (ushort)Messages.SelectNormalGameToC_ID)
+        {
+            SelectNormalGameToC msg = (SelectNormalGameToC)iMsg;
+
+            if (msg.m_nResult == 0)
+            {
+               
+            }
+            else
+            {
+                Debug.LogError("Select NormalGame Fail! m_nResult : " + msg.m_nResult);
+            }
+        }
+    }
+
+    private void OnDestroy()
+    {
+        Network.Instance.RemoveRecvMessageHandler(OnRecvMessage);
+    }
+
+    #region Event Handler
+    public void OnNormalGameBtnClicked()
+    {
+        SelectNormalGameToS msgToS = new SelectNormalGameToS ();
+
+        Network.Instance.Send(msgToS);
+    }
+    #endregion
 }

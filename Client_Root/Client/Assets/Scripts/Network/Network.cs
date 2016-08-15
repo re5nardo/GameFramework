@@ -13,6 +13,11 @@ public class Network : MonoSingleton<Network>
 	private BoolHandler m_ConnectCallback;
 	private MessageHandler m_RecvMessageCallback;
 
+    private void Start()
+    {
+        DontDestroyOnLoad(this);
+    }
+
 	private void Update()
 	{
 		lock (m_MessagesReceived)
@@ -37,7 +42,7 @@ public class Network : MonoSingleton<Network>
 		}
 
 		m_ConnectCallback = connectHandler;
-		m_RecvMessageCallback = recvMessageHandler;
+        AddRecvMessageHandler(recvMessageHandler);
 
         Connect (strIP, 9110);
 	}
@@ -45,6 +50,16 @@ public class Network : MonoSingleton<Network>
     public void SetRecvMessageHandler(MessageHandler recvMessageHandler)
     {
         m_RecvMessageCallback = recvMessageHandler;
+    }
+
+    public void AddRecvMessageHandler(MessageHandler recvMessageHandler)
+    {
+        m_RecvMessageCallback += recvMessageHandler;
+    }
+
+    public void RemoveRecvMessageHandler(MessageHandler recvMessageHandler)
+    {
+        m_RecvMessageCallback -= recvMessageHandler;
     }
 
 	private void OnDestroy()
@@ -198,6 +213,10 @@ public class Network : MonoSingleton<Network>
         else if (nMessageID == (ushort)Messages.JoinLobbyToC_ID)
         {
             msg = new JoinLobbyToC();
+        }
+        else if (nMessageID == (ushort)Messages.SelectNormalGameToC_ID)
+        {
+            msg = new SelectNormalGameToC();
         }
 
 		if (msg != null)
