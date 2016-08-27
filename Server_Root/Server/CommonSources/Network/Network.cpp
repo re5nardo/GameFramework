@@ -2,7 +2,7 @@
 #include "Network.h"
 #include "NetworkCore.h"
 #include "NetworkDefines.h"
-#include "IMessage.h"
+#include "../Message/IMessage.h"
 #include <process.h>
 
 Network::Network(void* pListener, const USHORT nPort, IMessageConvertor* pMessageConvertor)

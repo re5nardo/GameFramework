@@ -52,6 +52,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>C:\Users\bae\Documents\Visual Studio 2013\Projects\Server\Server;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -80,62 +81,48 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\CommonSources\Message\IDeserializable.h" />
+    <ClInclude Include="..\CommonSources\Message\IJSONObjectable.h" />
+    <ClInclude Include="..\CommonSources\Message\IMessage.h" />
+    <ClInclude Include="..\CommonSources\Message\IMessageConvertor.h" />
+    <ClInclude Include="..\CommonSources\Message\ISerializable.h" />
+    <ClInclude Include="..\CommonSources\Message\JSONHelper.h" />
+    <ClInclude Include="..\CommonSources\Network\Accepter.h" />
+    <ClInclude Include="..\CommonSources\Network\Network.h" />
+    <ClInclude Include="..\CommonSources\Network\NetworkCore.h" />
+    <ClInclude Include="..\CommonSources\Network\NetworkDefines.h" />
+    <ClInclude Include="..\CommonSources\Singleton.h" />
     <ClInclude Include="Data.h" />
-    <ClInclude Include="Accepter.h" />
     <ClInclude Include="Defines.h" />
-    <ClInclude Include="GameEventMoveToC.h" />
-    <ClInclude Include="GameEventMoveToS.h" />
-    <ClInclude Include="GameStartToC.h" />
     <ClInclude Include="Glicko2.h" />
-    <ClInclude Include="IDeserializable.h" />
-    <ClInclude Include="IJSONObjectable.h" />
-    <ClInclude Include="IMessage.h" />
-    <ClInclude Include="ISerializable.h" />
-    <ClInclude Include="JoinLobbyToC.h" />
-    <ClInclude Include="JoinLobbyToS.h" />
-    <ClInclude Include="JSONHelper.h" />
     <ClInclude Include="Lobby.h" />
-    <ClInclude Include="IMessageConvertor.h" />
-    <ClInclude Include="LobbyMessageConvertor.h" />
-    <ClInclude Include="LobbyMessageDefines.h" />
-    <ClInclude Include="LobbyMessageHeader.h" />
-    <ClInclude Include="Network.h" />
-    <ClInclude Include="NetworkCore.h" />
-    <ClInclude Include="NetworkDefines.h" />
+    <ClInclude Include="Messages\JoinLobbyToC.h" />
+    <ClInclude Include="Messages\JoinLobbyToS.h" />
+    <ClInclude Include="Messages\SelectNormalGameToC.h" />
+    <ClInclude Include="Messages\SelectNormalGameToS.h" />
     <ClInclude Include="Player.h" />
-    <ClInclude Include="ReadyForStartToS.h" />
-    <ClInclude Include="SelectNormalGameToC.h" />
-    <ClInclude Include="SelectNormalGameToS.h" />
-    <ClInclude Include="Singleton.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
-    <ClInclude Include="TestMessage.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Accepter.cpp" />
-    <ClCompile Include="GameEventMoveToC.cpp" />
-    <ClCompile Include="GameEventMoveToS.cpp" />
-    <ClCompile Include="GameStartToC.cpp" />
+    <ClCompile Include="..\CommonSources\Message\JSONHelper.cpp" />
+    <ClCompile Include="..\CommonSources\Network\Accepter.cpp" />
+    <ClCompile Include="..\CommonSources\Network\Network.cpp" />
+    <ClCompile Include="..\CommonSources\Network\NetworkCore.cpp" />
+    <ClCompile Include="..\CommonSources\Singleton.cpp" />
     <ClCompile Include="Glicko2.cpp" />
-    <ClCompile Include="JoinLobbyToC.cpp" />
-    <ClCompile Include="JoinLobbyToS.cpp" />
-    <ClCompile Include="JSONHelper.cpp" />
     <ClCompile Include="Lobby.cpp" />
     <ClCompile Include="LobbyMessageConvertor.cpp" />
-    <ClCompile Include="Network.cpp" />
-    <ClCompile Include="NetworkCore.cpp" />
+    <ClCompile Include="Messages\JoinLobbyToC.cpp" />
+    <ClCompile Include="Messages\JoinLobbyToS.cpp" />
+    <ClCompile Include="Messages\SelectNormalGameToC.cpp" />
+    <ClCompile Include="Messages\SelectNormalGameToS.cpp" />
     <ClCompile Include="Player.cpp" />
-    <ClCompile Include="ReadyForStartToS.cpp" />
-    <ClCompile Include="Room.cpp" />
-    <ClCompile Include="SelectNormalGameToC.cpp" />
-    <ClCompile Include="SelectNormalGameToS.cpp" />
     <ClCompile Include="Server.cpp" />
-    <ClCompile Include="Singleton.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="TestMessage.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -1,7 +1,7 @@
 #pragma once
 #include <WinSock2.h>
 #include "NetworkDefines.h"
-#include "IMessageConvertor.h"
+#include "../Message/IMessageConvertor.h"
 
 using namespace std;
 

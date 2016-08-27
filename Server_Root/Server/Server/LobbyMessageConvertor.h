@@ -1,5 +1,5 @@
 #pragma once
-#include "IMessageConvertor.h"
+#include "../CommonSources/Message/IMessageConvertor.h"
 
 class LobbyMessageConvertor : public IMessageConvertor
 {

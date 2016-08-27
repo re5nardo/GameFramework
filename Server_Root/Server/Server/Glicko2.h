@@ -1,7 +1,5 @@
 #pragma once
 
-#include "Singleton.h"
-
 
 struct Glicko2Data
 {

@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "Lobby.h"
-#include "Network.h"
-#include "IMessage.h"
+#include "../CommonSources/Network/Network.h"
+#include "../CommonSources/Message/IMessage.h"
 #include "LobbyMessageHeader.h"
 #include "LobbyMessageDefines.h"
 #include <time.h>
@@ -49,25 +49,25 @@ void Lobby::OnRecvMessage(unsigned int socket, IMessage* pMsg)
 	{
 		OnJoinLobbyToS((JoinLobbyToS*)pMsg, socket);
 	}
-	else if (pMsg->GetID() == Messages::ReadyForStartToS_ID)
-	{
-		GameStartToC* pTest = new GameStartToC();
-		pTest->m_lGameElapsedTime = 0;
+	//else if (pMsg->GetID() == Messages::ReadyForStartToS_ID)
+	//{
+	//	GameStartToC* pTest = new GameStartToC();
+	//	pTest->m_lGameElapsedTime = 0;
 
-		//time_t curTime;
-		//time(&curTime);
+	//	//time_t curTime;
+	//	//time(&curTime);
 
-		m_pNetwork->Send(socket, pTest);
-	}
-	else if (pMsg->GetID() == Messages::GameEventMoveToS_ID)
-	{
-		GameEventMoveToC* pMsgToC = new GameEventMoveToC();
-		pMsgToC->m_nPlayerIndex = 0;
-		pMsgToC->m_nElapsedTime = 0;
-		pMsgToC->m_vec3Dest = ((GameEventMoveToS*)pMsg)->m_vec3Dest;
+	//	m_pNetwork->Send(socket, pTest);
+	//}
+	//else if (pMsg->GetID() == Messages::GameEventMoveToS_ID)
+	//{
+	//	GameEventMoveToC* pMsgToC = new GameEventMoveToC();
+	//	pMsgToC->m_nPlayerIndex = 0;
+	//	pMsgToC->m_nElapsedTime = 0;
+	//	pMsgToC->m_vec3Dest = ((GameEventMoveToS*)pMsg)->m_vec3Dest;
 
-		m_pNetwork->Send(socket, pMsgToC);
-	}
+	//	m_pNetwork->Send(socket, pMsgToC);
+	//}
 	else if (pMsg->GetID() == Messages::SelectNormalGameToS_ID)
 	{
 		OnSelectNormalGameToS((SelectNormalGameToS*)pMsg, socket);

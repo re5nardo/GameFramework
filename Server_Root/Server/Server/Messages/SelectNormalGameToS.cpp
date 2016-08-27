@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "SelectNormalGameToS.h"
-#include "LobbyMessageDefines.h"
-#include "JSONHelper.h"
+#include "../LobbyMessageDefines.h"
+#include "../../CommonSources/Message/JSONHelper.h"
 
 
 SelectNormalGameToS::SelectNormalGameToS()

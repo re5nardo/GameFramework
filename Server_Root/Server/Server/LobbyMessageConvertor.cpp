@@ -16,15 +16,7 @@ IMessage* LobbyMessageConvertor::GetMessage(const unsigned short nMessageID, con
 {
 	IMessage* pMsg = NULL;
 
-	if (nMessageID == Messages::ReadyForStartToS_ID)
-	{
-		pMsg = new ReadyForStartToS();
-	}
-	else if (nMessageID == Messages::GameEventMoveToS_ID)
-	{
-		pMsg = new GameEventMoveToS();
-	}
-	else if (nMessageID == Messages::JoinLobbyToS_ID)
+	if (nMessageID == Messages::JoinLobbyToS_ID)
 	{
 		pMsg = new JoinLobbyToS();
 	}

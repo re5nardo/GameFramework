@@ -46,9 +46,6 @@
     <Filter Include="헤더 파일\Data">
       <UniqueIdentifier>{d8deeefd-d6aa-43f2-a900-155e991bd43d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\Room">
-      <UniqueIdentifier>{cc8c3770-3f46-4ef6-aa0c-2baa78014229}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -60,13 +57,7 @@
     <ClInclude Include="targetver.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="IMessage.h">
-      <Filter>헤더 파일\Messages</Filter>
-    </ClInclude>
     <ClInclude Include="Defines.h">
-      <Filter>헤더 파일\Common</Filter>
-    </ClInclude>
-    <ClInclude Include="Singleton.h">
       <Filter>헤더 파일\Common</Filter>
     </ClInclude>
     <ClInclude Include="Lobby.h">
@@ -75,74 +66,56 @@
     <ClInclude Include="Player.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Accepter.h">
-      <Filter>헤더 파일\Network</Filter>
-    </ClInclude>
-    <ClInclude Include="NetworkDefines.h">
-      <Filter>헤더 파일\Network</Filter>
-    </ClInclude>
-    <ClInclude Include="Network.h">
-      <Filter>헤더 파일\Network</Filter>
-    </ClInclude>
-    <ClInclude Include="ReadyForStartToS.h">
-      <Filter>헤더 파일\Messages\ToServer</Filter>
-    </ClInclude>
-    <ClInclude Include="ISerializable.h">
-      <Filter>헤더 파일\Messages</Filter>
-    </ClInclude>
-    <ClInclude Include="IDeserializable.h">
-      <Filter>헤더 파일\Messages</Filter>
-    </ClInclude>
-    <ClInclude Include="TestMessage.h">
-      <Filter>헤더 파일\Messages</Filter>
-    </ClInclude>
-    <ClInclude Include="GameStartToC.h">
-      <Filter>헤더 파일\Messages\ToClient</Filter>
-    </ClInclude>
-    <ClInclude Include="IJSONObjectable.h">
-      <Filter>헤더 파일\Messages</Filter>
-    </ClInclude>
     <ClInclude Include="Data.h">
       <Filter>헤더 파일\Data</Filter>
-    </ClInclude>
-    <ClInclude Include="JoinLobbyToS.h">
-      <Filter>헤더 파일\Messages\ToServer</Filter>
-    </ClInclude>
-    <ClInclude Include="JoinLobbyToC.h">
-      <Filter>헤더 파일\Messages\ToClient</Filter>
     </ClInclude>
     <ClInclude Include="Glicko2.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="JSONHelper.h">
-      <Filter>헤더 파일\Messages</Filter>
-    </ClInclude>
-    <ClInclude Include="GameEventMoveToC.h">
-      <Filter>헤더 파일\Messages\ToClient</Filter>
-    </ClInclude>
-    <ClInclude Include="GameEventMoveToS.h">
-      <Filter>헤더 파일\Messages\ToServer</Filter>
-    </ClInclude>
-    <ClInclude Include="SelectNormalGameToC.h">
-      <Filter>헤더 파일\Messages\ToClient</Filter>
-    </ClInclude>
-    <ClInclude Include="SelectNormalGameToS.h">
-      <Filter>헤더 파일\Messages\ToServer</Filter>
-    </ClInclude>
-    <ClInclude Include="NetworkCore.h">
+    <ClInclude Include="..\CommonSources\Network\Accepter.h">
       <Filter>헤더 파일\Network</Filter>
     </ClInclude>
-    <ClInclude Include="IMessageConvertor.h">
+    <ClInclude Include="..\CommonSources\Network\Network.h">
+      <Filter>헤더 파일\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CommonSources\Network\NetworkCore.h">
+      <Filter>헤더 파일\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CommonSources\Network\NetworkDefines.h">
+      <Filter>헤더 파일\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CommonSources\Message\IDeserializable.h">
       <Filter>헤더 파일\Messages</Filter>
     </ClInclude>
-    <ClInclude Include="LobbyMessageConvertor.h">
+    <ClInclude Include="..\CommonSources\Message\IJSONObjectable.h">
       <Filter>헤더 파일\Messages</Filter>
     </ClInclude>
-    <ClInclude Include="LobbyMessageDefines.h">
+    <ClInclude Include="..\CommonSources\Message\IMessage.h">
       <Filter>헤더 파일\Messages</Filter>
     </ClInclude>
-    <ClInclude Include="LobbyMessageHeader.h">
+    <ClInclude Include="..\CommonSources\Message\IMessageConvertor.h">
       <Filter>헤더 파일\Messages</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CommonSources\Message\ISerializable.h">
+      <Filter>헤더 파일\Messages</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CommonSources\Message\JSONHelper.h">
+      <Filter>헤더 파일\Messages</Filter>
+    </ClInclude>
+    <ClInclude Include="Messages\JoinLobbyToS.h">
+      <Filter>헤더 파일\Messages\ToServer</Filter>
+    </ClInclude>
+    <ClInclude Include="Messages\SelectNormalGameToS.h">
+      <Filter>헤더 파일\Messages\ToServer</Filter>
+    </ClInclude>
+    <ClInclude Include="Messages\JoinLobbyToC.h">
+      <Filter>헤더 파일\Messages\ToClient</Filter>
+    </ClInclude>
+    <ClInclude Include="Messages\SelectNormalGameToC.h">
+      <Filter>헤더 파일\Messages\ToClient</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CommonSources\Singleton.h">
+      <Filter>헤더 파일\Common</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -152,59 +125,41 @@
     <ClCompile Include="Server.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="TestMessage.cpp">
-      <Filter>소스 파일\Messages</Filter>
-    </ClCompile>
-    <ClCompile Include="Singleton.cpp">
-      <Filter>소스 파일\Common</Filter>
-    </ClCompile>
     <ClCompile Include="Lobby.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Player.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Accepter.cpp">
-      <Filter>소스 파일\Network</Filter>
-    </ClCompile>
-    <ClCompile Include="Network.cpp">
-      <Filter>소스 파일\Network</Filter>
-    </ClCompile>
-    <ClCompile Include="ReadyForStartToS.cpp">
-      <Filter>소스 파일\Messages\ToServer</Filter>
-    </ClCompile>
-    <ClCompile Include="GameStartToC.cpp">
-      <Filter>소스 파일\Messages\ToClient</Filter>
-    </ClCompile>
-    <ClCompile Include="Room.cpp">
-      <Filter>소스 파일\Room</Filter>
-    </ClCompile>
-    <ClCompile Include="JoinLobbyToS.cpp">
-      <Filter>소스 파일\Messages\ToServer</Filter>
-    </ClCompile>
-    <ClCompile Include="JoinLobbyToC.cpp">
-      <Filter>소스 파일\Messages\ToClient</Filter>
-    </ClCompile>
     <ClCompile Include="Glicko2.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="JSONHelper.cpp">
+    <ClCompile Include="..\CommonSources\Network\Accepter.cpp">
+      <Filter>소스 파일\Network</Filter>
+    </ClCompile>
+    <ClCompile Include="..\CommonSources\Network\Network.cpp">
+      <Filter>소스 파일\Network</Filter>
+    </ClCompile>
+    <ClCompile Include="..\CommonSources\Network\NetworkCore.cpp">
+      <Filter>소스 파일\Network</Filter>
+    </ClCompile>
+    <ClCompile Include="..\CommonSources\Message\JSONHelper.cpp">
       <Filter>소스 파일\Messages</Filter>
     </ClCompile>
-    <ClCompile Include="GameEventMoveToC.cpp">
-      <Filter>소스 파일\Messages\ToClient</Filter>
-    </ClCompile>
-    <ClCompile Include="GameEventMoveToS.cpp">
+    <ClCompile Include="Messages\JoinLobbyToS.cpp">
       <Filter>소스 파일\Messages\ToServer</Filter>
     </ClCompile>
-    <ClCompile Include="SelectNormalGameToC.cpp">
-      <Filter>소스 파일\Messages\ToClient</Filter>
-    </ClCompile>
-    <ClCompile Include="SelectNormalGameToS.cpp">
+    <ClCompile Include="Messages\SelectNormalGameToS.cpp">
       <Filter>소스 파일\Messages\ToServer</Filter>
     </ClCompile>
-    <ClCompile Include="NetworkCore.cpp">
-      <Filter>소스 파일\Network</Filter>
+    <ClCompile Include="Messages\JoinLobbyToC.cpp">
+      <Filter>소스 파일\Messages\ToClient</Filter>
+    </ClCompile>
+    <ClCompile Include="Messages\SelectNormalGameToC.cpp">
+      <Filter>소스 파일\Messages\ToClient</Filter>
+    </ClCompile>
+    <ClCompile Include="..\CommonSources\Singleton.cpp">
+      <Filter>소스 파일\Common</Filter>
     </ClCompile>
     <ClCompile Include="LobbyMessageConvertor.cpp">
       <Filter>소스 파일\Messages</Filter>

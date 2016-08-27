@@ -1,32 +1,33 @@
 #include "stdafx.h"
-#include "JoinLobbyToC.h"
-#include "LobbyMessageDefines.h"
-#include "JSONHelper.h"
+#include "SelectNormalGameToC.h"
+#include "../LobbyMessageDefines.h"
+#include "../../CommonSources/Message/JSONHelper.h"
 
 
-JoinLobbyToC::JoinLobbyToC()
+SelectNormalGameToC::SelectNormalGameToC()
 {
 	m_buffer = new GenericStringBuffer<UTF8<>>();
 	m_writer = new Writer<StringBuffer, UTF8<>>(*m_buffer);
 }
 
-JoinLobbyToC::~JoinLobbyToC()
+SelectNormalGameToC::~SelectNormalGameToC()
 {
 	delete m_buffer;
 	delete m_writer;
 }
 
-unsigned short JoinLobbyToC::GetID()
+unsigned short SelectNormalGameToC::GetID()
 {
-	return (unsigned short)Messages::JoinLobbyToC_ID;
+	return (unsigned short)Messages::SelectNormalGameToC_ID;
 }
 
-const char* JoinLobbyToC::Serialize()
+const char* SelectNormalGameToC::Serialize()
 {
 	Document document;
 	document.SetObject();
 
 	JSONHelper::AddField(&document, "Result", m_nResult);
+	JSONHelper::AddField(&document, "ExpectedTime", m_nExpectedTime);
 
 	m_buffer->Clear();
 	document.Accept(*m_writer);
@@ -34,7 +35,7 @@ const char* JoinLobbyToC::Serialize()
 	return m_buffer->GetString();
 }
 
-bool JoinLobbyToC::Deserialize(const char* pChar)
+bool SelectNormalGameToC::Deserialize(const char* pChar)
 {
 	Document document;
 	document.Parse<0>(pChar);
@@ -44,6 +45,7 @@ bool JoinLobbyToC::Deserialize(const char* pChar)
 	}
 
 	if (!JSONHelper::GetField(&document, "Result", &m_nResult)) return false;
+	if (!JSONHelper::GetField(&document, "ExpectedTime", &m_nExpectedTime)) return false;
 
 	return true;
 }
