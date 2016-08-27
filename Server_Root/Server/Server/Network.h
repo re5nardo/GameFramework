@@ -1,27 +1,24 @@
 #pragma once
 #include <WinSock2.h>
-#include <string>
-#include "Defines.h"
+#include "NetworkDefines.h"
+#include "IMessageConvertor.h"
 
 using namespace std;
 
 class IMessage;
-class Accepter;
+class NetworkCore;
 
 class Network
 {
 public:
-	Network(void* pListener, const USHORT nPort);
+	Network(void* pListener, const USHORT nPort, IMessageConvertor* pMessageConvertor);
 	virtual ~Network();
 
 private:
-	Accepter*		m_pAccepter;
-	HANDLE			m_hComport;
-	bool			m_bRunning;
-	USHORT			m_nPort;
-	void*			m_pListener;
-	void			(*m_AcceptCallback)(void* pListener, SOCKET socket);
-	void			(*m_RecvMessageCallback)(void* pListener, SOCKET socket, IMessage* pMsg);
+	NetworkCore*		m_pNetworkCore;
+	void*				m_pListener;
+	void				(*m_RecvMessageCallback)(void* pListener, SOCKET socket, IMessage* pMsg);
+	IMessageConvertor*	m_pMessageConvertor;
 
 public:
 	int			Start();
@@ -31,13 +28,8 @@ public:
 	void		Send(SOCKET socket, IMessage* pMsg, bool bDelete = true);
 
 private:
-	IMessage*	GetIMessage(USHORT nMessageID, char* pChar);
+	void		OnRecvMessage(unsigned int socket, LPPER_IO_DATA data);
 
 private:
-	void		AccepterThread();
-	void		WorkerThread();
-
-private:
-	static UINT WINAPI AccepterThreadStart(void* param);
-	static UINT WINAPI WorkerThreadStart(void* param);
+	static void OnRecvMessage(void* pNetwork, unsigned int socket, LPPER_IO_DATA data);
 };

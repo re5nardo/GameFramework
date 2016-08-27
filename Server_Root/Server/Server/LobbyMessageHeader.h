@@ -8,4 +8,3 @@
 #include "ReadyForStartToS.h"
 #include "SelectNormalGameToC.h"
 #include "SelectNormalGameToS.h"
-#include "TestMessage.h"

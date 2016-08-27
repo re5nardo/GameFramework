@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "GameEventMoveToS.h"
-#include "NetworkDefines.h"
+#include "LobbyMessageDefines.h"
 #include "JSONHelper.h"
 
 

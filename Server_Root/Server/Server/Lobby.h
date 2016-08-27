@@ -2,6 +2,7 @@
 
 #include <map>
 #include <string>
+#include "LobbyMessageConvertor.h"
 
 class Network;
 class IMessage;
@@ -19,6 +20,7 @@ public:
 private:
 	Network*							m_pNetwork;
 	map<string, unsigned int>			m_mapPlayer;
+	LobbyMessageConvertor				m_MessageConvertor;
 
 private:
 	void OnAccept(unsigned int socket);

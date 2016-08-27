@@ -43,9 +43,6 @@
     <Filter Include="소스 파일\Messages\ToClient">
       <UniqueIdentifier>{21dba2c7-db18-4096-9026-787d82d216a9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="헤더 파일\Room">
-      <UniqueIdentifier>{775cd21d-0e33-4270-b12d-3317cea8c306}</UniqueIdentifier>
-    </Filter>
     <Filter Include="헤더 파일\Data">
       <UniqueIdentifier>{d8deeefd-d6aa-43f2-a900-155e991bd43d}</UniqueIdentifier>
     </Filter>
@@ -105,9 +102,6 @@
     <ClInclude Include="IJSONObjectable.h">
       <Filter>헤더 파일\Messages</Filter>
     </ClInclude>
-    <ClInclude Include="Room.h">
-      <Filter>헤더 파일\Room</Filter>
-    </ClInclude>
     <ClInclude Include="Data.h">
       <Filter>헤더 파일\Data</Filter>
     </ClInclude>
@@ -135,7 +129,19 @@
     <ClInclude Include="SelectNormalGameToS.h">
       <Filter>헤더 파일\Messages\ToServer</Filter>
     </ClInclude>
-    <ClInclude Include="MessagesHeader.h">
+    <ClInclude Include="NetworkCore.h">
+      <Filter>헤더 파일\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="IMessageConvertor.h">
+      <Filter>헤더 파일\Messages</Filter>
+    </ClInclude>
+    <ClInclude Include="LobbyMessageConvertor.h">
+      <Filter>헤더 파일\Messages</Filter>
+    </ClInclude>
+    <ClInclude Include="LobbyMessageDefines.h">
+      <Filter>헤더 파일\Messages</Filter>
+    </ClInclude>
+    <ClInclude Include="LobbyMessageHeader.h">
       <Filter>헤더 파일\Messages</Filter>
     </ClInclude>
   </ItemGroup>
@@ -196,6 +202,12 @@
     </ClCompile>
     <ClCompile Include="SelectNormalGameToS.cpp">
       <Filter>소스 파일\Messages\ToServer</Filter>
+    </ClCompile>
+    <ClCompile Include="NetworkCore.cpp">
+      <Filter>소스 파일\Network</Filter>
+    </ClCompile>
+    <ClCompile Include="LobbyMessageConvertor.cpp">
+      <Filter>소스 파일\Messages</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

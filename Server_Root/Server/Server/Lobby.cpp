@@ -2,14 +2,14 @@
 #include "Lobby.h"
 #include "Network.h"
 #include "IMessage.h"
-#include "MessagesHeader.h"
-#include "NetworkDefines.h"
+#include "LobbyMessageHeader.h"
+#include "LobbyMessageDefines.h"
 #include <time.h>
 //#include <math.h>
 
 Lobby::Lobby(const unsigned short nPort)
 {
-	m_pNetwork = new Network(this, nPort);
+	m_pNetwork = new Network(this, nPort, &m_MessageConvertor);
 	m_pNetwork->SetAcceptCallback(OnAccept);
 	m_pNetwork->SetRecvMessageCallback(OnRecvMessage);
 

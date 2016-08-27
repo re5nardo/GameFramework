@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "JoinLobbyToS.h"
-#include "NetworkDefines.h"
+#include "LobbyMessageDefines.h"
 #include "JSONHelper.h"
 
 
