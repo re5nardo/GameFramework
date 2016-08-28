@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "ReadyForStartToS.h"
-#include "LobbyMessageDefines.h"
-#include "JSONHelper.h"
+#include "RoomMessageDefines.h"
+#include "../../CommonSources/Message/JSONHelper.h"
 
 
 ReadyForStartToS::ReadyForStartToS()

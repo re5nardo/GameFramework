@@ -14,37 +14,37 @@
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
     <Filter Include="헤더 파일\Messages">
-      <UniqueIdentifier>{8e5b5193-a204-4617-a4a3-a6e1fd143294}</UniqueIdentifier>
+      <UniqueIdentifier>{b604df00-ffbf-4dbe-af55-0caa46efef6b}</UniqueIdentifier>
     </Filter>
     <Filter Include="소스 파일\Messages">
-      <UniqueIdentifier>{0f3f246d-8f03-4229-b1b4-8729f82d00ea}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="헤더 파일\Common">
-      <UniqueIdentifier>{bc788599-fc18-453b-98cf-f31714fa3562}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="소스 파일\Common">
-      <UniqueIdentifier>{b5f81b43-cc03-4231-9be4-618f06e55b4d}</UniqueIdentifier>
+      <UniqueIdentifier>{5a2430e4-d1f7-443c-86f9-85a4998b9180}</UniqueIdentifier>
     </Filter>
     <Filter Include="헤더 파일\Network">
-      <UniqueIdentifier>{1d6828a3-6f6d-4a30-bb59-2e2dcd698904}</UniqueIdentifier>
+      <UniqueIdentifier>{3e81ce0b-1836-474a-8bcc-164bcc8785ef}</UniqueIdentifier>
     </Filter>
     <Filter Include="소스 파일\Network">
-      <UniqueIdentifier>{53bc7684-3f9f-4256-910b-a01d48b79ff9}</UniqueIdentifier>
+      <UniqueIdentifier>{c7917090-2f83-4ca7-ab02-27d337e59754}</UniqueIdentifier>
     </Filter>
-    <Filter Include="헤더 파일\Messages\ToClient">
-      <UniqueIdentifier>{d9ae330b-a1ed-421e-bee6-980805a143ef}</UniqueIdentifier>
+    <Filter Include="헤더 파일\Common">
+      <UniqueIdentifier>{d5459206-a242-43c1-9bf3-643001f7f599}</UniqueIdentifier>
     </Filter>
-    <Filter Include="헤더 파일\Messages\ToServer">
-      <UniqueIdentifier>{7d59cd35-fb35-4a4b-a808-ef9cd7687c68}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="소스 파일\Messages\ToServer">
-      <UniqueIdentifier>{699fe5b2-1ddf-434c-a3c2-7e897ad9dae3}</UniqueIdentifier>
+    <Filter Include="소스 파일\Common">
+      <UniqueIdentifier>{d57b08f1-b212-44e0-a7bb-b37f9d5cc772}</UniqueIdentifier>
     </Filter>
     <Filter Include="소스 파일\Messages\ToClient">
-      <UniqueIdentifier>{21dba2c7-db18-4096-9026-787d82d216a9}</UniqueIdentifier>
+      <UniqueIdentifier>{7711490d-1a2d-43bd-a92b-dd55cad9ce41}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Messages\ToServer">
+      <UniqueIdentifier>{e860259f-0af8-47c9-ae0f-e7853dd1f224}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Messages\ToClient">
+      <UniqueIdentifier>{7bf1b53f-2983-41a6-87b5-6b39cd095935}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Messages\ToServer">
+      <UniqueIdentifier>{54cc6227-df8e-4bde-8962-4a5949d64018}</UniqueIdentifier>
     </Filter>
     <Filter Include="헤더 파일\Data">
-      <UniqueIdentifier>{d8deeefd-d6aa-43f2-a900-155e991bd43d}</UniqueIdentifier>
+      <UniqueIdentifier>{841fea9b-9eb1-4723-bc73-ae3bc5831f6f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -57,20 +57,17 @@
     <ClInclude Include="targetver.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Defines.h">
-      <Filter>헤더 파일\Common</Filter>
-    </ClInclude>
-    <ClInclude Include="Lobby.h">
+    <ClInclude Include="Room.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Player.h">
-      <Filter>헤더 파일</Filter>
+    <ClInclude Include="RoomMessageHeader.h">
+      <Filter>헤더 파일\Messages</Filter>
     </ClInclude>
-    <ClInclude Include="Data.h">
-      <Filter>헤더 파일\Data</Filter>
+    <ClInclude Include="RoomMessageConvertor.h">
+      <Filter>헤더 파일\Messages</Filter>
     </ClInclude>
-    <ClInclude Include="Glicko2.h">
-      <Filter>헤더 파일</Filter>
+    <ClInclude Include="RoomMessageDefines.h">
+      <Filter>헤더 파일\Messages</Filter>
     </ClInclude>
     <ClInclude Include="..\CommonSources\Network\Accepter.h">
       <Filter>헤더 파일\Network</Filter>
@@ -83,6 +80,9 @@
     </ClInclude>
     <ClInclude Include="..\CommonSources\Network\NetworkDefines.h">
       <Filter>헤더 파일\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CommonSources\Singleton.h">
+      <Filter>헤더 파일\Common</Filter>
     </ClInclude>
     <ClInclude Include="..\CommonSources\Message\IDeserializable.h">
       <Filter>헤더 파일\Messages</Filter>
@@ -102,46 +102,37 @@
     <ClInclude Include="..\CommonSources\Message\JSONHelper.h">
       <Filter>헤더 파일\Messages</Filter>
     </ClInclude>
-    <ClInclude Include="Messages\JoinLobbyToS.h">
-      <Filter>헤더 파일\Messages\ToServer</Filter>
-    </ClInclude>
-    <ClInclude Include="Messages\SelectNormalGameToS.h">
-      <Filter>헤더 파일\Messages\ToServer</Filter>
-    </ClInclude>
-    <ClInclude Include="Messages\JoinLobbyToC.h">
+    <ClInclude Include="Messages\GameEventMoveToC.h">
       <Filter>헤더 파일\Messages\ToClient</Filter>
     </ClInclude>
-    <ClInclude Include="Messages\SelectNormalGameToC.h">
+    <ClInclude Include="Messages\GameStartToC.h">
       <Filter>헤더 파일\Messages\ToClient</Filter>
     </ClInclude>
-    <ClInclude Include="..\CommonSources\Singleton.h">
-      <Filter>헤더 파일\Common</Filter>
+    <ClInclude Include="Messages\GameEventMoveToS.h">
+      <Filter>헤더 파일\Messages\ToServer</Filter>
     </ClInclude>
-    <ClInclude Include="LobbyMessageConvertor.h">
-      <Filter>헤더 파일\Messages</Filter>
+    <ClInclude Include="Messages\ReadyForStartToS.h">
+      <Filter>헤더 파일\Messages\ToServer</Filter>
     </ClInclude>
-    <ClInclude Include="LobbyMessageHeader.h">
-      <Filter>헤더 파일\Messages</Filter>
+    <ClInclude Include="Data.h">
+      <Filter>헤더 파일\Data</Filter>
     </ClInclude>
-    <ClInclude Include="LobbyMessageDefines.h">
-      <Filter>헤더 파일\Messages</Filter>
+    <ClInclude Include="Defines.h">
+      <Filter>소스 파일\Common</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Server.cpp">
+    <ClCompile Include="RoomServer.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Lobby.cpp">
+    <ClCompile Include="Room.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Player.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Glicko2.cpp">
-      <Filter>소스 파일</Filter>
+    <ClCompile Include="RoomMessageConvertor.cpp">
+      <Filter>소스 파일\Messages</Filter>
     </ClCompile>
     <ClCompile Include="..\CommonSources\Network\Accepter.cpp">
       <Filter>소스 파일\Network</Filter>
@@ -152,26 +143,23 @@
     <ClCompile Include="..\CommonSources\Network\NetworkCore.cpp">
       <Filter>소스 파일\Network</Filter>
     </ClCompile>
-    <ClCompile Include="..\CommonSources\Message\JSONHelper.cpp">
-      <Filter>소스 파일\Messages</Filter>
-    </ClCompile>
-    <ClCompile Include="Messages\JoinLobbyToS.cpp">
-      <Filter>소스 파일\Messages\ToServer</Filter>
-    </ClCompile>
-    <ClCompile Include="Messages\SelectNormalGameToS.cpp">
-      <Filter>소스 파일\Messages\ToServer</Filter>
-    </ClCompile>
-    <ClCompile Include="Messages\JoinLobbyToC.cpp">
-      <Filter>소스 파일\Messages\ToClient</Filter>
-    </ClCompile>
-    <ClCompile Include="Messages\SelectNormalGameToC.cpp">
-      <Filter>소스 파일\Messages\ToClient</Filter>
-    </ClCompile>
     <ClCompile Include="..\CommonSources\Singleton.cpp">
       <Filter>소스 파일\Common</Filter>
     </ClCompile>
-    <ClCompile Include="LobbyMessageConvertor.cpp">
+    <ClCompile Include="..\CommonSources\Message\JSONHelper.cpp">
       <Filter>소스 파일\Messages</Filter>
+    </ClCompile>
+    <ClCompile Include="Messages\GameEventMoveToC.cpp">
+      <Filter>소스 파일\Messages\ToClient</Filter>
+    </ClCompile>
+    <ClCompile Include="Messages\GameStartToC.cpp">
+      <Filter>소스 파일\Messages\ToClient</Filter>
+    </ClCompile>
+    <ClCompile Include="Messages\GameEventMoveToS.cpp">
+      <Filter>소스 파일\Messages\ToServer</Filter>
+    </ClCompile>
+    <ClCompile Include="Messages\ReadyForStartToS.cpp">
+      <Filter>소스 파일\Messages\ToServer</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

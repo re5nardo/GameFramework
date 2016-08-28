@@ -1,27 +1,24 @@
 #pragma once
 
-#include "IMessage.h"
+#include "../../CommonSources/Message/IMessage.h"
 #include "../../rapidjson/document.h"
 #include "../../rapidjson/stringbuffer.h"
 #include "../../rapidjson/writer.h"
-#include "Data.h"
 
 using namespace rapidjson;
 
-class GameEventMoveToC : public IMessage
+class GameStartToC : public IMessage
 {
 public:
-	GameEventMoveToC();
-	virtual ~GameEventMoveToC();
+	GameStartToC();
+	virtual ~GameStartToC();
 
 private:
 	GenericStringBuffer<UTF8<>>*	m_buffer;
 	Writer<StringBuffer, UTF8<>>*	m_writer;
 
 public:
-	int m_nPlayerIndex;				//  json field name : PlayerIndex
-	int m_nElapsedTime;				//  json field name : ElapsedTime
-	Vector3 m_vec3Dest;				//  json field name : Pos_X, Pos_Y, Pos_Z
+	unsigned __int64 m_lGameElapsedTime;		//	json field name : GameElapsedTime
 
 public:
 	unsigned short GetID() override;

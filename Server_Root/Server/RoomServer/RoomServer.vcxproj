@@ -11,16 +11,16 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{C216FA1A-3348-4AED-B136-69D1B85BDCB2}</ProjectGuid>
+    <ProjectGuid>{869D3F0C-F575-41DD-BFE3-991F2C1F02CC}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>Server</RootNamespace>
+    <RootNamespace>RoomServer</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v120</PlatformToolset>
-    <CharacterSet>MultiByte</CharacterSet>
+    <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -52,7 +52,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>C:\Users\bae\Documents\Visual Studio 2013\Projects\Server\Server;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\bae\Documents\Visual Studio 2013\Projects\Server\RoomServer;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -94,16 +94,14 @@
     <ClInclude Include="..\CommonSources\Singleton.h" />
     <ClInclude Include="Data.h" />
     <ClInclude Include="Defines.h" />
-    <ClInclude Include="Glicko2.h" />
-    <ClInclude Include="Lobby.h" />
-    <ClInclude Include="LobbyMessageConvertor.h" />
-    <ClInclude Include="LobbyMessageDefines.h" />
-    <ClInclude Include="LobbyMessageHeader.h" />
-    <ClInclude Include="Messages\JoinLobbyToC.h" />
-    <ClInclude Include="Messages\JoinLobbyToS.h" />
-    <ClInclude Include="Messages\SelectNormalGameToC.h" />
-    <ClInclude Include="Messages\SelectNormalGameToS.h" />
-    <ClInclude Include="Player.h" />
+    <ClInclude Include="Messages\GameEventMoveToC.h" />
+    <ClInclude Include="Messages\GameEventMoveToS.h" />
+    <ClInclude Include="Messages\GameStartToC.h" />
+    <ClInclude Include="Messages\ReadyForStartToS.h" />
+    <ClInclude Include="Room.h" />
+    <ClInclude Include="RoomMessageConvertor.h" />
+    <ClInclude Include="RoomMessageDefines.h" />
+    <ClInclude Include="RoomMessageHeader.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
@@ -113,15 +111,13 @@
     <ClCompile Include="..\CommonSources\Network\Network.cpp" />
     <ClCompile Include="..\CommonSources\Network\NetworkCore.cpp" />
     <ClCompile Include="..\CommonSources\Singleton.cpp" />
-    <ClCompile Include="Glicko2.cpp" />
-    <ClCompile Include="Lobby.cpp" />
-    <ClCompile Include="LobbyMessageConvertor.cpp" />
-    <ClCompile Include="Messages\JoinLobbyToC.cpp" />
-    <ClCompile Include="Messages\JoinLobbyToS.cpp" />
-    <ClCompile Include="Messages\SelectNormalGameToC.cpp" />
-    <ClCompile Include="Messages\SelectNormalGameToS.cpp" />
-    <ClCompile Include="Player.cpp" />
-    <ClCompile Include="Server.cpp" />
+    <ClCompile Include="Messages\GameEventMoveToC.cpp" />
+    <ClCompile Include="Messages\GameEventMoveToS.cpp" />
+    <ClCompile Include="Messages\GameStartToC.cpp" />
+    <ClCompile Include="Messages\ReadyForStartToS.cpp" />
+    <ClCompile Include="Room.cpp" />
+    <ClCompile Include="RoomMessageConvertor.cpp" />
+    <ClCompile Include="RoomServer.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>

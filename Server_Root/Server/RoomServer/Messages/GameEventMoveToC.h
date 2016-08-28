@@ -1,6 +1,6 @@
 #pragma once
 
-#include "IMessage.h"
+#include "../../CommonSources/Message/IMessage.h"
 #include "../../rapidjson/document.h"
 #include "../../rapidjson/stringbuffer.h"
 #include "../../rapidjson/writer.h"
@@ -8,11 +8,11 @@
 
 using namespace rapidjson;
 
-class GameEventMoveToS : public IMessage
+class GameEventMoveToC : public IMessage
 {
 public:
-	GameEventMoveToS();
-	virtual ~GameEventMoveToS();
+	GameEventMoveToC();
+	virtual ~GameEventMoveToC();
 
 private:
 	GenericStringBuffer<UTF8<>>*	m_buffer;
