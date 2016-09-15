@@ -2,11 +2,13 @@
 
 public class ReadyForStartToS : IMessage
 {
+    public const ushort MESSAGE_ID = 20000;
+
     public ulong m_nPlayerNumber;     //  json field name : PlayerNumber
 
     public ushort GetID()
     {
-        return (ushort)Messages.ReadyForStartToS_ID;
+        return MESSAGE_ID;
     }
 
     public byte[] Serialize()

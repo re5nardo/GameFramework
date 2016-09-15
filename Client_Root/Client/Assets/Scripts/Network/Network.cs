@@ -202,19 +202,19 @@ public class Network : MonoSingleton<Network>
 	{
 		IMessage msg = null;
 
-		if (nMessageID == (ushort)Messages.TEST_MESSAGE_ID)
+        if (nMessageID == TestMessage.MESSAGE_ID)
 		{
 			msg = new TestMessage();
 		}
-        else if (nMessageID == (ushort)Messages.GameEventMoveToC_ID)
+        else if (nMessageID == GameEventMoveToC.MESSAGE_ID)
         {
             msg = new GameEventMoveToC();
         }
-        else if (nMessageID == (ushort)Messages.JoinLobbyToC_ID)
+        else if (nMessageID == JoinLobbyToC.MESSAGE_ID)
         {
             msg = new JoinLobbyToC();
         }
-        else if (nMessageID == (ushort)Messages.SelectNormalGameToC_ID)
+        else if (nMessageID == SelectNormalGameToC.MESSAGE_ID)
         {
             msg = new SelectNormalGameToC();
         }

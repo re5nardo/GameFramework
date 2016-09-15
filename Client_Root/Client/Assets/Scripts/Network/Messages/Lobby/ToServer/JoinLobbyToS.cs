@@ -2,12 +2,14 @@
 
 public class JoinLobbyToS : IMessage
 {
+    public const ushort MESSAGE_ID = 0;
+
     public string   m_strPlayerKey;         //  json field name : PlayerKey
     public int      m_nAuthKey;             //  json field name : AuthKey
 
     public ushort GetID()
     {
-        return (ushort)Messages.JoinLobbyToS_ID;
+        return MESSAGE_ID;
     }
 
     public byte[] Serialize()

@@ -2,12 +2,14 @@
 
 public class SelectNormalGameToC : IMessage
 {
+    public const ushort MESSAGE_ID = 10001;
+
     public int m_nResult;           //  json field name : Result
     public int m_nExpectedTime;     //  json field name : ExpectedTime
 
     public ushort GetID()
     {
-        return (ushort)Messages.SelectNormalGameToC_ID;
+        return MESSAGE_ID;
     }
 
     public byte[] Serialize()

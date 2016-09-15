@@ -2,11 +2,13 @@
 
 public class JoinLobbyToC : IMessage
 {
+    public const ushort MESSAGE_ID = 10000;
+
     public int m_nResult;     //  json field name : Result
 
     public ushort GetID()
     {
-        return (ushort)Messages.JoinLobbyToC_ID;
+        return MESSAGE_ID;
     }
 
     public byte[] Serialize()

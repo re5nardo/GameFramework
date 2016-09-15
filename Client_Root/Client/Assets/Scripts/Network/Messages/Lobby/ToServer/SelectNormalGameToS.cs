@@ -2,9 +2,11 @@
 
 public class SelectNormalGameToS : IMessage
 {
+    public const ushort MESSAGE_ID = 1;
+
     public ushort GetID()
     {
-        return (ushort)Messages.SelectNormalGameToS_ID;
+        return MESSAGE_ID;
     }
 
     public byte[] Serialize()

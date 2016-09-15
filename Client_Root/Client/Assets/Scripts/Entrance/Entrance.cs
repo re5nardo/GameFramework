@@ -18,7 +18,7 @@ public class Entrance : MonoBehaviour
 
     private void OnRecvMessage(IMessage iMsg)
     {
-        if (iMsg.GetID() == (ushort)Messages.JoinLobbyToC_ID)
+        if (iMsg.GetID() == JoinLobbyToC.MESSAGE_ID)
         {
             OnJoinLobbyToC((JoinLobbyToC)iMsg);
         }

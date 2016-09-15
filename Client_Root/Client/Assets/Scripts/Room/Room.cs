@@ -20,7 +20,7 @@ public class Room : MonoBehaviour
             m_Game.OnRecvMessage(iMsg);
 
         //  other message
-        if (iMsg.GetID () == (ushort)Messages.TEST_MESSAGE_ID)
+        if (iMsg.GetID () == TestMessage.MESSAGE_ID)
         {
             //  ...
         }
@@ -28,7 +28,7 @@ public class Room : MonoBehaviour
 
     private bool CheckGameMessage(IMessage iMsg)
     {
-        if (iMsg.GetID() == (ushort)Messages.GameEventMoveToC_ID)
+        if (iMsg.GetID() == GameEventMoveToC.MESSAGE_ID)
         {
             return true;
         }

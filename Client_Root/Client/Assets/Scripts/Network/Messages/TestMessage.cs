@@ -3,6 +3,8 @@ using System.Text;
 
 public class TestMessage : IMessage
 {
+    public const ushort MESSAGE_ID = 40000;
+
 	private string 				        m_strName;			        //	json field name : name
 	public int 				            m_nAge;				        //	json field name : age
 	public List<int>			        m_listFavoriteNumbers;		//	json field name : favoriteNumbers	
@@ -26,7 +28,7 @@ public class TestMessage : IMessage
 
 	public ushort GetID()
 	{
-		return (ushort)Messages.TEST_MESSAGE_ID;
+        return MESSAGE_ID;
 	}
 
 	public byte[] Serialize()

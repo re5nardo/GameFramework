@@ -9,7 +9,7 @@ public class Lobby : MonoBehaviour
 
     private void OnRecvMessage(IMessage iMsg)
     {
-        if (iMsg.GetID() == (ushort)Messages.SelectNormalGameToC_ID)
+        if (iMsg.GetID() == SelectNormalGameToC.MESSAGE_ID)
         {
             SelectNormalGameToC msg = (SelectNormalGameToC)iMsg;
 

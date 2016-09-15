@@ -1,15 +1,17 @@
 ﻿using UnityEngine;
 using System.Text;
 
-public class GameEventMoveToC : IMessage
+public class GameEventMoveToS : IMessage
 {
+    public const ushort MESSAGE_ID = 20001;
+
     public int m_nPlayerIndex = 0;                          //  json field name : PlayerIndex
     public int m_nElapsedTime = 0;                          //  json field name : ElapsedTime
     public Vector3 m_vec3Dest = Vector3.zero;               //  Json field name : Pos_X, Pos_Y, Pos_Z
 
     public ushort GetID()
     {
-        return (ushort)Messages.GameEventMoveToC_ID;
+        return MESSAGE_ID;
     }
 
     public byte[] Serialize()

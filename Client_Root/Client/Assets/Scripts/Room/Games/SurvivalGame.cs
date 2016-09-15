@@ -40,11 +40,11 @@ public class SurvivalGame : IGame
 
     public override void OnRecvMessage(IMessage msg)
     {
-        if (msg.GetID() == (ushort)Messages.GameEventMoveToC_ID)
+        if (msg.GetID() == GameEventMoveToC.MESSAGE_ID)
         {
             OnRecvGameEvent(msg);
         }
-        else if (msg.GetID() == (ushort)Messages.GameStartToC_ID)
+        else if (msg.GetID() == GameStartToC.MESSAGE_ID)
         {
             GameStartToC resp = (GameStartToC)msg;
 
@@ -56,7 +56,7 @@ public class SurvivalGame : IGame
 
     private void OnRecvGameEvent(IMessage msg)
     {
-        if (msg.GetID() == (ushort)Messages.GameEventMoveToC_ID)
+        if (msg.GetID() == GameEventMoveToC.MESSAGE_ID)
         {
             Move((msg as GameEventMoveToC).m_vec3Dest);
         }
