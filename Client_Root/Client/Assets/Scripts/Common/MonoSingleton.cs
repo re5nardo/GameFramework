@@ -9,15 +9,14 @@ public class MonoSingleton<T> : MonoBehaviour where T : MonoSingleton<T>
 		get
 		{
 			if (instance == null)
-			{
-				GameObject goSingleton = GameObject.Find ("Singleton");
+            {
+                GameObject goSingleton = GameObject.Find (typeof(T).Name + "Singleton");
 				if (goSingleton == null)
 				{
-					goSingleton = new GameObject ("Singleton");
+                    goSingleton = new GameObject (typeof(T).Name + "Singleton");
 				}
 					
 				instance = (T)goSingleton.AddComponent (typeof(T));
-
 			}
 
 			return instance;
@@ -28,13 +27,13 @@ public class MonoSingleton<T> : MonoBehaviour where T : MonoSingleton<T>
 	{
 		if (instance == null)
 		{
-			if (gameObject.name == "Singleton")
+            if (gameObject.name == (typeof(T).Name + "Singleton"))
 			{
 				instance = (T)this;
 			}
 			else
 			{
-				Debug.LogWarning ("MonoSingleton is not on Singleton object, so delete this");
+                Debug.LogWarning (string.Format("MonoSingleton is not on {0}Singleton object, so delete this", typeof(T).Name));
 				Destroy (this);
 			}
 		}
