@@ -123,9 +123,6 @@
     <ClInclude Include="LobbyMessageHeader.h">
       <Filter>헤더 파일\Messages</Filter>
     </ClInclude>
-    <ClInclude Include="LobbyMessageDefines.h">
-      <Filter>헤더 파일\Messages</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">

@@ -14,6 +14,9 @@ public:
 	GameEventMoveToS();
 	virtual ~GameEventMoveToS();
 
+public:
+	static const unsigned short MESSAGE_ID = 20001;
+
 private:
 	GenericStringBuffer<UTF8<>>*	m_buffer;
 	Writer<StringBuffer, UTF8<>>*	m_writer;

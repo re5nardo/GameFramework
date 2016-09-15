@@ -3,7 +3,6 @@
 #include "../CommonSources/Network/Network.h"
 #include "../CommonSources/Message/IMessage.h"
 #include "RoomMessageHeader.h"
-#include "RoomMessageDefines.h"
 #include <time.h>
 //#include <math.h>
 

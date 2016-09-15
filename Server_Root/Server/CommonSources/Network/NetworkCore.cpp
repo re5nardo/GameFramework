@@ -69,15 +69,12 @@ void NetworkCore::SetAcceptCallback(void(*handler)(void* pListener, SOCKET socke
 	m_AcceptCallback = handler;
 }
 
-void NetworkCore::Send(SOCKET socket, char* pChar)
+void NetworkCore::Send(SOCKET socket, char* pChar, int nLength)
 {
-	char* pCharCopiedData = new char[strlen(pChar)];
-	strcpy_s(pCharCopiedData, strlen(pChar), pChar);
-
 	LPPER_IO_DATA ioInfo = (LPPER_IO_DATA)malloc(sizeof(PER_IO_DATA));
 	memset(&(ioInfo->Overlapped), 0, sizeof(OVERLAPPED));
-	ioInfo->WsaBuf.len = strlen(pCharCopiedData);
-	ioInfo->WsaBuf.buf = pCharCopiedData;
+	ioInfo->WsaBuf.len = nLength;
+	ioInfo->WsaBuf.buf = pChar;
 	ioInfo->Mode = IOMode::Write;
 
 	int nResult = WSASend(socket, &(ioInfo->WsaBuf), 1, NULL, 0, &(ioInfo->Overlapped), NULL);
@@ -87,9 +84,6 @@ void NetworkCore::Send(SOCKET socket, char* pChar)
 		delete ioInfo->WsaBuf.buf;
 		free(ioInfo);
 	}
-
-	//if (bDelete)
-	//	delete pMsg;
 }
 
 #pragma region

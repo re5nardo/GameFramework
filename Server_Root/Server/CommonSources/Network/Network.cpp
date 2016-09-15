@@ -60,19 +60,7 @@ void Network::Send(SOCKET socket, IMessage* pMsg, bool bDelete)
 		*(pCharCopiedData + 4 + i) = *(pCharSerializedData + i);
 	}
 
-	LPPER_IO_DATA ioInfo = (LPPER_IO_DATA)malloc(sizeof(PER_IO_DATA));
-	memset(&(ioInfo->Overlapped), 0, sizeof(OVERLAPPED));
-	ioInfo->WsaBuf.len = nTotalSize;
-	ioInfo->WsaBuf.buf = pCharCopiedData;
-	ioInfo->Mode = IOMode::Write;
-
-	int nResult = WSASend(socket, &(ioInfo->WsaBuf), 1, NULL, 0, &(ioInfo->Overlapped), NULL);
-	if (nResult == SOCKET_ERROR && (WSAGetLastError() != ERROR_IO_PENDING))
-	{
-		closesocket(socket);
-		delete ioInfo->WsaBuf.buf;
-		free(ioInfo);
-	}
+	m_pNetworkCore->Send(socket, pCharCopiedData, nTotalSize);
 
 	if (bDelete)
 		delete pMsg;

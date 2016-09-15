@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "LobbyMessageConvertor.h"
 #include "LobbyMessageHeader.h"
-#include "LobbyMessageDefines.h"
 
 LobbyMessageConvertor::LobbyMessageConvertor()
 {
@@ -16,11 +15,11 @@ IMessage* LobbyMessageConvertor::GetMessage(const unsigned short nMessageID, con
 {
 	IMessage* pMsg = NULL;
 
-	if (nMessageID == Messages::JoinLobbyToS_ID)
+	if (nMessageID == JoinLobbyToS::MESSAGE_ID)
 	{
 		pMsg = new JoinLobbyToS();
 	}
-	else if (nMessageID == Messages::SelectNormalGameToS_ID)
+	else if (nMessageID == SelectNormalGameToS::MESSAGE_ID)
 	{
 		pMsg = new SelectNormalGameToS();
 	}

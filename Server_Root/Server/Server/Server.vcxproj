@@ -97,7 +97,6 @@
     <ClInclude Include="Glicko2.h" />
     <ClInclude Include="Lobby.h" />
     <ClInclude Include="LobbyMessageConvertor.h" />
-    <ClInclude Include="LobbyMessageDefines.h" />
     <ClInclude Include="LobbyMessageHeader.h" />
     <ClInclude Include="Messages\JoinLobbyToC.h" />
     <ClInclude Include="Messages\JoinLobbyToS.h" />

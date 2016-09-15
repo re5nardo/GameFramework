@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "RoomMessageConvertor.h"
 #include "RoomMessageHeader.h"
-#include "RoomMessageDefines.h"
 
 RoomMessageConvertor::RoomMessageConvertor()
 {

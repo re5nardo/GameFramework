@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "GameStartToC.h"
-#include "RoomMessageDefines.h"
 #include "../../CommonSources/Message/JSONHelper.h"
 
 
@@ -18,7 +17,7 @@ GameStartToC::~GameStartToC()
 
 unsigned short GameStartToC::GetID()
 {
-	return (unsigned short)Messages::GameStartToC_ID;
+	return MESSAGE_ID;
 }
 
 const char* GameStartToC::Serialize()

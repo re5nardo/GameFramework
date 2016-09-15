@@ -13,6 +13,9 @@ public:
 	ReadyForStartToS();
 	virtual ~ReadyForStartToS();
 
+public:
+	static const unsigned short MESSAGE_ID = 20000;
+
 private:
 	GenericStringBuffer<UTF8<>>*	m_buffer;
 	Writer<StringBuffer, UTF8<>>*	m_writer;

@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "SelectNormalGameToC.h"
-#include "../LobbyMessageDefines.h"
 #include "../../CommonSources/Message/JSONHelper.h"
 
 
@@ -18,7 +17,7 @@ SelectNormalGameToC::~SelectNormalGameToC()
 
 unsigned short SelectNormalGameToC::GetID()
 {
-	return (unsigned short)Messages::SelectNormalGameToC_ID;
+	return MESSAGE_ID;
 }
 
 const char* SelectNormalGameToC::Serialize()

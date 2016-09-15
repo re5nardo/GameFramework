@@ -3,7 +3,6 @@
 #include "../CommonSources/Network/Network.h"
 #include "../CommonSources/Message/IMessage.h"
 #include "LobbyMessageHeader.h"
-#include "LobbyMessageDefines.h"
 #include <time.h>
 //#include <math.h>
 
@@ -32,8 +31,6 @@ void Lobby::SendToAllUsers(IMessage* pMsg)
 	delete pMsg;
 }
 
-
-
 void Lobby::OnAccept(unsigned int socket)
 {
 	//	glicko - 2
@@ -45,33 +42,16 @@ void Lobby::OnRecvMessage(unsigned int socket, IMessage* pMsg)
 	//	temp
 	//printf("%s", pMsg->Serialize());
 
-	if (pMsg->GetID() == Messages::JoinLobbyToS_ID)
+	if (pMsg->GetID() == JoinLobbyToS::MESSAGE_ID)
 	{
 		OnJoinLobbyToS((JoinLobbyToS*)pMsg, socket);
 	}
-	//else if (pMsg->GetID() == Messages::ReadyForStartToS_ID)
-	//{
-	//	GameStartToC* pTest = new GameStartToC();
-	//	pTest->m_lGameElapsedTime = 0;
-
-	//	//time_t curTime;
-	//	//time(&curTime);
-
-	//	m_pNetwork->Send(socket, pTest);
-	//}
-	//else if (pMsg->GetID() == Messages::GameEventMoveToS_ID)
-	//{
-	//	GameEventMoveToC* pMsgToC = new GameEventMoveToC();
-	//	pMsgToC->m_nPlayerIndex = 0;
-	//	pMsgToC->m_nElapsedTime = 0;
-	//	pMsgToC->m_vec3Dest = ((GameEventMoveToS*)pMsg)->m_vec3Dest;
-
-	//	m_pNetwork->Send(socket, pMsgToC);
-	//}
-	else if (pMsg->GetID() == Messages::SelectNormalGameToS_ID)
+	else if (pMsg->GetID() == SelectNormalGameToS::MESSAGE_ID)
 	{
 		OnSelectNormalGameToS((SelectNormalGameToS*)pMsg, socket);
 	}
+
+	delete pMsg;
 }
 
 
@@ -97,6 +77,9 @@ void Lobby::OnJoinLobbyToS(JoinLobbyToS* pMsg, unsigned int socket)
 
 void Lobby::OnSelectNormalGameToS(SelectNormalGameToS* pMsg, unsigned int socket)
 {
+	//	Match making.. & select room server..
+	//	...
+
 	SelectNormalGameToC* pMsgToC = new SelectNormalGameToC();
 	pMsgToC->m_nResult = 0;
 

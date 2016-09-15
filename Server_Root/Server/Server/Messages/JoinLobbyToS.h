@@ -13,6 +13,9 @@ public:
 	JoinLobbyToS();
 	virtual ~JoinLobbyToS();
 
+public:
+	static const unsigned short MESSAGE_ID = 0;
+
 private:
 	GenericStringBuffer<UTF8<>>*	m_buffer;
 	Writer<StringBuffer, UTF8<>>*	m_writer;

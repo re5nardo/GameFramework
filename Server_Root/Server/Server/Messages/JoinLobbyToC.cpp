@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "JoinLobbyToC.h"
-#include "../LobbyMessageDefines.h"
 #include "../../CommonSources/Message/JSONHelper.h"
 
 
@@ -18,7 +17,7 @@ JoinLobbyToC::~JoinLobbyToC()
 
 unsigned short JoinLobbyToC::GetID()
 {
-	return (unsigned short)Messages::JoinLobbyToC_ID;
+	return MESSAGE_ID;
 }
 
 const char* JoinLobbyToC::Serialize()

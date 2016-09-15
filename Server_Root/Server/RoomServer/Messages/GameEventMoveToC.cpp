@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "GameEventMoveToC.h"
-#include "RoomMessageDefines.h"
 #include "../../CommonSources/Message/JSONHelper.h"
 
 
@@ -18,7 +17,7 @@ GameEventMoveToC::~GameEventMoveToC()
 
 unsigned short GameEventMoveToC::GetID()
 {
-	return (unsigned short)Messages::GameEventMoveToC_ID;
+	return MESSAGE_ID;
 }
 
 const char* GameEventMoveToC::Serialize()

@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "ReadyForStartToS.h"
-#include "RoomMessageDefines.h"
 #include "../../CommonSources/Message/JSONHelper.h"
 
 
@@ -18,7 +17,7 @@ ReadyForStartToS::~ReadyForStartToS()
 
 unsigned short ReadyForStartToS::GetID()
 {
-	return (unsigned short)Messages::ReadyForStartToS_ID;
+	return MESSAGE_ID;
 }
 
 const char* ReadyForStartToS::Serialize()
