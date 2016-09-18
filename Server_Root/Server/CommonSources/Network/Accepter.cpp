@@ -24,7 +24,7 @@ int Accepter::Start()
 		return 0;
 	}
 
-	m_Socket = WSASocketW(AF_INET, SOCK_STREAM, 0, NULL, 0, WSA_FLAG_OVERLAPPED);
+	m_Socket = WSASocketW(PF_INET, SOCK_STREAM, 0, NULL, 0, WSA_FLAG_OVERLAPPED);
 	if (m_Socket == INVALID_SOCKET)
 	{
 		perror("socket() error!");
@@ -35,7 +35,7 @@ int Accepter::Start()
 	memset(&address, 0, sizeof(address));
 	address.sin_family = AF_INET;
 	address.sin_addr.s_addr = INADDR_ANY;
-	address.sin_port = htons((m_nPort));
+	address.sin_port = htons(m_nPort);
 
 	int nResult = bind(m_Socket, (SOCKADDR*)&address, sizeof(address));
 	if (nResult == SOCKET_ERROR)

@@ -8,6 +8,7 @@ class Network;
 class IMessage;
 class JoinLobbyToS;
 class SelectNormalGameToS;
+class CreateRoomToL;
 
 using namespace std;
 
@@ -19,7 +20,8 @@ public:
 
 private:
 	Network*							m_pNetwork;
-	map<string, unsigned int>			m_mapPlayer;
+	map<string, unsigned int>			m_mapPlayerSocket;
+	map<unsigned int, string>			m_mapSocketPlayer;
 	LobbyMessageConvertor				m_MessageConvertor;
 
 private:
@@ -32,6 +34,7 @@ private:
 	//	Protocol Handler
 	void OnJoinLobbyToS(JoinLobbyToS* pMsg, unsigned int socket);
 	void OnSelectNormalGameToS(SelectNormalGameToS* pMsg, unsigned int socket);
+	void OnCreateRoomToL(CreateRoomToL* pMsg, unsigned int socket);
 
 private:
 	static void OnAccept(void* pLobby, unsigned int socket);

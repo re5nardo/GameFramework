@@ -3,8 +3,10 @@
 #include <map>
 #include <string>
 #include "RoomMessageConvertor.h"
+#include "RoomMessageHeader.h"
 
 class Network;
+class CreateRoomToR;
 
 using namespace std;
 
@@ -27,8 +29,7 @@ private:
 	void SendToAllUsers(IMessage* pMsg);
 
 	//	Protocol Handler
-	//void OnJoinLobbyToS(JoinLobbyToS* pMsg, unsigned int socket);
-	//void OnSelectNormalGameToS(SelectNormalGameToS* pMsg, unsigned int socket);
+	void OnCreateRoomToR(CreateRoomToR* pMsg, unsigned int socket);
 
 private:
 	static void OnAccept(void* pLobby, unsigned int socket);

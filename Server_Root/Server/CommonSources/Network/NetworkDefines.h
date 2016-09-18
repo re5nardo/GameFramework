@@ -26,4 +26,5 @@ typedef struct
 	USHORT			TotalSize;
 	char*			CurMessage;
 	IOMode			Mode;
+	bool			Disposable;
 }PER_IO_DATA, *LPPER_IO_DATA;

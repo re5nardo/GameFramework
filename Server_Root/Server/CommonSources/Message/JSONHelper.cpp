@@ -44,14 +44,16 @@ void JSONHelper::AddField(Document* pJsonObj, const char* pCharFieldName, Value 
 	pJsonObj->AddMember(pCharFieldName, value, pJsonObj->GetAllocator());
 }
 
-template<typename T>
-void JSONHelper::AddField(Document* pJsonObj, const char* pCharFieldName, list<T> value)
+void JSONHelper::AddField(Document* pJsonObj, const char* pCharFieldName, vector<string> value)
 {
 	Value field(kArrayType);
 
-	for (list<T>::iterator it = value.begin(); it != value.end(); ++it)
+	for (vector<string>::iterator it = value.begin(); it != value.end(); ++it)
 	{
-		field<T>.PushBack(*it, pJsonObj->GetAllocator());
+		Value element;
+		element.SetString((*it).c_str(), (*it).length(), pJsonObj->GetAllocator());
+
+		field.PushBack(element, pJsonObj->GetAllocator());
 	}
 
 	pJsonObj->AddMember(pCharFieldName, field, pJsonObj->GetAllocator());
@@ -173,6 +175,29 @@ bool JSONHelper::GetField(Document* pJsonObj, string strFieldName, list<__int32>
 	for (SizeType i = 0; i < values.Size(); i++)
 	{
 		(*pValue).push_back(values[i].GetInt());
+	}
+
+	return true;
+}
+
+bool JSONHelper::GetField(Document* pJsonObj, string strFieldName, vector<string>* pValue)
+{
+	if (!pJsonObj->HasMember(strFieldName.c_str()))
+	{
+		//Debug.LogWarning("JSONObject does not have field, field name : " + strFieldName);
+		return false;
+	}
+
+	if (!(*pJsonObj)[strFieldName.c_str()].IsArray())
+	{
+		//Debug.LogWarning("Data type is invalid! It's not Array");
+		return false;
+	}
+
+	const Value& values = (*pJsonObj)[strFieldName.c_str()];
+	for (SizeType i = 0; i < values.Size(); i++)
+	{
+		(*pValue).push_back(values[i].GetString());
 	}
 
 	return true;

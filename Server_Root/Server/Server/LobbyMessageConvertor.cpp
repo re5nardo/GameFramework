@@ -23,6 +23,10 @@ IMessage* LobbyMessageConvertor::GetMessage(const unsigned short nMessageID, con
 	{
 		pMsg = new SelectNormalGameToS();
 	}
+	else if (nMessageID == CreateRoomToL::MESSAGE_ID)
+	{
+		pMsg = new CreateRoomToL();
+	}
 
 	if (pMsg != NULL)
 	{

@@ -1,6 +1,8 @@
 #pragma once
 
 #include <list>
+#include <vector>
+#include <string>
 #include "../../../rapidjson/document.h"
 
 using namespace rapidjson;
@@ -20,8 +22,33 @@ public:
 	static void AddField(Document* pJsonObj, const char* pCharFieldName, float value);
 	static void AddField(Document* pJsonObj, const char* pCharFieldName, string value);
 	static void AddField(Document* pJsonObj, const char* pCharFieldName, Value value);
+	static void AddField(Document* pJsonObj, const char* pCharFieldName, vector<string> value);
+
 	template<typename T>
-	static void AddField(Document* pJsonObj, const char* pCharFieldName, list<T> value);
+	static void AddField(Document* pJsonObj, const char* pCharFieldName, list<T> value)
+	{
+		Value field(kArrayType);
+
+		for (list<T>::iterator it = value.begin(); it != value.end(); ++it)
+		{
+			field.PushBack<T>(*it, pJsonObj->GetAllocator());
+		}
+
+		pJsonObj->AddMember(pCharFieldName, field, pJsonObj->GetAllocator());
+	}
+
+	template<typename T>
+	static void AddField(Document* pJsonObj, const char* pCharFieldName, vector<T> value)
+	{
+		Value field(kArrayType);
+
+		for (vector<T>::iterator it = value.begin(); it != value.end(); ++it)
+		{
+			field.PushBack<T>(*it, pJsonObj->GetAllocator());
+		}
+
+		pJsonObj->AddMember(pCharFieldName, field, pJsonObj->GetAllocator());
+	}
 
 	static bool GetField(Document* pJsonObj, string strFieldName, __int32* pValue);
 	static bool GetField(Document* pJsonObj, string strFieldName, __int64* pValue);
@@ -29,5 +56,6 @@ public:
 	static bool GetField(Document* pJsonObj, string strFieldName, float* pValue);
 	static bool GetField(Document* pJsonObj, string strFieldName, string* pValue);
 	static bool GetField(Document* pJsonObj, string strFieldName, list<__int32>* pValue);
+	static bool GetField(Document* pJsonObj, string strFieldName, vector<string>* pValue);
 };
 

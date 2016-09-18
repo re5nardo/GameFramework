@@ -44,38 +44,28 @@ void Room::OnRecvMessage(unsigned int socket, IMessage* pMsg)
 	//	temp
 	//printf("%s", pMsg->Serialize());
 
-	//if (pMsg->GetID() == Messages::JoinLobbyToS_ID)
-	//{
-	//	OnJoinLobbyToS((JoinLobbyToS*)pMsg, socket);
-	//}
-	//else if (pMsg->GetID() == Messages::ReadyForStartToS_ID)
-	//{
-	//	GameStartToC* pTest = new GameStartToC();
-	//	pTest->m_lGameElapsedTime = 0;
+	if (pMsg->GetID() == CreateRoomToR::MESSAGE_ID)
+	{
+		OnCreateRoomToR((CreateRoomToR*)pMsg, socket);
+	}
 
-	//	//time_t curTime;
-	//	//time(&curTime);
-
-	//	m_pNetwork->Send(socket, pTest);
-	//}
-	//else if (pMsg->GetID() == Messages::GameEventMoveToS_ID)
-	//{
-	//	GameEventMoveToC* pMsgToC = new GameEventMoveToC();
-	//	pMsgToC->m_nPlayerIndex = 0;
-	//	pMsgToC->m_nElapsedTime = 0;
-	//	pMsgToC->m_vec3Dest = ((GameEventMoveToS*)pMsg)->m_vec3Dest;
-
-	//	m_pNetwork->Send(socket, pMsgToC);
-	//}
-	//else if (pMsg->GetID() == Messages::SelectNormalGameToS_ID)
-	//{
-	//	OnSelectNormalGameToS((SelectNormalGameToS*)pMsg, socket);
-	//}
+	delete pMsg;
 }
 
 
 //	Protocol Handlers
+void Room::OnCreateRoomToR(CreateRoomToR* pMsg, unsigned int socket)
+{
+	CreateRoomToL* res = new CreateRoomToL();
+	res->m_nResult = 0;
+	
+	for (int i = 0; i < pMsg->m_vecPlayers.size(); ++i)
+	{
+		res->m_vecPlayers.push_back(pMsg->m_vecPlayers[i]);
+	}
 
+	m_pNetwork->Send(socket, res, true, true);
+}
 
 
 //	Static Functions for Callback

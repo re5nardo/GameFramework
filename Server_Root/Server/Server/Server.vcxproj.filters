@@ -123,6 +123,12 @@
     <ClInclude Include="LobbyMessageHeader.h">
       <Filter>헤더 파일\Messages</Filter>
     </ClInclude>
+    <ClInclude Include="..\CommonSources\Messages\CreateRoomToL.h">
+      <Filter>헤더 파일\Messages\ToServer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CommonSources\Messages\CreateRoomToR.h">
+      <Filter>헤더 파일\Messages\ToClient</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -169,6 +175,12 @@
     </ClCompile>
     <ClCompile Include="LobbyMessageConvertor.cpp">
       <Filter>소스 파일\Messages</Filter>
+    </ClCompile>
+    <ClCompile Include="..\CommonSources\Messages\CreateRoomToL.cpp">
+      <Filter>소스 파일\Messages\ToServer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\CommonSources\Messages\CreateRoomToR.cpp">
+      <Filter>소스 파일\Messages\ToClient</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

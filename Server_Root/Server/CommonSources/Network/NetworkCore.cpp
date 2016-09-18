@@ -69,13 +69,14 @@ void NetworkCore::SetAcceptCallback(void(*handler)(void* pListener, SOCKET socke
 	m_AcceptCallback = handler;
 }
 
-void NetworkCore::Send(SOCKET socket, char* pChar, int nLength)
+void NetworkCore::Send(SOCKET socket, char* pChar, int nLength, bool bDisposable)
 {
 	LPPER_IO_DATA ioInfo = (LPPER_IO_DATA)malloc(sizeof(PER_IO_DATA));
 	memset(&(ioInfo->Overlapped), 0, sizeof(OVERLAPPED));
 	ioInfo->WsaBuf.len = nLength;
 	ioInfo->WsaBuf.buf = pChar;
 	ioInfo->Mode = IOMode::Write;
+	ioInfo->Disposable = bDisposable;
 
 	int nResult = WSASend(socket, &(ioInfo->WsaBuf), 1, NULL, 0, &(ioInfo->Overlapped), NULL);
 	if (nResult == SOCKET_ERROR && (WSAGetLastError() != ERROR_IO_PENDING))
@@ -84,6 +85,11 @@ void NetworkCore::Send(SOCKET socket, char* pChar, int nLength)
 		delete ioInfo->WsaBuf.buf;
 		free(ioInfo);
 	}
+}
+
+HANDLE NetworkCore::GetCompletionPortHandle()
+{
+	return m_hComport;
 }
 
 #pragma region
@@ -100,6 +106,7 @@ void NetworkCore::AccepterThread()
 		ioInfo->WsaBuf.len = BUF_SIZE;
 		ioInfo->WsaBuf.buf = new char[BUF_SIZE];
 		ioInfo->Mode = IOMode::Read;
+		ioInfo->Disposable = false;
 		ioInfo->CurPos = 0;
 		DWORD flags = 0;
 
@@ -108,6 +115,7 @@ void NetworkCore::AccepterThread()
 		{
 			closesocket(handleInfo->Socket);
 			free(handleInfo);
+			delete ioInfo->WsaBuf.buf;
 			free(ioInfo);
 		}
 
@@ -135,6 +143,7 @@ void NetworkCore::WorkerThread()
 			{
 				closesocket(socket);
 				free(handleInfo);
+				delete ioInfo->WsaBuf.buf;
 				free(ioInfo);
 
 				continue;
@@ -199,6 +208,12 @@ void NetworkCore::WorkerThread()
 		else
 		{
 			puts("message sent!");
+
+			if (ioInfo->Disposable)
+			{
+				closesocket(handleInfo->Socket);
+			}
+
 			delete ioInfo->WsaBuf.buf;
 			free(ioInfo);
 		}

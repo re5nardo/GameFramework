@@ -4,6 +4,7 @@
 #include "NetworkDefines.h"
 #include "../Message/IMessage.h"
 #include <process.h>
+#include <WS2tcpip.h>
 
 Network::Network(void* pListener, const USHORT nPort, IMessageConvertor* pMessageConvertor)
 {
@@ -43,7 +44,7 @@ void Network::SetAcceptCallback(void(*handler)(void* pListener, SOCKET socket))
 	m_pNetworkCore->SetAcceptCallback(handler);
 }
 
-void Network::Send(SOCKET socket, IMessage* pMsg, bool bDelete)
+void Network::Send(SOCKET socket, IMessage* pMsg, bool bDelete, bool bDisposable)
 {
 	const char* pCharSerializedData = pMsg->Serialize();
 	int nSerializedDSize = strlen(pCharSerializedData);
@@ -60,10 +61,61 @@ void Network::Send(SOCKET socket, IMessage* pMsg, bool bDelete)
 		*(pCharCopiedData + 4 + i) = *(pCharSerializedData + i);
 	}
 
-	m_pNetworkCore->Send(socket, pCharCopiedData, nTotalSize);
+	m_pNetworkCore->Send(socket, pCharCopiedData, nTotalSize, bDisposable);
 
 	if (bDelete)
 		delete pMsg;
+}
+
+int Network::Send(const char* pIP, const USHORT nPort, IMessage* pMsg, bool bDisposable)
+{
+	SOCKET hSocket = WSASocketW(PF_INET, SOCK_STREAM, 0, NULL, 0, WSA_FLAG_OVERLAPPED);
+	if (hSocket == INVALID_SOCKET)
+	{
+		perror("socket() error!");
+		return -1;
+	}
+
+	sockaddr_in servAddr;
+	memset(&servAddr, 0, sizeof(servAddr));
+	servAddr.sin_family = AF_INET;
+	inet_pton(AF_INET, pIP, &servAddr.sin_addr.s_addr);
+	servAddr.sin_port = htons(nPort);
+
+	int nResult = connect(hSocket, (SOCKADDR*)&servAddr, sizeof(servAddr));
+	if (nResult == SOCKET_ERROR)
+	{
+		perror("connect() error");
+		return nResult;
+	}
+
+	LPPER_HANDLE_DATA handleInfo = (LPPER_HANDLE_DATA)malloc(sizeof(PER_HANDLE_DATA));
+	handleInfo->Socket = hSocket;
+	memcpy(&(handleInfo->Address), &servAddr, sizeof(servAddr));
+
+	CreateIoCompletionPort((HANDLE)handleInfo->Socket, m_pNetworkCore->GetCompletionPortHandle(), (DWORD)handleInfo, 0);
+
+	Send(hSocket, pMsg, true, bDisposable);
+
+	LPPER_IO_DATA ioInfo = (LPPER_IO_DATA)malloc(sizeof(PER_IO_DATA));
+	memset(&(ioInfo->Overlapped), 0, sizeof(OVERLAPPED));
+	ioInfo->WsaBuf.len = BUF_SIZE;
+	ioInfo->WsaBuf.buf = new char[BUF_SIZE];
+	ioInfo->Mode = IOMode::Read;
+	ioInfo->Disposable = false;
+	ioInfo->CurPos = 0;
+	DWORD flags = 0;
+
+	nResult = WSARecv(hSocket, &(ioInfo->WsaBuf), 1, NULL, &flags, &(ioInfo->Overlapped), NULL);
+	if (nResult == SOCKET_ERROR && (WSAGetLastError() != ERROR_IO_PENDING))
+	{
+		closesocket(handleInfo->Socket);
+		free(handleInfo);
+		delete ioInfo->WsaBuf.buf;
+		free(ioInfo);
+	}
+
+	return 0;
 }
 
 void Network::OnRecvMessage(unsigned int socket, LPPER_IO_DATA data)

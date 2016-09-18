@@ -81,6 +81,8 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\CommonSources\Messages\CreateRoomToL.h" />
+    <ClInclude Include="..\CommonSources\Messages\CreateRoomToR.h" />
     <ClInclude Include="..\CommonSources\Message\IDeserializable.h" />
     <ClInclude Include="..\CommonSources\Message\IJSONObjectable.h" />
     <ClInclude Include="..\CommonSources\Message\IMessage.h" />
@@ -107,6 +109,8 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\CommonSources\Messages\CreateRoomToL.cpp" />
+    <ClCompile Include="..\CommonSources\Messages\CreateRoomToR.cpp" />
     <ClCompile Include="..\CommonSources\Message\JSONHelper.cpp" />
     <ClCompile Include="..\CommonSources\Network\Accepter.cpp" />
     <ClCompile Include="..\CommonSources\Network\Network.cpp" />
