@@ -6,11 +6,20 @@ public class Room : MonoBehaviour
 {
     [SerializeField] private IGame m_Game = null;
 
+    //  Temp
+    private string m_strIP = "175.197.228.153";
+    private int m_nPort = 9111;
+
     private void Start()
     {
         Application.targetFrameRate = 30;
 
-        Network.Instance.AddRecvMessageHandler(OnRecvMessage);
+        RoomNetwork.Instance.ConnectToServer(m_strIP, m_nPort, OnConnected, OnRecvMessage);
+    }
+
+    private void OnConnected(bool bSuccess)
+    {
+        Debug.Log("OnConnected! Success : " + bSuccess);
     }
 
     private void OnRecvMessage(IMessage iMsg)
@@ -38,6 +47,7 @@ public class Room : MonoBehaviour
 
     private void OnDestroy()
     {
-        Network.Instance.RemoveRecvMessageHandler(OnRecvMessage);
+        RoomNetwork.Instance.RemoveConnectHandler(OnConnected);
+        RoomNetwork.Instance.RemoveRecvMessageHandler(OnRecvMessage);
     }
 }

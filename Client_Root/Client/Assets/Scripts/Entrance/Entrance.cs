@@ -39,6 +39,7 @@ public class Entrance : MonoBehaviour
 
     private void OnDestroy()
     {
+        Network.Instance.RemoveConnectHandler(OnConnected);
         Network.Instance.RemoveRecvMessageHandler(OnRecvMessage);
     }
 

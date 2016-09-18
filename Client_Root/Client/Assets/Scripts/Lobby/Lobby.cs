@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Lobby : MonoBehaviour
 {
@@ -15,7 +16,8 @@ public class Lobby : MonoBehaviour
 
             if (msg.m_nResult == 0)
             {
-               
+                //  Go to Room
+                SceneManager.LoadScene("Room");
             }
             else
             {

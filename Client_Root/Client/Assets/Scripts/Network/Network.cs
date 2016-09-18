@@ -31,8 +31,7 @@ public class Network : MonoSingleton<Network>
 			}
 		}
 	}
-
-
+        
 	public void ConnectToServer(string strIP, int nPort, BoolHandler connectHandler, MessageHandler recvMessageHandler)
 	{
 		Close ();
@@ -41,15 +40,20 @@ public class Network : MonoSingleton<Network>
 			m_MessagesReceived.Clear ();
 		}
 
-		m_ConnectCallback = connectHandler;
+        AddConnectHandler(connectHandler);
         AddRecvMessageHandler(recvMessageHandler);
 
-        Connect (strIP, 9110);
+        Connect (strIP, nPort);
 	}
 
-    public void SetRecvMessageHandler(MessageHandler recvMessageHandler)
+    public void AddConnectHandler(BoolHandler connectHandler)
     {
-        m_RecvMessageCallback = recvMessageHandler;
+        m_ConnectCallback += connectHandler;
+    }
+
+    public void RemoveConnectHandler(BoolHandler connectHandler)
+    {
+        m_ConnectCallback -= connectHandler;
     }
 
     public void AddRecvMessageHandler(MessageHandler recvMessageHandler)
