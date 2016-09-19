@@ -8,24 +8,24 @@
 
 Lobby::Lobby(const unsigned short nPort)
 {
-	m_pNetwork = new Network(this, nPort, &m_MessageConvertor);
-	m_pNetwork->SetAcceptCallback(OnAccept);
-	m_pNetwork->SetRecvMessageCallback(OnRecvMessage);
+	Network::Instance()->Initialize(this, nPort, &m_MessageConvertor);
+	Network::Instance()->SetAcceptCallback(OnAccept);
+	Network::Instance()->SetRecvMessageCallback(OnRecvMessage);
 
-	m_pNetwork->Start();
+	Network::Instance()->Start();
 }
 
 Lobby::~Lobby()
 {
-	m_pNetwork->Stop();
-	delete m_pNetwork;
+	Network::Instance()->Stop();
+	Network::Instance()->Destroy();
 }
 
 void Lobby::SendToAllUsers(IMessage* pMsg)
 {
 	for (map<string, unsigned int>::iterator it = m_mapPlayerSocket.begin(); it != m_mapPlayerSocket.end(); it++)
 	{
-		m_pNetwork->Send(it->second, pMsg, false);
+		Network::Instance()->Send(it->second, pMsg, false);
 	}
 	
 	delete pMsg;
@@ -77,7 +77,7 @@ void Lobby::OnJoinLobbyToS(JoinLobbyToS* pMsg, unsigned int socket)
 	JoinLobbyToC* pMsgToC = new JoinLobbyToC();
 	pMsgToC->m_nResult = 0;
 
-	m_pNetwork->Send(socket, pMsgToC);
+	Network::Instance()->Send(socket, pMsgToC);
 }
 
 void Lobby::OnSelectNormalGameToS(SelectNormalGameToS* pMsg, unsigned int socket)
@@ -89,7 +89,7 @@ void Lobby::OnSelectNormalGameToS(SelectNormalGameToS* pMsg, unsigned int socket
 	req->m_nMatchID = 119;
 	req->m_vecPlayers.push_back(m_mapSocketPlayer[socket]);
 
-	m_pNetwork->Send("175.197.228.153", 9111, req);
+	Network::Instance()->Send("175.197.228.153", 9111, req);
 }
 
 void Lobby::OnCreateRoomToL(CreateRoomToL* pMsg, unsigned int socket)
@@ -99,7 +99,7 @@ void Lobby::OnCreateRoomToL(CreateRoomToL* pMsg, unsigned int socket)
 
 	for (int i = 0; i < pMsg->m_vecPlayers.size(); ++i)
 	{
-		m_pNetwork->Send(m_mapPlayerSocket[pMsg->m_vecPlayers[i]], pMsgToC);
+		Network::Instance()->Send(m_mapPlayerSocket[pMsg->m_vecPlayers[i]], pMsgToC);
 	}
 }
 

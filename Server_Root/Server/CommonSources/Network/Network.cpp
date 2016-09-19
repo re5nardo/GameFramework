@@ -6,14 +6,9 @@
 #include <process.h>
 #include <WS2tcpip.h>
 
-Network::Network(void* pListener, const USHORT nPort, IMessageConvertor* pMessageConvertor)
+Network::Network()
 {
-	m_pNetworkCore = new NetworkCore(this, nPort);
-	m_pNetworkCore->SetRecvMessageCallback(OnRecvMessage);
-	m_RecvMessageCallback = NULL;
 
-	m_pListener = pListener;
-	m_pMessageConvertor = pMessageConvertor;
 }
 
 Network::~Network()
@@ -22,6 +17,16 @@ Network::~Network()
 	{
 		delete m_pNetworkCore;
 	}
+}
+
+void Network::Initialize(void* pListener, const USHORT nPort, IMessageConvertor* pMessageConvertor)
+{
+	m_pNetworkCore = new NetworkCore(this, nPort);
+	m_pNetworkCore->SetRecvMessageCallback(OnRecvMessage);
+	m_RecvMessageCallback = NULL;
+
+	m_pListener = pListener;
+	m_pMessageConvertor = pMessageConvertor;
 }
 
 int Network::Start()

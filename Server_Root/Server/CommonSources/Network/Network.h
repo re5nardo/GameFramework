@@ -2,16 +2,17 @@
 #include <WinSock2.h>
 #include "NetworkDefines.h"
 #include "../Message/IMessageConvertor.h"
+#include "../CommonSources/Singleton.h"
 
 using namespace std;
 
 class IMessage;
 class NetworkCore;
 
-class Network
+class Network : public Singleton<Network>
 {
 public:
-	Network(void* pListener, const USHORT nPort, IMessageConvertor* pMessageConvertor);
+	Network();
 	virtual ~Network();
 
 private:
@@ -21,6 +22,7 @@ private:
 	IMessageConvertor*	m_pMessageConvertor;
 
 public:
+	void		Initialize(void* pListener, const USHORT nPort, IMessageConvertor* pMessageConvertor);
 	int			Start();
 	void		Stop();
 	void		SetAcceptCallback(void(*handler)(void* pListener, SOCKET socket));

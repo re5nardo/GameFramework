@@ -170,9 +170,6 @@
     <ClCompile Include="Messages\SelectNormalGameToC.cpp">
       <Filter>소스 파일\Messages\ToClient</Filter>
     </ClCompile>
-    <ClCompile Include="..\CommonSources\Singleton.cpp">
-      <Filter>소스 파일\Common</Filter>
-    </ClCompile>
     <ClCompile Include="LobbyMessageConvertor.cpp">
       <Filter>소스 파일\Messages</Filter>
     </ClCompile>

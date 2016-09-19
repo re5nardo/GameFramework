@@ -4,7 +4,6 @@
 #include <string>
 #include "LobbyMessageConvertor.h"
 
-class Network;
 class IMessage;
 class JoinLobbyToS;
 class SelectNormalGameToS;
@@ -19,7 +18,6 @@ public:
 	virtual ~Lobby();
 
 private:
-	Network*							m_pNetwork;
 	map<string, unsigned int>			m_mapPlayerSocket;
 	map<unsigned int, string>			m_mapSocketPlayer;
 	LobbyMessageConvertor				m_MessageConvertor;

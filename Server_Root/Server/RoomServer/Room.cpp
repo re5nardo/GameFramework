@@ -8,24 +8,24 @@
 
 Room::Room(const unsigned short nPort)
 {
-	m_pNetwork = new Network(this, nPort, &m_MessageConvertor);
-	m_pNetwork->SetAcceptCallback(OnAccept);
-	m_pNetwork->SetRecvMessageCallback(OnRecvMessage);
+	Network::Instance()->Initialize(this, nPort, &m_MessageConvertor);
+	Network::Instance()->SetAcceptCallback(OnAccept);
+	Network::Instance()->SetRecvMessageCallback(OnRecvMessage);
 
-	m_pNetwork->Start();
+	Network::Instance()->Start();
 }
 
 Room::~Room()
 {
-	m_pNetwork->Stop();
-	delete m_pNetwork;
+	Network::Instance()->Stop();
+	Network::Instance()->Destroy();
 }
 
 void Room::SendToAllUsers(IMessage* pMsg)
 {
-	for (map<string, unsigned int>::iterator it = m_mapPlayer.begin(); it != m_mapPlayer.end(); it++)
+	for (map<string, unsigned int>::iterator it = m_mapPlayerSocket.begin(); it != m_mapPlayerSocket.end(); it++)
 	{
-		m_pNetwork->Send(it->second, pMsg, false);
+		Network::Instance()->Send(it->second, pMsg, false);
 	}
 
 	delete pMsg;
@@ -48,6 +48,10 @@ void Room::OnRecvMessage(unsigned int socket, IMessage* pMsg)
 	{
 		OnCreateRoomToR((CreateRoomToR*)pMsg, socket);
 	}
+	else if (pMsg->GetID() == GameEventMoveToS::MESSAGE_ID)
+	{
+		OnGameEventMoveToS((GameEventMoveToS*)pMsg, socket);
+	}
 
 	delete pMsg;
 }
@@ -64,7 +68,17 @@ void Room::OnCreateRoomToR(CreateRoomToR* pMsg, unsigned int socket)
 		res->m_vecPlayers.push_back(pMsg->m_vecPlayers[i]);
 	}
 
-	m_pNetwork->Send(socket, res, true, true);
+	Network::Instance()->Send(socket, res, true, true);
+}
+
+void Room::OnGameEventMoveToS(GameEventMoveToS* pMsg, unsigned int socket)
+{
+	GameEventMoveToC* res = new GameEventMoveToC();
+	res->m_nPlayerIndex = pMsg->m_nPlayerIndex;
+	res->m_nElapsedTime = pMsg->m_nElapsedTime;
+	res->m_vec3Dest = pMsg->m_vec3Dest;
+
+	SendToAllUsers(res);
 }
 
 

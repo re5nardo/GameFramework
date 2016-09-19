@@ -115,7 +115,6 @@
     <ClCompile Include="..\CommonSources\Network\Accepter.cpp" />
     <ClCompile Include="..\CommonSources\Network\Network.cpp" />
     <ClCompile Include="..\CommonSources\Network\NetworkCore.cpp" />
-    <ClCompile Include="..\CommonSources\Singleton.cpp" />
     <ClCompile Include="Glicko2.cpp" />
     <ClCompile Include="Lobby.cpp" />
     <ClCompile Include="LobbyMessageConvertor.cpp" />

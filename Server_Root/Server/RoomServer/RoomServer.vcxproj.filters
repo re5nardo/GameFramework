@@ -46,6 +46,12 @@
     <Filter Include="헤더 파일\Data">
       <UniqueIdentifier>{841fea9b-9eb1-4723-bc73-ae3bc5831f6f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="헤더 파일\Game">
+      <UniqueIdentifier>{13550fa7-11f9-4512-8e2b-dc5200e7dd6a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Game">
+      <UniqueIdentifier>{9b3cb8a0-3ad5-434e-b744-eab67b1427ba}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -123,6 +129,9 @@
     <ClInclude Include="..\CommonSources\Messages\CreateRoomToL.h">
       <Filter>헤더 파일\Messages\ToClient</Filter>
     </ClInclude>
+    <ClInclude Include="Game\BaeGameRoom.h">
+      <Filter>헤더 파일\Game</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -146,9 +155,6 @@
     <ClCompile Include="..\CommonSources\Network\NetworkCore.cpp">
       <Filter>소스 파일\Network</Filter>
     </ClCompile>
-    <ClCompile Include="..\CommonSources\Singleton.cpp">
-      <Filter>소스 파일\Common</Filter>
-    </ClCompile>
     <ClCompile Include="..\CommonSources\Message\JSONHelper.cpp">
       <Filter>소스 파일\Messages</Filter>
     </ClCompile>
@@ -169,6 +175,9 @@
     </ClCompile>
     <ClCompile Include="..\CommonSources\Messages\CreateRoomToL.cpp">
       <Filter>소스 파일\Messages\ToClient</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\BaeGameRoom.cpp">
+      <Filter>소스 파일\Game</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
