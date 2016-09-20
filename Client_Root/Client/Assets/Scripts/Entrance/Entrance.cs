@@ -11,9 +11,9 @@ public class Entrance : MonoBehaviour
         Network.Instance.ConnectToServer(m_strIP, m_nPort, OnConnected, OnRecvMessage);
     }
 
-    private void OnConnected(bool bSuccess)
+    private void OnConnected(bool bResult)
     {
-        Debug.Log("OnConnected! Success : " + bSuccess);
+        Debug.Log("OnConnected! Result : " + bResult);
     }
 
     private void OnRecvMessage(IMessage iMsg)

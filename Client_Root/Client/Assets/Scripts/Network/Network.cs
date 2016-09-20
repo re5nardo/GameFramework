@@ -10,6 +10,8 @@ public class Network : MonoSingleton<Network>
 	private Socket m_Socket;
 	private Queue<IMessage> m_MessagesReceived = new Queue<IMessage>();
 
+    private bool m_bConnectResult;
+    private bool m_bConnectCallbacked;
 	private BoolHandler m_ConnectCallback;
 	private MessageHandler m_RecvMessageCallback;
 
@@ -30,6 +32,16 @@ public class Network : MonoSingleton<Network>
 				}
 			}
 		}
+
+        if (m_bConnectCallbacked)
+        {
+            if (m_ConnectCallback != null)
+            {
+                m_ConnectCallback(m_bConnectResult);
+            }
+
+            m_bConnectCallbacked = false;
+        }
 	}
         
 	public void ConnectToServer(string strIP, int nPort, BoolHandler connectHandler, MessageHandler recvMessageHandler)
@@ -85,6 +97,8 @@ public class Network : MonoSingleton<Network>
 		
 	private void ConnectCallback(IAsyncResult ar)
 	{
+        m_bConnectCallbacked = true;
+
 		try
 		{
 			// Retrieve the socket from the state object.
@@ -95,19 +109,13 @@ public class Network : MonoSingleton<Network>
 
 			ReceiveStart ();
 
-			if(m_ConnectCallback != null)
-			{
-				m_ConnectCallback(true);
-			}
+            m_bConnectResult = true;
 		} 
 		catch (Exception e)
 		{
 			Console.WriteLine(e.ToString());
 
-			if(m_ConnectCallback != null)
-			{
-				m_ConnectCallback(false);
-			}
+            m_bConnectResult = false;
 		}
 	}
 
@@ -206,15 +214,7 @@ public class Network : MonoSingleton<Network>
 	{
 		IMessage msg = null;
 
-        if (nMessageID == TestMessage.MESSAGE_ID)
-		{
-			msg = new TestMessage();
-		}
-        else if (nMessageID == GameEventMoveToC.MESSAGE_ID)
-        {
-            msg = new GameEventMoveToC();
-        }
-        else if (nMessageID == JoinLobbyToC.MESSAGE_ID)
+        if (nMessageID == JoinLobbyToC.MESSAGE_ID)
         {
             msg = new JoinLobbyToC();
         }

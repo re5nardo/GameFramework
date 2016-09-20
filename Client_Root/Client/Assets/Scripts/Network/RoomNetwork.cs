@@ -5,11 +5,13 @@ using System.Net.Sockets;
 using System.Threading;
 using System.Collections.Generic;
 
-public class RoomNetwork : MonoSingleton<Network>
+public class RoomNetwork : MonoSingleton<RoomNetwork>
 {
     private Socket m_Socket;
     private Queue<IMessage> m_MessagesReceived = new Queue<IMessage>();
 
+    private bool m_bConnectResult;
+    private bool m_bConnectCallbacked;
     private BoolHandler m_ConnectCallback;
     private MessageHandler m_RecvMessageCallback;
 
@@ -24,6 +26,16 @@ public class RoomNetwork : MonoSingleton<Network>
                     m_RecvMessageCallback(m_MessagesReceived.Dequeue ());
                 }
             }
+        }
+
+        if (m_bConnectCallbacked)
+        {
+            if (m_ConnectCallback != null)
+            {
+                m_ConnectCallback(m_bConnectResult);
+            }
+
+            m_bConnectCallbacked = false;
         }
     }
         
@@ -80,6 +92,8 @@ public class RoomNetwork : MonoSingleton<Network>
 
     private void ConnectCallback(IAsyncResult ar)
     {
+        m_bConnectCallbacked = true;
+
         try
         {
             // Retrieve the socket from the state object.
@@ -90,19 +104,13 @@ public class RoomNetwork : MonoSingleton<Network>
 
             ReceiveStart ();
 
-            if(m_ConnectCallback != null)
-            {
-                m_ConnectCallback(true);
-            }
+            m_bConnectResult = true;
         } 
         catch (Exception e)
         {
             Console.WriteLine(e.ToString());
 
-            if(m_ConnectCallback != null)
-            {
-                m_ConnectCallback(false);
-            }
+            m_bConnectResult = false;
         }
     }
 
@@ -201,21 +209,13 @@ public class RoomNetwork : MonoSingleton<Network>
     {
         IMessage msg = null;
 
-        if (nMessageID == TestMessage.MESSAGE_ID)
-        {
-            msg = new TestMessage();
-        }
-        else if (nMessageID == GameEventMoveToC.MESSAGE_ID)
+        if (nMessageID == GameEventMoveToC.MESSAGE_ID)
         {
             msg = new GameEventMoveToC();
         }
-        else if (nMessageID == JoinLobbyToC.MESSAGE_ID)
+        else if (nMessageID == EnterRoomToC.MESSAGE_ID)
         {
-            msg = new JoinLobbyToC();
-        }
-        else if (nMessageID == SelectNormalGameToC.MESSAGE_ID)
-        {
-            msg = new SelectNormalGameToC();
+            msg = new EnterRoomToC();
         }
 
         if (msg != null)
