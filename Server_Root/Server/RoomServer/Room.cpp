@@ -3,6 +3,7 @@
 #include "../CommonSources/Network/Network.h"
 #include "../CommonSources/Message/IMessage.h"
 #include "RoomMessageHeader.h"
+#include "Game\BaeGameRoom.h"
 #include <time.h>
 //#include <math.h>
 
@@ -52,6 +53,10 @@ void Room::OnRecvMessage(unsigned int socket, IMessage* pMsg)
 	{
 		OnGameEventMoveToS((GameEventMoveToS*)pMsg, socket);
 	}
+	else if (pMsg->GetID() == EnterRoomToS::MESSAGE_ID)
+	{
+		OnEnterRoomToS((EnterRoomToS*)pMsg, socket);
+	}
 
 	delete pMsg;
 }
@@ -60,6 +65,15 @@ void Room::OnRecvMessage(unsigned int socket, IMessage* pMsg)
 //	Protocol Handlers
 void Room::OnCreateRoomToR(CreateRoomToR* pMsg, unsigned int socket)
 {
+	BaeGameRoom* gameRoom = new BaeGameRoom(pMsg->m_nMatchID, pMsg->m_vecPlayers);
+	
+	m_mapMatchIDGameRoom[pMsg->m_nMatchID] = gameRoom;
+
+	for (int i = 0; i < pMsg->m_vecPlayers.size(); ++i)
+	{
+		m_mapPlayerGameRoom[pMsg->m_vecPlayers[i]] = gameRoom;
+	}
+
 	CreateRoomToL* res = new CreateRoomToL();
 	res->m_nResult = 0;
 	
@@ -73,12 +87,34 @@ void Room::OnCreateRoomToR(CreateRoomToR* pMsg, unsigned int socket)
 
 void Room::OnGameEventMoveToS(GameEventMoveToS* pMsg, unsigned int socket)
 {
-	GameEventMoveToC* res = new GameEventMoveToC();
+	m_mapPlayerGameRoom[m_mapSocketPlayer[socket]]->OnRecvMessage(socket, pMsg);
+	
+
+	/*GameEventMoveToC* res = new GameEventMoveToC();
 	res->m_nPlayerIndex = pMsg->m_nPlayerIndex;
 	res->m_nElapsedTime = pMsg->m_nElapsedTime;
 	res->m_vec3Dest = pMsg->m_vec3Dest;
 
-	SendToAllUsers(res);
+	SendToAllUsers(res);*/
+}
+
+void Room::OnEnterRoomToS(EnterRoomToS* pMsg, unsigned int socket)
+{
+	//	now.. always accept..
+	/*
+	if (!IsAuth(pMsg->m_nAuthKey))
+	{
+	delete pMsg;
+	return;
+	}
+	*/
+
+	m_mapPlayerSocket[pMsg->m_strPlayerKey] = socket;
+	m_mapSocketPlayer[socket] = pMsg->m_strPlayerKey;
+
+
+
+	m_mapPlayerGameRoom[pMsg->m_strPlayerKey]->OnRecvMessage(socket, pMsg);
 }
 
 
