@@ -8,6 +8,7 @@
 
 class CreateRoomToR;
 class GameEventMoveToS;
+class BaeGameRoom;
 
 using namespace std;
 
@@ -21,6 +22,8 @@ private:
 	map<string, unsigned int>			m_mapPlayerSocket;
 	map<unsigned int, string>			m_mapSocketPlayer;
 	RoomMessageConvertor				m_MessageConvertor;
+	map<int, BaeGameRoom*>				m_mapMatchIDGameRoom;
+	map<string, BaeGameRoom*>			m_mapPlayerGameRoom;
 
 private:
 	void OnAccept(unsigned int socket);
@@ -32,6 +35,7 @@ private:
 	//	Protocol Handler
 	void OnCreateRoomToR(CreateRoomToR* pMsg, unsigned int socket);
 	void OnGameEventMoveToS(GameEventMoveToS* pMsg, unsigned int socket);
+	void OnEnterRoomToS(EnterRoomToS* pMsg, unsigned int socket);
 
 private:
 	static void OnAccept(void* pLobby, unsigned int socket);

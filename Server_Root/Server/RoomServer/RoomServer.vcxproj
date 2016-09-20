@@ -97,6 +97,8 @@
     <ClInclude Include="Data.h" />
     <ClInclude Include="Defines.h" />
     <ClInclude Include="Game\BaeGameRoom.h" />
+    <ClInclude Include="Messages\EnterRoomToC.h" />
+    <ClInclude Include="Messages\EnterRoomToS.h" />
     <ClInclude Include="Messages\GameEventMoveToC.h" />
     <ClInclude Include="Messages\GameEventMoveToS.h" />
     <ClInclude Include="Messages\GameStartToC.h" />
@@ -115,6 +117,8 @@
     <ClCompile Include="..\CommonSources\Network\Network.cpp" />
     <ClCompile Include="..\CommonSources\Network\NetworkCore.cpp" />
     <ClCompile Include="Game\BaeGameRoom.cpp" />
+    <ClCompile Include="Messages\EnterRoomToC.cpp" />
+    <ClCompile Include="Messages\EnterRoomToS.cpp" />
     <ClCompile Include="Messages\GameEventMoveToC.cpp" />
     <ClCompile Include="Messages\GameEventMoveToS.cpp" />
     <ClCompile Include="Messages\GameStartToC.cpp" />

@@ -23,6 +23,10 @@ IMessage* RoomMessageConvertor::GetMessage(const unsigned short nMessageID, cons
 	{
 		pMsg = new GameEventMoveToS();
 	}
+	else if (nMessageID == EnterRoomToS::MESSAGE_ID)
+	{
+		pMsg = new EnterRoomToS();
+	}
 
 	if (pMsg != NULL)
 	{

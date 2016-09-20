@@ -6,3 +6,5 @@
 #include "Messages/ReadyForStartToS.h"
 #include "../CommonSources/Messages/CreateRoomToR.h"
 #include "../CommonSources/Messages/CreateRoomToL.h"
+#include "Messages/EnterRoomToC.h"
+#include "Messages/EnterRoomToS.h"

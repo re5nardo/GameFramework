@@ -132,6 +132,12 @@
     <ClInclude Include="Game\BaeGameRoom.h">
       <Filter>헤더 파일\Game</Filter>
     </ClInclude>
+    <ClInclude Include="Messages\EnterRoomToC.h">
+      <Filter>헤더 파일\Messages\ToClient</Filter>
+    </ClInclude>
+    <ClInclude Include="Messages\EnterRoomToS.h">
+      <Filter>헤더 파일\Messages\ToServer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -178,6 +184,12 @@
     </ClCompile>
     <ClCompile Include="Game\BaeGameRoom.cpp">
       <Filter>소스 파일\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Messages\EnterRoomToC.cpp">
+      <Filter>소스 파일\Messages\ToClient</Filter>
+    </ClCompile>
+    <ClCompile Include="Messages\EnterRoomToS.cpp">
+      <Filter>소스 파일\Messages\ToServer</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

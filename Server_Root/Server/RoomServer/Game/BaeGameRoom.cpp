@@ -6,9 +6,10 @@
 #include <time.h>
 
 
-BaeGameRoom::BaeGameRoom()
+BaeGameRoom::BaeGameRoom(int nMatchID, vector<string> vecMatchedPlayers)
 {
-
+	m_nMatchID = nMatchID;
+	m_vecMatchedPlayers = vecMatchedPlayers;
 }
 
 BaeGameRoom::~BaeGameRoom()
@@ -18,12 +19,10 @@ BaeGameRoom::~BaeGameRoom()
 
 void BaeGameRoom::SendToAllUsers(IMessage* pMsg)
 {
-	for (map<string, unsigned int>::iterator it = m_mapPlayerSocket.begin(); it != m_mapPlayerSocket.end(); it++)
+	for (int i = 0; i < m_vecPlayers.size(); ++i)
 	{
-		
+		Network::Instance()->Send(m_mapPlayerSocket[m_vecPlayers[i]], pMsg);
 	}
-
-	delete pMsg;
 }
 
 
@@ -40,8 +39,10 @@ void BaeGameRoom::OnRecvMessage(unsigned int socket, IMessage* pMsg)
 	{
 		OnGameEventMoveToS((GameEventMoveToS*)pMsg, socket);
 	}
-
-	delete pMsg;
+	else if (pMsg->GetID() == EnterRoomToS::MESSAGE_ID)
+	{
+		OnEnterRoomToS((EnterRoomToS*)pMsg, socket);
+	}
 }
 
 
@@ -67,4 +68,24 @@ void BaeGameRoom::OnGameEventMoveToS(GameEventMoveToS* pMsg, unsigned int socket
 	res->m_vec3Dest = pMsg->m_vec3Dest;
 
 	SendToAllUsers(res);
+}
+
+void BaeGameRoom::OnEnterRoomToS(EnterRoomToS* pMsg, unsigned int socket)
+{
+	EnterRoomToC* res = new EnterRoomToC();
+
+	//if (pMsg->m_nMatchID != m_nMatchID || m_vecMatchedPlayers.~_Container_base12(pMsg->m_strPlayerKey))
+	if (false)
+	{
+		res->m_nResult = -1;
+	}
+	else
+	{
+		res->m_nResult = 0;
+	}
+
+	m_vecPlayers.push_back(pMsg->m_strPlayerKey);
+	m_mapPlayerSocket[pMsg->m_strPlayerKey] = socket;
+
+	Network::Instance()->Send(socket, res);
 }
