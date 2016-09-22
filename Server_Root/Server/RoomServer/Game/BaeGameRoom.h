@@ -6,8 +6,8 @@
 
 class IMessage;
 class CreateRoomToR;
-class GameEventMoveToS;
-class EnterRoomToS;
+class GameEventMoveToR;
+class EnterRoomToR;
 
 using namespace std;
 
@@ -32,7 +32,7 @@ private:
 
 	//	Protocol Handler
 	void OnCreateRoomToR(CreateRoomToR* pMsg, unsigned int socket);
-	void OnGameEventMoveToS(GameEventMoveToS* pMsg, unsigned int socket);
-	void OnEnterRoomToS(EnterRoomToS* pMsg, unsigned int socket);
+	void OnGameEventMoveToR(GameEventMoveToR* pMsg, unsigned int socket);
+	void OnEnterRoomToR(EnterRoomToR* pMsg, unsigned int socket);
 };
 

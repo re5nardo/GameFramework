@@ -1,26 +1,26 @@
 #include "stdafx.h"
-#include "EnterRoomToS.h"
+#include "EnterRoomToR.h"
 #include "../../CommonSources/Message/JSONHelper.h"
 
 
-EnterRoomToS::EnterRoomToS()
+EnterRoomToR::EnterRoomToR()
 {
 	m_buffer = new GenericStringBuffer<UTF8<>>();
 	m_writer = new Writer<StringBuffer, UTF8<>>(*m_buffer);
 }
 
-EnterRoomToS::~EnterRoomToS()
+EnterRoomToR::~EnterRoomToR()
 {
 	delete m_buffer;
 	delete m_writer;
 }
 
-unsigned short EnterRoomToS::GetID()
+unsigned short EnterRoomToR::GetID()
 {
 	return MESSAGE_ID;
 }
 
-const char* EnterRoomToS::Serialize()
+const char* EnterRoomToR::Serialize()
 {
 	Document document;
 	document.SetObject();
@@ -35,7 +35,7 @@ const char* EnterRoomToS::Serialize()
 	return m_buffer->GetString();
 }
 
-bool EnterRoomToS::Deserialize(const char* pChar)
+bool EnterRoomToR::Deserialize(const char* pChar)
 {
 	Document document;
 	document.Parse<0>(pChar);

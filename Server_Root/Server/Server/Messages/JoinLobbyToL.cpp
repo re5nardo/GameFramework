@@ -1,26 +1,26 @@
 #include "stdafx.h"
-#include "JoinLobbyToS.h"
+#include "JoinLobbyToL.h"
 #include "../../CommonSources/Message/JSONHelper.h"
 
 
-JoinLobbyToS::JoinLobbyToS()
+JoinLobbyToL::JoinLobbyToL()
 {
 	m_buffer = new GenericStringBuffer<UTF8<>>();
 	m_writer = new Writer<StringBuffer, UTF8<>>(*m_buffer);
 }
 
-JoinLobbyToS::~JoinLobbyToS()
+JoinLobbyToL::~JoinLobbyToL()
 {
 	delete m_buffer;
 	delete m_writer;
 }
 
-unsigned short JoinLobbyToS::GetID()
+unsigned short JoinLobbyToL::GetID()
 {
 	return MESSAGE_ID;
 }
 
-const char* JoinLobbyToS::Serialize()
+const char* JoinLobbyToL::Serialize()
 {
 	Document document;
 	document.SetObject();
@@ -34,7 +34,7 @@ const char* JoinLobbyToS::Serialize()
 	return m_buffer->GetString();
 }
 
-bool JoinLobbyToS::Deserialize(const char* pChar)
+bool JoinLobbyToL::Deserialize(const char* pChar)
 {
 	Document document;
 	document.Parse<0>(pChar);

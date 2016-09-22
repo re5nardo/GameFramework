@@ -7,18 +7,23 @@
 
 using namespace rapidjson;
 
-class SelectNormalGameToS : public IMessage
+class EnterRoomToR : public IMessage
 {
 public:
-	SelectNormalGameToS();
-	virtual ~SelectNormalGameToS();
+	EnterRoomToR();
+	virtual ~EnterRoomToR();
 
 public:
-	static const unsigned short MESSAGE_ID = 1;
+	static const unsigned short MESSAGE_ID = 20002;
 
 private:
 	GenericStringBuffer<UTF8<>>*	m_buffer;
 	Writer<StringBuffer, UTF8<>>*	m_writer;
+
+public:
+	string				m_strPlayerKey;			//	json field name : PlayerKey
+	int					m_nAuthKey;             //  json field name : AuthKey
+	int					m_nMatchID;				//  json field name : MatchID
 
 public:
 	unsigned short GetID() override;

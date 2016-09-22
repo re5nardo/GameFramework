@@ -1,26 +1,26 @@
 #include "stdafx.h"
-#include "GameEventMoveToS.h"
+#include "GameEventMoveToR.h"
 #include "../../CommonSources/Message/JSONHelper.h"
 
 
-GameEventMoveToS::GameEventMoveToS()
+GameEventMoveToR::GameEventMoveToR()
 {
 	m_buffer = new GenericStringBuffer<UTF8<>>();
 	m_writer = new Writer<StringBuffer, UTF8<>>(*m_buffer);
 }
 
-GameEventMoveToS::~GameEventMoveToS()
+GameEventMoveToR::~GameEventMoveToR()
 {
 	delete m_buffer;
 	delete m_writer;
 }
 
-unsigned short GameEventMoveToS::GetID()
+unsigned short GameEventMoveToR::GetID()
 {
 	return MESSAGE_ID;
 }
 
-const char* GameEventMoveToS::Serialize()
+const char* GameEventMoveToR::Serialize()
 {
 	Document document;
 	document.SetObject();
@@ -37,7 +37,7 @@ const char* GameEventMoveToS::Serialize()
 	return m_buffer->GetString();
 }
 
-bool GameEventMoveToS::Deserialize(const char* pChar)
+bool GameEventMoveToR::Deserialize(const char* pChar)
 {
 	Document document;
 	document.Parse<0>(pChar);

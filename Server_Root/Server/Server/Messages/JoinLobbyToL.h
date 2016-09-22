@@ -7,11 +7,11 @@
 
 using namespace rapidjson;
 
-class JoinLobbyToS : public IMessage
+class JoinLobbyToL : public IMessage
 {
 public:
-	JoinLobbyToS();
-	virtual ~JoinLobbyToS();
+	JoinLobbyToL();
+	virtual ~JoinLobbyToL();
 
 public:
 	static const unsigned short MESSAGE_ID = 0;

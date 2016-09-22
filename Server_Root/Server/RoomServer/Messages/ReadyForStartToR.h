@@ -7,11 +7,11 @@
 
 using namespace rapidjson;
 
-class ReadyForStartToS : public IMessage
+class ReadyForStartToR : public IMessage
 {
 public:
-	ReadyForStartToS();
-	virtual ~ReadyForStartToS();
+	ReadyForStartToR();
+	virtual ~ReadyForStartToR();
 
 public:
 	static const unsigned short MESSAGE_ID = 20000;

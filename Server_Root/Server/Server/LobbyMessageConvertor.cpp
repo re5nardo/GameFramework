@@ -15,13 +15,13 @@ IMessage* LobbyMessageConvertor::GetMessage(const unsigned short nMessageID, con
 {
 	IMessage* pMsg = NULL;
 
-	if (nMessageID == JoinLobbyToS::MESSAGE_ID)
+	if (nMessageID == JoinLobbyToL::MESSAGE_ID)
 	{
-		pMsg = new JoinLobbyToS();
+		pMsg = new JoinLobbyToL();
 	}
-	else if (nMessageID == SelectNormalGameToS::MESSAGE_ID)
+	else if (nMessageID == SelectNormalGameToL::MESSAGE_ID)
 	{
-		pMsg = new SelectNormalGameToS();
+		pMsg = new SelectNormalGameToL();
 	}
 	else if (nMessageID == CreateRoomToL::MESSAGE_ID)
 	{

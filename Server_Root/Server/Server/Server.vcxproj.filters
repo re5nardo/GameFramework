@@ -34,17 +34,23 @@
     <Filter Include="헤더 파일\Messages\ToClient">
       <UniqueIdentifier>{d9ae330b-a1ed-421e-bee6-980805a143ef}</UniqueIdentifier>
     </Filter>
-    <Filter Include="헤더 파일\Messages\ToServer">
-      <UniqueIdentifier>{7d59cd35-fb35-4a4b-a808-ef9cd7687c68}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="소스 파일\Messages\ToServer">
-      <UniqueIdentifier>{699fe5b2-1ddf-434c-a3c2-7e897ad9dae3}</UniqueIdentifier>
-    </Filter>
     <Filter Include="소스 파일\Messages\ToClient">
       <UniqueIdentifier>{21dba2c7-db18-4096-9026-787d82d216a9}</UniqueIdentifier>
     </Filter>
     <Filter Include="헤더 파일\Data">
       <UniqueIdentifier>{d8deeefd-d6aa-43f2-a900-155e991bd43d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Messages\ToRoom">
+      <UniqueIdentifier>{51ccada3-04d9-425d-862b-3aa02733c4c5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Messages\ToRoom">
+      <UniqueIdentifier>{a5c3a384-08a0-4534-a14a-9b35ee92430c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Messages\ToLobby">
+      <UniqueIdentifier>{7d59cd35-fb35-4a4b-a808-ef9cd7687c68}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Messages\ToLobby">
+      <UniqueIdentifier>{699fe5b2-1ddf-434c-a3c2-7e897ad9dae3}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -102,12 +108,6 @@
     <ClInclude Include="..\CommonSources\Message\JSONHelper.h">
       <Filter>헤더 파일\Messages</Filter>
     </ClInclude>
-    <ClInclude Include="Messages\JoinLobbyToS.h">
-      <Filter>헤더 파일\Messages\ToServer</Filter>
-    </ClInclude>
-    <ClInclude Include="Messages\SelectNormalGameToS.h">
-      <Filter>헤더 파일\Messages\ToServer</Filter>
-    </ClInclude>
     <ClInclude Include="Messages\JoinLobbyToC.h">
       <Filter>헤더 파일\Messages\ToClient</Filter>
     </ClInclude>
@@ -124,10 +124,16 @@
       <Filter>헤더 파일\Messages</Filter>
     </ClInclude>
     <ClInclude Include="..\CommonSources\Messages\CreateRoomToL.h">
-      <Filter>헤더 파일\Messages\ToServer</Filter>
+      <Filter>헤더 파일\Messages\ToLobby</Filter>
+    </ClInclude>
+    <ClInclude Include="Messages\JoinLobbyToL.h">
+      <Filter>헤더 파일\Messages\ToLobby</Filter>
+    </ClInclude>
+    <ClInclude Include="Messages\SelectNormalGameToL.h">
+      <Filter>헤더 파일\Messages\ToLobby</Filter>
     </ClInclude>
     <ClInclude Include="..\CommonSources\Messages\CreateRoomToR.h">
-      <Filter>헤더 파일\Messages\ToClient</Filter>
+      <Filter>헤더 파일\Messages\ToRoom</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -158,12 +164,6 @@
     <ClCompile Include="..\CommonSources\Message\JSONHelper.cpp">
       <Filter>소스 파일\Messages</Filter>
     </ClCompile>
-    <ClCompile Include="Messages\JoinLobbyToS.cpp">
-      <Filter>소스 파일\Messages\ToServer</Filter>
-    </ClCompile>
-    <ClCompile Include="Messages\SelectNormalGameToS.cpp">
-      <Filter>소스 파일\Messages\ToServer</Filter>
-    </ClCompile>
     <ClCompile Include="Messages\JoinLobbyToC.cpp">
       <Filter>소스 파일\Messages\ToClient</Filter>
     </ClCompile>
@@ -174,10 +174,16 @@
       <Filter>소스 파일\Messages</Filter>
     </ClCompile>
     <ClCompile Include="..\CommonSources\Messages\CreateRoomToL.cpp">
-      <Filter>소스 파일\Messages\ToServer</Filter>
+      <Filter>소스 파일\Messages\ToLobby</Filter>
+    </ClCompile>
+    <ClCompile Include="Messages\JoinLobbyToL.cpp">
+      <Filter>소스 파일\Messages\ToLobby</Filter>
+    </ClCompile>
+    <ClCompile Include="Messages\SelectNormalGameToL.cpp">
+      <Filter>소스 파일\Messages\ToLobby</Filter>
     </ClCompile>
     <ClCompile Include="..\CommonSources\Messages\CreateRoomToR.cpp">
-      <Filter>소스 파일\Messages\ToClient</Filter>
+      <Filter>소스 파일\Messages\ToRoom</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -35,13 +35,13 @@ void BaeGameRoom::OnRecvMessage(unsigned int socket, IMessage* pMsg)
 	{
 		OnCreateRoomToR((CreateRoomToR*)pMsg, socket);
 	}
-	else if (pMsg->GetID() == GameEventMoveToS::MESSAGE_ID)
+	else if (pMsg->GetID() == GameEventMoveToR::MESSAGE_ID)
 	{
-		OnGameEventMoveToS((GameEventMoveToS*)pMsg, socket);
+		OnGameEventMoveToR((GameEventMoveToR*)pMsg, socket);
 	}
-	else if (pMsg->GetID() == EnterRoomToS::MESSAGE_ID)
+	else if (pMsg->GetID() == EnterRoomToR::MESSAGE_ID)
 	{
-		OnEnterRoomToS((EnterRoomToS*)pMsg, socket);
+		OnEnterRoomToR((EnterRoomToR*)pMsg, socket);
 	}
 }
 
@@ -60,7 +60,7 @@ void BaeGameRoom::OnCreateRoomToR(CreateRoomToR* pMsg, unsigned int socket)
 	//m_pNetwork->Send(socket, res, true, true);
 }
 
-void BaeGameRoom::OnGameEventMoveToS(GameEventMoveToS* pMsg, unsigned int socket)
+void BaeGameRoom::OnGameEventMoveToR(GameEventMoveToR* pMsg, unsigned int socket)
 {
 	GameEventMoveToC* res = new GameEventMoveToC();
 	res->m_nPlayerIndex = pMsg->m_nPlayerIndex;
@@ -70,7 +70,7 @@ void BaeGameRoom::OnGameEventMoveToS(GameEventMoveToS* pMsg, unsigned int socket
 	SendToAllUsers(res);
 }
 
-void BaeGameRoom::OnEnterRoomToS(EnterRoomToS* pMsg, unsigned int socket)
+void BaeGameRoom::OnEnterRoomToR(EnterRoomToR* pMsg, unsigned int socket)
 {
 	EnterRoomToC* res = new EnterRoomToC();
 

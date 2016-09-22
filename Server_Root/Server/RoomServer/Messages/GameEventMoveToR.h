@@ -8,11 +8,11 @@
 
 using namespace rapidjson;
 
-class GameEventMoveToS : public IMessage
+class GameEventMoveToR : public IMessage
 {
 public:
-	GameEventMoveToS();
-	virtual ~GameEventMoveToS();
+	GameEventMoveToR();
+	virtual ~GameEventMoveToR();
 
 public:
 	static const unsigned short MESSAGE_ID = 20001;

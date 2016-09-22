@@ -42,13 +42,13 @@ void Lobby::OnRecvMessage(unsigned int socket, IMessage* pMsg)
 	//	temp
 	//printf("%s", pMsg->Serialize());
 
-	if (pMsg->GetID() == JoinLobbyToS::MESSAGE_ID)
+	if (pMsg->GetID() == JoinLobbyToL::MESSAGE_ID)
 	{
-		OnJoinLobbyToS((JoinLobbyToS*)pMsg, socket);
+		OnJoinLobbyToL((JoinLobbyToL*)pMsg, socket);
 	}
-	else if (pMsg->GetID() == SelectNormalGameToS::MESSAGE_ID)
+	else if (pMsg->GetID() == SelectNormalGameToL::MESSAGE_ID)
 	{
-		OnSelectNormalGameToS((SelectNormalGameToS*)pMsg, socket);
+		OnSelectNormalGameToL((SelectNormalGameToL*)pMsg, socket);
 	}
 	else if (pMsg->GetID() == CreateRoomToL::MESSAGE_ID)
 	{
@@ -60,7 +60,7 @@ void Lobby::OnRecvMessage(unsigned int socket, IMessage* pMsg)
 
 
 //	Protocol Handlers
-void Lobby::OnJoinLobbyToS(JoinLobbyToS* pMsg, unsigned int socket)
+void Lobby::OnJoinLobbyToL(JoinLobbyToL* pMsg, unsigned int socket)
 {
 	//	now.. always accept..
 	/*
@@ -80,7 +80,7 @@ void Lobby::OnJoinLobbyToS(JoinLobbyToS* pMsg, unsigned int socket)
 	Network::Instance()->Send(socket, pMsgToC);
 }
 
-void Lobby::OnSelectNormalGameToS(SelectNormalGameToS* pMsg, unsigned int socket)
+void Lobby::OnSelectNormalGameToL(SelectNormalGameToL* pMsg, unsigned int socket)
 {
 	//	Match making.. & select room server..
 	//	...

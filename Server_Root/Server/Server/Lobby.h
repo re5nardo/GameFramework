@@ -5,8 +5,8 @@
 #include "LobbyMessageConvertor.h"
 
 class IMessage;
-class JoinLobbyToS;
-class SelectNormalGameToS;
+class JoinLobbyToL;
+class SelectNormalGameToL;
 class CreateRoomToL;
 
 using namespace std;
@@ -30,8 +30,8 @@ private:
 	void SendToAllUsers(IMessage* pMsg);
 
 	//	Protocol Handler
-	void OnJoinLobbyToS(JoinLobbyToS* pMsg, unsigned int socket);
-	void OnSelectNormalGameToS(SelectNormalGameToS* pMsg, unsigned int socket);
+	void OnJoinLobbyToL(JoinLobbyToL* pMsg, unsigned int socket);
+	void OnSelectNormalGameToL(SelectNormalGameToL* pMsg, unsigned int socket);
 	void OnCreateRoomToL(CreateRoomToL* pMsg, unsigned int socket);
 
 private:

@@ -101,9 +101,9 @@
     <ClInclude Include="LobbyMessageConvertor.h" />
     <ClInclude Include="LobbyMessageHeader.h" />
     <ClInclude Include="Messages\JoinLobbyToC.h" />
-    <ClInclude Include="Messages\JoinLobbyToS.h" />
+    <ClInclude Include="Messages\JoinLobbyToL.h" />
     <ClInclude Include="Messages\SelectNormalGameToC.h" />
-    <ClInclude Include="Messages\SelectNormalGameToS.h" />
+    <ClInclude Include="Messages\SelectNormalGameToL.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
@@ -119,9 +119,9 @@
     <ClCompile Include="Lobby.cpp" />
     <ClCompile Include="LobbyMessageConvertor.cpp" />
     <ClCompile Include="Messages\JoinLobbyToC.cpp" />
-    <ClCompile Include="Messages\JoinLobbyToS.cpp" />
+    <ClCompile Include="Messages\JoinLobbyToL.cpp" />
     <ClCompile Include="Messages\SelectNormalGameToC.cpp" />
-    <ClCompile Include="Messages\SelectNormalGameToS.cpp" />
+    <ClCompile Include="Messages\SelectNormalGameToL.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Server.cpp" />
     <ClCompile Include="stdafx.cpp">

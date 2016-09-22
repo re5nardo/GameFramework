@@ -19,13 +19,13 @@ IMessage* RoomMessageConvertor::GetMessage(const unsigned short nMessageID, cons
 	{
 		pMsg = new CreateRoomToR();
 	}
-	else if (nMessageID == GameEventMoveToS::MESSAGE_ID)
+	else if (nMessageID == GameEventMoveToR::MESSAGE_ID)
 	{
-		pMsg = new GameEventMoveToS();
+		pMsg = new GameEventMoveToR();
 	}
-	else if (nMessageID == EnterRoomToS::MESSAGE_ID)
+	else if (nMessageID == EnterRoomToR::MESSAGE_ID)
 	{
-		pMsg = new EnterRoomToS();
+		pMsg = new EnterRoomToR();
 	}
 
 	if (pMsg != NULL)

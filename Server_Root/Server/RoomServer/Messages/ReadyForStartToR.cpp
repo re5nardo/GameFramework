@@ -1,29 +1,31 @@
 #include "stdafx.h"
-#include "SelectNormalGameToS.h"
+#include "ReadyForStartToR.h"
 #include "../../CommonSources/Message/JSONHelper.h"
 
 
-SelectNormalGameToS::SelectNormalGameToS()
+ReadyForStartToR::ReadyForStartToR()
 {
 	m_buffer = new GenericStringBuffer<UTF8<>>();
 	m_writer = new Writer<StringBuffer, UTF8<>>(*m_buffer);
 }
 
-SelectNormalGameToS::~SelectNormalGameToS()
+ReadyForStartToR::~ReadyForStartToR()
 {
 	delete m_buffer;
 	delete m_writer;
 }
 
-unsigned short SelectNormalGameToS::GetID()
+unsigned short ReadyForStartToR::GetID()
 {
 	return MESSAGE_ID;
 }
 
-const char* SelectNormalGameToS::Serialize()
+const char* ReadyForStartToR::Serialize()
 {
 	Document document;
 	document.SetObject();
+
+	JSONHelper::AddField(&document, "PlayerIndex", m_nPlayerIndex);
 
 	m_buffer->Clear();
 	document.Accept(*m_writer);
@@ -31,7 +33,7 @@ const char* SelectNormalGameToS::Serialize()
 	return m_buffer->GetString();
 }
 
-bool SelectNormalGameToS::Deserialize(const char* pChar)
+bool ReadyForStartToR::Deserialize(const char* pChar)
 {
 	Document document;
 	document.Parse<0>(pChar);
@@ -39,6 +41,8 @@ bool SelectNormalGameToS::Deserialize(const char* pChar)
 	{
 		return false;
 	}
+
+	if (!JSONHelper::GetField(&document, "PlayerIndex", &m_nPlayerIndex)) return false;
 
 	return true;
 }

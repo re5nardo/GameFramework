@@ -1,8 +1,8 @@
 #pragma once
 
 #include "Messages/JoinLobbyToC.h"
-#include "Messages/JoinLobbyToS.h"
+#include "Messages/JoinLobbyToL.h"
 #include "Messages/SelectNormalGameToC.h"
-#include "Messages/SelectNormalGameToS.h"
+#include "Messages/SelectNormalGameToL.h"
 #include "../CommonSources/Messages/CreateRoomToR.h"
 #include "../CommonSources/Messages/CreateRoomToL.h"

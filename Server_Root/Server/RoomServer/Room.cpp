@@ -49,13 +49,13 @@ void Room::OnRecvMessage(unsigned int socket, IMessage* pMsg)
 	{
 		OnCreateRoomToR((CreateRoomToR*)pMsg, socket);
 	}
-	else if (pMsg->GetID() == GameEventMoveToS::MESSAGE_ID)
+	else if (pMsg->GetID() == GameEventMoveToR::MESSAGE_ID)
 	{
-		OnGameEventMoveToS((GameEventMoveToS*)pMsg, socket);
+		OnGameEventMoveToR((GameEventMoveToR*)pMsg, socket);
 	}
-	else if (pMsg->GetID() == EnterRoomToS::MESSAGE_ID)
+	else if (pMsg->GetID() == EnterRoomToR::MESSAGE_ID)
 	{
-		OnEnterRoomToS((EnterRoomToS*)pMsg, socket);
+		OnEnterRoomToR((EnterRoomToR*)pMsg, socket);
 	}
 
 	delete pMsg;
@@ -85,7 +85,7 @@ void Room::OnCreateRoomToR(CreateRoomToR* pMsg, unsigned int socket)
 	Network::Instance()->Send(socket, res, true, true);
 }
 
-void Room::OnGameEventMoveToS(GameEventMoveToS* pMsg, unsigned int socket)
+void Room::OnGameEventMoveToR(GameEventMoveToR* pMsg, unsigned int socket)
 {
 	m_mapPlayerGameRoom[m_mapSocketPlayer[socket]]->OnRecvMessage(socket, pMsg);
 	
@@ -98,7 +98,7 @@ void Room::OnGameEventMoveToS(GameEventMoveToS* pMsg, unsigned int socket)
 	SendToAllUsers(res);*/
 }
 
-void Room::OnEnterRoomToS(EnterRoomToS* pMsg, unsigned int socket)
+void Room::OnEnterRoomToR(EnterRoomToR* pMsg, unsigned int socket)
 {
 	//	now.. always accept..
 	/*

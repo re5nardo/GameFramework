@@ -34,14 +34,8 @@
     <Filter Include="소스 파일\Messages\ToClient">
       <UniqueIdentifier>{7711490d-1a2d-43bd-a92b-dd55cad9ce41}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\Messages\ToServer">
-      <UniqueIdentifier>{e860259f-0af8-47c9-ae0f-e7853dd1f224}</UniqueIdentifier>
-    </Filter>
     <Filter Include="헤더 파일\Messages\ToClient">
       <UniqueIdentifier>{7bf1b53f-2983-41a6-87b5-6b39cd095935}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="헤더 파일\Messages\ToServer">
-      <UniqueIdentifier>{54cc6227-df8e-4bde-8962-4a5949d64018}</UniqueIdentifier>
     </Filter>
     <Filter Include="헤더 파일\Data">
       <UniqueIdentifier>{841fea9b-9eb1-4723-bc73-ae3bc5831f6f}</UniqueIdentifier>
@@ -51,6 +45,18 @@
     </Filter>
     <Filter Include="소스 파일\Game">
       <UniqueIdentifier>{9b3cb8a0-3ad5-434e-b744-eab67b1427ba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Messages\ToRoom">
+      <UniqueIdentifier>{e860259f-0af8-47c9-ae0f-e7853dd1f224}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Messages\ToLobby">
+      <UniqueIdentifier>{5479cc39-5e52-4a5e-9971-73dd8cd8580f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Messages\ToLobby">
+      <UniqueIdentifier>{f734c150-0d25-41e0-9f1b-c02ba559d9f5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Messages\ToRoom">
+      <UniqueIdentifier>{54cc6227-df8e-4bde-8962-4a5949d64018}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -111,12 +117,6 @@
     <ClInclude Include="Messages\GameStartToC.h">
       <Filter>헤더 파일\Messages\ToClient</Filter>
     </ClInclude>
-    <ClInclude Include="Messages\GameEventMoveToS.h">
-      <Filter>헤더 파일\Messages\ToServer</Filter>
-    </ClInclude>
-    <ClInclude Include="Messages\ReadyForStartToS.h">
-      <Filter>헤더 파일\Messages\ToServer</Filter>
-    </ClInclude>
     <ClInclude Include="Data.h">
       <Filter>헤더 파일\Data</Filter>
     </ClInclude>
@@ -124,10 +124,7 @@
       <Filter>소스 파일\Common</Filter>
     </ClInclude>
     <ClInclude Include="..\CommonSources\Messages\CreateRoomToR.h">
-      <Filter>헤더 파일\Messages\ToServer</Filter>
-    </ClInclude>
-    <ClInclude Include="..\CommonSources\Messages\CreateRoomToL.h">
-      <Filter>헤더 파일\Messages\ToClient</Filter>
+      <Filter>헤더 파일\Messages\ToRoom</Filter>
     </ClInclude>
     <ClInclude Include="Game\BaeGameRoom.h">
       <Filter>헤더 파일\Game</Filter>
@@ -135,8 +132,17 @@
     <ClInclude Include="Messages\EnterRoomToC.h">
       <Filter>헤더 파일\Messages\ToClient</Filter>
     </ClInclude>
-    <ClInclude Include="Messages\EnterRoomToS.h">
-      <Filter>헤더 파일\Messages\ToServer</Filter>
+    <ClInclude Include="Messages\EnterRoomToR.h">
+      <Filter>헤더 파일\Messages\ToRoom</Filter>
+    </ClInclude>
+    <ClInclude Include="Messages\GameEventMoveToR.h">
+      <Filter>헤더 파일\Messages\ToRoom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CommonSources\Messages\CreateRoomToL.h">
+      <Filter>헤더 파일\Messages\ToLobby</Filter>
+    </ClInclude>
+    <ClInclude Include="Messages\ReadyForStartToR.h">
+      <Filter>헤더 파일\Messages\ToRoom</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -170,17 +176,8 @@
     <ClCompile Include="Messages\GameStartToC.cpp">
       <Filter>소스 파일\Messages\ToClient</Filter>
     </ClCompile>
-    <ClCompile Include="Messages\GameEventMoveToS.cpp">
-      <Filter>소스 파일\Messages\ToServer</Filter>
-    </ClCompile>
-    <ClCompile Include="Messages\ReadyForStartToS.cpp">
-      <Filter>소스 파일\Messages\ToServer</Filter>
-    </ClCompile>
     <ClCompile Include="..\CommonSources\Messages\CreateRoomToR.cpp">
-      <Filter>소스 파일\Messages\ToServer</Filter>
-    </ClCompile>
-    <ClCompile Include="..\CommonSources\Messages\CreateRoomToL.cpp">
-      <Filter>소스 파일\Messages\ToClient</Filter>
+      <Filter>소스 파일\Messages\ToRoom</Filter>
     </ClCompile>
     <ClCompile Include="Game\BaeGameRoom.cpp">
       <Filter>소스 파일\Game</Filter>
@@ -188,8 +185,17 @@
     <ClCompile Include="Messages\EnterRoomToC.cpp">
       <Filter>소스 파일\Messages\ToClient</Filter>
     </ClCompile>
-    <ClCompile Include="Messages\EnterRoomToS.cpp">
-      <Filter>소스 파일\Messages\ToServer</Filter>
+    <ClCompile Include="..\CommonSources\Messages\CreateRoomToL.cpp">
+      <Filter>소스 파일\Messages\ToLobby</Filter>
+    </ClCompile>
+    <ClCompile Include="Messages\EnterRoomToR.cpp">
+      <Filter>소스 파일\Messages\ToRoom</Filter>
+    </ClCompile>
+    <ClCompile Include="Messages\GameEventMoveToR.cpp">
+      <Filter>소스 파일\Messages\ToRoom</Filter>
+    </ClCompile>
+    <ClCompile Include="Messages\ReadyForStartToR.cpp">
+      <Filter>소스 파일\Messages\ToRoom</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
