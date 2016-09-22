@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-public class JoinLobbyToS : IMessage
+public class JoinLobbyToL : IMessage
 {
     public const ushort MESSAGE_ID = 0;
 

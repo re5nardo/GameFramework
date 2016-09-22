@@ -46,11 +46,11 @@ public class Entrance : MonoBehaviour
 #region Event Handler
     public void OnJoinLobbyBtnClicked()
     {
-        JoinLobbyToS msgToS = new JoinLobbyToS();
-        msgToS.m_strPlayerKey = SystemInfo.deviceUniqueIdentifier;
-        msgToS.m_nAuthKey = 0;
+        JoinLobbyToL msgToL = new JoinLobbyToL();
+        msgToL.m_strPlayerKey = SystemInfo.deviceUniqueIdentifier;
+        msgToL.m_nAuthKey = 0;
 
-        Network.Instance.Send(msgToS);
+        Network.Instance.Send(msgToL);
     }
 #endregion
 }

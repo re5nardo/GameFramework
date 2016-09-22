@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-public class EnterRoomToS : IMessage
+public class EnterRoomToR : IMessage
 {
     public const ushort MESSAGE_ID = 20002;
 

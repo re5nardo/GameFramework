@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-public class ReadyForStartToS : IMessage
+public class ReadyForStartToR : IMessage
 {
     public const ushort MESSAGE_ID = 20000;
 

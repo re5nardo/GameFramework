@@ -43,12 +43,12 @@ public class BaeGameRoom : MonoBehaviour
             return;
         }
 
-        EnterRoomToS msgToS = new EnterRoomToS ();
-        msgToS.m_strPlayerKey = SystemInfo.deviceUniqueIdentifier;
-        msgToS.m_nAuthKey = 0;
-        msgToS.m_nMatchID = 0;
+        EnterRoomToR msgToR = new EnterRoomToR ();
+        msgToR.m_strPlayerKey = SystemInfo.deviceUniqueIdentifier;
+        msgToR.m_nAuthKey = 0;
+        msgToR.m_nMatchID = 0;
 
-        RoomNetwork.Instance.Send(msgToS);
+        RoomNetwork.Instance.Send(msgToR);
     }
 
     private void StartGame()
@@ -106,12 +106,12 @@ public class BaeGameRoom : MonoBehaviour
 #region Event Handler
     private void OnClicked(Vector3 vec3Pos)
     {
-        GameEventMoveToS moveToS = new GameEventMoveToS();
-        moveToS.m_nPlayerIndex = 0;
-        moveToS.m_nElapsedTime = 0;
-        moveToS.m_vec3Dest = vec3Pos;
+        GameEventMoveToR moveToR = new GameEventMoveToR();
+        moveToR.m_nPlayerIndex = 0;
+        moveToR.m_nElapsedTime = 0;
+        moveToR.m_vec3Dest = vec3Pos;
 
-        RoomNetwork.Instance.Send(moveToS);
+        RoomNetwork.Instance.Send(moveToR);
     }
 #endregion
 

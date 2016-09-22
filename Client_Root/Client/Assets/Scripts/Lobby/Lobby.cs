@@ -34,9 +34,9 @@ public class Lobby : MonoBehaviour
     #region Event Handler
     public void OnNormalGameBtnClicked()
     {
-        SelectNormalGameToS msgToS = new SelectNormalGameToS ();
+        SelectNormalGameToL msgToL = new SelectNormalGameToL ();
 
-        Network.Instance.Send(msgToS);
+        Network.Instance.Send(msgToL);
     }
     #endregion
 }

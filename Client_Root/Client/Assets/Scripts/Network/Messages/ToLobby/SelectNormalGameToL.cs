@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-public class SelectNormalGameToS : IMessage
+public class SelectNormalGameToL : IMessage
 {
     public const ushort MESSAGE_ID = 1;
 

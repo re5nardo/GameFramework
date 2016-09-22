@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Text;
 
-public class GameEventMoveToS : IMessage
+public class GameEventMoveToR : IMessage
 {
     public const ushort MESSAGE_ID = 20001;
 
