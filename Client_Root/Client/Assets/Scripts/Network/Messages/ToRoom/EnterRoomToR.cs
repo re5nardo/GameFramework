@@ -2,7 +2,7 @@
 
 public class EnterRoomToR : IMessage
 {
-    public const ushort MESSAGE_ID = 20002;
+    public const ushort MESSAGE_ID = MessageID.EnterRoomToR_ID;
 
     public string   m_strPlayerKey;         //  json field name : PlayerKey
     public int      m_nAuthKey;             //  json field name : AuthKey

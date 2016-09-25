@@ -3,7 +3,7 @@ using System.Text;
 
 public class GameEventMoveToC : IMessage
 {
-    public const ushort MESSAGE_ID = 30001;
+    public const ushort MESSAGE_ID = MessageID.GameEventMoveToC_ID;
 
     public int m_nPlayerIndex = 0;                          //  json field name : PlayerIndex
     public int m_nElapsedTime = 0;                          //  json field name : ElapsedTime

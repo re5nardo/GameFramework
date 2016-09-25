@@ -2,7 +2,7 @@
 
 public class SelectNormalGameToL : IMessage
 {
-    public const ushort MESSAGE_ID = 1;
+    public const ushort MESSAGE_ID = MessageID.SelectNormalGameToL_ID;
 
     public ushort GetID()
     {

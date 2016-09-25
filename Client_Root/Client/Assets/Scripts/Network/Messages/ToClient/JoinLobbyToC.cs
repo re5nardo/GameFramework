@@ -2,7 +2,7 @@
 
 public class JoinLobbyToC : IMessage
 {
-    public const ushort MESSAGE_ID = 10000;
+    public const ushort MESSAGE_ID = MessageID.JoinLobbyToC_ID;
 
     public int m_nResult;     //  json field name : Result
 

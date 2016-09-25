@@ -2,7 +2,7 @@
 
 public class JoinLobbyToL : IMessage
 {
-    public const ushort MESSAGE_ID = 0;
+    public const ushort MESSAGE_ID = MessageID.JoinLobbyToL_ID;
 
     public string   m_strPlayerKey;         //  json field name : PlayerKey
     public int      m_nAuthKey;             //  json field name : AuthKey

@@ -2,7 +2,7 @@
 
 public class ReadyForStartToR : IMessage
 {
-    public const ushort MESSAGE_ID = 20000;
+    public const ushort MESSAGE_ID = MessageID.ReadyForStartToR_ID;
 
     public ulong m_nPlayerNumber;     //  json field name : PlayerNumber
 

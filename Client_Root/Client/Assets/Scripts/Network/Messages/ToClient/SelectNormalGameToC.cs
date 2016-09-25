@@ -2,7 +2,7 @@
 
 public class SelectNormalGameToC : IMessage
 {
-    public const ushort MESSAGE_ID = 10001;
+    public const ushort MESSAGE_ID = MessageID.SelectNormalGameToC_ID;
 
     public int m_nResult;           //  json field name : Result
     public int m_nExpectedTime;     //  json field name : ExpectedTime

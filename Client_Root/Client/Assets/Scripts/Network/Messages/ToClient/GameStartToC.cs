@@ -3,7 +3,7 @@ using System.Text;
 
 public class GameStartToC : IMessage
 {
-    public const ushort MESSAGE_ID = 30000;
+    public const ushort MESSAGE_ID = MessageID.GameStartToC_ID;
 
     public long                 m_lGameElapsedTime;                             //  json field name : GameElapsedTime
     public List<PlayerInfo>     m_listPlayerInfo = new List<PlayerInfo>();      //  json field name : PlayerInfoList

@@ -2,7 +2,7 @@
 
 public class PlayerEnterRoomToC : IMessage
 {
-    public const ushort MESSAGE_ID = 30003;
+    public const ushort MESSAGE_ID = MessageID.PlayerEnterRoomToC_ID;
 
     public int      m_nPlayerIndex;         //  json field name : PlayerIndex
     public string   m_strCharacterID;       //  json field name : CharacterID
