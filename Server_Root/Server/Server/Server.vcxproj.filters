@@ -135,6 +135,9 @@
     <ClInclude Include="..\CommonSources\Messages\CreateRoomToR.h">
       <Filter>헤더 파일\Messages\ToRoom</Filter>
     </ClInclude>
+    <ClInclude Include="..\CommonSources\Message\MessageIDs.h">
+      <Filter>헤더 파일\Messages</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">

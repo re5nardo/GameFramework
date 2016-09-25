@@ -1,28 +1,29 @@
 #pragma once
 
 #include "../../CommonSources/Message/IMessage.h"
-#include "../../rapidjson/document.h"
-#include "../../rapidjson/stringbuffer.h"
-#include "../../rapidjson/writer.h"
+#include "../../../rapidjson/document.h"
+#include "../../../rapidjson/stringbuffer.h"
+#include "../../../rapidjson/writer.h"
 #include "../../CommonSources/Message/MessageIDs.h"
 
 using namespace rapidjson;
 
-class GameStartToC : public IMessage
+class PlayerEnterRoomToC : public IMessage
 {
 public:
-	GameStartToC();
-	virtual ~GameStartToC();
+	PlayerEnterRoomToC();
+	virtual ~PlayerEnterRoomToC();
 
 public:
-	static const unsigned short MESSAGE_ID = GameStartToC_ID;
+	static const unsigned short MESSAGE_ID = PlayerEnterRoomToC_ID;
 
 private:
 	GenericStringBuffer<UTF8<>>*	m_buffer;
 	Writer<StringBuffer, UTF8<>>*	m_writer;
 
 public:
-	unsigned __int64 m_lGameElapsedTime;		//	json field name : GameElapsedTime
+	int		m_nPlayerIndex;			//  json field name : PlayerIndex
+	string	m_strCharacterID;		//  json field name : CharacterID
 
 public:
 	unsigned short GetID() override;

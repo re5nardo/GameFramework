@@ -89,6 +89,7 @@
     <ClInclude Include="..\CommonSources\Message\IMessageConvertor.h" />
     <ClInclude Include="..\CommonSources\Message\ISerializable.h" />
     <ClInclude Include="..\CommonSources\Message\JSONHelper.h" />
+    <ClInclude Include="..\CommonSources\Message\MessageIDs.h" />
     <ClInclude Include="..\CommonSources\Network\Accepter.h" />
     <ClInclude Include="..\CommonSources\Network\Network.h" />
     <ClInclude Include="..\CommonSources\Network\NetworkCore.h" />
@@ -102,6 +103,9 @@
     <ClInclude Include="Messages\GameEventMoveToC.h" />
     <ClInclude Include="Messages\GameEventMoveToR.h" />
     <ClInclude Include="Messages\GameStartToC.h" />
+    <ClInclude Include="Messages\PlayerEnterRoomToC.h" />
+    <ClInclude Include="Messages\PreparationStateToC.h" />
+    <ClInclude Include="Messages\PreparationStateToR.h" />
     <ClInclude Include="Messages\ReadyForStartToR.h" />
     <ClInclude Include="Room.h" />
     <ClInclude Include="RoomMessageConvertor.h" />
@@ -122,6 +126,9 @@
     <ClCompile Include="Messages\GameEventMoveToC.cpp" />
     <ClCompile Include="Messages\GameEventMoveToR.cpp" />
     <ClCompile Include="Messages\GameStartToC.cpp" />
+    <ClCompile Include="Messages\PlayerEnterRoomToC.cpp" />
+    <ClCompile Include="Messages\PreparationStateToC.cpp" />
+    <ClCompile Include="Messages\PreparationStateToR.cpp" />
     <ClCompile Include="Messages\ReadyForStartToR.cpp" />
     <ClCompile Include="Room.cpp" />
     <ClCompile Include="RoomMessageConvertor.cpp" />

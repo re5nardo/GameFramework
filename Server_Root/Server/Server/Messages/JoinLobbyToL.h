@@ -4,6 +4,7 @@
 #include "../../../rapidjson/document.h"
 #include "../../../rapidjson/stringbuffer.h"
 #include "../../../rapidjson/writer.h"
+#include "../../CommonSources/Message/MessageIDs.h"
 
 using namespace rapidjson;
 
@@ -14,7 +15,7 @@ public:
 	virtual ~JoinLobbyToL();
 
 public:
-	static const unsigned short MESSAGE_ID = 0;
+	static const unsigned short MESSAGE_ID = JoinLobbyToL_ID;
 
 private:
 	GenericStringBuffer<UTF8<>>*	m_buffer;

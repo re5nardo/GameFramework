@@ -144,6 +144,18 @@
     <ClInclude Include="Messages\ReadyForStartToR.h">
       <Filter>헤더 파일\Messages\ToRoom</Filter>
     </ClInclude>
+    <ClInclude Include="Messages\PreparationStateToR.h">
+      <Filter>헤더 파일\Messages\ToRoom</Filter>
+    </ClInclude>
+    <ClInclude Include="Messages\PreparationStateToC.h">
+      <Filter>헤더 파일\Messages\ToClient</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CommonSources\Message\MessageIDs.h">
+      <Filter>헤더 파일\Messages</Filter>
+    </ClInclude>
+    <ClInclude Include="Messages\PlayerEnterRoomToC.h">
+      <Filter>헤더 파일\Messages\ToClient</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -196,6 +208,15 @@
     </ClCompile>
     <ClCompile Include="Messages\ReadyForStartToR.cpp">
       <Filter>소스 파일\Messages\ToRoom</Filter>
+    </ClCompile>
+    <ClCompile Include="Messages\PreparationStateToR.cpp">
+      <Filter>소스 파일\Messages\ToRoom</Filter>
+    </ClCompile>
+    <ClCompile Include="Messages\PreparationStateToC.cpp">
+      <Filter>소스 파일\Messages\ToClient</Filter>
+    </ClCompile>
+    <ClCompile Include="Messages\PlayerEnterRoomToC.cpp">
+      <Filter>소스 파일\Messages\ToClient</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

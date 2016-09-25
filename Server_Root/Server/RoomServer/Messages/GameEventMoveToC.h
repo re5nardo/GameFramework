@@ -4,6 +4,7 @@
 #include "../../rapidjson/document.h"
 #include "../../rapidjson/stringbuffer.h"
 #include "../../rapidjson/writer.h"
+#include "../../CommonSources/Message/MessageIDs.h"
 #include "Data.h"
 
 using namespace rapidjson;
@@ -15,7 +16,7 @@ public:
 	virtual ~GameEventMoveToC();
 
 public:
-	static const unsigned short MESSAGE_ID = 30001;
+	static const unsigned short MESSAGE_ID = GameEventMoveToC_ID;
 
 private:
 	GenericStringBuffer<UTF8<>>*	m_buffer;

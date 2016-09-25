@@ -89,6 +89,7 @@
     <ClInclude Include="..\CommonSources\Message\IMessageConvertor.h" />
     <ClInclude Include="..\CommonSources\Message\ISerializable.h" />
     <ClInclude Include="..\CommonSources\Message\JSONHelper.h" />
+    <ClInclude Include="..\CommonSources\Message\MessageIDs.h" />
     <ClInclude Include="..\CommonSources\Network\Accepter.h" />
     <ClInclude Include="..\CommonSources\Network\Network.h" />
     <ClInclude Include="..\CommonSources\Network\NetworkCore.h" />

@@ -4,6 +4,7 @@
 #include "../../rapidjson/document.h"
 #include "../../rapidjson/stringbuffer.h"
 #include "../../rapidjson/writer.h"
+#include "../../CommonSources/Message/MessageIDs.h"
 #include "Data.h"
 #include <vector>
 #include <string>
@@ -17,7 +18,7 @@ public:
 	virtual ~CreateRoomToR();
 
 public:
-	static const unsigned short MESSAGE_ID = 40000;
+	static const unsigned short MESSAGE_ID = CreateRoomToR_ID;
 
 private:
 	GenericStringBuffer<UTF8<>>*	m_buffer;
