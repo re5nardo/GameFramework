@@ -12,7 +12,7 @@ public class MoveBehaviorData : IBehaviorData
 {
     public override ushort GetID()
     {
-        return TestMessage.MESSAGE_ID;
+        return 0;
     }
 
     public Vector3 m_vec3Start;

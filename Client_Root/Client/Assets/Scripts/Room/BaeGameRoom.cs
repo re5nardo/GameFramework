@@ -11,7 +11,7 @@ public class BaeGameRoom : MonoBehaviour
     [SerializeField] private CameraController     m_CameraController;
 
     //  Temp
-    private string m_strIP = "175.197.228.153";
+    private string m_strIP = "175.197.228.220";
     private int m_nPort = 9111;
 
     private AStarAlgorithm                      m_AStarAlgorithm = new AStarAlgorithm();
@@ -53,7 +53,7 @@ public class BaeGameRoom : MonoBehaviour
 
     private void StartGame()
     {
-        StartCoroutine(PrepareGame());
+        m_InputManager.Work(m_MapManager.GetWidth(), m_MapManager.GetHeight(), m_CameraMain, OnClicked);
     }
 
     private IEnumerator PrepareGame()
@@ -61,18 +61,10 @@ public class BaeGameRoom : MonoBehaviour
         //  prefare for game
         yield return StartCoroutine(m_MapManager.LoadMap(1));
 
-        m_InputManager.Work(m_MapManager.GetWidth(), m_MapManager.GetHeight(), m_CameraMain, OnClicked);
+        PreparationStateToR preparationStateToR = new PreparationStateToR();
+        preparationStateToR.m_fState = 1.0f;
 
-        //  temp
-        GameObject goCharacter = new GameObject("MisterBae");
-        m_MisterBae = goCharacter.AddComponent<MisterBae>();
-
-        Stat stat = new Stat();
-        stat.fSpeed = 4f;
-
-        m_MisterBae.Initialize(stat); 
-
-        m_CameraController.FollowTarget(m_MisterBae.m_CharacterUI.transform);
+        RoomNetwork.Instance.Send(preparationStateToR);
     }
 
 #region Network Message Handler
@@ -86,13 +78,36 @@ public class BaeGameRoom : MonoBehaviour
             {
                 m_nPlayerIndex = msg.m_nPlayerIndex;
 
-                StartGame();
+                foreach(KeyValuePair<int, string> kv in msg.m_dicPlayers)
+                {
+                    GameObject goCharacter = new GameObject("Player_" + kv.Key.ToString());
+                    m_MisterBae = goCharacter.AddComponent<MisterBae>();
+
+                    Stat stat = new Stat();
+                    stat.fSpeed = 4f;
+                    m_MisterBae.Initialize(stat);
+
+                    m_dicCharacter[kv.Key] = m_MisterBae;
+
+                    if(kv.Key == m_nPlayerIndex)
+                        m_CameraController.FollowTarget(m_MisterBae.m_CharacterUI.transform);
+                }
+
+                StartCoroutine(PrepareGame());
             }
             else
             {
                 Debug.LogError("Enter Room Fail! m_nResult : " + msg.m_nResult);
                 SceneManager.LoadScene("Lobby");
             }
+        }
+        else if (iMsg.GetID() == PlayerEnterRoomToC.MESSAGE_ID)
+        {
+            
+        }
+        else if (iMsg.GetID() == GameStartToC.MESSAGE_ID)
+        {
+            StartGame();
         }
         else if (iMsg.GetID() == GameEventMoveToC.MESSAGE_ID)
         {

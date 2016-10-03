@@ -29,11 +29,11 @@ public static class JSONHelper
         jsonObject.AddField(strFieldName, value);
     }
 
-    public static void AddField<T>(JSONObject jsonObject, string strFieldName, List<T> listValue) where T : IJSONObjectable
+    public static void AddField<T>(JSONObject jsonObject, string strFieldName, List<T> value) where T : IJSONObjectable
     {
         JSONObject arr = new JSONObject(JSONObject.Type.ARRAY);
 
-        foreach(T data in listValue)
+        foreach(T data in value)
         {
             arr.Add(data.GetJSONObject());
         }
@@ -41,6 +41,22 @@ public static class JSONHelper
         arr.AddField(strFieldName, arr);
 
         jsonObject.AddField(strFieldName, arr);
+    }
+
+    public static void AddField(JSONObject jsonObject, string strFieldName, Dictionary<int, string> value)
+    {
+        JSONObject obj = new JSONObject(JSONObject.Type.OBJECT);
+
+        obj.keys = new List<string>();
+        obj.list = new List<JSONObject>();
+
+        foreach(KeyValuePair<int, string> kv in value)
+        {
+            obj.keys.Add(kv.Key.ToString());
+            obj.list.Add(JSONObject.CreateStringObject(kv.Value));
+        }
+
+        jsonObject.AddField(strFieldName, obj);
     }
     #endregion
 
@@ -170,14 +186,36 @@ public static class JSONHelper
             Debug.LogWarning("Data type is invalid! It's not array");
             return false;
         }
-
-        listValue.Clear();
+            
         foreach(JSONObject element in jsonObject.list)
         {
             T value = new T();
             value.SetByJSONObject(element);
 
             listValue.Add(value);
+        }
+
+        return true;
+    }
+
+    public static bool GetField(JSONObject jsonObject, string strFieldName, Dictionary<int, string> dicValue)
+    {
+        if(!jsonObject.HasField(strFieldName))
+        {
+            Debug.LogWarning("JSONObject does not have field, field name : " + strFieldName);
+            return false;
+        }
+
+        if(!jsonObject.GetField(strFieldName).IsObject)
+        {
+            Debug.LogWarning("Data type is invalid! It's not object");
+            return false;
+        }
+
+        JSONObject field = jsonObject.GetField(strFieldName);
+        for (int i = 0; i < field.list.Count; i++)
+        {
+            dicValue.Add(int.Parse(field.keys[i]), field.list[i].str);      
         }
 
         return true;
