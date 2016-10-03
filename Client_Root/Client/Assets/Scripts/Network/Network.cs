@@ -186,8 +186,6 @@ public class Network : MonoSingleton<Network>
 
 						lock (m_MessagesReceived)
 						{
-                            BaeTest.listLatency.Add(DateTime.Now - BaeTest.sentTime);
-
 							m_MessagesReceived.Enqueue(GetIMessage(state.CurMessageID, state.CurMessage));
 						}
 
@@ -249,9 +247,7 @@ public class Network : MonoSingleton<Network>
 			{
 				byteData[nIndex++] = data;
 			}
-				
-            BaeTest.sentTime = DateTime.Now;
-            
+
 			// Begin sending the data to the remote device.
 			m_Socket.BeginSend(byteData, 0, byteData.Length, 0, new AsyncCallback(SendCallback), m_Socket);
 		}
