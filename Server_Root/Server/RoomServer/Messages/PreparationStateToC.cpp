@@ -25,6 +25,7 @@ const char* PreparationStateToC::Serialize()
 	Document document;
 	document.SetObject();
 
+	JSONHelper::AddField(&document, "PlayerIndex", m_nPlayerIndex);
 	JSONHelper::AddField(&document, "State", m_fState);
 
 	m_buffer->Clear();
@@ -42,6 +43,7 @@ bool PreparationStateToC::Deserialize(const char* pChar)
 		return false;
 	}
 
+	if (!JSONHelper::GetField(&document, "PlayerIndex", &m_nPlayerIndex)) return false;
 	if (!JSONHelper::GetField(&document, "State", &m_fState)) return false;
 
 	return true;

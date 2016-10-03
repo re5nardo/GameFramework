@@ -19,22 +19,19 @@ public:
 	virtual ~Room();
 
 private:
-	map<string, unsigned int>			m_mapPlayerSocket;
-	map<unsigned int, string>			m_mapSocketPlayer;
+	map<string, unsigned int>			m_mapPlayerKeySocket;
+	map<unsigned int, string>			m_mapSocketPlayerKey;
 	RoomMessageConvertor				m_MessageConvertor;
 	map<int, BaeGameRoom*>				m_mapMatchIDGameRoom;
-	map<string, BaeGameRoom*>			m_mapPlayerGameRoom;
+	map<string, BaeGameRoom*>			m_mapPlayerKeyGameRoom;
 
 private:
 	void OnAccept(unsigned int socket);
 	void OnRecvMessage(unsigned int socket, IMessage* pMsg);
 
 private:
-	void SendToAllUsers(IMessage* pMsg);
-
 	//	Protocol Handler
 	void OnCreateRoomToR(CreateRoomToR* pMsg, unsigned int socket);
-	void OnGameEventMoveToR(GameEventMoveToR* pMsg, unsigned int socket);
 	void OnEnterRoomToR(EnterRoomToR* pMsg, unsigned int socket);
 
 private:

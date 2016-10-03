@@ -22,18 +22,6 @@ Room::~Room()
 	Network::Instance()->Destroy();
 }
 
-void Room::SendToAllUsers(IMessage* pMsg)
-{
-	for (map<string, unsigned int>::iterator it = m_mapPlayerSocket.begin(); it != m_mapPlayerSocket.end(); it++)
-	{
-		Network::Instance()->Send(it->second, pMsg, false);
-	}
-
-	delete pMsg;
-}
-
-
-
 void Room::OnAccept(unsigned int socket)
 {
 	//	glicko - 2
@@ -49,13 +37,13 @@ void Room::OnRecvMessage(unsigned int socket, IMessage* pMsg)
 	{
 		OnCreateRoomToR((CreateRoomToR*)pMsg, socket);
 	}
-	else if (pMsg->GetID() == GameEventMoveToR::MESSAGE_ID)
-	{
-		OnGameEventMoveToR((GameEventMoveToR*)pMsg, socket);
-	}
 	else if (pMsg->GetID() == EnterRoomToR::MESSAGE_ID)
 	{
 		OnEnterRoomToR((EnterRoomToR*)pMsg, socket);
+	}
+	else
+	{
+		m_mapPlayerKeyGameRoom[m_mapSocketPlayerKey[socket]]->OnRecvMessage(socket, pMsg);
 	}
 
 	delete pMsg;
@@ -71,7 +59,7 @@ void Room::OnCreateRoomToR(CreateRoomToR* pMsg, unsigned int socket)
 
 	for (int i = 0; i < pMsg->m_vecPlayers.size(); ++i)
 	{
-		m_mapPlayerGameRoom[pMsg->m_vecPlayers[i]] = gameRoom;
+		m_mapPlayerKeyGameRoom[pMsg->m_vecPlayers[i]] = gameRoom;
 	}
 
 	CreateRoomToL* res = new CreateRoomToL();
@@ -85,19 +73,6 @@ void Room::OnCreateRoomToR(CreateRoomToR* pMsg, unsigned int socket)
 	Network::Instance()->Send(socket, res, true, true);
 }
 
-void Room::OnGameEventMoveToR(GameEventMoveToR* pMsg, unsigned int socket)
-{
-	m_mapPlayerGameRoom[m_mapSocketPlayer[socket]]->OnRecvMessage(socket, pMsg);
-	
-
-	/*GameEventMoveToC* res = new GameEventMoveToC();
-	res->m_nPlayerIndex = pMsg->m_nPlayerIndex;
-	res->m_nElapsedTime = pMsg->m_nElapsedTime;
-	res->m_vec3Dest = pMsg->m_vec3Dest;
-
-	SendToAllUsers(res);*/
-}
-
 void Room::OnEnterRoomToR(EnterRoomToR* pMsg, unsigned int socket)
 {
 	//	now.. always accept..
@@ -109,12 +84,12 @@ void Room::OnEnterRoomToR(EnterRoomToR* pMsg, unsigned int socket)
 	}
 	*/
 
-	m_mapPlayerSocket[pMsg->m_strPlayerKey] = socket;
-	m_mapSocketPlayer[socket] = pMsg->m_strPlayerKey;
+	m_mapPlayerKeySocket[pMsg->m_strPlayerKey] = socket;
+	m_mapSocketPlayerKey[socket] = pMsg->m_strPlayerKey;
 
 
 
-	m_mapPlayerGameRoom[pMsg->m_strPlayerKey]->OnRecvMessage(socket, pMsg);
+	m_mapPlayerKeyGameRoom[pMsg->m_strPlayerKey]->OnRecvMessage(socket, pMsg);
 }
 
 

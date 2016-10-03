@@ -2,6 +2,7 @@
 
 #include <map>
 #include <string>
+#include <queue>
 #include "LobbyMessageConvertor.h"
 
 class IMessage;
@@ -18,9 +19,12 @@ public:
 	virtual ~Lobby();
 
 private:
-	map<string, unsigned int>			m_mapPlayerSocket;
-	map<unsigned int, string>			m_mapSocketPlayer;
+	map<string, unsigned int>			m_mapPlayerKeySocket;
+	map<unsigned int, string>			m_mapSocketPlayerKey;
 	LobbyMessageConvertor				m_MessageConvertor;
+
+private:
+	queue<string>	m_queueMatchingPool;
 
 private:
 	void OnAccept(unsigned int socket);

@@ -23,7 +23,7 @@ Lobby::~Lobby()
 
 void Lobby::SendToAllUsers(IMessage* pMsg)
 {
-	for (map<string, unsigned int>::iterator it = m_mapPlayerSocket.begin(); it != m_mapPlayerSocket.end(); it++)
+	for (map<string, unsigned int>::iterator it = m_mapPlayerKeySocket.begin(); it != m_mapPlayerKeySocket.end(); it++)
 	{
 		Network::Instance()->Send(it->second, pMsg, false);
 	}
@@ -71,8 +71,8 @@ void Lobby::OnJoinLobbyToL(JoinLobbyToL* pMsg, unsigned int socket)
 	}
 	*/
 
-	m_mapPlayerSocket[pMsg->m_strPlayerKey] = socket;
-	m_mapSocketPlayer[socket] = pMsg->m_strPlayerKey;
+	m_mapPlayerKeySocket[pMsg->m_strPlayerKey] = socket;
+	m_mapSocketPlayerKey[socket] = pMsg->m_strPlayerKey;
 
 	JoinLobbyToC* pMsgToC = new JoinLobbyToC();
 	pMsgToC->m_nResult = 0;
@@ -84,12 +84,22 @@ void Lobby::OnSelectNormalGameToL(SelectNormalGameToL* pMsg, unsigned int socket
 {
 	//	Match making.. & select room server..
 	//	...
+	int nMatchingPlayerCount = 1;
+	m_queueMatchingPool.push(m_mapSocketPlayerKey[socket]);
 
-	CreateRoomToR* req = new CreateRoomToR();
-	req->m_nMatchID = 119;
-	req->m_vecPlayers.push_back(m_mapSocketPlayer[socket]);
+	if (m_queueMatchingPool.size() >= nMatchingPlayerCount)
+	{
+		CreateRoomToR* req = new CreateRoomToR();
+		req->m_nMatchID = 119;
 
-	Network::Instance()->Send("175.197.228.153", 9111, req);
+		for (int i = 0; i < nMatchingPlayerCount; ++i)
+		{
+			req->m_vecPlayers.push_back(m_queueMatchingPool.front());
+			m_queueMatchingPool.pop();
+		}
+
+		Network::Instance()->Send("175.197.228.220", 9111, req);
+	}
 }
 
 void Lobby::OnCreateRoomToL(CreateRoomToL* pMsg, unsigned int socket)
@@ -99,7 +109,7 @@ void Lobby::OnCreateRoomToL(CreateRoomToL* pMsg, unsigned int socket)
 
 	for (int i = 0; i < pMsg->m_vecPlayers.size(); ++i)
 	{
-		Network::Instance()->Send(m_mapPlayerSocket[pMsg->m_vecPlayers[i]], pMsgToC);
+		Network::Instance()->Send(m_mapPlayerKeySocket[pMsg->m_vecPlayers[i]], pMsgToC);
 	}
 }
 

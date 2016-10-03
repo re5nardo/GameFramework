@@ -5,6 +5,7 @@
 #include "../../../rapidjson/stringbuffer.h"
 #include "../../../rapidjson/writer.h"
 #include "../../CommonSources/Message/MessageIDs.h"
+#include <map>
 
 using namespace rapidjson;
 
@@ -22,8 +23,9 @@ private:
 	Writer<StringBuffer, UTF8<>>*	m_writer;
 
 public:
-	int m_nResult;			//  json field name : Result
-	int m_nPlayerIndex;     //  json field name : PlayerIndex
+	int m_nResult;						//  json field name : Result
+	int m_nPlayerIndex;					//  json field name : PlayerIndex
+	map<int, string> m_mapPlayers;		//  json field name : Players
 
 public:
 	unsigned short GetID() override;

@@ -25,8 +25,6 @@ const char* GameStartToC::Serialize()
 	Document document;
 	document.SetObject();
 
-	JSONHelper::AddField(&document, "GameElapsedTime", m_lGameElapsedTime);
-
 	m_buffer->Clear();
 	document.Accept(*m_writer);
 
@@ -41,8 +39,6 @@ bool GameStartToC::Deserialize(const char* pChar)
 	{
 		return false;
 	}
-
-	if (!JSONHelper::GetField(&document, "GameElapsedTime", &m_lGameElapsedTime)) return false;
 
 	return true;
 }

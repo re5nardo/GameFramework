@@ -27,6 +27,10 @@ IMessage* RoomMessageConvertor::GetMessage(const unsigned short nMessageID, cons
 	{
 		pMsg = new EnterRoomToR();
 	}
+	else if (nMessageID == PreparationStateToR::MESSAGE_ID)
+	{
+		pMsg = new PreparationStateToR();
+	}
 
 	if (pMsg != NULL)
 	{

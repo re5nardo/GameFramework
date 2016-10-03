@@ -22,9 +22,6 @@ private:
 	Writer<StringBuffer, UTF8<>>*	m_writer;
 
 public:
-	unsigned __int64 m_lGameElapsedTime;		//	json field name : GameElapsedTime
-
-public:
 	unsigned short GetID() override;
 	const char* Serialize() override;
 	bool Deserialize(const char* pChar) override;

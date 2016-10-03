@@ -22,6 +22,7 @@ private:
 	Writer<StringBuffer, UTF8<>>*	m_writer;
 
 public:
+	int					m_nPlayerIndex;			//  json field name : PlayerIndex
 	float				m_fState;				//	json field name : State
 
 public:

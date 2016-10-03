@@ -27,6 +27,7 @@ const char* EnterRoomToC::Serialize()
 
 	JSONHelper::AddField(&document, "Result", m_nResult);
 	JSONHelper::AddField(&document, "PlayerIndex", m_nPlayerIndex);
+	JSONHelper::AddField(&document, "Players", m_mapPlayers);
 
 	m_buffer->Clear();
 	document.Accept(*m_writer);
@@ -45,6 +46,7 @@ bool EnterRoomToC::Deserialize(const char* pChar)
 
 	if (!JSONHelper::GetField(&document, "Result", &m_nResult)) return false;
 	if (!JSONHelper::GetField(&document, "PlayerIndex", &m_nPlayerIndex)) return false;
+	if (!JSONHelper::GetField(&document, "Players", &m_mapPlayers)) return false;
 
 	return true;
 }

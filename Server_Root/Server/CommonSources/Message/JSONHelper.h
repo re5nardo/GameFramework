@@ -3,6 +3,7 @@
 #include <list>
 #include <vector>
 #include <string>
+#include <map>
 #include "../../../rapidjson/document.h"
 
 using namespace rapidjson;
@@ -23,6 +24,7 @@ public:
 	static void AddField(Document* pJsonObj, const char* pCharFieldName, string value);
 	static void AddField(Document* pJsonObj, const char* pCharFieldName, Value value);
 	static void AddField(Document* pJsonObj, const char* pCharFieldName, vector<string> value);
+	static void AddField(Document* pJsonObj, const char* pCharFieldName, map<int, string> value);
 
 	template<typename T>
 	static void AddField(Document* pJsonObj, const char* pCharFieldName, list<T> value)
@@ -57,5 +59,6 @@ public:
 	static bool GetField(Document* pJsonObj, string strFieldName, string* pValue);
 	static bool GetField(Document* pJsonObj, string strFieldName, list<__int32>* pValue);
 	static bool GetField(Document* pJsonObj, string strFieldName, vector<string>* pValue);
+	static bool GetField(Document* pJsonObj, string strFieldName, map<int, string>* pValue);
 };
 

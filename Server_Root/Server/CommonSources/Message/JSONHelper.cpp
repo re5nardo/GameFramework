@@ -58,6 +58,25 @@ void JSONHelper::AddField(Document* pJsonObj, const char* pCharFieldName, vector
 
 	pJsonObj->AddMember(pCharFieldName, field, pJsonObj->GetAllocator());
 }
+
+void JSONHelper::AddField(Document* pJsonObj, const char* pCharFieldName, map<int, string> value)
+{
+	Value field(kObjectType);
+	field.SetObject();
+	for (map<int, string>::iterator itr = value.begin(); itr != value.end(); itr++)
+	{
+		//	key
+		Value k;
+		k.SetString(to_string(itr->first).c_str(), to_string(itr->first).length(), pJsonObj->GetAllocator());
+
+		//	value
+		Value v;
+		v.SetString(itr->second.c_str(), itr->second.length(), pJsonObj->GetAllocator());
+
+		field.AddMember(k, v, pJsonObj->GetAllocator());
+	}
+	pJsonObj->AddMember(pCharFieldName, field, pJsonObj->GetAllocator());
+}
 #pragma endregion
 
 
@@ -127,13 +146,19 @@ bool JSONHelper::GetField(Document* pJsonObj, string strFieldName, float* pValue
 		return false;
 	}
 
-	if (!(*pJsonObj)[strFieldName.c_str()].IsDouble())
+	if ((*pJsonObj)[strFieldName.c_str()].IsDouble())
+	{
+		*pValue = (*pJsonObj)[strFieldName.c_str()].GetDouble();
+	}
+	else if ((*pJsonObj)[strFieldName.c_str()].IsInt())
+	{
+		*pValue = (*pJsonObj)[strFieldName.c_str()].GetInt();
+	}
+	else
 	{
 		//Debug.LogWarning("Data type is invalid! It's not Double");
 		return false;
 	}
-
-	*pValue = (*pJsonObj)[strFieldName.c_str()].GetDouble();
 
 	return true;
 }
@@ -198,6 +223,29 @@ bool JSONHelper::GetField(Document* pJsonObj, string strFieldName, vector<string
 	for (SizeType i = 0; i < values.Size(); i++)
 	{
 		(*pValue).push_back(values[i].GetString());
+	}
+
+	return true;
+}
+
+bool JSONHelper::GetField(Document* pJsonObj, string strFieldName, map<int, string>* pValue)
+{
+	if (!pJsonObj->HasMember(strFieldName.c_str()))
+	{
+		//Debug.LogWarning("JSONObject does not have field, field name : " + strFieldName);
+		return false;
+	}
+
+	if (!(*pJsonObj)[strFieldName.c_str()].IsObject())
+	{
+		//Debug.LogWarning("Data type is invalid! It's not Array");
+		return false;
+	}
+
+	const Value& values = (*pJsonObj)[strFieldName.c_str()];
+	for (Value::ConstMemberIterator itr = values.MemberBegin(); itr != values.MemberEnd(); ++itr)
+	{
+		(*pValue)[atoi(itr->name.GetString())] = itr->value.GetString();
 	}
 
 	return true;
