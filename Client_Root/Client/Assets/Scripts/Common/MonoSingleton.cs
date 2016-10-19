@@ -44,4 +44,8 @@ public class MonoSingleton<T> : MonoBehaviour where T : MonoSingleton<T>
 		}
 	}
 
+    public static T GetInstance()
+    {
+        return instance;
+    }
 }

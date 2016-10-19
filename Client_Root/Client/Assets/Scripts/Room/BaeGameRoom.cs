@@ -11,7 +11,7 @@ public class BaeGameRoom : MonoBehaviour
     [SerializeField] private CameraController     m_CameraController;
 
     //  Temp
-    private string m_strIP = "175.197.228.220";
+    private string m_strIP = "175.197.228.227";
     private int m_nPort = 9111;
 
     private AStarAlgorithm                      m_AStarAlgorithm = new AStarAlgorithm();
@@ -113,7 +113,7 @@ public class BaeGameRoom : MonoBehaviour
         {
             GameEventMoveToC msg = (GameEventMoveToC)iMsg;
 
-            Move(msg.m_vec3Dest);
+            Move(msg.m_nPlayerIndex, msg.m_vec3Dest);
         }
     }
 #endregion
@@ -122,7 +122,7 @@ public class BaeGameRoom : MonoBehaviour
     private void OnClicked(Vector3 vec3Pos)
     {
         GameEventMoveToR moveToR = new GameEventMoveToR();
-        moveToR.m_nPlayerIndex = 0;
+        moveToR.m_nPlayerIndex = m_nPlayerIndex;
         moveToR.m_nElapsedTime = 0;
         moveToR.m_vec3Dest = vec3Pos;
 
@@ -130,14 +130,20 @@ public class BaeGameRoom : MonoBehaviour
     }
 #endregion
 
-    private void Move(Vector3 vec3Pos)
+    private void Move(int nPlayerIndex, Vector3 vec3Pos)
     {
+        if (!m_dicCharacter.ContainsKey(nPlayerIndex))
+        {
+            Debug.LogError("nPlayerIndex is invalid!, nPlayerIndex : " + nPlayerIndex);
+            return;
+        }
+
         if (!m_MapManager.IsPositionValidToMove(vec3Pos))
         {
             return;
         }
-
-        Node start = new Node(m_MisterBae.GetPosition(), false);
+            
+        Node start = new Node(m_dicCharacter[nPlayerIndex].GetPosition(), false);
         Node end = new Node(vec3Pos, false);
 
         m_MapManager.InsertNode(start);
@@ -148,7 +154,7 @@ public class BaeGameRoom : MonoBehaviour
         m_MapManager.RemoveNode(start);
         m_MapManager.RemoveNode(end);
 
-        m_MisterBae.Move(SmoothPathQuick(listPath));
+        m_dicCharacter[nPlayerIndex].Move(SmoothPathQuick(listPath));
     }
 
     private LinkedList<Node> SmoothPathQuick(LinkedList<Node> listPath)
@@ -185,8 +191,11 @@ public class BaeGameRoom : MonoBehaviour
 
     private void OnDestroy()
     {
-        RoomNetwork.Instance.RemoveConnectHandler(OnConnected);
-        RoomNetwork.Instance.RemoveRecvMessageHandler(OnRecvMessage);
+        if (RoomNetwork.GetInstance() != null)
+        {
+            RoomNetwork.Instance.RemoveConnectHandler(OnConnected);
+            RoomNetwork.Instance.RemoveRecvMessageHandler(OnRecvMessage);
+        }
 
         Application.targetFrameRate = m_nOldFrameRate;
 

@@ -14,4 +14,9 @@ public class Singleton<T> where T : class, new()
 			return instance;
 		}
 	}
+
+    public static T GetInstance()
+    {
+        return instance;
+    }
 }

@@ -28,7 +28,8 @@ public class Lobby : MonoBehaviour
 
     private void OnDestroy()
     {
-        Network.Instance.RemoveRecvMessageHandler(OnRecvMessage);
+        if(Network.GetInstance() != null)
+            Network.Instance.RemoveRecvMessageHandler(OnRecvMessage);
     }
 
     #region Event Handler

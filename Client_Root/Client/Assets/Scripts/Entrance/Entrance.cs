@@ -3,7 +3,7 @@ using UnityEngine.SceneManagement;
 
 public class Entrance : MonoBehaviour
 {
-    private string m_strIP = "175.197.228.220";
+    private string m_strIP = "175.197.228.227";
     private int m_nPort = 9110;
 
     private void Start()
@@ -39,8 +39,11 @@ public class Entrance : MonoBehaviour
 
     private void OnDestroy()
     {
-        Network.Instance.RemoveConnectHandler(OnConnected);
-        Network.Instance.RemoveRecvMessageHandler(OnRecvMessage);
+        if (Network.GetInstance() != null)
+        {
+            Network.Instance.RemoveConnectHandler(OnConnected);
+            Network.Instance.RemoveRecvMessageHandler(OnRecvMessage);
+        }
     }
 
 #region Event Handler
