@@ -28,7 +28,7 @@ public:
 	void		SetAcceptCallback(void(*handler)(void* pListener, SOCKET socket));
 	void		SetRecvMessageCallback(void(*handler)(void* pListener, SOCKET socket, IMessage* pMsg));
 	void		Send(SOCKET socket, IMessage* pMsg, bool bDelete = true, bool bDisposable = false);
-	int			Send(const char* pIP, const USHORT nPort, IMessage* pMsg, bool bDisposable = false);
+	int			Send(const char* pIP, const USHORT nPort, IMessage* pMsg, bool bDelete = true, bool bDisposable = false);
 
 private:
 	void		OnRecvMessage(unsigned int socket, LPPER_IO_DATA data);

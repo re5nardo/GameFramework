@@ -84,7 +84,7 @@ void Lobby::OnSelectNormalGameToL(SelectNormalGameToL* pMsg, unsigned int socket
 {
 	//	Match making.. & select room server..
 	//	...
-	int nMatchingPlayerCount = 1;
+	int nMatchingPlayerCount = 2;
 	m_queueMatchingPool.push(m_mapSocketPlayerKey[socket]);
 
 	if (m_queueMatchingPool.size() >= nMatchingPlayerCount)
@@ -98,7 +98,7 @@ void Lobby::OnSelectNormalGameToL(SelectNormalGameToL* pMsg, unsigned int socket
 			m_queueMatchingPool.pop();
 		}
 
-		Network::Instance()->Send("175.197.228.220", 9111, req);
+		Network::Instance()->Send("175.197.228.227", 9111, req);
 	}
 }
 
@@ -109,8 +109,10 @@ void Lobby::OnCreateRoomToL(CreateRoomToL* pMsg, unsigned int socket)
 
 	for (int i = 0; i < pMsg->m_vecPlayers.size(); ++i)
 	{
-		Network::Instance()->Send(m_mapPlayerKeySocket[pMsg->m_vecPlayers[i]], pMsgToC);
+		Network::Instance()->Send(m_mapPlayerKeySocket[pMsg->m_vecPlayers[i]], pMsgToC, false);
 	}
+
+	delete pMsgToC;
 }
 
 

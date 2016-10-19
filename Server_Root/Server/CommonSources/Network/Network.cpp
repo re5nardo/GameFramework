@@ -52,6 +52,9 @@ void Network::SetAcceptCallback(void(*handler)(void* pListener, SOCKET socket))
 void Network::Send(SOCKET socket, IMessage* pMsg, bool bDelete, bool bDisposable)
 {
 	const char* pCharSerializedData = pMsg->Serialize();
+
+	puts(pCharSerializedData);
+
 	int nSerializedDSize = strlen(pCharSerializedData);
 	int nTotalSize = MESSAGE_HEADER_SIZE + nSerializedDSize;
 
@@ -72,7 +75,7 @@ void Network::Send(SOCKET socket, IMessage* pMsg, bool bDelete, bool bDisposable
 		delete pMsg;
 }
 
-int Network::Send(const char* pIP, const USHORT nPort, IMessage* pMsg, bool bDisposable)
+int Network::Send(const char* pIP, const USHORT nPort, IMessage* pMsg, bool bDelete, bool bDisposable)
 {
 	SOCKET hSocket = WSASocketW(PF_INET, SOCK_STREAM, 0, NULL, 0, WSA_FLAG_OVERLAPPED);
 	if (hSocket == INVALID_SOCKET)
@@ -100,8 +103,6 @@ int Network::Send(const char* pIP, const USHORT nPort, IMessage* pMsg, bool bDis
 
 	CreateIoCompletionPort((HANDLE)handleInfo->Socket, m_pNetworkCore->GetCompletionPortHandle(), (DWORD)handleInfo, 0);
 
-	Send(hSocket, pMsg, true, bDisposable);
-
 	LPPER_IO_DATA ioInfo = (LPPER_IO_DATA)malloc(sizeof(PER_IO_DATA));
 	memset(&(ioInfo->Overlapped), 0, sizeof(OVERLAPPED));
 	ioInfo->WsaBuf.len = BUF_SIZE;
@@ -119,6 +120,8 @@ int Network::Send(const char* pIP, const USHORT nPort, IMessage* pMsg, bool bDis
 		delete ioInfo->WsaBuf.buf;
 		free(ioInfo);
 	}
+
+	Send(hSocket, pMsg, bDelete, bDisposable);
 
 	return 0;
 }

@@ -9,11 +9,10 @@
 BaeGameRoom::BaeGameRoom(int nMatchID, vector<string> vecMatchedPlayerKey)
 {
 	m_nMatchID = nMatchID;
+	m_vecMatchedPlayerKey = vecMatchedPlayerKey;
 
 	for (int i = 0; i < vecMatchedPlayerKey.size(); ++i)
 	{
-		m_mapPlayerIndexPlayerKey[i] = vecMatchedPlayerKey[i];
-
 		m_mapPlayerIndexPreparationState[i] = 0.0f;
 	}
 }
@@ -23,13 +22,16 @@ BaeGameRoom::~BaeGameRoom()
 
 }
 
-void BaeGameRoom::SendToAllUsers(IMessage* pMsg, string strExclusionKey)
+void BaeGameRoom::SendToAllUsers(IMessage* pMsg, string strExclusionKey, bool bDelete)
 {
 	for (map<string, unsigned int>::iterator it = m_mapPlayerKeySocket.begin(); it != m_mapPlayerKeySocket.end(); ++it)
 	{
 		if (it->first != strExclusionKey)
-			Network::Instance()->Send(m_mapPlayerKeySocket[it->first], pMsg);
+			Network::Instance()->Send(m_mapPlayerKeySocket[it->first], pMsg, false);
 	}
+
+	if (bDelete)
+		delete pMsg;
 }
 
 void BaeGameRoom::OnRecvMessage(unsigned int socket, IMessage* pMsg)
@@ -68,17 +70,22 @@ void BaeGameRoom::OnEnterRoomToR(EnterRoomToR* pMsg, unsigned int socket)
 
 		m_mapPlayerKeySocket[pMsg->m_strPlayerKey] = socket;
 		m_mapSocketPlayerKey[socket] = pMsg->m_strPlayerKey;
-		m_mapPlayerKeyPlayerIndex[pMsg->m_strPlayerKey] = nPlayerIndex;
-		m_mapPlayerIndexPlayerKey[nPlayerIndex] = pMsg->m_strPlayerKey;
 
 		enterRoomToC->m_nResult = 0;
 		enterRoomToC->m_nPlayerIndex = nPlayerIndex;
-		for (map<int, string>::iterator it = m_mapPlayerIndexPlayerKey.begin(); it != m_mapPlayerIndexPlayerKey.end(); ++it)
+		for (int i = 0; i < m_vecMatchedPlayerKey.size(); ++i)
 		{
-			enterRoomToC->m_mapPlayers[it->first] = it->second;
+			enterRoomToC->m_mapPlayers[i] = m_vecMatchedPlayerKey[i];
 		}
 
 		Network::Instance()->Send(socket, enterRoomToC);
+
+		/*PlayerEnterRoomToC* playerEnterRoomToC = new PlayerEnterRoomToC();
+
+		playerEnterRoomToC->m_nPlayerIndex = nPlayerIndex;
+		playerEnterRoomToC->m_strCharacterID = "Test";
+
+		SendToAllUsers(playerEnterRoomToC, pMsg->m_strPlayerKey);*/
 	}
 	else
 	{
@@ -111,12 +118,18 @@ void BaeGameRoom::OnPreparationStateToR(PreparationStateToR* pMsg, unsigned int 
 
 int BaeGameRoom::GetPlayerIndexByPlayerKey(string strPlayerKey)
 {
-	return m_mapPlayerKeyPlayerIndex[strPlayerKey];
+	for (int i = 0; i < m_vecMatchedPlayerKey.size(); ++i)
+	{
+		if (m_vecMatchedPlayerKey[i] == strPlayerKey)
+			return i;
+	}
+
+	return -1;
 }
 
 int BaeGameRoom::GetPlayerIndexBySocket(unsigned int socket)
 {
-	return m_mapPlayerKeyPlayerIndex[m_mapSocketPlayerKey[socket]];
+	return GetPlayerIndexByPlayerKey(m_mapSocketPlayerKey[socket]);
 }
 
 bool BaeGameRoom::IsValidPlayer(string strPlayerKey)
