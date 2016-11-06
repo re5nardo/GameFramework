@@ -1,11 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
-public abstract class ICharacter : MonoBehaviour    //  Inherit MonoBehaviour for coroutine..
+public abstract class ICharacter : BehaviorBasedObject
 {
     public ICharacterUI             m_CharacterUI = null;
-    protected List<IBehavior>       m_listBehavior = new List<IBehavior>(8);
-
     protected Vector3               m_vec3Position = Vector3.zero;
     protected Stat                  m_DefaultStat = default(Stat);
     protected Stat                  m_CurrentStat = default(Stat);
@@ -44,7 +42,7 @@ public abstract class ICharacter : MonoBehaviour    //  Inherit MonoBehaviour fo
 
     protected virtual void LateUpdate()
     {
-        if (m_listBehavior.Count == 0)
+        if (!IsBehaviorPlaying())
         {
             Idle();
         }

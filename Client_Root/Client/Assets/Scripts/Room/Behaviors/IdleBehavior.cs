@@ -3,10 +3,12 @@ using System.Collections;
 
 public class IdleBehavior : IBehavior
 {
-    private string                      m_strIdleClipName = "";
+    private ICharacter      m_Character = null;
+    private string          m_strIdleClipName = "";
 
-    public IdleBehavior(ICharacter Character, BehaviorDelegate OnBehaviorEnd, string strIdleClipName) : base(Character, OnBehaviorEnd)
+    public IdleBehavior(ICharacter Character, string strIdleClipName) : base(Character)
     {
+        m_Character = Character;
         m_strIdleClipName = strIdleClipName;
     }
 

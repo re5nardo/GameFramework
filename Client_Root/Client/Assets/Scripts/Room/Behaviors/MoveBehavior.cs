@@ -4,13 +4,16 @@ using System.Collections.Generic;
 
 public class MoveBehavior : IBehavior
 {
+    private ICharacter                  m_Character = null;
     private List<Node>                  m_listPath = null;
     private Dictionary<int, float>      m_dicDistance = new Dictionary<int, float>();   //  Node index and accumulated distance
     private float                       m_fDistanceToMove = 0f;
     private string                      m_strMoveClipName = "";
+    private bool                        m_bContinue = false;
 
-    public MoveBehavior(ICharacter Character, BehaviorDelegate OnBehaviorEnd, LinkedList<Node> listPath, string strMoveClipName) : base(Character, OnBehaviorEnd)
+    public MoveBehavior(ICharacter Character, LinkedList<Node> listPath, string strMoveClipName, bool bContinue) : base(Character)
     {
+        m_Character = Character;
         m_listPath = new List<Node>(listPath);
 
         for (int nIndex = 0; nIndex < m_listPath.Count; ++nIndex)
@@ -28,12 +31,14 @@ public class MoveBehavior : IBehavior
         m_fDistanceToMove = m_dicDistance[m_listPath.Count - 1];
 
         m_strMoveClipName = strMoveClipName;
+        m_bContinue = bContinue;
     }
 
     protected override IEnumerator Body()
     {
         float fClipLength = m_Character.m_CharacterUI.GetAnimationClipLegth(m_strMoveClipName);
         float fElapsedTime = 0f;
+        float fContinueTime = m_bContinue ? m_Character.m_CharacterUI.GetAnimationStateTime(m_strMoveClipName) : 0f;
 
         float fMovedDistance = 0f;
         int nPrev = 0;
@@ -41,7 +46,7 @@ public class MoveBehavior : IBehavior
 
         while (true)
         {
-            m_Character.m_CharacterUI.SampleAnimation(m_strMoveClipName, (fElapsedTime % fClipLength) / fClipLength);
+            m_Character.m_CharacterUI.SampleAnimation(m_strMoveClipName, ((fElapsedTime + fContinueTime) % fClipLength) / fClipLength);
             m_Character.m_CharacterUI.transform.LookAt(m_listPath[nNext].m_vec3Pos);
 
             if (fMovedDistance >= m_fDistanceToMove)

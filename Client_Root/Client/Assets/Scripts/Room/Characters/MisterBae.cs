@@ -17,49 +17,23 @@ public class MisterBae : ICharacter
 
     public override void Idle()
     {
-        foreach(IBehavior behavior in m_listBehavior)
-        {
-            behavior.Stop();
-        }
-        m_listBehavior.Clear();
+        StopAllBehaviors();
 
-        IdleBehavior idleBehavior = new IdleBehavior(this, OnBehaviorEnd, "WAIT01");
-
-        m_listBehavior.Add(idleBehavior);
-
-        idleBehavior.Start();
+        StartBehavior(new IdleBehavior(this, "WAIT01"));
     }
 
     public override void Stop()
     {
-        foreach(IBehavior behavior in m_listBehavior)
-        {
-            behavior.Stop();
-        }
-        m_listBehavior.Clear();
+        StopAllBehaviors();
 
-        StopBehavior stopBehavior = new StopBehavior(this, OnBehaviorEnd);
-
-        m_listBehavior.Add(stopBehavior);
-
-        stopBehavior.Start();
+        StartBehavior(new StopBehavior(this));
     }
 
     public override void Move(LinkedList<Node> listPath)
     {
-        List<IBehavior> listBehavior = m_listBehavior.FindAll(behavior => behavior is MoveBehavior || behavior is IdleBehavior );
+        StopAllBehaviors();
 
-        foreach(IBehavior behavior in listBehavior)
-        {
-            behavior.Stop();
-            m_listBehavior.Remove(behavior);
-        }
-
-        MoveBehavior moveBehavior = new MoveBehavior(this, OnBehaviorEnd, listPath, "RUN00_F");
-
-        m_listBehavior.Add(moveBehavior);
-
-        moveBehavior.Start();
+        StartBehavior(new MoveBehavior(this, listPath, "RUN00_F", m_LastBehavior is MoveBehavior));
     }
 
     public override void Skiil(object data)
@@ -72,9 +46,4 @@ public class MisterBae : ICharacter
         
     }
 #endregion
-
-    private void OnBehaviorEnd(IBehavior behavior)
-    {
-        m_listBehavior.Remove(behavior);
-    }
 }

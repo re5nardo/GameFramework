@@ -3,10 +3,13 @@ using System.Collections;
 
 public class StopBehavior : IBehavior
 {
-    private const float STOP_DURATION = 2f;
+    private const float     STOP_DURATION = 2f;
 
-    public StopBehavior(ICharacter Character, BehaviorDelegate OnBehaviorEnd) : base(Character, OnBehaviorEnd)
+    private ICharacter      m_Character = null;
+
+    public StopBehavior(ICharacter Character) : base(Character)
     {
+        m_Character = Character;
     }
 
     protected override IEnumerator Body()

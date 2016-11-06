@@ -6,78 +6,49 @@ public abstract class IBehavior
 {
     public delegate void BehaviorDelegate(IBehavior behavior);
 
-    protected ICharacter        m_Character = null;
-    private BehaviorDelegate    m_OnBehaviorEnd = null;
-    protected Coroutine         m_BodyCoroutine = null;
-    protected Coroutine         m_SubCoroutine = null;
+    protected BehaviorBasedObject   m_Performer = null;
+    private Coroutine               m_BodyCoroutine = null;
+    protected Coroutine             m_SubCoroutine = null;
 
-    public IBehavior(ICharacter Character, BehaviorDelegate OnBehaviorEnd)
+    public IBehavior(BehaviorBasedObject performer)
     {
-        m_Character = Character;
-        m_OnBehaviorEnd = OnBehaviorEnd;
+        m_Performer = performer;
     }
 
     public Coroutine Start()
     {
-        return m_Character.StartCoroutine(Do());
+        return m_Performer.StartCoroutine(Do());
     }
 
     private IEnumerator Do()
     {
-        m_BodyCoroutine = m_Character.StartCoroutine(Body());
+        m_BodyCoroutine = m_Performer.StartCoroutine(Body());
         yield return m_BodyCoroutine;
 
-        if(m_OnBehaviorEnd != null)
-        {
-            m_OnBehaviorEnd(this);
-        }
+        m_Performer.OnBehaviorEnd(this);
     }
 
     protected abstract IEnumerator Body();
 
     public void Stop()
     {
-        m_Character.StopCoroutine(m_BodyCoroutine);
+        m_Performer.StopCoroutine(m_BodyCoroutine);
         if(m_SubCoroutine != null)
         {
-            m_Character.StopCoroutine(m_SubCoroutine);
+            m_Performer.StopCoroutine(m_SubCoroutine);
         }
 
         OnStop();
 
-        if(m_OnBehaviorEnd != null)
-        {
-            m_OnBehaviorEnd(this);
-        }
+        m_Performer.OnBehaviorEnd(this);
     }
 
     protected virtual void OnStop()
     {
-        m_Character.m_CharacterUI.StopAnimation();
     }
 }
     
-//public class MoveBehaviorr : IBehavior
-//{
-//    Vector3 m_vec3Dest = Vector3.zero;
-//
-//    public MoveBehaviorr(Vector3 vec3Dest)
-//    {
-//        m_vec3Dest = vec3Dest;
-//    }
-//
-//    protected override IEnumerator Body()
-//    {
-//        Debug.Log("[1] frameCount : " + Time.frameCount);
-//        yield return null;
-//
-//        Debug.Log("[2] frameCount : " + Time.frameCount);
-//        yield return new WaitForSeconds(3);
-//
-//        Debug.Log("[3] frameCount : " + Time.frameCount);
-//    }
-//}
-//
+
 //public class CombiBehavior : IBehavior
 //{
 //    protected override IEnumerator Body()

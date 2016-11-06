@@ -31,11 +31,33 @@ public class ICharacterUI : MonoBehaviour
 
     public void SampleAnimation(string strClipName, float fNormalizedTime)
     {
+        if (!IsClipNameValid(strClipName))
+        {
+            Debug.LogError("strClipName is invalid!, strClipName : " + strClipName);
+            return;
+        }
+
         m_animCharacterUI[strClipName].normalizedTime = fNormalizedTime;
         m_animCharacterUI[strClipName].enabled = true;
         m_animCharacterUI[strClipName].weight = 1f;
         m_animCharacterUI.Sample();
         m_animCharacterUI[strClipName].enabled = false;
+    }
+
+    public float GetAnimationStateTime(string strClipName)
+    {
+        if (!IsClipNameValid(strClipName))
+        {
+            Debug.LogError("strClipName is invalid!, strClipName : " + strClipName);
+            return 0f;
+        }
+
+        return m_animCharacterUI[strClipName].time;
+    }
+
+    private bool IsClipNameValid(string strClipName)
+    {
+        return m_animCharacterUI.GetClip(strClipName) != null;
     }
 
     //  local pos
