@@ -20,6 +20,11 @@ unsigned short CreateRoomToR::GetID()
 	return MESSAGE_ID;
 }
 
+IMessage* CreateRoomToR::Clone()
+{
+	return NULL;
+}
+
 const char* CreateRoomToR::Serialize()
 {
 	Document document;

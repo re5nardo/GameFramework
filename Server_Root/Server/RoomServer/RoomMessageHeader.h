@@ -11,3 +11,7 @@
 #include "Messages\PlayerEnterRoomToC.h"
 #include "Messages\PreparationStateToC.h"
 #include "Messages\PreparationStateToR.h"
+#include "Messages\GameEventIdleToC.h"
+#include "Messages\GameEventIdleToR.h"
+#include "Messages\GameEventStopToC.h"
+#include "Messages\GameEventStopToR.h"

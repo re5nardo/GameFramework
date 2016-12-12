@@ -20,6 +20,11 @@ unsigned short JoinLobbyToC::GetID()
 	return MESSAGE_ID;
 }
 
+IMessage* JoinLobbyToC::Clone()
+{
+	return NULL;
+}
+
 const char* JoinLobbyToC::Serialize()
 {
 	Document document;

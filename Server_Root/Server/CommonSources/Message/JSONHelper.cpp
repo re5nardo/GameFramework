@@ -156,7 +156,7 @@ bool JSONHelper::GetField(Document* pJsonObj, string strFieldName, float* pValue
 	}
 	else
 	{
-		//Debug.LogWarning("Data type is invalid! It's not Double");
+		//Debug.LogWarning("Data type is invalid! It's not Float");
 		return false;
 	}
 

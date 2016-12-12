@@ -20,6 +20,11 @@ unsigned short PlayerEnterRoomToC::GetID()
 	return MESSAGE_ID;
 }
 
+IMessage* PlayerEnterRoomToC::Clone()
+{
+	return NULL;
+}
+
 const char* PlayerEnterRoomToC::Serialize()
 {
 	Document document;

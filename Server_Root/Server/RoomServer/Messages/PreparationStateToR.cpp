@@ -20,6 +20,11 @@ unsigned short PreparationStateToR::GetID()
 	return MESSAGE_ID;
 }
 
+IMessage* PreparationStateToR::Clone()
+{
+	return NULL;
+}
+
 const char* PreparationStateToR::Serialize()
 {
 	Document document;

@@ -20,6 +20,11 @@ unsigned short ReadyForStartToR::GetID()
 	return MESSAGE_ID;
 }
 
+IMessage* ReadyForStartToR::Clone()
+{
+	return NULL;
+}
+
 const char* ReadyForStartToR::Serialize()
 {
 	Document document;

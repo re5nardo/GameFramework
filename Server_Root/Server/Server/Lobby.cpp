@@ -98,7 +98,7 @@ void Lobby::OnSelectNormalGameToL(SelectNormalGameToL* pMsg, unsigned int socket
 			m_queueMatchingPool.pop();
 		}
 
-		Network::Instance()->Send("175.197.228.227", 9111, req);
+		Network::Instance()->Send("175.197.227.73", 9111, req);
 	}
 }
 

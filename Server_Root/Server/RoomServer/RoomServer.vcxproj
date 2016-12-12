@@ -100,8 +100,12 @@
     <ClInclude Include="Game\BaeGameRoom.h" />
     <ClInclude Include="Messages\EnterRoomToC.h" />
     <ClInclude Include="Messages\EnterRoomToR.h" />
+    <ClInclude Include="Messages\GameEventIdleToC.h" />
+    <ClInclude Include="Messages\GameEventIdleToR.h" />
     <ClInclude Include="Messages\GameEventMoveToC.h" />
     <ClInclude Include="Messages\GameEventMoveToR.h" />
+    <ClInclude Include="Messages\GameEventStopToC.h" />
+    <ClInclude Include="Messages\GameEventStopToR.h" />
     <ClInclude Include="Messages\GameStartToC.h" />
     <ClInclude Include="Messages\PlayerEnterRoomToC.h" />
     <ClInclude Include="Messages\PreparationStateToC.h" />
@@ -123,8 +127,12 @@
     <ClCompile Include="Game\BaeGameRoom.cpp" />
     <ClCompile Include="Messages\EnterRoomToC.cpp" />
     <ClCompile Include="Messages\EnterRoomToR.cpp" />
+    <ClCompile Include="Messages\GameEventIdleToC.cpp" />
+    <ClCompile Include="Messages\GameEventIdleToR.cpp" />
     <ClCompile Include="Messages\GameEventMoveToC.cpp" />
     <ClCompile Include="Messages\GameEventMoveToR.cpp" />
+    <ClCompile Include="Messages\GameEventStopToC.cpp" />
+    <ClCompile Include="Messages\GameEventStopToR.cpp" />
     <ClCompile Include="Messages\GameStartToC.cpp" />
     <ClCompile Include="Messages\PlayerEnterRoomToC.cpp" />
     <ClCompile Include="Messages\PreparationStateToC.cpp" />

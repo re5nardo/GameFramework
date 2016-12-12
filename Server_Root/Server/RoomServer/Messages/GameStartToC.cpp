@@ -20,6 +20,11 @@ unsigned short GameStartToC::GetID()
 	return MESSAGE_ID;
 }
 
+IMessage* GameStartToC::Clone()
+{
+	return NULL;
+}
+
 const char* GameStartToC::Serialize()
 {
 	Document document;

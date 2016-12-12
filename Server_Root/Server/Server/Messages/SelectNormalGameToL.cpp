@@ -20,6 +20,11 @@ unsigned short SelectNormalGameToL::GetID()
 	return MESSAGE_ID;
 }
 
+IMessage* SelectNormalGameToL::Clone()
+{
+	return NULL;
+}
+
 const char* SelectNormalGameToL::Serialize()
 {
 	Document document;

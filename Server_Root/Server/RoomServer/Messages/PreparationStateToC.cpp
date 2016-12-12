@@ -20,6 +20,11 @@ unsigned short PreparationStateToC::GetID()
 	return MESSAGE_ID;
 }
 
+IMessage* PreparationStateToC::Clone()
+{
+	return NULL;
+}
+
 const char* PreparationStateToC::Serialize()
 {
 	Document document;

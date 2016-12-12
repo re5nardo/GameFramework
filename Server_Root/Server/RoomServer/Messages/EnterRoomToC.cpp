@@ -20,6 +20,11 @@ unsigned short EnterRoomToC::GetID()
 	return MESSAGE_ID;
 }
 
+IMessage* EnterRoomToC::Clone()
+{
+	return NULL;
+}
+
 const char* EnterRoomToC::Serialize()
 {
 	Document document;

@@ -14,4 +14,5 @@ public:
 
 public:
 	virtual unsigned short GetID() = 0;
+	virtual IMessage* Clone() = 0;
 };

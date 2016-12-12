@@ -30,6 +30,7 @@ public:
 
 public:
 	unsigned short GetID() override;
+	IMessage* Clone() override;
 	const char* Serialize() override;
 	bool Deserialize(const char* pChar) override;
 };

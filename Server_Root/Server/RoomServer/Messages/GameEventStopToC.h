@@ -5,21 +5,27 @@
 #include "../../rapidjson/stringbuffer.h"
 #include "../../rapidjson/writer.h"
 #include "../../CommonSources/Message/MessageIDs.h"
+#include "Data.h"
 
 using namespace rapidjson;
 
-class GameStartToC : public IMessage
+class GameEventStopToC : public IMessage
 {
 public:
-	GameStartToC();
-	virtual ~GameStartToC();
+	GameEventStopToC();
+	virtual ~GameEventStopToC();
 
 public:
-	static const unsigned short MESSAGE_ID = GameStartToC_ID;
+	static const unsigned short MESSAGE_ID = GameEventStopToC_ID;
 
 private:
 	GenericStringBuffer<UTF8<>>*	m_buffer;
 	Writer<StringBuffer, UTF8<>>*	m_writer;
+
+public:
+	int m_nPlayerIndex;				//  json field name : PlayerIndex
+	__int64 m_lEventTime;			//  json field name : EventTime
+	Vector3 m_vec3Pos;				//  json field name : Pos_X, Pos_Y, Pos_Z
 
 public:
 	unsigned short GetID() override;

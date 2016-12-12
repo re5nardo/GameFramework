@@ -156,6 +156,18 @@
     <ClInclude Include="Messages\PlayerEnterRoomToC.h">
       <Filter>헤더 파일\Messages\ToClient</Filter>
     </ClInclude>
+    <ClInclude Include="Messages\GameEventIdleToC.h">
+      <Filter>헤더 파일\Messages\ToClient</Filter>
+    </ClInclude>
+    <ClInclude Include="Messages\GameEventStopToC.h">
+      <Filter>헤더 파일\Messages\ToClient</Filter>
+    </ClInclude>
+    <ClInclude Include="Messages\GameEventIdleToR.h">
+      <Filter>헤더 파일\Messages\ToRoom</Filter>
+    </ClInclude>
+    <ClInclude Include="Messages\GameEventStopToR.h">
+      <Filter>헤더 파일\Messages\ToRoom</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -217,6 +229,18 @@
     </ClCompile>
     <ClCompile Include="Messages\PlayerEnterRoomToC.cpp">
       <Filter>소스 파일\Messages\ToClient</Filter>
+    </ClCompile>
+    <ClCompile Include="Messages\GameEventIdleToC.cpp">
+      <Filter>소스 파일\Messages\ToClient</Filter>
+    </ClCompile>
+    <ClCompile Include="Messages\GameEventStopToC.cpp">
+      <Filter>소스 파일\Messages\ToClient</Filter>
+    </ClCompile>
+    <ClCompile Include="Messages\GameEventIdleToR.cpp">
+      <Filter>소스 파일\Messages\ToRoom</Filter>
+    </ClCompile>
+    <ClCompile Include="Messages\GameEventStopToR.cpp">
+      <Filter>소스 파일\Messages\ToRoom</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

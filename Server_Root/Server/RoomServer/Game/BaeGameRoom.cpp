@@ -3,7 +3,6 @@
 #include "../CommonSources/Network/Network.h"
 #include "../CommonSources/Message/IMessage.h"
 #include "RoomMessageHeader.h"
-#include <time.h>
 
 
 BaeGameRoom::BaeGameRoom(int nMatchID, vector<string> vecMatchedPlayerKey)
@@ -19,7 +18,10 @@ BaeGameRoom::BaeGameRoom(int nMatchID, vector<string> vecMatchedPlayerKey)
 
 BaeGameRoom::~BaeGameRoom()
 {
-
+	for (vector<pair<__int64, IMessage*>>::iterator it = m_vecGameEventRecord.begin(); it != m_vecGameEventRecord.end(); ++it)
+	{
+		delete it->second;
+	}
 }
 
 void BaeGameRoom::SendToAllUsers(IMessage* pMsg, string strExclusionKey, bool bDelete)
@@ -48,14 +50,54 @@ void BaeGameRoom::OnRecvMessage(unsigned int socket, IMessage* pMsg)
 	{
 		OnGameEventMoveToR((GameEventMoveToR*)pMsg, socket);
 	}
+	else if (pMsg->GetID() == GameEventIdleToR::MESSAGE_ID)
+	{
+		OnGameEventIdleToR((GameEventIdleToR*)pMsg, socket);
+	}
+	else if (pMsg->GetID() == GameEventStopToR::MESSAGE_ID)
+	{
+		OnGameEventStopToR((GameEventStopToR*)pMsg, socket);
+	}
 }
 
 void BaeGameRoom::OnGameEventMoveToR(GameEventMoveToR* pMsg, unsigned int socket)
 {
+	__int64 lEventTime = GetElapsedTime();
+
 	GameEventMoveToC* res = new GameEventMoveToC();
 	res->m_nPlayerIndex = pMsg->m_nPlayerIndex;
-	res->m_nElapsedTime = pMsg->m_nElapsedTime;
+	res->m_lEventTime = lEventTime;
 	res->m_vec3Dest = pMsg->m_vec3Dest;
+
+	m_vecGameEventRecord.push_back(make_pair(lEventTime, res->Clone()));
+
+	SendToAllUsers(res);
+}
+
+void BaeGameRoom::OnGameEventIdleToR(GameEventIdleToR* pMsg, unsigned int socket)
+{
+	__int64 lEventTime = GetElapsedTime();
+
+	GameEventIdleToC* res = new GameEventIdleToC();
+	res->m_nPlayerIndex = pMsg->m_nPlayerIndex;
+	res->m_lEventTime = lEventTime;
+	res->m_vec3Pos = pMsg->m_vec3Pos;
+
+	m_vecGameEventRecord.push_back(make_pair(lEventTime, res->Clone()));
+
+	SendToAllUsers(res);
+}
+
+void BaeGameRoom::OnGameEventStopToR(GameEventStopToR* pMsg, unsigned int socket)
+{
+	__int64 lEventTime = GetElapsedTime();
+
+	GameEventStopToC* res = new GameEventStopToC();
+	res->m_nPlayerIndex = pMsg->m_nPlayerIndex;
+	res->m_lEventTime = lEventTime;
+	res->m_vec3Pos = pMsg->m_vec3Pos;
+
+	m_vecGameEventRecord.push_back(make_pair(lEventTime, res->Clone()));
 
 	SendToAllUsers(res);
 }
@@ -110,6 +152,8 @@ void BaeGameRoom::OnPreparationStateToR(PreparationStateToR* pMsg, unsigned int 
 
 	if (IsAllPlayersReady())
 	{
+		m_StartTime = system_clock::now();
+
 		GameStartToC* gameStartToC = new GameStartToC();
 
 		SendToAllUsers(gameStartToC);
@@ -149,4 +193,11 @@ bool BaeGameRoom::IsAllPlayersReady()
 	}
 
 	return true;
+}
+
+__int64 BaeGameRoom::GetElapsedTime()
+{
+	milliseconds elapsedTime = duration_cast<milliseconds>(system_clock::now() - m_StartTime);
+
+	return elapsedTime.count();
 }
