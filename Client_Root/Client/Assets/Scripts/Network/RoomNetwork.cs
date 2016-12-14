@@ -227,6 +227,14 @@ public class RoomNetwork : MonoSingleton<RoomNetwork>
         {
             msg = new PlayerEnterRoomToC();
         }
+        else if (nMessageID == GameEventIdleToC.MESSAGE_ID)
+        {
+            msg = new GameEventIdleToC();
+        }
+        else if (nMessageID == GameEventStopToC.MESSAGE_ID)
+        {
+            msg = new GameEventStopToC();
+        }
 
         if (msg != null)
         {

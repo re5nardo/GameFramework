@@ -10,10 +10,11 @@ public class MoveBehavior : IBehavior
     private float                       m_fDistanceToMove = 0f;
     private string                      m_strMoveClipName = "";
     private bool                        m_bContinue = false;
+    private float                       m_fEventTime = 0f;
 
-    public MoveBehavior(ICharacter Character, LinkedList<Node> listPath, string strMoveClipName, bool bContinue) : base(Character)
+    public MoveBehavior(ICharacter character, LinkedList<Node> listPath, string strMoveClipName, bool bContinue, float fEventTime) : base(character)
     {
-        m_Character = Character;
+        m_Character = character;
         m_listPath = new List<Node>(listPath);
 
         for (int nIndex = 0; nIndex < m_listPath.Count; ++nIndex)
@@ -32,10 +33,15 @@ public class MoveBehavior : IBehavior
 
         m_strMoveClipName = strMoveClipName;
         m_bContinue = bContinue;
+        m_fEventTime = fEventTime;
     }
 
     protected override IEnumerator Body()
     {
+        float fLatency = IGameRoom.Instance.GetElapsedTime() - m_fEventTime;
+        bool bCorrection = fLatency >= IGameRoom.Instance.GetCorrectionThreshold();
+        float fCorrectionSpeed = (fLatency + IGameRoom.Instance.GetCorrectionTime()) / IGameRoom.Instance.GetCorrectionTime();
+
         float fClipLength = m_Character.m_CharacterUI.GetAnimationClipLegth(m_strMoveClipName);
         float fElapsedTime = 0f;
         float fContinueTime = m_bContinue ? m_Character.m_CharacterUI.GetAnimationStateTime(m_strMoveClipName) : 0f;
@@ -48,6 +54,19 @@ public class MoveBehavior : IBehavior
         {
             m_Character.m_CharacterUI.SampleAnimation(m_strMoveClipName, ((fElapsedTime + fContinueTime) % fClipLength) / fClipLength);
             m_Character.m_CharacterUI.transform.LookAt(m_listPath[nNext].m_vec3Pos);
+
+            yield return null;
+
+            fElapsedTime += Time.deltaTime;
+
+            if (bCorrection && fElapsedTime < IGameRoom.Instance.GetCorrectionTime())
+            {
+                fMovedDistance += m_Character.GetSpeed() * Time.deltaTime * fCorrectionSpeed;
+            }
+            else
+            {
+                fMovedDistance += m_Character.GetSpeed() * Time.deltaTime;
+            }
 
             if (fMovedDistance >= m_fDistanceToMove)
             {
@@ -63,11 +82,6 @@ public class MoveBehavior : IBehavior
             float t = (fMovedDistance - m_dicDistance[nPrev]) / (m_dicDistance[nNext] - m_dicDistance[nPrev]);
 
             m_Character.SetPosition(Util.Math.Lerp(m_listPath[nPrev].m_vec3Pos, m_listPath[nNext].m_vec3Pos, t));
-
-            yield return null;
-
-            fElapsedTime += Time.deltaTime;
-            fMovedDistance += m_Character.GetSpeed() * Time.deltaTime;
         }
 
         m_Character.SetPosition(m_listPath[m_listPath.Count - 1].m_vec3Pos);

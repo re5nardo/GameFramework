@@ -19,7 +19,7 @@ public class MisterBae : ICharacter
     {
         StopAllBehaviors();
 
-        StartBehavior(new IdleBehavior(this, "WAIT01"));
+        StartBehavior(new IdleBehavior(this, "WAIT01", m_LastBehavior is IdleBehavior));
     }
 
     public override void Stop()
@@ -29,11 +29,11 @@ public class MisterBae : ICharacter
         StartBehavior(new StopBehavior(this));
     }
 
-    public override void Move(LinkedList<Node> listPath)
+    public override void Move(LinkedList<Node> listPath, float fEventTime)
     {
         StopAllBehaviors();
 
-        StartBehavior(new MoveBehavior(this, listPath, "RUN00_F", m_LastBehavior is MoveBehavior));
+        StartBehavior(new MoveBehavior(this, listPath, "RUN00_F", m_LastBehavior is MoveBehavior, fEventTime));
     }
 
     public override void Skiil(object data)

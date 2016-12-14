@@ -41,8 +41,8 @@ public class BehaviorBasedObject : MonoBehaviour
         m_listBehavior.Remove(behavior);
     }
 
-    protected bool IsBehaviorPlaying()
+    protected int GetCountOfPlayingBehavior()
     {
-        return m_listBehavior.Count != 0;
+        return m_listBehavior.Count;
     }
 }

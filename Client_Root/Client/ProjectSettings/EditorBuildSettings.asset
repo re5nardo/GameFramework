@@ -13,3 +13,5 @@ EditorBuildSettings:
     path: Assets/Scenes/BaeGameRoom.unity
   - enabled: 1
     path: Assets/Scenes/Maps/TestMap.unity
+  - enabled: 1
+    path: Assets/Scenes/Maps/BasicStraightWay.unity

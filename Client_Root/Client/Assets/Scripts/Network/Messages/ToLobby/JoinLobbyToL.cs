@@ -12,6 +12,11 @@ public class JoinLobbyToL : IMessage
         return MESSAGE_ID;
     }
 
+    public IMessage Clone()
+    {
+        return null; 
+    }
+
     public byte[] Serialize()
     {
         JSONObject jsonObj = new JSONObject(JSONObject.Type.OBJECT);

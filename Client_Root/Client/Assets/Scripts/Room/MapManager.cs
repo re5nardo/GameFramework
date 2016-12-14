@@ -57,7 +57,7 @@ public class MapManager : MonoBehaviour
 
         SetMapFromXML(m_Map, xmlDoc);
 
-        //  load map scene
+        //  Load map scene
         yield return SceneManager.LoadSceneAsync(m_Map.m_strSceneName, LoadSceneMode.Additive);
 
         //  Set Map Nodes

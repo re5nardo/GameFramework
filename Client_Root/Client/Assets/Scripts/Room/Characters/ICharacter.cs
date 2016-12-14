@@ -8,9 +8,12 @@ public abstract class ICharacter : BehaviorBasedObject
     protected Stat                  m_DefaultStat = default(Stat);
     protected Stat                  m_CurrentStat = default(Stat);
 
+    private int                     m_OldBehaviorCount = 0;
+    public DefaultHandler           m_onBehavioringFinish = null;
+
     public abstract void Idle();
     public abstract void Stop();
-    public abstract void Move(LinkedList<Node> listPath);
+    public abstract void Move(LinkedList<Node> listPath, float fEventTime);
     public abstract void Skiil(object data);
     public abstract void Emotion();
 
@@ -40,12 +43,17 @@ public abstract class ICharacter : BehaviorBasedObject
         return m_vec3Position;
     }
 
-    protected virtual void LateUpdate()
+    private void LateUpdate()
     {
-        if (!IsBehaviorPlaying())
+        if (m_OldBehaviorCount != 0 && GetCountOfPlayingBehavior() == 0)
         {
-            Idle();
+            if (m_onBehavioringFinish != null)
+            {
+                m_onBehavioringFinish();
+            }
         }
+
+        m_OldBehaviorCount = GetCountOfPlayingBehavior();
     }
 
     protected virtual void OnDestroy()

@@ -139,7 +139,7 @@ GameObject:
   - 4: {fileID: 274764076}
   - 114: {fileID: 274764075}
   m_Layer: 0
-  m_Name: BaeGameRoom
+  m_Name: BaeGameRoomSingleton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

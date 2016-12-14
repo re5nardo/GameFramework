@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 
-public class BaeGameRoom : MonoBehaviour
+public class BaeGameRoom : IGameRoom
 {
     [SerializeField] private MapManager           m_MapManager = null;
     [SerializeField] private InputManager         m_InputManager = null;
@@ -15,7 +15,6 @@ public class BaeGameRoom : MonoBehaviour
     private int m_nPort = 9111;
 
     private AStarAlgorithm                      m_AStarAlgorithm = new AStarAlgorithm();
-    private MisterBae                           m_MisterBae = null;
 
     private Dictionary<int, ICharacter>         m_dicCharacter = new Dictionary<int, ICharacter>();
 
@@ -23,12 +22,23 @@ public class BaeGameRoom : MonoBehaviour
 
     private int m_nPlayerIndex = -1;
 
+    private bool m_bPlaying = false;
+    private float m_fElapsedTime = 0f;
+
+    private List<KeyValuePair<float, IMessage>> m_listGameEventRecord = new List<KeyValuePair<float, IMessage>>();
+
     private void Start()
     {
         m_nOldFrameRate = Application.targetFrameRate;
         Application.targetFrameRate = 30;
 
         RoomNetwork.Instance.ConnectToServer(m_strIP, m_nPort, OnConnected, OnRecvMessage);
+    }
+
+    private void Update()
+    {
+        if (m_bPlaying)
+            m_fElapsedTime += Time.deltaTime;
     }
 
     private void OnConnected(bool bResult)
@@ -53,6 +63,8 @@ public class BaeGameRoom : MonoBehaviour
 
     private void StartGame()
     {
+        m_bPlaying = true;
+
         m_InputManager.Work(m_MapManager.GetWidth(), m_MapManager.GetHeight(), m_CameraMain, OnClicked);
     }
 
@@ -81,16 +93,35 @@ public class BaeGameRoom : MonoBehaviour
                 foreach(KeyValuePair<int, string> kv in msg.m_dicPlayers)
                 {
                     GameObject goCharacter = new GameObject("Player_" + kv.Key.ToString());
-                    m_MisterBae = goCharacter.AddComponent<MisterBae>();
+                    MisterBae misterBae = goCharacter.AddComponent<MisterBae>();
 
                     Stat stat = new Stat();
                     stat.fSpeed = 4f;
-                    m_MisterBae.Initialize(stat);
 
-                    m_dicCharacter[kv.Key] = m_MisterBae;
+                    m_dicCharacter[kv.Key] = misterBae;
+
+                    misterBae.Initialize(stat);
+                    misterBae.m_onBehavioringFinish = delegate()
+                    {
+                        misterBae.Idle();
+
+                        GameEventIdleToR idleToR = new GameEventIdleToR();
+                        idleToR.m_nPlayerIndex = kv.Key;
+                        idleToR.m_vec3Pos = misterBae.GetPosition();
+
+                        RoomNetwork.Instance.Send(idleToR);
+                    };
+
+                    misterBae.Idle();
+
+                    GameEventIdleToR idleToR2 = new GameEventIdleToR();
+                    idleToR2.m_nPlayerIndex = kv.Key;
+                    idleToR2.m_vec3Pos = misterBae.GetPosition();
+
+                    RoomNetwork.Instance.Send(idleToR2);
 
                     if(kv.Key == m_nPlayerIndex)
-                        m_CameraController.FollowTarget(m_MisterBae.m_CharacterUI.transform);
+                        m_CameraController.FollowTarget(misterBae.m_CharacterUI.transform);
                 }
 
                 StartCoroutine(PrepareGame());
@@ -113,7 +144,31 @@ public class BaeGameRoom : MonoBehaviour
         {
             GameEventMoveToC msg = (GameEventMoveToC)iMsg;
 
-            Move(msg.m_nPlayerIndex, msg.m_vec3Dest);
+            Move(msg.m_nPlayerIndex, msg.m_vec3Dest, msg.m_lEventTime / 1000.0f);
+        }
+        else if (iMsg.GetID() == GameEventIdleToC.MESSAGE_ID)
+        {
+            GameEventIdleToC msg = (GameEventIdleToC)iMsg;
+
+            if (!m_dicCharacter.ContainsKey(msg.m_nPlayerIndex))
+            {
+                Debug.LogWarning("PlayerIndex is invalid!, PlayerIndex : " + msg.m_nPlayerIndex);
+                return;
+            }
+
+            m_dicCharacter[msg.m_nPlayerIndex].Idle();
+        }
+        else if (iMsg.GetID() == GameEventStopToC.MESSAGE_ID)
+        {
+            GameEventStopToC msg = (GameEventStopToC)iMsg;
+
+            if (!m_dicCharacter.ContainsKey(msg.m_nPlayerIndex))
+            {
+                Debug.LogWarning("PlayerIndex is invalid!, PlayerIndex : " + msg.m_nPlayerIndex);
+                return;
+            }
+
+            m_dicCharacter[msg.m_nPlayerIndex].Stop();
         }
     }
 #endregion
@@ -123,14 +178,13 @@ public class BaeGameRoom : MonoBehaviour
     {
         GameEventMoveToR moveToR = new GameEventMoveToR();
         moveToR.m_nPlayerIndex = m_nPlayerIndex;
-        moveToR.m_nElapsedTime = 0;
         moveToR.m_vec3Dest = vec3Pos;
 
         RoomNetwork.Instance.Send(moveToR);
     }
 #endregion
 
-    private void Move(int nPlayerIndex, Vector3 vec3Pos)
+    private void Move(int nPlayerIndex, Vector3 vec3Pos, float fEventTime)
     {
         if (!m_dicCharacter.ContainsKey(nPlayerIndex))
         {
@@ -154,7 +208,7 @@ public class BaeGameRoom : MonoBehaviour
         m_MapManager.RemoveNode(start);
         m_MapManager.RemoveNode(end);
 
-        m_dicCharacter[nPlayerIndex].Move(SmoothPathQuick(listPath));
+        m_dicCharacter[nPlayerIndex].Move(SmoothPathQuick(listPath), fEventTime);
     }
 
     private LinkedList<Node> SmoothPathQuick(LinkedList<Node> listPath)
@@ -201,5 +255,10 @@ public class BaeGameRoom : MonoBehaviour
 
         m_InputManager.Stop();
         m_CameraController.StopFollow();
+    }
+
+    public override float GetElapsedTime()
+    {
+        return m_fElapsedTime;
     }
 }
