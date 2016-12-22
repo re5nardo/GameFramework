@@ -29,11 +29,15 @@ public class MisterBae : ICharacter
         StartBehavior(new StopBehavior(this));
     }
 
-    public override void Move(LinkedList<Node> listPath, float fEventTime)
+    public override void Move(LinkedList<Node> listPath, float fEventTime, System.Action callback = null)
     {
-        StopAllBehaviors();
+        List<IBehavior> listBehavior = m_listBehavior.FindAll(a => a is IdleBehavior || a is MoveBehavior || a is PatrolBehavior);
+        foreach(IBehavior bh in listBehavior)
+        {
+            bh.Stop();
+        }
 
-        StartBehavior(new MoveBehavior(this, listPath, "RUN00_F", m_LastBehavior is MoveBehavior, fEventTime));
+        StartBehavior(new MoveBehavior(this, listPath, "RUN00_F", m_LastBehavior is MoveBehavior, fEventTime), callback);
     }
 
     public override void Skiil(object data)
@@ -46,4 +50,15 @@ public class MisterBae : ICharacter
         
     }
 #endregion
+
+    public void Patrol(Vector3 vec3Start, Vector3 vec3Dest)
+    {
+        List<IBehavior> listBehavior = m_listBehavior.FindAll(a => a is IdleBehavior || a is MoveBehavior);
+        foreach(IBehavior bh in listBehavior)
+        {
+            bh.Stop();
+        }
+
+        StartBehavior(new PatrolBehavior(this, vec3Start, vec3Dest, "RUN00_F"));
+    }
 }

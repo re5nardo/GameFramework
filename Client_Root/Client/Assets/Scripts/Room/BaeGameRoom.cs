@@ -5,16 +5,14 @@ using UnityEngine.SceneManagement;
 
 public class BaeGameRoom : IGameRoom
 {
-    [SerializeField] private MapManager           m_MapManager = null;
     [SerializeField] private InputManager         m_InputManager = null;
     [SerializeField] private Camera               m_CameraMain = null;
     [SerializeField] private CameraController     m_CameraController;
 
+
     //  Temp
     private string m_strIP = "175.197.227.73";
     private int m_nPort = 9111;
-
-    private AStarAlgorithm                      m_AStarAlgorithm = new AStarAlgorithm();
 
     private Dictionary<int, ICharacter>         m_dicCharacter = new Dictionary<int, ICharacter>();
 
@@ -66,12 +64,22 @@ public class BaeGameRoom : IGameRoom
         m_bPlaying = true;
 
         m_InputManager.Work(m_MapManager.GetWidth(), m_MapManager.GetHeight(), m_CameraMain, OnClicked);
+
+        foreach (IBehaviorBasedObjectAI obstacle in m_listObstacle)
+        {
+            obstacle.StartAI();
+        }
     }
 
     private IEnumerator PrepareGame()
     {
         //  prefare for game
         yield return StartCoroutine(m_MapManager.LoadMap(1));
+
+        foreach (IBehaviorBasedObjectAI obstacle in m_listObstacle)
+        {
+            obstacle.Init();
+        }
 
         PreparationStateToR preparationStateToR = new PreparationStateToR();
         preparationStateToR.m_fState = 1.0f;
@@ -192,55 +200,15 @@ public class BaeGameRoom : IGameRoom
             return;
         }
 
-        if (!m_MapManager.IsPositionValidToMove(vec3Pos))
+        LinkedList<Node> listPath = GetMovePath(m_dicCharacter[nPlayerIndex].GetPosition(), vec3Pos);
+
+        if (listPath == null)
         {
+            Debug.LogError("Position is invalid!, vec3Pos : " + vec3Pos);
             return;
         }
-            
-        Node start = new Node(m_dicCharacter[nPlayerIndex].GetPosition(), false);
-        Node end = new Node(vec3Pos, false);
 
-        m_MapManager.InsertNode(start);
-        m_MapManager.InsertNode(end);
-
-        LinkedList<Node> listPath = m_AStarAlgorithm.AStar(start, end);
-
-        m_MapManager.RemoveNode(start);
-        m_MapManager.RemoveNode(end);
-
-        m_dicCharacter[nPlayerIndex].Move(SmoothPathQuick(listPath), fEventTime);
-    }
-
-    private LinkedList<Node> SmoothPathQuick(LinkedList<Node> listPath)
-    {
-        if (listPath.Count <= 2)
-        {
-            return listPath;
-        }
-
-        LinkedListNode<Node> node1 = listPath.First;
-        LinkedListNode<Node> node2 = node1.Next;
-        LinkedListNode<Node> node3 = node2.Next;
-
-        while (node3 != null)
-        {
-            //  check user can walk between 1, 3
-            if (m_MapManager.CanMoveStraightly(node1.Value.m_vec3Pos, node3.Value.m_vec3Pos))
-            {
-                listPath.Remove(node2);
-
-                node2 = node3;
-                node3 = node2.Next;
-            }
-            else
-            {
-                node1 = node2;
-                node2 = node1.Next;
-                node3 = node2.Next;
-            }
-        }
-
-        return listPath;
+        m_dicCharacter[nPlayerIndex].Move(listPath, fEventTime);
     }
 
     private void OnDestroy()
