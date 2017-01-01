@@ -14,8 +14,8 @@ public abstract class ICharacter : BehaviorBasedObject
     public abstract void Idle();
     public abstract void Stop();
     public abstract void Move(LinkedList<Node> listPath, float fEventTime, System.Action callback = null);
-    public abstract void Skiil(object data);
     public abstract void Emotion();
+    public abstract void GameEvent(IMessage iMsg);
 
     protected abstract void CreateUI();
     public abstract void Initialize(params object[] arrParam);

@@ -10,6 +10,7 @@ public abstract class IGameRoom : MonoSingleton<IGameRoom>
     private AStarAlgorithm  m_AStarAlgorithm = new AStarAlgorithm();
 
     public abstract float GetElapsedTime();
+    public abstract int GetPlayerIndex();
 
     public virtual float GetCorrectionTime()
     {

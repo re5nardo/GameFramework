@@ -140,6 +140,12 @@ public class BaeGameRoom : IGameRoom
                 SceneManager.LoadScene("Lobby");
             }
         }
+        else if (iMsg.GetID() == GameEventTeleportToC.MESSAGE_ID)
+        {
+            GameEventTeleportToC msg = (GameEventTeleportToC)iMsg;
+
+            m_dicCharacter[msg.m_nPlayerIndex].GameEvent(iMsg);
+        }
         else if (iMsg.GetID() == PlayerEnterRoomToC.MESSAGE_ID)
         {
             
@@ -228,5 +234,10 @@ public class BaeGameRoom : IGameRoom
     public override float GetElapsedTime()
     {
         return m_fElapsedTime;
+    }
+
+    public override int GetPlayerIndex()
+    {
+        return m_nPlayerIndex;
     }
 }

@@ -8,7 +8,7 @@ public abstract class IBehavior
 
     protected BehaviorBasedObject   m_Performer = null;
     private Coroutine               m_BodyCoroutine = null;
-    protected Coroutine             m_SubBehavior = null;
+    protected Coroutine             m_SubCoroutine = null;
 
     public IBehavior(BehaviorBasedObject performer)
     {
@@ -33,9 +33,9 @@ public abstract class IBehavior
     public void Stop()
     {
         m_Performer.StopCoroutine(m_BodyCoroutine);
-        if(m_SubBehavior != null)
+        if(m_SubCoroutine != null)
         {
-            m_Performer.StopCoroutine(m_SubBehavior);
+            m_Performer.StopCoroutine(m_SubCoroutine);
         }
 
         OnStop();

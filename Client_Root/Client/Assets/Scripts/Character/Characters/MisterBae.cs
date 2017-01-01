@@ -40,9 +40,12 @@ public class MisterBae : ICharacter
         StartBehavior(new MoveBehavior(this, listPath, "RUN00_F", m_LastBehavior is MoveBehavior, fEventTime), callback);
     }
 
-    public override void Skiil(object data)
+    public override void GameEvent(IMessage iMsg)
     {
-        
+        if (iMsg is GameEventTeleportToC)
+        {
+            Teleport((GameEventTeleportToC)iMsg);
+        }
     }
 
     public override void Emotion()
@@ -50,6 +53,25 @@ public class MisterBae : ICharacter
         
     }
 #endregion
+
+    public void Teleport(GameEventTeleportToC data)
+    {
+        if (m_listBehavior.Exists(a => a is MisterBaeTeleportBehavior))
+        {
+            (m_listBehavior.Find(a => a is MisterBaeTeleportBehavior) as MisterBaeTeleportBehavior).SetState((MisterBaeTeleportBehavior.State)data.m_nState);
+        }
+        else
+        {
+            List<IBehavior> listBehavior = m_listBehavior.FindAll(a => a is IdleBehavior || a is MoveBehavior);
+            foreach(IBehavior bh in listBehavior)
+            {
+                bh.Stop();
+            }
+
+            StartBehavior(new MisterBaeTeleportBehavior(this, (MisterBaeTeleportBehavior.State)data.m_nState, data.m_vec3Start, data.m_vec3Dest));
+        }
+    }
+
 
     public void Patrol(Vector3 vec3Start, Vector3 vec3Dest)
     {

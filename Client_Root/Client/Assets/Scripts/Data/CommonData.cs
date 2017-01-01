@@ -108,3 +108,51 @@ public struct Sphere
     }
 }
 
+namespace CommonData
+{
+    public struct Vector3 : IJSONObjectConvertible
+    {
+        public float x;         //  json field name : x
+        public float y;         //  json field name : y
+        public float z;         //  json field name : z
+
+        public Vector3(float x, float y, float z)
+        {
+            this.x = x;
+            this.y = y;
+            this.z = z;
+        }
+
+        public Vector3(Vector3 pos)
+        {
+            this.x = pos.x;
+            this.y = pos.y;
+            this.z = pos.z;
+        }
+
+        public JSONObject GetJSONObject()
+        {
+            JSONObject jsonObj = new JSONObject(JSONObject.Type.OBJECT);
+
+            JSONHelper.AddField(jsonObj, "x", x);
+            JSONHelper.AddField(jsonObj, "y", y);
+            JSONHelper.AddField(jsonObj, "z", z);
+
+            return jsonObj;
+        }
+
+        public bool SetJSONObject(JSONObject jsonObj)
+        {
+            if(!JSONHelper.GetField(jsonObj, "x", ref x)) return false;
+            if(!JSONHelper.GetField(jsonObj, "y", ref y)) return false;
+            if(!JSONHelper.GetField(jsonObj, "z", ref z)) return false;
+
+            return true;
+        }
+
+        public UnityEngine.Vector3 GetVector3()
+        {
+            return new UnityEngine.Vector3(x, y, z);
+        }
+    }
+}

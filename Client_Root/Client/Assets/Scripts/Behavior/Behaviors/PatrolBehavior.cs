@@ -42,9 +42,9 @@ public class PatrolBehavior : IBehavior
                 yield break;
             }
 
-            m_SubBehavior = new MoveBehavior(m_Character, listPath, m_strMoveClipName, !bFirstMove, IGameRoom.Instance.GetElapsedTime()).Start();
+            m_SubCoroutine = new MoveBehavior(m_Character, listPath, m_strMoveClipName, !bFirstMove, IGameRoom.Instance.GetElapsedTime()).Start();
 
-            yield return m_SubBehavior;
+            yield return m_SubCoroutine;
 
             bGoToDest = !bGoToDest;
             bFirstMove = false;

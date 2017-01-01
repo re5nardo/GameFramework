@@ -235,6 +235,10 @@ public class RoomNetwork : MonoSingleton<RoomNetwork>
         {
             msg = new GameEventStopToC();
         }
+        else if (nMessageID == GameEventTeleportToC.MESSAGE_ID)
+        {
+            msg = new GameEventTeleportToC();
+        }
 
         if (msg != null)
         {

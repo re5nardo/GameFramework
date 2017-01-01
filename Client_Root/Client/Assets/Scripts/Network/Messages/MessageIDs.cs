@@ -19,6 +19,7 @@ public class MessageID
     public const ushort EnterRoomToR_ID =                   40003;
     public const ushort GameEventIdleToR_ID =               40004;
     public const ushort GameEventStopToR_ID =               40005;
+    public const ushort GameEventTeleportToR_ID =           40006;
 
 
     //  Room -> Client (50000 ~ 59999)
@@ -29,4 +30,5 @@ public class MessageID
     public const ushort PlayerEnterRoomToC_ID =             50004;
     public const ushort GameEventIdleToC_ID =               50005;
     public const ushort GameEventStopToC_ID =               50006;
+    public const ushort GameEventTeleportToC_ID =           50007;
 }

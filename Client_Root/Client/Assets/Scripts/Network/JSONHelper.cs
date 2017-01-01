@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using System;
 
 public static class JSONHelper
 {
@@ -57,6 +58,19 @@ public static class JSONHelper
         }
 
         jsonObject.AddField(strFieldName, obj);
+    }
+
+    public static void AddField(JSONObject jsonObject, string strFieldName, IJSONObjectConvertible value)
+    {
+        jsonObject.AddField(strFieldName, value.GetJSONObject());
+    }
+
+    public static void AddField<T>(JSONObject jsonObject, string strFieldName, T value) where T : IConvertible
+    {
+        T eValue = (T)Enum.Parse(typeof(T), value.ToString());
+        int nValue = Convert.ToInt32(eValue);
+
+        jsonObject.AddField(strFieldName, nValue);
     }
     #endregion
 
@@ -217,6 +231,47 @@ public static class JSONHelper
         {
             dicValue.Add(int.Parse(field.keys[i]), field.list[i].str);      
         }
+
+        return true;
+    }
+
+    public static bool GetField(JSONObject jsonObject, string strFieldName, IJSONObjectConvertible value)
+    {
+        if(!jsonObject.HasField(strFieldName))
+        {
+            Debug.LogWarning("JSONObject does not have field, field name : " + strFieldName);
+            return false;
+        }
+
+        if(!jsonObject.GetField(strFieldName).IsObject)
+        {
+            Debug.LogWarning("Data type is invalid! It's not object");
+            return false;
+        }
+
+        value.SetJSONObject(jsonObject.GetField(strFieldName));
+
+        return true;
+    }
+
+    public static bool GetField<T>(JSONObject jsonObject, string strFieldName, ref T value) where T : IConvertible
+    {
+        if(!jsonObject.HasField(strFieldName))
+        {
+            Debug.LogWarning("JSONObject does not have field!, field name : " + strFieldName);
+            return false;
+        }
+
+        if(!jsonObject.GetField(strFieldName).IsNumber)
+        {
+            Debug.LogWarning("Data type is invalid! It's not number");
+            return false;
+        } 
+
+        int nValue = 0;
+        jsonObject.GetField(ref nValue, strFieldName);
+
+        value = (T)Enum.Parse(typeof(T), nValue.ToString());
 
         return true;
     }
