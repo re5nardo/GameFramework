@@ -30,9 +30,9 @@ const char* EnterRoomToR::Serialize()
 	Document document;
 	document.SetObject();
 
-	JSONHelper::AddField(&document, "PlayerKey", m_strPlayerKey);
-	JSONHelper::AddField(&document, "AuthKey", m_nAuthKey);
-	JSONHelper::AddField(&document, "MatchID", m_nMatchID);
+	JSONHelper::AddField(&document, &document, "PlayerKey", m_strPlayerKey);
+	JSONHelper::AddField(&document, &document, "AuthKey", m_nAuthKey);
+	JSONHelper::AddField(&document, &document, "MatchID", m_nMatchID);
 
 	m_buffer->Clear();
 	document.Accept(*m_writer);

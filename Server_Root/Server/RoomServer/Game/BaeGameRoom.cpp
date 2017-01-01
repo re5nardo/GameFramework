@@ -1,9 +1,9 @@
 #include "stdafx.h"
 #include "BaeGameRoom.h"
-#include "../CommonSources/Network/Network.h"
-#include "../CommonSources/Message/IMessage.h"
-#include "RoomMessageHeader.h"
-
+#include "../../CommonSources/Network/Network.h"
+#include "../../CommonSources/Message/IMessage.h"
+#include "../../RoomServer/RoomMessageHeader.h"
+//#include "RoomMessageHeader.h"
 
 BaeGameRoom::BaeGameRoom(int nMatchID, vector<string> vecMatchedPlayerKey)
 {
@@ -57,6 +57,23 @@ void BaeGameRoom::OnRecvMessage(unsigned int socket, IMessage* pMsg)
 	else if (pMsg->GetID() == GameEventStopToR::MESSAGE_ID)
 	{
 		OnGameEventStopToR((GameEventStopToR*)pMsg, socket);
+	}
+	else if (pMsg->GetID() == GameEventTeleportToR::MESSAGE_ID)
+	{
+		GameEventTeleportToR* tt = (GameEventTeleportToR*)pMsg;
+
+		__int64 lEventTime = GetElapsedTime();
+
+		GameEventTeleportToC* res = new GameEventTeleportToC();
+		res->m_nPlayerIndex = tt->m_nPlayerIndex;
+		res->m_lEventTime = lEventTime;
+		res->m_vec3Start = tt->m_vec3Start;
+		res->m_vec3Dest = tt->m_vec3Dest;
+		res->m_nState = tt->m_nState;
+
+		m_vecGameEventRecord.push_back(make_pair(lEventTime, res->Clone()));
+
+		SendToAllUsers(res);
 	}
 }
 

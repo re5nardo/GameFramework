@@ -30,8 +30,8 @@ const char* CreateRoomToL::Serialize()
 	Document document;
 	document.SetObject();
 
-	JSONHelper::AddField(&document, "Result", m_nResult);
-	JSONHelper::AddField(&document, "Players", m_vecPlayers);
+	JSONHelper::AddField(&document, &document, "Result", m_nResult);
+	JSONHelper::AddField(&document, &document, "Players", m_vecPlayers);
 
 	m_buffer->Clear();
 	document.Accept(*m_writer);

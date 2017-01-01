@@ -26,7 +26,7 @@
 #define EnterRoomToR_ID							40003;
 #define GameEventIdleToR_ID						40004;
 #define GameEventStopToR_ID						40005;
-
+#define GameEventTeleportToR_ID					40006;
 
 //	Room -> Client (50000 ~ 59999)
 #define PreparationStateToC_ID					50000;
@@ -36,3 +36,4 @@
 #define PlayerEnterRoomToC_ID					50004;
 #define GameEventIdleToC_ID						50005;
 #define GameEventStopToC_ID						50006;
+#define GameEventTeleportToC_ID					50007;

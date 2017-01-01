@@ -52,7 +52,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>C:\Users\bae\Documents\Visual Studio 2013\Projects\Server\RoomServer;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -84,6 +84,7 @@
     <ClInclude Include="..\CommonSources\Messages\CreateRoomToL.h" />
     <ClInclude Include="..\CommonSources\Messages\CreateRoomToR.h" />
     <ClInclude Include="..\CommonSources\Message\IDeserializable.h" />
+    <ClInclude Include="..\CommonSources\Message\IJSONObjectConvertible.h" />
     <ClInclude Include="..\CommonSources\Message\IJSONObjectable.h" />
     <ClInclude Include="..\CommonSources\Message\IMessage.h" />
     <ClInclude Include="..\CommonSources\Message\IMessageConvertor.h" />
@@ -106,6 +107,8 @@
     <ClInclude Include="Messages\GameEventMoveToR.h" />
     <ClInclude Include="Messages\GameEventStopToC.h" />
     <ClInclude Include="Messages\GameEventStopToR.h" />
+    <ClInclude Include="Messages\GameEventTeleportToC.h" />
+    <ClInclude Include="Messages\GameEventTeleportToR.h" />
     <ClInclude Include="Messages\GameStartToC.h" />
     <ClInclude Include="Messages\PlayerEnterRoomToC.h" />
     <ClInclude Include="Messages\PreparationStateToC.h" />
@@ -133,6 +136,8 @@
     <ClCompile Include="Messages\GameEventMoveToR.cpp" />
     <ClCompile Include="Messages\GameEventStopToC.cpp" />
     <ClCompile Include="Messages\GameEventStopToR.cpp" />
+    <ClCompile Include="Messages\GameEventTeleportToC.cpp" />
+    <ClCompile Include="Messages\GameEventTeleportToR.cpp" />
     <ClCompile Include="Messages\GameStartToC.cpp" />
     <ClCompile Include="Messages\PlayerEnterRoomToC.cpp" />
     <ClCompile Include="Messages\PreparationStateToC.cpp" />

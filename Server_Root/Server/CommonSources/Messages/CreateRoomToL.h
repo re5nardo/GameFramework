@@ -1,11 +1,11 @@
 #pragma once
 
 #include "../../CommonSources/Message/IMessage.h"
-#include "../../rapidjson/document.h"
-#include "../../rapidjson/stringbuffer.h"
-#include "../../rapidjson/writer.h"
+#include "../../../rapidjson/document.h"
+#include "../../../rapidjson/stringbuffer.h"
+#include "../../../rapidjson/writer.h"
 #include "../../CommonSources/Message/MessageIDs.h"
-#include "Data.h"
+#include "../../RoomServer/Data.h"
 #include <vector>
 #include <string>
 

@@ -30,11 +30,11 @@ const char* GameEventStopToC::Serialize()
 	Document document;
 	document.SetObject();
 
-	JSONHelper::AddField(&document, "PlayerIndex", m_nPlayerIndex);
-	JSONHelper::AddField(&document, "EventTime", m_lEventTime);
-	JSONHelper::AddField(&document, "Pos_X", m_vec3Pos.x);
-	JSONHelper::AddField(&document, "Pos_Y", m_vec3Pos.y);
-	JSONHelper::AddField(&document, "Pos_Z", m_vec3Pos.z);
+	JSONHelper::AddField(&document, &document, "PlayerIndex", m_nPlayerIndex);
+	JSONHelper::AddField(&document, &document, "EventTime", m_lEventTime);
+	JSONHelper::AddField(&document, &document, "Pos_X", m_vec3Pos.x);
+	JSONHelper::AddField(&document, &document, "Pos_Y", m_vec3Pos.y);
+	JSONHelper::AddField(&document, &document, "Pos_Z", m_vec3Pos.z);
 
 	m_buffer->Clear();
 	document.Accept(*m_writer);

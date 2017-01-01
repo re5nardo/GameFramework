@@ -55,8 +55,8 @@ void Network::Send(SOCKET socket, IMessage* pMsg, bool bDelete, bool bDisposable
 
 	puts(pCharSerializedData);
 
-	int nSerializedDSize = strlen(pCharSerializedData);
-	int nTotalSize = MESSAGE_HEADER_SIZE + nSerializedDSize;
+	unsigned short nSerializedSize = strlen(pCharSerializedData);
+	unsigned short nTotalSize = MESSAGE_HEADER_SIZE + nSerializedSize;
 
 	char* pCharCopiedData = new char[nTotalSize];
 

@@ -30,8 +30,8 @@ const char* JoinLobbyToL::Serialize()
 	Document document;
 	document.SetObject();
 
-	JSONHelper::AddField(&document, "PlayerKey", m_strPlayerKey);
-	JSONHelper::AddField(&document, "AuthKey", m_nAuthKey);
+	JSONHelper::AddField(&document, &document, "PlayerKey", m_strPlayerKey);
+	JSONHelper::AddField(&document, &document, "AuthKey", m_nAuthKey);
 
 	m_buffer->Clear();
 	document.Accept(*m_writer);

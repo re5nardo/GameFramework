@@ -30,9 +30,9 @@ const char* EnterRoomToC::Serialize()
 	Document document;
 	document.SetObject();
 
-	JSONHelper::AddField(&document, "Result", m_nResult);
-	JSONHelper::AddField(&document, "PlayerIndex", m_nPlayerIndex);
-	JSONHelper::AddField(&document, "Players", m_mapPlayers);
+	JSONHelper::AddField(&document, &document, "Result", m_nResult);
+	JSONHelper::AddField(&document, &document, "PlayerIndex", m_nPlayerIndex);
+	JSONHelper::AddField(&document, &document, "Players", m_mapPlayers);
 
 	m_buffer->Clear();
 	document.Accept(*m_writer);

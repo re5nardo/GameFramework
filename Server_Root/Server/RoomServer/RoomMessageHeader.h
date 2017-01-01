@@ -15,3 +15,5 @@
 #include "Messages\GameEventIdleToR.h"
 #include "Messages\GameEventStopToC.h"
 #include "Messages\GameEventStopToR.h"
+#include "Messages\GameEventTeleportToC.h"
+#include "Messages\GameEventTeleportToR.h"

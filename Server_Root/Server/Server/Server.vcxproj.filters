@@ -138,6 +138,9 @@
     <ClInclude Include="..\CommonSources\Message\MessageIDs.h">
       <Filter>헤더 파일\Messages</Filter>
     </ClInclude>
+    <ClInclude Include="..\CommonSources\Message\IJSONObjectConvertible.h">
+      <Filter>헤더 파일\Messages</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">

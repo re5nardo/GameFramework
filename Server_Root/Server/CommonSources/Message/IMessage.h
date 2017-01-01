@@ -5,7 +5,6 @@
 
 using namespace std;
 
-//	JSON format
 class IMessage : public ISerializable, public IDeserializable
 {
 public:

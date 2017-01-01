@@ -30,8 +30,8 @@ const char* SelectNormalGameToC::Serialize()
 	Document document;
 	document.SetObject();
 
-	JSONHelper::AddField(&document, "Result", m_nResult);
-	JSONHelper::AddField(&document, "ExpectedTime", m_nExpectedTime);
+	JSONHelper::AddField(&document, &document, "Result", m_nResult);
+	JSONHelper::AddField(&document, &document, "ExpectedTime", m_nExpectedTime);
 
 	m_buffer->Clear();
 	document.Accept(*m_writer);

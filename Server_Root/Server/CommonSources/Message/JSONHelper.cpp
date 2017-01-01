@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "JSONHelper.h"
+#include "IJSONObjectConvertible.h"
 
 JSONHelper::JSONHelper()
 {
@@ -11,55 +12,55 @@ JSONHelper::~JSONHelper()
 }
 
 #pragma region AddField
-void JSONHelper::AddField(Document* pJsonObj, const char* pCharFieldName, __int32 value)
+void JSONHelper::AddField(Value* pJsonObj, Document* pDocument, const char* pCharFieldName, __int32 value)
 {
-	pJsonObj->AddMember<__int32>(pCharFieldName, value, pJsonObj->GetAllocator());
+	pJsonObj->AddMember<__int32>(pCharFieldName, value, pDocument->GetAllocator());
 }
 
-void JSONHelper::AddField(Document* pJsonObj, const char* pCharFieldName, __int64 value)
+void JSONHelper::AddField(Value* pJsonObj, Document* pDocument, const char* pCharFieldName, __int64 value)
 {
-	pJsonObj->AddMember<__int64>(pCharFieldName, value, pJsonObj->GetAllocator());
+	pJsonObj->AddMember<__int64>(pCharFieldName, value, pDocument->GetAllocator());
 }
 
-void JSONHelper::AddField(Document* pJsonObj, const char* pCharFieldName, unsigned __int64 value)
+void JSONHelper::AddField(Value* pJsonObj, Document* pDocument, const char* pCharFieldName, unsigned __int64 value)
 {
-	pJsonObj->AddMember<unsigned __int64>(pCharFieldName, value, pJsonObj->GetAllocator());
+	pJsonObj->AddMember<unsigned __int64>(pCharFieldName, value, pDocument->GetAllocator());
 }
 
-void JSONHelper::AddField(Document* pJsonObj, const char* pCharFieldName, float value)
+void JSONHelper::AddField(Value* pJsonObj,Document* pDocument, const char* pCharFieldName, float value)
 {
-	pJsonObj->AddMember<float>(pCharFieldName, value, pJsonObj->GetAllocator());
+	pJsonObj->AddMember<float>(pCharFieldName, value, pDocument->GetAllocator());
 }
 
-void JSONHelper::AddField(Document* pJsonObj, const char* pCharFieldName, string value)
+void JSONHelper::AddField(Value* pJsonObj, Document* pDocument, const char* pCharFieldName, string value)
 {
 	Value field;
-	field.SetString(value.c_str(), value.length(), pJsonObj->GetAllocator());
+	field.SetString(value.c_str(), value.length(), pDocument->GetAllocator());
 
-	pJsonObj->AddMember(pCharFieldName, field, pJsonObj->GetAllocator());
+	pJsonObj->AddMember(pCharFieldName, field, pDocument->GetAllocator());
 }
 
-void JSONHelper::AddField(Document* pJsonObj, const char* pCharFieldName, Value value)
+void JSONHelper::AddField(Value* pJsonObj, Document* pDocument, const char* pCharFieldName, Value value)
 {
-	pJsonObj->AddMember(pCharFieldName, value, pJsonObj->GetAllocator());
+	pJsonObj->AddMember(pCharFieldName, value, pDocument->GetAllocator());
 }
 
-void JSONHelper::AddField(Document* pJsonObj, const char* pCharFieldName, vector<string> value)
+void JSONHelper::AddField(Value* pJsonObj, Document* pDocument, const char* pCharFieldName, vector<string> value)
 {
 	Value field(kArrayType);
 
 	for (vector<string>::iterator it = value.begin(); it != value.end(); ++it)
 	{
 		Value element;
-		element.SetString((*it).c_str(), (*it).length(), pJsonObj->GetAllocator());
+		element.SetString((*it).c_str(), (*it).length(), pDocument->GetAllocator());
 
-		field.PushBack(element, pJsonObj->GetAllocator());
+		field.PushBack(element, pDocument->GetAllocator());
 	}
 
-	pJsonObj->AddMember(pCharFieldName, field, pJsonObj->GetAllocator());
+	pJsonObj->AddMember(pCharFieldName, field, pDocument->GetAllocator());
 }
 
-void JSONHelper::AddField(Document* pJsonObj, const char* pCharFieldName, map<int, string> value)
+void JSONHelper::AddField(Value* pJsonObj, Document* pDocument, const char* pCharFieldName, map<int, string> value)
 {
 	Value field(kObjectType);
 	field.SetObject();
@@ -67,21 +68,26 @@ void JSONHelper::AddField(Document* pJsonObj, const char* pCharFieldName, map<in
 	{
 		//	key
 		Value k;
-		k.SetString(to_string(itr->first).c_str(), to_string(itr->first).length(), pJsonObj->GetAllocator());
+		k.SetString(to_string(itr->first).c_str(), to_string(itr->first).length(), pDocument->GetAllocator());
 
 		//	value
 		Value v;
-		v.SetString(itr->second.c_str(), itr->second.length(), pJsonObj->GetAllocator());
+		v.SetString(itr->second.c_str(), itr->second.length(), pDocument->GetAllocator());
 
-		field.AddMember(k, v, pJsonObj->GetAllocator());
+		field.AddMember(k, v, pDocument->GetAllocator());
 	}
-	pJsonObj->AddMember(pCharFieldName, field, pJsonObj->GetAllocator());
+	pJsonObj->AddMember(pCharFieldName, field, pDocument->GetAllocator());
+}
+
+void JSONHelper::AddField(Value* pJsonObj, Document* pDocument, const char* pCharFieldName, IJSONObjectConvertible* pValue)
+{
+	pJsonObj->AddMember(pCharFieldName, pValue->GetJSONObject(pDocument), pDocument->GetAllocator());
 }
 #pragma endregion
 
 
 #pragma region GetField
-bool JSONHelper::GetField(Document* pJsonObj, string strFieldName, __int32* pValue)
+bool JSONHelper::GetField(Value* pJsonObj, string strFieldName, __int32* pValue)
 {
 	if (!pJsonObj->HasMember(strFieldName.c_str()))
 	{
@@ -100,7 +106,7 @@ bool JSONHelper::GetField(Document* pJsonObj, string strFieldName, __int32* pVal
 	return true;
 }
 
-bool JSONHelper::GetField(Document* pJsonObj, string strFieldName, __int64* pValue)
+bool JSONHelper::GetField(Value* pJsonObj, string strFieldName, __int64* pValue)
 {
 	if (!pJsonObj->HasMember(strFieldName.c_str()))
 	{
@@ -119,7 +125,7 @@ bool JSONHelper::GetField(Document* pJsonObj, string strFieldName, __int64* pVal
 	return true;
 }
 
-bool JSONHelper::GetField(Document* pJsonObj, string strFieldName, unsigned __int64* pValue)
+bool JSONHelper::GetField(Value* pJsonObj, string strFieldName, unsigned __int64* pValue)
 {
 	if (!pJsonObj->HasMember(strFieldName.c_str()))
 	{
@@ -138,7 +144,7 @@ bool JSONHelper::GetField(Document* pJsonObj, string strFieldName, unsigned __in
 	return true;
 }
 
-bool JSONHelper::GetField(Document* pJsonObj, string strFieldName, float* pValue)
+bool JSONHelper::GetField(Value* pJsonObj, string strFieldName, float* pValue)
 {
 	if (!pJsonObj->HasMember(strFieldName.c_str()))
 	{
@@ -163,7 +169,7 @@ bool JSONHelper::GetField(Document* pJsonObj, string strFieldName, float* pValue
 	return true;
 }
 
-bool JSONHelper::GetField(Document* pJsonObj, string strFieldName, string* pValue)
+bool JSONHelper::GetField(Value* pJsonObj, string strFieldName, string* pValue)
 {
 	if (!pJsonObj->HasMember(strFieldName.c_str()))
 	{
@@ -182,7 +188,7 @@ bool JSONHelper::GetField(Document* pJsonObj, string strFieldName, string* pValu
 	return true;
 }
 
-bool JSONHelper::GetField(Document* pJsonObj, string strFieldName, list<__int32>* pValue)
+bool JSONHelper::GetField(Value* pJsonObj, string strFieldName, list<__int32>* pValue)
 {
 	if (!pJsonObj->HasMember(strFieldName.c_str()))
 	{
@@ -205,7 +211,7 @@ bool JSONHelper::GetField(Document* pJsonObj, string strFieldName, list<__int32>
 	return true;
 }
 
-bool JSONHelper::GetField(Document* pJsonObj, string strFieldName, vector<string>* pValue)
+bool JSONHelper::GetField(Value* pJsonObj, string strFieldName, vector<string>* pValue)
 {
 	if (!pJsonObj->HasMember(strFieldName.c_str()))
 	{
@@ -228,7 +234,7 @@ bool JSONHelper::GetField(Document* pJsonObj, string strFieldName, vector<string
 	return true;
 }
 
-bool JSONHelper::GetField(Document* pJsonObj, string strFieldName, map<int, string>* pValue)
+bool JSONHelper::GetField(Value* pJsonObj, string strFieldName, map<int, string>* pValue)
 {
 	if (!pJsonObj->HasMember(strFieldName.c_str()))
 	{
@@ -247,6 +253,25 @@ bool JSONHelper::GetField(Document* pJsonObj, string strFieldName, map<int, stri
 	{
 		(*pValue)[atoi(itr->name.GetString())] = itr->value.GetString();
 	}
+
+	return true;
+}
+
+bool JSONHelper::GetField(Value* pJsonObj, string strFieldName, IJSONObjectConvertible* pValue)
+{
+	if (!pJsonObj->HasMember(strFieldName.c_str()))
+	{
+		//Debug.LogWarning("JSONObject does not have field, field name : " + strFieldName);
+		return false;
+	}
+
+	if (!(*pJsonObj)[strFieldName.c_str()].IsObject())
+	{
+		//Debug.LogWarning("Data type is invalid! It's not Array");
+		return false;
+	}
+
+	pValue->SetJSONObject(&((*pJsonObj)[strFieldName.c_str()]));
 
 	return true;
 }

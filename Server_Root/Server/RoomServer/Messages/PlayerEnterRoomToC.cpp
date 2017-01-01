@@ -30,8 +30,8 @@ const char* PlayerEnterRoomToC::Serialize()
 	Document document;
 	document.SetObject();
 
-	JSONHelper::AddField(&document, "PlayerIndex", m_nPlayerIndex);
-	JSONHelper::AddField(&document, "CharacterID", m_strCharacterID);
+	JSONHelper::AddField(&document, &document, "PlayerIndex", m_nPlayerIndex);
+	JSONHelper::AddField(&document, &document, "CharacterID", m_strCharacterID);
 
 	m_buffer->Clear();
 	document.Accept(*m_writer);

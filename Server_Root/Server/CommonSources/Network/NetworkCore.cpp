@@ -153,22 +153,22 @@ void NetworkCore::WorkerThread()
 			{
 				if (ioInfo->CurPos == 0)
 				{
-					ioInfo->CurMessageID = (USHORT)ioInfo->WsaBuf.buf[i] << 8;
+					ioInfo->CurMessageID = (unsigned char)ioInfo->WsaBuf.buf[i] << 8;
 					ioInfo->CurPos++;
 				}
 				else if (ioInfo->CurPos == 1)
 				{
-					ioInfo->CurMessageID += (USHORT)ioInfo->WsaBuf.buf[i];
+					ioInfo->CurMessageID += (unsigned char)ioInfo->WsaBuf.buf[i];
 					ioInfo->CurPos++;
 				}
 				else if (ioInfo->CurPos == 2)
 				{
-					ioInfo->TotalSize = (USHORT)ioInfo->WsaBuf.buf[i] << 8;
+					ioInfo->TotalSize = (unsigned char)ioInfo->WsaBuf.buf[i] << 8;
 					ioInfo->CurPos++;
 				}
 				else if (ioInfo->CurPos == 3)
 				{
-					ioInfo->TotalSize += (USHORT)ioInfo->WsaBuf.buf[i];
+					ioInfo->TotalSize += (unsigned char)ioInfo->WsaBuf.buf[i];
 					ioInfo->CurMessage = new char[ioInfo->TotalSize - MESSAGE_HEADER_SIZE + 1/*'\0'*/];
 					ioInfo->CurPos++;
 				}

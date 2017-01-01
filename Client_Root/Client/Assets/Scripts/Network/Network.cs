@@ -234,7 +234,7 @@ public class Network : MonoSingleton<Network>
 		try
 		{
             byte[] byteSerializedData = msg.Serialize();
-            int nTotalSize = NetworkDefines.MESSAGE_HEADER_SIZE + byteSerializedData.Length;		//	msg id(2) + msg length info(2)
+            ushort nTotalSize = (ushort)(NetworkDefines.MESSAGE_HEADER_SIZE + byteSerializedData.Length);		//	msg id(2) + msg length info(2)
 			byte[] byteData = new byte[nTotalSize];
 
 			byteData [0] = BitConverter.GetBytes(msg.GetID())[1];

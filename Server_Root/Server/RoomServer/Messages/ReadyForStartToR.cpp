@@ -30,7 +30,7 @@ const char* ReadyForStartToR::Serialize()
 	Document document;
 	document.SetObject();
 
-	JSONHelper::AddField(&document, "PlayerIndex", m_nPlayerIndex);
+	JSONHelper::AddField(&document, &document, "PlayerIndex", m_nPlayerIndex);
 
 	m_buffer->Clear();
 	document.Accept(*m_writer);

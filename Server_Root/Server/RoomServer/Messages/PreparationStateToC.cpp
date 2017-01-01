@@ -30,8 +30,8 @@ const char* PreparationStateToC::Serialize()
 	Document document;
 	document.SetObject();
 
-	JSONHelper::AddField(&document, "PlayerIndex", m_nPlayerIndex);
-	JSONHelper::AddField(&document, "State", m_fState);
+	JSONHelper::AddField(&document, &document, "PlayerIndex", m_nPlayerIndex);
+	JSONHelper::AddField(&document, &document, "State", m_fState);
 
 	m_buffer->Clear();
 	document.Accept(*m_writer);

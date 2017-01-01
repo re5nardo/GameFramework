@@ -30,8 +30,8 @@ const char* CreateRoomToR::Serialize()
 	Document document;
 	document.SetObject();
 
-	JSONHelper::AddField(&document, "MatchID", m_nMatchID);
-	JSONHelper::AddField(&document, "Players", m_vecPlayers);
+	JSONHelper::AddField(&document, &document, "MatchID", m_nMatchID);
+	JSONHelper::AddField(&document, &document, "Players", m_vecPlayers);
 
 	m_buffer->Clear();
 	document.Accept(*m_writer);
