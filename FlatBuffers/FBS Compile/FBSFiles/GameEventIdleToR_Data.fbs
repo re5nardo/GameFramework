@@ -1,0 +1,7 @@
+include "FBSData.fbs";
+
+table GameEventIdleToR_Data
+{
+	PlayerIndex:int;
+	Pos:FBSData.Vector3;
+}

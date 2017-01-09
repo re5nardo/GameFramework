@@ -1,0 +1,5 @@
+
+table JoinLobbyToC_Data
+{
+	Result:int;
+}

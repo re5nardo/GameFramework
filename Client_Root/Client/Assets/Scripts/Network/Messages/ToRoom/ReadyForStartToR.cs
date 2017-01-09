@@ -1,10 +1,10 @@
-﻿using System.Text;
+﻿using FlatBuffers;
 
 public class ReadyForStartToR : IMessage
 {
     public const ushort MESSAGE_ID = MessageID.ReadyForStartToR_ID;
 
-    public ulong m_nPlayerNumber;     //  json field name : PlayerNumber
+    public int m_nPlayerIndex;
 
     public ushort GetID()
     {
@@ -18,18 +18,24 @@ public class ReadyForStartToR : IMessage
 
     public byte[] Serialize()
     {
-        JSONObject jsonObj = new JSONObject(JSONObject.Type.OBJECT);
+        FlatBufferBuilder builder = new FlatBufferBuilder(1024);
 
-        JSONHelper.AddField(jsonObj, "PlayerNumber", m_nPlayerNumber);
+        ReadyForStartToR_Data.StartReadyForStartToR_Data(builder);
+        ReadyForStartToR_Data.AddPlayerIndex(builder, m_nPlayerIndex);
+        var data = ReadyForStartToR_Data.EndReadyForStartToR_Data(builder);
 
-        return Encoding.Default.GetBytes(jsonObj.Print());
+        builder.Finish(data.Value);
+
+        return builder.SizedByteArray();
     }
 
     public bool Deserialize(byte[] bytes)
     {
-        JSONObject jsonObj = new JSONObject(Encoding.UTF8.GetString(bytes));
+        var buf = new ByteBuffer(bytes);
 
-        if(!JSONHelper.GetField(jsonObj, "PlayerNumber", ref m_nPlayerNumber)) return false;
+        var data = ReadyForStartToR_Data.GetRootAsReadyForStartToR_Data(buf);
+
+        m_nPlayerIndex = data.PlayerIndex;
 
         return true;
     }

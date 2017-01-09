@@ -51,11 +51,9 @@ void Network::SetAcceptCallback(void(*handler)(void* pListener, SOCKET socket))
 
 void Network::Send(SOCKET socket, IMessage* pMsg, bool bDelete, bool bDisposable)
 {
-	const char* pCharSerializedData = pMsg->Serialize();
+	int nSerializedSize = 0;
+	const char* pCharSerializedData = pMsg->Serialize(&nSerializedSize);
 
-	puts(pCharSerializedData);
-
-	unsigned short nSerializedSize = strlen(pCharSerializedData);
 	unsigned short nTotalSize = MESSAGE_HEADER_SIZE + nSerializedSize;
 
 	char* pCharCopiedData = new char[nTotalSize];
@@ -64,7 +62,7 @@ void Network::Send(SOCKET socket, IMessage* pMsg, bool bDelete, bool bDisposable
 	*(pCharCopiedData + 1) = pMsg->GetID() & 0x00FF;
 	*(pCharCopiedData + 2) = nTotalSize >> 8;
 	*(pCharCopiedData + 3) = nTotalSize & 0x00FF;
-	for (int i = 0; i < strlen(pCharSerializedData); ++i)
+	for (int i = 0; i < nSerializedSize; ++i)
 	{
 		*(pCharCopiedData + 4 + i) = *(pCharSerializedData + i);
 	}

@@ -1,18 +1,13 @@
 #include "stdafx.h"
 #include "JoinLobbyToC.h"
-#include "../../CommonSources/Message/JSONHelper.h"
+#include "JoinLobbyToC_Data_generated.h"
 
-
-JoinLobbyToC::JoinLobbyToC()
+JoinLobbyToC::JoinLobbyToC() : m_Builder(1024)
 {
-	m_buffer = new GenericStringBuffer<UTF8<>>();
-	m_writer = new Writer<StringBuffer, UTF8<>>(*m_buffer);
 }
 
 JoinLobbyToC::~JoinLobbyToC()
 {
-	delete m_buffer;
-	delete m_writer;
 }
 
 unsigned short JoinLobbyToC::GetID()
@@ -25,29 +20,24 @@ IMessage* JoinLobbyToC::Clone()
 	return NULL;
 }
 
-const char* JoinLobbyToC::Serialize()
+const char* JoinLobbyToC::Serialize(int* pLength)
 {
-	Document document;
-	document.SetObject();
+	JoinLobbyToC_DataBuilder data_builder(m_Builder);
+	data_builder.add_Result(m_nResult);
+	auto data = data_builder.Finish();
 
-	JSONHelper::AddField(&document, &document, "Result", m_nResult);
+	m_Builder.Finish(data);
 
-	m_buffer->Clear();
-	document.Accept(*m_writer);
+	*pLength = m_Builder.GetSize();
 
-	return m_buffer->GetString();
+	return (char*)m_Builder.GetBufferPointer();
 }
 
 bool JoinLobbyToC::Deserialize(const char* pChar)
 {
-	Document document;
-	document.Parse<0>(pChar);
-	if (!document.IsObject())
-	{
-		return false;
-	}
+	auto data = flatbuffers::GetRoot<JoinLobbyToC_Data>((const void*)pChar);
 
-	if (!JSONHelper::GetField(&document, "Result", &m_nResult)) return false;
+	m_nResult = data->Result();
 
 	return true;
 }

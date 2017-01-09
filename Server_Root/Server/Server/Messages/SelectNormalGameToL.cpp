@@ -1,18 +1,13 @@
 #include "stdafx.h"
 #include "SelectNormalGameToL.h"
-#include "../../CommonSources/Message/JSONHelper.h"
+#include "SelectNormalGameToL_Data_generated.h"
 
-
-SelectNormalGameToL::SelectNormalGameToL()
+SelectNormalGameToL::SelectNormalGameToL() : m_Builder(1024)
 {
-	m_buffer = new GenericStringBuffer<UTF8<>>();
-	m_writer = new Writer<StringBuffer, UTF8<>>(*m_buffer);
 }
 
 SelectNormalGameToL::~SelectNormalGameToL()
 {
-	delete m_buffer;
-	delete m_writer;
 }
 
 unsigned short SelectNormalGameToL::GetID()
@@ -25,25 +20,21 @@ IMessage* SelectNormalGameToL::Clone()
 	return NULL;
 }
 
-const char* SelectNormalGameToL::Serialize()
+const char* SelectNormalGameToL::Serialize(int* pLength)
 {
-	Document document;
-	document.SetObject();
+	SelectNormalGameToL_DataBuilder data_builder(m_Builder);
+	auto data = data_builder.Finish();
 
-	m_buffer->Clear();
-	document.Accept(*m_writer);
+	m_Builder.Finish(data);
 
-	return m_buffer->GetString();
+	*pLength = m_Builder.GetSize();
+
+	return (char*)m_Builder.GetBufferPointer();
 }
 
 bool SelectNormalGameToL::Deserialize(const char* pChar)
 {
-	Document document;
-	document.Parse<0>(pChar);
-	if (!document.IsObject())
-	{
-		return false;
-	}
+	auto data = flatbuffers::GetRoot<SelectNormalGameToL_Data>((const void*)pChar);
 
 	return true;
 }

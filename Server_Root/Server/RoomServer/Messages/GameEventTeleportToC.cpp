@@ -1,18 +1,13 @@
 #include "stdafx.h"
 #include "GameEventTeleportToC.h"
-#include "../../CommonSources/Message/JSONHelper.h"
+#include "GameEventTeleportToC_Data_generated.h"
 
-
-GameEventTeleportToC::GameEventTeleportToC()
+GameEventTeleportToC::GameEventTeleportToC() : m_Builder(1024)
 {
-	m_buffer = new GenericStringBuffer<UTF8<>>();
-	m_writer = new Writer<StringBuffer, UTF8<>>(*m_buffer);
 }
 
 GameEventTeleportToC::~GameEventTeleportToC()
 {
-	delete m_buffer;
-	delete m_writer;
 }
 
 unsigned short GameEventTeleportToC::GetID()
@@ -25,45 +20,39 @@ IMessage* GameEventTeleportToC::Clone()
 	return NULL;
 }
 
-const char* GameEventTeleportToC::Serialize()
+const char* GameEventTeleportToC::Serialize(int* pLength)
 {
-	Document document;
-	document.SetObject();
+	FBSData::Vector3 start(m_vec3Start.x, m_vec3Start.y, m_vec3Start.z);
+	FBSData::Vector3 dest(m_vec3Dest.x, m_vec3Dest.y, m_vec3Dest.z);
 
-	JSONHelper::AddField(&document, &document, "PlayerIndex", m_nPlayerIndex);
-	JSONHelper::AddField(&document, &document, "EventTime", m_lEventTime);
-	JSONHelper::AddField(&document, &document, "Start_X", m_vec3Start.x);
-	JSONHelper::AddField(&document, &document, "Start_Y", m_vec3Start.y);
-	JSONHelper::AddField(&document, &document, "Start_Z", m_vec3Start.z);
-	JSONHelper::AddField(&document, &document, "Dest_X", m_vec3Dest.x);
-	JSONHelper::AddField(&document, &document, "Dest_Y", m_vec3Dest.y);
-	JSONHelper::AddField(&document, &document, "Dest_Z", m_vec3Dest.z);
-	JSONHelper::AddField(&document, &document, "State", m_nState);
+	GameEventTeleportToC_DataBuilder data_builder(m_Builder);
+	data_builder.add_PlayerIndex(m_nPlayerIndex);
+	data_builder.add_EventTime(m_lEventTime);
+	data_builder.add_Start(&start);
+	data_builder.add_Dest(&dest);
+	data_builder.add_State(m_nState);
+	auto data = data_builder.Finish();
 
-	m_buffer->Clear();
-	document.Accept(*m_writer);
+	m_Builder.Finish(data);
 
-	return m_buffer->GetString();
+	*pLength = m_Builder.GetSize();
+
+	return (char*)m_Builder.GetBufferPointer();
 }
 
 bool GameEventTeleportToC::Deserialize(const char* pChar)
 {
-	Document document;
-	document.Parse<0>(pChar);
-	if (!document.IsObject())
-	{
-		return false;
-	}
+	auto data = flatbuffers::GetRoot<GameEventTeleportToC_Data>((const void*)pChar);
 
-	if (!JSONHelper::GetField(&document, "PlayerIndex", &m_nPlayerIndex)) return false;
-	if (!JSONHelper::GetField(&document, "EventTime", &m_lEventTime)) return false;
-	if (!JSONHelper::GetField(&document, "Start_X", &m_vec3Start.x)) return false;
-	if (!JSONHelper::GetField(&document, "Start_Y", &m_vec3Start.y)) return false;
-	if (!JSONHelper::GetField(&document, "Start_Z", &m_vec3Start.z)) return false;
-	if (!JSONHelper::GetField(&document, "Dest_X", &m_vec3Dest.x)) return false;
-	if (!JSONHelper::GetField(&document, "Dest_Y", &m_vec3Dest.y)) return false;
-	if (!JSONHelper::GetField(&document, "Dest_Z", &m_vec3Dest.z)) return false;
-	if (!JSONHelper::GetField(&document, "State", &m_nState)) return false;
+	m_nPlayerIndex = data->PlayerIndex();
+	m_lEventTime = data->EventTime();
+	m_vec3Start.x = data->Start()->x();
+	m_vec3Start.y = data->Start()->y();
+	m_vec3Start.z = data->Start()->z();
+	m_vec3Dest.x = data->Dest()->x();
+	m_vec3Dest.y = data->Dest()->y();
+	m_vec3Dest.z = data->Dest()->z();
+	m_nState = data->State();
 
 	return true;
 }

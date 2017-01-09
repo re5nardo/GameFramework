@@ -1,13 +1,15 @@
 #pragma once
 
 #include "../../CommonSources/Message/IMessage.h"
-#include "../../../rapidjson/document.h"
-#include "../../../rapidjson/stringbuffer.h"
-#include "../../../rapidjson/writer.h"
 #include "../../CommonSources/Message/MessageIDs.h"
 #include "../../RoomServer/Data.h"
+#ifdef max
+#undef max
+#undef min
+#endif
+#include "flatbuffers/flatbuffers.h"
 
-using namespace rapidjson;
+using namespace flatbuffers;
 
 class GameEventMoveToC : public IMessage
 {
@@ -19,18 +21,17 @@ public:
 	static const unsigned short MESSAGE_ID = GameEventMoveToC_ID;
 
 private:
-	GenericStringBuffer<UTF8<>>*	m_buffer;
-	Writer<StringBuffer, UTF8<>>*	m_writer;
+	FlatBufferBuilder m_Builder;
 
 public:
-	int m_nPlayerIndex;				//  json field name : PlayerIndex
-	__int64 m_lEventTime;			//  json field name : EventTime
-	Vector3 m_vec3Dest;				//  json field name : Pos_X, Pos_Y, Pos_Z
+	int m_nPlayerIndex;
+	__int64 m_lEventTime;
+	Vector3 m_vec3Dest;
 
 public:
 	unsigned short GetID() override;
 	IMessage* Clone() override;
-	const char* Serialize() override;
+	const char* Serialize(int* pLength = NULL) override;
 	bool Deserialize(const char* pChar) override;
 };
 

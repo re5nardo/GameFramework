@@ -1,0 +1,6 @@
+
+table PreparationStateToC_Data
+{
+	PlayerIndex:int;
+	State:float;
+}

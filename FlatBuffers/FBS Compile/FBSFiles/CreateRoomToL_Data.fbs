@@ -1,0 +1,6 @@
+
+table CreateRoomToL_Data
+{
+	Result:int;
+	Players:[string];
+}

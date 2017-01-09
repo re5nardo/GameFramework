@@ -1,12 +1,12 @@
 ﻿using UnityEngine;
-using System.Text;
+using FlatBuffers;
 
 public class GameEventMoveToR : IMessage
 {
     public const ushort MESSAGE_ID = MessageID.GameEventMoveToR_ID;
 
-    public int m_nPlayerIndex = 0;                          //  json field name : PlayerIndex
-    public Vector3 m_vec3Dest = Vector3.zero;               //  Json field name : Pos_X, Pos_Y, Pos_Z
+    public int m_nPlayerIndex;
+    public Vector3 m_vec3Dest;
 
     public ushort GetID()
     {
@@ -20,24 +20,28 @@ public class GameEventMoveToR : IMessage
 
     public byte[] Serialize()
     {
-        JSONObject jsonObj = new JSONObject(JSONObject.Type.OBJECT);
+        FlatBufferBuilder builder = new FlatBufferBuilder(1024);
 
-        JSONHelper.AddField(jsonObj, "PlayerIndex", m_nPlayerIndex);
-        JSONHelper.AddField(jsonObj, "Pos_X", m_vec3Dest.x);
-        JSONHelper.AddField(jsonObj, "Pos_Y", m_vec3Dest.y);
-        JSONHelper.AddField(jsonObj, "Pos_Z", m_vec3Dest.z);
+        var dest = FBSData.Vector3.CreateVector3(builder, m_vec3Dest.x, m_vec3Dest.y, m_vec3Dest.z);
 
-        return Encoding.Default.GetBytes(jsonObj.Print());
+        GameEventMoveToR_Data.StartGameEventMoveToR_Data(builder);
+        GameEventMoveToR_Data.AddPlayerIndex(builder, m_nPlayerIndex);
+        GameEventMoveToR_Data.AddDest(builder, dest);
+        var data = GameEventMoveToR_Data.EndGameEventMoveToR_Data(builder);
+
+        builder.Finish(data.Value);
+
+        return builder.SizedByteArray();
     }
 
     public bool Deserialize(byte[] bytes)
     {
-        JSONObject jsonObj = new JSONObject(Encoding.UTF8.GetString(bytes));
+        var buf = new ByteBuffer(bytes);
 
-        if(!JSONHelper.GetField(jsonObj, "PlayerIndex", ref m_nPlayerIndex)) return false;
-        if(!JSONHelper.GetField(jsonObj, "Pos_X", ref m_vec3Dest.x)) return false;
-        if(!JSONHelper.GetField(jsonObj, "Pos_Y", ref m_vec3Dest.y)) return false;
-        if(!JSONHelper.GetField(jsonObj, "Pos_Z", ref m_vec3Dest.z)) return false;
+        var data = GameEventMoveToR_Data.GetRootAsGameEventMoveToR_Data(buf);
+
+        m_nPlayerIndex = data.PlayerIndex;
+        m_vec3Dest = new Vector3(data.Dest.X, data.Dest.Y, data.Dest.Z);
 
         return true;
     }

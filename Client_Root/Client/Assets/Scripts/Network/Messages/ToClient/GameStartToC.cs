@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Text;
+﻿using FlatBuffers;
 
 public class GameStartToC : IMessage
 {
@@ -17,14 +16,21 @@ public class GameStartToC : IMessage
 
     public byte[] Serialize()
     {
-        JSONObject jsonObj = new JSONObject(JSONObject.Type.OBJECT);
+        FlatBufferBuilder builder = new FlatBufferBuilder(1024);
 
-        return Encoding.Default.GetBytes(jsonObj.Print());
+        GameStartToC_Data.StartGameStartToC_Data(builder);
+        var data = GameStartToC_Data.EndGameStartToC_Data(builder);
+
+        builder.Finish(data.Value);
+
+        return builder.SizedByteArray();
     }
 
     public bool Deserialize(byte[] bytes)
     {
-        JSONObject jsonObj = new JSONObject(Encoding.UTF8.GetString(bytes));
+        var buf = new ByteBuffer(bytes);
+
+        var data = GameStartToC_Data.GetRootAsGameStartToC_Data(buf);
 
         return true;
     }

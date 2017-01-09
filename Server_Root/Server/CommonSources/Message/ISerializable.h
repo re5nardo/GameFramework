@@ -11,5 +11,5 @@ public:
 	virtual ~ISerializable(){};
 
 public:
-	virtual const char* Serialize() = 0;
+	virtual const char* Serialize(int* pLength = NULL) = 0;
 };

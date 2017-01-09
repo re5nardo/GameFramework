@@ -1,13 +1,15 @@
 #pragma once
 
 #include "../../CommonSources/Message/IMessage.h"
-#include "../../../rapidjson/document.h"
-#include "../../../rapidjson/stringbuffer.h"
-#include "../../../rapidjson/writer.h"
 #include "../../CommonSources/Message/MessageIDs.h"
 #include <map>
+#ifdef max
+#undef max
+#undef min
+#endif
+#include "flatbuffers/flatbuffers.h"
 
-using namespace rapidjson;
+using namespace flatbuffers;
 
 class EnterRoomToC : public IMessage
 {
@@ -19,18 +21,17 @@ public:
 	static const unsigned short MESSAGE_ID = EnterRoomToC_ID;
 
 private:
-	GenericStringBuffer<UTF8<>>*	m_buffer;
-	Writer<StringBuffer, UTF8<>>*	m_writer;
+	FlatBufferBuilder m_Builder;
 
 public:
-	int m_nResult;						//  json field name : Result
-	int m_nPlayerIndex;					//  json field name : PlayerIndex
-	map<int, string> m_mapPlayers;		//  json field name : Players
+	int m_nResult;
+	int m_nPlayerIndex;
+	map<int, string> m_mapPlayers;
 
 public:
 	unsigned short GetID() override;
 	IMessage* Clone() override;
-	const char* Serialize() override;
+	const char* Serialize(int* pLength = NULL) override;
 	bool Deserialize(const char* pChar) override;
 };
 

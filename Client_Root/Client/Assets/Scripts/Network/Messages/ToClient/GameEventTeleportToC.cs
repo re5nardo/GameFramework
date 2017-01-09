@@ -1,15 +1,15 @@
 ﻿using UnityEngine;
-using System.Text;
+using FlatBuffers;
 
 public class GameEventTeleportToC : IMessage
 {
     public const ushort MESSAGE_ID = MessageID.GameEventTeleportToC_ID;
 
-    public int m_nPlayerIndex = 0;                          //  json field name : PlayerIndex
-    public long m_lEventTime = 0;                           //  json field name : EventTime
-    public Vector3 m_vec3Start = Vector3.zero;              //  Json field name : Start_X, Start_Y, Start_Z
-    public Vector3 m_vec3Dest = Vector3.zero;               //  Json field name : Dest_X, Dest_Y, Dest_Z
-    public int m_nState = 0;                                //  Json field name : State
+    public int m_nPlayerIndex;
+    public long m_lEventTime;
+    public Vector3 m_vec3Start;
+    public Vector3 m_vec3Dest;
+    public int m_nState;
 
     public ushort GetID()
     {
@@ -23,34 +23,35 @@ public class GameEventTeleportToC : IMessage
 
     public byte[] Serialize()
     {
-        JSONObject jsonObj = new JSONObject(JSONObject.Type.OBJECT);
+        FlatBufferBuilder builder = new FlatBufferBuilder(1024);
 
-        JSONHelper.AddField(jsonObj, "PlayerIndex", m_nPlayerIndex);
-        JSONHelper.AddField(jsonObj, "EventTime", m_lEventTime);
-        JSONHelper.AddField(jsonObj, "Start_X", m_vec3Start.x);
-        JSONHelper.AddField(jsonObj, "Start_Y", m_vec3Start.y);
-        JSONHelper.AddField(jsonObj, "Start_Z", m_vec3Start.z);
-        JSONHelper.AddField(jsonObj, "Dest_X", m_vec3Dest.x);
-        JSONHelper.AddField(jsonObj, "Dest_Y", m_vec3Dest.y);
-        JSONHelper.AddField(jsonObj, "Dest_Z", m_vec3Dest.z);
-        JSONHelper.AddField(jsonObj, "State", m_nState);
+        var start = FBSData.Vector3.CreateVector3(builder, m_vec3Start.x, m_vec3Start.y, m_vec3Start.z);
+        var dest = FBSData.Vector3.CreateVector3(builder, m_vec3Dest.x, m_vec3Dest.y, m_vec3Dest.z);
 
-        return Encoding.Default.GetBytes(jsonObj.Print());
+        GameEventTeleportToC_Data.StartGameEventTeleportToC_Data(builder);
+        GameEventTeleportToC_Data.AddPlayerIndex(builder, m_nPlayerIndex);
+        GameEventTeleportToC_Data.AddEventTime(builder, m_lEventTime);
+        GameEventTeleportToC_Data.AddStart(builder, start);
+        GameEventTeleportToC_Data.AddDest(builder, dest);
+        GameEventTeleportToC_Data.AddState(builder, m_nState);
+        var data = GameEventTeleportToC_Data.EndGameEventTeleportToC_Data(builder);
+
+        builder.Finish(data.Value);
+
+        return builder.SizedByteArray();
     }
 
     public bool Deserialize(byte[] bytes)
     {
-        JSONObject jsonObj = new JSONObject(Encoding.UTF8.GetString(bytes));
+        var buf = new ByteBuffer(bytes);
 
-        if(!JSONHelper.GetField(jsonObj, "PlayerIndex", ref m_nPlayerIndex)) return false;
-        if(!JSONHelper.GetField(jsonObj, "EventTime", ref m_lEventTime)) return false;
-        if(!JSONHelper.GetField(jsonObj, "Start_X", ref m_vec3Start.x)) return false;
-        if(!JSONHelper.GetField(jsonObj, "Start_Y", ref m_vec3Start.y)) return false;
-        if(!JSONHelper.GetField(jsonObj, "Start_Z", ref m_vec3Start.z)) return false;
-        if(!JSONHelper.GetField(jsonObj, "Dest_X", ref m_vec3Dest.x)) return false;
-        if(!JSONHelper.GetField(jsonObj, "Dest_Y", ref m_vec3Dest.y)) return false;
-        if(!JSONHelper.GetField(jsonObj, "Dest_Z", ref m_vec3Dest.z)) return false;
-        if(!JSONHelper.GetField(jsonObj, "State", ref m_nState)) return false;
+        var data = GameEventTeleportToC_Data.GetRootAsGameEventTeleportToC_Data(buf);
+
+        m_nPlayerIndex = data.PlayerIndex;
+        m_lEventTime = data.EventTime;
+        m_vec3Start = new Vector3(data.Start.X, data.Start.Y, data.Start.Z);
+        m_vec3Dest = new Vector3(data.Dest.X, data.Dest.Y, data.Dest.Z);
+        m_nState = data.State;
 
         return true;
     }

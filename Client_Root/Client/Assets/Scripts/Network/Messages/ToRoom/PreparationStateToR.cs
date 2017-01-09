@@ -1,10 +1,10 @@
-﻿using System.Text;
+﻿using FlatBuffers;
 
 public class PreparationStateToR : IMessage
 {
     public const ushort MESSAGE_ID = MessageID.PreparationStateToR_ID;
 
-    public float    m_fState;           //  json field name : State
+    public float m_fState;
 
     public ushort GetID()
     {
@@ -18,18 +18,24 @@ public class PreparationStateToR : IMessage
 
     public byte[] Serialize()
     {
-        JSONObject jsonObj = new JSONObject(JSONObject.Type.OBJECT);
+        FlatBufferBuilder builder = new FlatBufferBuilder(1024);
 
-        JSONHelper.AddField(jsonObj, "State", m_fState);
+        PreparationStateToR_Data.StartPreparationStateToR_Data(builder);
+        PreparationStateToR_Data.AddState(builder, m_fState);
+        var data = PreparationStateToR_Data.EndPreparationStateToR_Data(builder);
 
-        return Encoding.Default.GetBytes(jsonObj.Print());
+        builder.Finish(data.Value);
+
+        return builder.SizedByteArray();
     }
 
     public bool Deserialize(byte[] bytes)
     {
-        JSONObject jsonObj = new JSONObject(Encoding.UTF8.GetString(bytes));
+        var buf = new ByteBuffer(bytes);
 
-        if(!JSONHelper.GetField(jsonObj, "State", ref m_fState)) return false;
+        var data = PreparationStateToR_Data.GetRootAsPreparationStateToR_Data(buf);
+
+        m_fState = data.State;
 
         return true;
     }

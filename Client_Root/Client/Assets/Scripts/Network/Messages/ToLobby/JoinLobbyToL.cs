@@ -1,11 +1,11 @@
-﻿using System.Text;
+﻿using FlatBuffers;
 
 public class JoinLobbyToL : IMessage
 {
     public const ushort MESSAGE_ID = MessageID.JoinLobbyToL_ID;
 
-    public string   m_strPlayerKey;         //  json field name : PlayerKey
-    public int      m_nAuthKey;             //  json field name : AuthKey
+    public string m_strPlayerKey;
+    public int m_nAuthKey;
 
     public ushort GetID()
     {
@@ -19,20 +19,28 @@ public class JoinLobbyToL : IMessage
 
     public byte[] Serialize()
     {
-        JSONObject jsonObj = new JSONObject(JSONObject.Type.OBJECT);
+        FlatBufferBuilder builder = new FlatBufferBuilder(1024);
 
-        JSONHelper.AddField(jsonObj, "PlayerKey", m_strPlayerKey);
-        JSONHelper.AddField(jsonObj, "AuthKey", m_nAuthKey);
+        var playerKey = builder.CreateString(m_strPlayerKey);
 
-        return Encoding.Default.GetBytes(jsonObj.Print());
+        JoinLobbyToL_Data.StartJoinLobbyToL_Data(builder);
+        JoinLobbyToL_Data.AddPlayerKey(builder, playerKey);
+        JoinLobbyToL_Data.AddAuthKey(builder, m_nAuthKey);
+        var data = JoinLobbyToL_Data.EndJoinLobbyToL_Data(builder);
+
+        builder.Finish(data.Value);
+
+        return builder.SizedByteArray();
     }
 
     public bool Deserialize(byte[] bytes)
     {
-        JSONObject jsonObj = new JSONObject(Encoding.UTF8.GetString(bytes));
+        var buf = new ByteBuffer(bytes);
 
-        if(!JSONHelper.GetField(jsonObj, "PlayerNumber", ref m_strPlayerKey)) return false;
-        if(!JSONHelper.GetField(jsonObj, "AuthKey", ref m_nAuthKey)) return false;
+        var data = JoinLobbyToL_Data.GetRootAsJoinLobbyToL_Data(buf);
+
+        m_strPlayerKey = data.PlayerKey;
+        m_nAuthKey = data.AuthKey;
 
         return true;
     }

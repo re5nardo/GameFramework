@@ -1,0 +1,7 @@
+
+table EnterRoomToR_Data
+{
+	PlayerKey:string;
+	AuthKey:int;
+	MatchID:int;
+}

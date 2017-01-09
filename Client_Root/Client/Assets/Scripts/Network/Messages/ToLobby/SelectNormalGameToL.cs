@@ -1,4 +1,4 @@
-﻿using System.Text;
+﻿using FlatBuffers;
 
 public class SelectNormalGameToL : IMessage
 {
@@ -16,14 +16,21 @@ public class SelectNormalGameToL : IMessage
 
     public byte[] Serialize()
     {
-        JSONObject jsonObj = new JSONObject(JSONObject.Type.OBJECT);
+        FlatBufferBuilder builder = new FlatBufferBuilder(1024);
 
-        return Encoding.Default.GetBytes(jsonObj.Print());
+        SelectNormalGameToL_Data.StartSelectNormalGameToL_Data(builder);
+        var data = SelectNormalGameToL_Data.EndSelectNormalGameToL_Data(builder);
+
+        builder.Finish(data.Value);
+
+        return builder.SizedByteArray();
     }
 
     public bool Deserialize(byte[] bytes)
     {
-        JSONObject jsonObj = new JSONObject(Encoding.UTF8.GetString(bytes));
+        var buf = new ByteBuffer(bytes);
+
+        var data = SelectNormalGameToL_Data.GetRootAsSelectNormalGameToL_Data(buf);
 
         return true;
     }

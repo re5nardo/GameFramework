@@ -1,13 +1,13 @@
 ﻿using UnityEngine;
-using System.Text;
+using FlatBuffers;
 
 public class GameEventIdleToC : IMessage
 {
     public const ushort MESSAGE_ID = MessageID.GameEventIdleToC_ID;
 
-    public int m_nPlayerIndex = 0;                          //  json field name : PlayerIndex
-    public long m_lEventTime = 0;                           //  json field name : EventTime
-    public Vector3 m_vec3Dest = Vector3.zero;               //  Json field name : Pos_X, Pos_Y, Pos_Z
+    public int m_nPlayerIndex;
+    public long m_lEventTime;
+    public Vector3 m_vec3Pos;
 
     public ushort GetID()
     {
@@ -21,26 +21,30 @@ public class GameEventIdleToC : IMessage
 
     public byte[] Serialize()
     {
-        JSONObject jsonObj = new JSONObject(JSONObject.Type.OBJECT);
+        FlatBufferBuilder builder = new FlatBufferBuilder(1024);
 
-        JSONHelper.AddField(jsonObj, "PlayerIndex", m_nPlayerIndex);
-        JSONHelper.AddField(jsonObj, "EventTime", m_lEventTime);
-        JSONHelper.AddField(jsonObj, "Pos_X", m_vec3Dest.x);
-        JSONHelper.AddField(jsonObj, "Pos_Y", m_vec3Dest.y);
-        JSONHelper.AddField(jsonObj, "Pos_Z", m_vec3Dest.z);
+        var pos = FBSData.Vector3.CreateVector3(builder, m_vec3Pos.x, m_vec3Pos.y, m_vec3Pos.z);
 
-        return Encoding.Default.GetBytes(jsonObj.Print());
+        GameEventIdleToC_Data.StartGameEventIdleToC_Data(builder);
+        GameEventIdleToC_Data.AddPlayerIndex(builder, m_nPlayerIndex);
+        GameEventIdleToC_Data.AddEventTime(builder, m_lEventTime);
+        GameEventIdleToC_Data.AddPos(builder, pos);
+        var data = GameEventIdleToC_Data.EndGameEventIdleToC_Data(builder);
+
+        builder.Finish(data.Value);
+
+        return builder.SizedByteArray();
     }
 
     public bool Deserialize(byte[] bytes)
     {
-        JSONObject jsonObj = new JSONObject(Encoding.UTF8.GetString(bytes));
+        var buf = new ByteBuffer(bytes);
 
-        if(!JSONHelper.GetField(jsonObj, "PlayerIndex", ref m_nPlayerIndex)) return false;
-        if(!JSONHelper.GetField(jsonObj, "EventTime", ref m_lEventTime)) return false;
-        if(!JSONHelper.GetField(jsonObj, "Pos_X", ref m_vec3Dest.x)) return false;
-        if(!JSONHelper.GetField(jsonObj, "Pos_Y", ref m_vec3Dest.y)) return false;
-        if(!JSONHelper.GetField(jsonObj, "Pos_Z", ref m_vec3Dest.z)) return false;
+        var data = GameEventIdleToC_Data.GetRootAsGameEventIdleToC_Data(buf);
+
+        m_nPlayerIndex = data.PlayerIndex;
+        m_lEventTime = data.EventTime;
+        m_vec3Pos = new Vector3(data.Pos.X, data.Pos.Y, data.Pos.Z);
 
         return true;
     }

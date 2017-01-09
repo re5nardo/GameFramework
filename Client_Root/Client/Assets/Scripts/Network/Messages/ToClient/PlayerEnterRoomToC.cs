@@ -1,11 +1,11 @@
-﻿using System.Text;
+﻿using FlatBuffers;
 
 public class PlayerEnterRoomToC : IMessage
 {
     public const ushort MESSAGE_ID = MessageID.PlayerEnterRoomToC_ID;
 
-    public int      m_nPlayerIndex;         //  json field name : PlayerIndex
-    public string   m_strCharacterID;       //  json field name : CharacterID
+    public int m_nPlayerIndex;
+    public string m_strCharacterID;
 
     public ushort GetID()
     {
@@ -19,20 +19,28 @@ public class PlayerEnterRoomToC : IMessage
 
     public byte[] Serialize()
     {
-        JSONObject jsonObj = new JSONObject(JSONObject.Type.OBJECT);
+        FlatBufferBuilder builder = new FlatBufferBuilder(1024);
 
-        JSONHelper.AddField(jsonObj, "PlayerIndex", m_nPlayerIndex);
-        JSONHelper.AddField(jsonObj, "CharacterID", m_strCharacterID);
+        var characterID = builder.CreateString(m_strCharacterID);
 
-        return Encoding.Default.GetBytes(jsonObj.Print());
+        PlayerEnterRoomToC_Data.StartPlayerEnterRoomToC_Data(builder);
+        PlayerEnterRoomToC_Data.AddPlayerIndex(builder, m_nPlayerIndex);
+        PlayerEnterRoomToC_Data.AddCharacterID(builder, characterID);
+        var data = PlayerEnterRoomToC_Data.EndPlayerEnterRoomToC_Data(builder);
+
+        builder.Finish(data.Value);
+
+        return builder.SizedByteArray();
     }
 
     public bool Deserialize(byte[] bytes)
     {
-        JSONObject jsonObj = new JSONObject(Encoding.UTF8.GetString(bytes));
+        var buf = new ByteBuffer(bytes);
 
-        if(!JSONHelper.GetField(jsonObj, "PlayerIndex", ref m_nPlayerIndex)) return false;
-        if(!JSONHelper.GetField(jsonObj, "CharacterID", ref m_strCharacterID)) return false;
+        var data = PlayerEnterRoomToC_Data.GetRootAsPlayerEnterRoomToC_Data(buf);
+
+        m_nPlayerIndex = data.PlayerIndex;
+        m_strCharacterID = data.CharacterID;
 
         return true;
     }

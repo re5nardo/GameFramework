@@ -169,17 +169,16 @@ void NetworkCore::WorkerThread()
 				else if (ioInfo->CurPos == 3)
 				{
 					ioInfo->TotalSize += (unsigned char)ioInfo->WsaBuf.buf[i];
-					ioInfo->CurMessage = new char[ioInfo->TotalSize - MESSAGE_HEADER_SIZE + 1/*'\0'*/];
+					ioInfo->CurMessage = new char[ioInfo->TotalSize - MESSAGE_HEADER_SIZE];
 					ioInfo->CurPos++;
 				}
 				else
 				{
+					ioInfo->CurMessage[ioInfo->CurPos - MESSAGE_HEADER_SIZE] = ioInfo->WsaBuf.buf[i];
+
 					//	last index
 					if (ioInfo->CurPos == ioInfo->TotalSize - 1)
 					{
-						ioInfo->CurMessage[ioInfo->CurPos - MESSAGE_HEADER_SIZE] = ioInfo->WsaBuf.buf[i];
-						ioInfo->CurMessage[ioInfo->CurPos - MESSAGE_HEADER_SIZE + 1] = '\0';
-
 						if (m_RecvMessageCallback != NULL)
 						{
 							m_RecvMessageCallback(m_pListener, socket, ioInfo);
@@ -190,7 +189,6 @@ void NetworkCore::WorkerThread()
 					}
 					else
 					{
-						ioInfo->CurMessage[ioInfo->CurPos - MESSAGE_HEADER_SIZE] = ioInfo->WsaBuf.buf[i];
 						ioInfo->CurPos++;
 					}
 				}

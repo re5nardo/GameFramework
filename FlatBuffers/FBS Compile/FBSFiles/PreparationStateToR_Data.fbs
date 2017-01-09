@@ -1,0 +1,5 @@
+
+table PreparationStateToR_Data
+{
+	State:float;
+}

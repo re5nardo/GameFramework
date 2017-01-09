@@ -1,18 +1,13 @@
 #include "stdafx.h"
 #include "PreparationStateToC.h"
-#include "../../CommonSources/Message/JSONHelper.h"
+#include "PreparationStateToC_Data_generated.h"
 
-
-PreparationStateToC::PreparationStateToC()
+PreparationStateToC::PreparationStateToC() : m_Builder(1024)
 {
-	m_buffer = new GenericStringBuffer<UTF8<>>();
-	m_writer = new Writer<StringBuffer, UTF8<>>(*m_buffer);
 }
 
 PreparationStateToC::~PreparationStateToC()
 {
-	delete m_buffer;
-	delete m_writer;
 }
 
 unsigned short PreparationStateToC::GetID()
@@ -25,31 +20,26 @@ IMessage* PreparationStateToC::Clone()
 	return NULL;
 }
 
-const char* PreparationStateToC::Serialize()
+const char* PreparationStateToC::Serialize(int* pLength)
 {
-	Document document;
-	document.SetObject();
+	PreparationStateToC_DataBuilder data_builder(m_Builder);
+	data_builder.add_PlayerIndex(m_nPlayerIndex);
+	data_builder.add_State(m_fState);
+	auto data = data_builder.Finish();
 
-	JSONHelper::AddField(&document, &document, "PlayerIndex", m_nPlayerIndex);
-	JSONHelper::AddField(&document, &document, "State", m_fState);
+	m_Builder.Finish(data);
 
-	m_buffer->Clear();
-	document.Accept(*m_writer);
+	*pLength = m_Builder.GetSize();
 
-	return m_buffer->GetString();
+	return (char*)m_Builder.GetBufferPointer();
 }
 
 bool PreparationStateToC::Deserialize(const char* pChar)
 {
-	Document document;
-	document.Parse<0>(pChar);
-	if (!document.IsObject())
-	{
-		return false;
-	}
+	auto data = flatbuffers::GetRoot<PreparationStateToC_Data>((const void*)pChar);
 
-	if (!JSONHelper::GetField(&document, "PlayerIndex", &m_nPlayerIndex)) return false;
-	if (!JSONHelper::GetField(&document, "State", &m_fState)) return false;
+	m_nPlayerIndex = data->PlayerIndex();
+	m_fState = data->State();
 
 	return true;
 }

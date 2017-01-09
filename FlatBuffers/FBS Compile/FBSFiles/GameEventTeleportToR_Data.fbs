@@ -1,0 +1,9 @@
+include "FBSData.fbs";
+
+table GameEventTeleportToR_Data
+{
+	PlayerIndex:int;
+	Start:FBSData.Vector3;
+	Dest:FBSData.Vector3;
+	State:int;
+}

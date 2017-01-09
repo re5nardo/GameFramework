@@ -1,18 +1,13 @@
 #include "stdafx.h"
 #include "JoinLobbyToL.h"
-#include "../../CommonSources/Message/JSONHelper.h"
+#include "JoinLobbyToL_Data_generated.h"
 
-
-JoinLobbyToL::JoinLobbyToL()
+JoinLobbyToL::JoinLobbyToL() : m_Builder(1024)
 {
-	m_buffer = new GenericStringBuffer<UTF8<>>();
-	m_writer = new Writer<StringBuffer, UTF8<>>(*m_buffer);
 }
 
 JoinLobbyToL::~JoinLobbyToL()
 {
-	delete m_buffer;
-	delete m_writer;
 }
 
 unsigned short JoinLobbyToL::GetID()
@@ -25,31 +20,28 @@ IMessage* JoinLobbyToL::Clone()
 	return NULL;
 }
 
-const char* JoinLobbyToL::Serialize()
+const char* JoinLobbyToL::Serialize(int* pLength)
 {
-	Document document;
-	document.SetObject();
+	auto playerKey = m_Builder.CreateString(m_strPlayerKey);
 
-	JSONHelper::AddField(&document, &document, "PlayerKey", m_strPlayerKey);
-	JSONHelper::AddField(&document, &document, "AuthKey", m_nAuthKey);
+	JoinLobbyToL_DataBuilder data_builder(m_Builder);
+	data_builder.add_PlayerKey(playerKey);
+	data_builder.add_AuthKey(m_nAuthKey);
+	auto data = data_builder.Finish();
 
-	m_buffer->Clear();
-	document.Accept(*m_writer);
+	m_Builder.Finish(data);
 
-	return m_buffer->GetString();
+	*pLength = m_Builder.GetSize();
+
+	return (char*)m_Builder.GetBufferPointer();
 }
 
 bool JoinLobbyToL::Deserialize(const char* pChar)
 {
-	Document document;
-	document.Parse<0>(pChar);
-	if (!document.IsObject())
-	{
-		return false;
-	}
+	auto data = flatbuffers::GetRoot<JoinLobbyToL_Data>((const void*)pChar);
 
-	if (!JSONHelper::GetField(&document, "PlayerKey", &m_strPlayerKey)) return false;
-	if (!JSONHelper::GetField(&document, "AuthKey", &m_nAuthKey)) return false;
+	m_strPlayerKey = data->PlayerKey()->str();
+	m_nAuthKey = data->AuthKey();
 
 	return true;
 }

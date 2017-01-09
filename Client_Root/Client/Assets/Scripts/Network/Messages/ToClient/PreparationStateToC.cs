@@ -1,11 +1,11 @@
-﻿using System.Text;
+﻿using FlatBuffers;
 
 public class PreparationStateToC : IMessage
 {
     public const ushort MESSAGE_ID = MessageID.PreparationStateToC_ID;
 
-    public int      m_nPlayerIndex;     //  json field name : PlayerIndex
-    public float    m_fState;           //  json field name : State
+    public int m_nPlayerIndex;
+    public float m_fState;
 
     public ushort GetID()
     {
@@ -19,20 +19,26 @@ public class PreparationStateToC : IMessage
 
     public byte[] Serialize()
     {
-        JSONObject jsonObj = new JSONObject(JSONObject.Type.OBJECT);
+        FlatBufferBuilder builder = new FlatBufferBuilder(1024);
 
-        JSONHelper.AddField(jsonObj, "PlayerIndex", m_nPlayerIndex);
-        JSONHelper.AddField(jsonObj, "State", m_fState);
+        PreparationStateToC_Data.StartPreparationStateToC_Data(builder);
+        PreparationStateToC_Data.AddPlayerIndex(builder, m_nPlayerIndex);
+        PreparationStateToC_Data.AddState(builder, m_fState);
+        var data = PreparationStateToC_Data.EndPreparationStateToC_Data(builder);
 
-        return Encoding.Default.GetBytes(jsonObj.Print());
+        builder.Finish(data.Value);
+
+        return builder.SizedByteArray();
     }
 
     public bool Deserialize(byte[] bytes)
     {
-        JSONObject jsonObj = new JSONObject(Encoding.UTF8.GetString(bytes));
+        var buf = new ByteBuffer(bytes);
 
-        if(!JSONHelper.GetField(jsonObj, "PlayerIndex", ref m_nPlayerIndex)) return false;
-        if(!JSONHelper.GetField(jsonObj, "State", ref m_fState)) return false;
+        var data = PreparationStateToC_Data.GetRootAsPreparationStateToC_Data(buf);
+
+        m_nPlayerIndex = data.PlayerIndex;
+        m_fState = data.State;
 
         return true;
     }

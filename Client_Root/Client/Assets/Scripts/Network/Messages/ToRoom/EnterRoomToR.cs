@@ -1,12 +1,12 @@
-﻿using System.Text;
+﻿using FlatBuffers;
 
 public class EnterRoomToR : IMessage
 {
     public const ushort MESSAGE_ID = MessageID.EnterRoomToR_ID;
 
-    public string   m_strPlayerKey;         //  json field name : PlayerKey
-    public int      m_nAuthKey;             //  json field name : AuthKey
-    public int      m_nMatchID;             //  json field name : MatchID
+    public string m_strPlayerKey;
+    public int m_nAuthKey;
+    public int m_nMatchID;
 
     public ushort GetID()
     {
@@ -20,22 +20,30 @@ public class EnterRoomToR : IMessage
 
     public byte[] Serialize()
     {
-        JSONObject jsonObj = new JSONObject(JSONObject.Type.OBJECT);
+        FlatBufferBuilder builder = new FlatBufferBuilder(1024);
 
-        JSONHelper.AddField(jsonObj, "PlayerKey", m_strPlayerKey);
-        JSONHelper.AddField(jsonObj, "AuthKey", m_nAuthKey);
-        JSONHelper.AddField(jsonObj, "MatchID", m_nMatchID);
+        var playerKey = builder.CreateString(m_strPlayerKey);
 
-        return Encoding.Default.GetBytes(jsonObj.Print());
+        EnterRoomToR_Data.StartEnterRoomToR_Data(builder);
+        EnterRoomToR_Data.AddPlayerKey(builder, playerKey);
+        EnterRoomToR_Data.AddAuthKey(builder, m_nAuthKey);
+        EnterRoomToR_Data.AddMatchID(builder, m_nMatchID);
+        var data = EnterRoomToR_Data.EndEnterRoomToR_Data(builder);
+
+        builder.Finish(data.Value);
+
+        return builder.SizedByteArray();
     }
 
     public bool Deserialize(byte[] bytes)
     {
-        JSONObject jsonObj = new JSONObject(Encoding.UTF8.GetString(bytes));
+        var buf = new ByteBuffer(bytes);
 
-        if(!JSONHelper.GetField(jsonObj, "PlayerNumber", ref m_strPlayerKey)) return false;
-        if(!JSONHelper.GetField(jsonObj, "AuthKey", ref m_nAuthKey)) return false;
-        if(!JSONHelper.GetField(jsonObj, "MatchID", ref m_nMatchID)) return false;
+        var data = EnterRoomToR_Data.GetRootAsEnterRoomToR_Data(buf);
+
+        m_strPlayerKey = data.PlayerKey;
+        m_nAuthKey = data.AuthKey;
+        m_nMatchID = data.MatchID;
 
         return true;
     }

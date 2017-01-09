@@ -1,13 +1,13 @@
-﻿using System.Text;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using FlatBuffers;
 
 public class EnterRoomToC : IMessage
 {
     public const ushort MESSAGE_ID = MessageID.EnterRoomToC_ID;
 
-    public int m_nResult;                                                           //  json field name : Result
-    public int m_nPlayerIndex;                                                      //  json field name : PlayerIndex
-    public Dictionary<int, string> m_dicPlayers = new Dictionary<int, string>();    //  json field name : Players
+    public int m_nResult;
+    public int m_nPlayerIndex;
+    public Dictionary<int, string> m_dicPlayers = new Dictionary<int, string>();
 
     public ushort GetID()
     {
@@ -21,22 +21,45 @@ public class EnterRoomToC : IMessage
 
     public byte[] Serialize()
     {
-        JSONObject jsonObj = new JSONObject(JSONObject.Type.OBJECT);
+        FlatBufferBuilder builder = new FlatBufferBuilder(1024);
 
-        JSONHelper.AddField(jsonObj, "Result", m_nResult);
-        JSONHelper.AddField(jsonObj, "PlayerIndex", m_nPlayerIndex);
-        JSONHelper.AddField(jsonObj, "Players", m_dicPlayers);
+        int[] keys = new int[m_dicPlayers.Keys.Count];
+        StringOffset[] values = new StringOffset[m_dicPlayers.Values.Count];
 
-        return Encoding.Default.GetBytes(jsonObj.Print());
+        int nIndex = 0;
+        foreach(KeyValuePair<int, string> kv in m_dicPlayers)
+        {
+            keys[nIndex++] = kv.Key;
+            values[nIndex++] = builder.CreateString(kv.Value);
+        }
+
+        var playersMapKey = EnterRoomToC_Data.CreatePlayersMapKeyVector(builder, keys);
+        var playersMapValue = EnterRoomToC_Data.CreatePlayersMapValueVector(builder, values);
+
+        EnterRoomToC_Data.StartEnterRoomToC_Data(builder);
+        EnterRoomToC_Data.AddResult(builder, m_nResult);
+        EnterRoomToC_Data.AddPlayerIndex(builder, m_nPlayerIndex);
+        EnterRoomToC_Data.AddPlayersMapKey(builder, playersMapKey);
+        EnterRoomToC_Data.AddPlayersMapValue(builder, playersMapValue);
+        var data = EnterRoomToC_Data.EndEnterRoomToC_Data(builder);
+
+        builder.Finish(data.Value);
+
+        return builder.SizedByteArray();
     }
 
     public bool Deserialize(byte[] bytes)
     {
-        JSONObject jsonObj = new JSONObject(Encoding.UTF8.GetString(bytes));
+        var buf = new ByteBuffer(bytes);
 
-        if(!JSONHelper.GetField(jsonObj, "Result", ref m_nResult)) return false;
-        if(!JSONHelper.GetField(jsonObj, "PlayerIndex", ref m_nPlayerIndex)) return false;
-        if(!JSONHelper.GetField(jsonObj, "Players", m_dicPlayers)) return false;
+        var data = EnterRoomToC_Data.GetRootAsEnterRoomToC_Data(buf);
+
+        m_nResult = data.Result;
+        m_nPlayerIndex = data.PlayerIndex;
+        for (int i = 0; i < data.PlayersMapKeyLength; ++i)
+        {
+            m_dicPlayers.Add(data.GetPlayersMapKey(i), data.GetPlayersMapValue(i));
+        }
 
         return true;
     }

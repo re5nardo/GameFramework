@@ -1,18 +1,13 @@
 #include "stdafx.h"
 #include "GameEventIdleToC.h"
-#include "../../CommonSources/Message/JSONHelper.h"
+#include "GameEventIdleToC_Data_generated.h"
 
-
-GameEventIdleToC::GameEventIdleToC()
+GameEventIdleToC::GameEventIdleToC() : m_Builder(1024)
 {
-	m_buffer = new GenericStringBuffer<UTF8<>>();
-	m_writer = new Writer<StringBuffer, UTF8<>>(*m_buffer);
 }
 
 GameEventIdleToC::~GameEventIdleToC()
 {
-	delete m_buffer;
-	delete m_writer;
 }
 
 unsigned short GameEventIdleToC::GetID()
@@ -25,37 +20,32 @@ IMessage* GameEventIdleToC::Clone()
 	return NULL;
 }
 
-const char* GameEventIdleToC::Serialize()
+const char* GameEventIdleToC::Serialize(int* pLength)
 {
-	Document document;
-	document.SetObject();
+	FBSData::Vector3 pos(m_vec3Pos.x, m_vec3Pos.y, m_vec3Pos.z);
 
-	JSONHelper::AddField(&document, &document, "PlayerIndex", m_nPlayerIndex);
-	JSONHelper::AddField(&document, &document, "EventTime", m_lEventTime);
-	JSONHelper::AddField(&document, &document, "Pos_X", m_vec3Pos.x);
-	JSONHelper::AddField(&document, &document, "Pos_Y", m_vec3Pos.y);
-	JSONHelper::AddField(&document, &document, "Pos_Z", m_vec3Pos.z);
+	GameEventIdleToC_DataBuilder data_builder(m_Builder);
+	data_builder.add_PlayerIndex(m_nPlayerIndex);
+	data_builder.add_EventTime(m_lEventTime);
+	data_builder.add_Pos(&pos);
+	auto data = data_builder.Finish();
 
-	m_buffer->Clear();
-	document.Accept(*m_writer);
+	m_Builder.Finish(data);
 
-	return m_buffer->GetString();
+	*pLength = m_Builder.GetSize();
+
+	return (char*)m_Builder.GetBufferPointer();
 }
 
 bool GameEventIdleToC::Deserialize(const char* pChar)
 {
-	Document document;
-	document.Parse<0>(pChar);
-	if (!document.IsObject())
-	{
-		return false;
-	}
+	auto data = flatbuffers::GetRoot<GameEventIdleToC_Data>((const void*)pChar);
 
-	if (!JSONHelper::GetField(&document, "PlayerIndex", &m_nPlayerIndex)) return false;
-	if (!JSONHelper::GetField(&document, "EventTime", &m_lEventTime)) return false;
-	if (!JSONHelper::GetField(&document, "Pos_X", &m_vec3Pos.x)) return false;
-	if (!JSONHelper::GetField(&document, "Pos_Y", &m_vec3Pos.y)) return false;
-	if (!JSONHelper::GetField(&document, "Pos_Z", &m_vec3Pos.z)) return false;
+	m_nPlayerIndex = data->PlayerIndex();
+	m_lEventTime = data->EventTime();
+	m_vec3Pos.x = data->Pos()->x();
+	m_vec3Pos.y = data->Pos()->y();
+	m_vec3Pos.z = data->Pos()->z();
 
 	return true;
 }

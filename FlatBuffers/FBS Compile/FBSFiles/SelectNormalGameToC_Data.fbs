@@ -1,0 +1,6 @@
+
+table SelectNormalGameToC_Data
+{
+	Result:int;
+	ExpectedTime:int;
+}

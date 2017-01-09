@@ -1,18 +1,13 @@
 #include "stdafx.h"
 #include "PlayerEnterRoomToC.h"
-#include "../../CommonSources/Message/JSONHelper.h"
+#include "PlayerEnterRoomToC_Data_generated.h"
 
-
-PlayerEnterRoomToC::PlayerEnterRoomToC()
+PlayerEnterRoomToC::PlayerEnterRoomToC() : m_Builder(1024)
 {
-	m_buffer = new GenericStringBuffer<UTF8<>>();
-	m_writer = new Writer<StringBuffer, UTF8<>>(*m_buffer);
 }
 
 PlayerEnterRoomToC::~PlayerEnterRoomToC()
 {
-	delete m_buffer;
-	delete m_writer;
 }
 
 unsigned short PlayerEnterRoomToC::GetID()
@@ -25,31 +20,28 @@ IMessage* PlayerEnterRoomToC::Clone()
 	return NULL;
 }
 
-const char* PlayerEnterRoomToC::Serialize()
+const char* PlayerEnterRoomToC::Serialize(int* pLength)
 {
-	Document document;
-	document.SetObject();
+	auto characterID = m_Builder.CreateString(m_strCharacterID);
 
-	JSONHelper::AddField(&document, &document, "PlayerIndex", m_nPlayerIndex);
-	JSONHelper::AddField(&document, &document, "CharacterID", m_strCharacterID);
+	PlayerEnterRoomToC_DataBuilder data_builder(m_Builder);
+	data_builder.add_PlayerIndex(m_nPlayerIndex);
+	data_builder.add_CharacterID(characterID);
+	auto data = data_builder.Finish();
 
-	m_buffer->Clear();
-	document.Accept(*m_writer);
+	m_Builder.Finish(data);
 
-	return m_buffer->GetString();
+	*pLength = m_Builder.GetSize();
+
+	return (char*)m_Builder.GetBufferPointer();
 }
 
 bool PlayerEnterRoomToC::Deserialize(const char* pChar)
 {
-	Document document;
-	document.Parse<0>(pChar);
-	if (!document.IsObject())
-	{
-		return false;
-	}
+	auto data = flatbuffers::GetRoot<PlayerEnterRoomToC_Data>((const void*)pChar);
 
-	if (!JSONHelper::GetField(&document, "PlayerIndex", &m_nPlayerIndex)) return false;
-	if (!JSONHelper::GetField(&document, "CharacterID", &m_strCharacterID)) return false;
+	m_nPlayerIndex = data->PlayerIndex();
+	m_strCharacterID = data->CharacterID()->str();
 
 	return true;
 }

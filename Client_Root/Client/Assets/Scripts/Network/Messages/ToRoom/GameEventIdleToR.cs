@@ -1,12 +1,12 @@
 ﻿using UnityEngine;
-using System.Text;
+using FlatBuffers;
 
 public class GameEventIdleToR : IMessage
 {
     public const ushort MESSAGE_ID = MessageID.GameEventIdleToR_ID;
 
-    public int m_nPlayerIndex = 0;                          //  json field name : PlayerIndex
-    public Vector3 m_vec3Pos = Vector3.zero;                //  Json field name : Pos_X, Pos_Y, Pos_Z
+    public int m_nPlayerIndex;
+    public Vector3 m_vec3Pos;
 
     public ushort GetID()
     {
@@ -20,24 +20,28 @@ public class GameEventIdleToR : IMessage
 
     public byte[] Serialize()
     {
-        JSONObject jsonObj = new JSONObject(JSONObject.Type.OBJECT);
+        FlatBufferBuilder builder = new FlatBufferBuilder(1024);
 
-        JSONHelper.AddField(jsonObj, "PlayerIndex", m_nPlayerIndex);
-        JSONHelper.AddField(jsonObj, "Pos_X", m_vec3Pos.x);
-        JSONHelper.AddField(jsonObj, "Pos_Y", m_vec3Pos.y);
-        JSONHelper.AddField(jsonObj, "Pos_Z", m_vec3Pos.z);
+        var pos = FBSData.Vector3.CreateVector3(builder, m_vec3Pos.x, m_vec3Pos.y, m_vec3Pos.z);
 
-        return Encoding.Default.GetBytes(jsonObj.Print());
+        GameEventIdleToR_Data.StartGameEventIdleToR_Data(builder);
+        GameEventIdleToR_Data.AddPlayerIndex(builder, m_nPlayerIndex);
+        GameEventIdleToR_Data.AddPos(builder, pos);
+        var data = GameEventIdleToR_Data.EndGameEventIdleToR_Data(builder);
+
+        builder.Finish(data.Value);
+
+        return builder.SizedByteArray();
     }
 
     public bool Deserialize(byte[] bytes)
     {
-        JSONObject jsonObj = new JSONObject(Encoding.UTF8.GetString(bytes));
+        var buf = new ByteBuffer(bytes);
 
-        if(!JSONHelper.GetField(jsonObj, "PlayerIndex", ref m_nPlayerIndex)) return false;
-        if(!JSONHelper.GetField(jsonObj, "Pos_X", ref m_vec3Pos.x)) return false;
-        if(!JSONHelper.GetField(jsonObj, "Pos_Y", ref m_vec3Pos.y)) return false;
-        if(!JSONHelper.GetField(jsonObj, "Pos_Z", ref m_vec3Pos.z)) return false;
+        var data = GameEventIdleToR_Data.GetRootAsGameEventIdleToR_Data(buf);
+
+        m_nPlayerIndex = data.PlayerIndex;
+        m_vec3Pos = new Vector3(data.Pos.X, data.Pos.Y, data.Pos.Z);
 
         return true;
     }

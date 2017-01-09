@@ -1,18 +1,13 @@
 #include "stdafx.h"
 #include "PreparationStateToR.h"
-#include "../../CommonSources/Message/JSONHelper.h"
+#include "PreparationStateToR_Data_generated.h"
 
-
-PreparationStateToR::PreparationStateToR()
+PreparationStateToR::PreparationStateToR() : m_Builder(1024)
 {
-	m_buffer = new GenericStringBuffer<UTF8<>>();
-	m_writer = new Writer<StringBuffer, UTF8<>>(*m_buffer);
 }
 
 PreparationStateToR::~PreparationStateToR()
 {
-	delete m_buffer;
-	delete m_writer;
 }
 
 unsigned short PreparationStateToR::GetID()
@@ -25,29 +20,24 @@ IMessage* PreparationStateToR::Clone()
 	return NULL;
 }
 
-const char* PreparationStateToR::Serialize()
+const char* PreparationStateToR::Serialize(int* pLength)
 {
-	Document document;
-	document.SetObject();
+	PreparationStateToR_DataBuilder data_builder(m_Builder);
+	data_builder.add_State(m_fState);
+	auto data = data_builder.Finish();
 
-	JSONHelper::AddField(&document, &document, "State", m_fState);
+	m_Builder.Finish(data);
 
-	m_buffer->Clear();
-	document.Accept(*m_writer);
+	*pLength = m_Builder.GetSize();
 
-	return m_buffer->GetString();
+	return (char*)m_Builder.GetBufferPointer();
 }
 
 bool PreparationStateToR::Deserialize(const char* pChar)
 {
-	Document document;
-	document.Parse<0>(pChar);
-	if (!document.IsObject())
-	{
-		return false;
-	}
+	auto data = flatbuffers::GetRoot<PreparationStateToR_Data>((const void*)pChar);
 
-	if (!JSONHelper::GetField(&document, "State", &m_fState)) return false;
+	m_fState = data->State();
 
 	return true;
 }

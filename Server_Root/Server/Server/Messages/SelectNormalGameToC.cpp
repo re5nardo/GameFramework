@@ -1,18 +1,13 @@
 #include "stdafx.h"
 #include "SelectNormalGameToC.h"
-#include "../../CommonSources/Message/JSONHelper.h"
+#include "SelectNormalGameToC_Data_generated.h"
 
-
-SelectNormalGameToC::SelectNormalGameToC()
+SelectNormalGameToC::SelectNormalGameToC() : m_Builder(1024)
 {
-	m_buffer = new GenericStringBuffer<UTF8<>>();
-	m_writer = new Writer<StringBuffer, UTF8<>>(*m_buffer);
 }
 
 SelectNormalGameToC::~SelectNormalGameToC()
 {
-	delete m_buffer;
-	delete m_writer;
 }
 
 unsigned short SelectNormalGameToC::GetID()
@@ -25,31 +20,26 @@ IMessage* SelectNormalGameToC::Clone()
 	return NULL;
 }
 
-const char* SelectNormalGameToC::Serialize()
+const char* SelectNormalGameToC::Serialize(int* pLength)
 {
-	Document document;
-	document.SetObject();
+	SelectNormalGameToC_DataBuilder data_builder(m_Builder);
+	data_builder.add_Result(m_nResult);
+	data_builder.add_ExpectedTime(m_nExpectedTime);
+	auto data = data_builder.Finish();
 
-	JSONHelper::AddField(&document, &document, "Result", m_nResult);
-	JSONHelper::AddField(&document, &document, "ExpectedTime", m_nExpectedTime);
+	m_Builder.Finish(data);
 
-	m_buffer->Clear();
-	document.Accept(*m_writer);
+	*pLength = m_Builder.GetSize();
 
-	return m_buffer->GetString();
+	return (char*)m_Builder.GetBufferPointer();
 }
 
 bool SelectNormalGameToC::Deserialize(const char* pChar)
 {
-	Document document;
-	document.Parse<0>(pChar);
-	if (!document.IsObject())
-	{
-		return false;
-	}
+	auto data = flatbuffers::GetRoot<SelectNormalGameToC_Data>((const void*)pChar);
 
-	if (!JSONHelper::GetField(&document, "Result", &m_nResult)) return false;
-	if (!JSONHelper::GetField(&document, "ExpectedTime", &m_nExpectedTime)) return false;
+	m_nResult = data->Result();
+	m_nExpectedTime = data->ExpectedTime();
 
 	return true;
 }

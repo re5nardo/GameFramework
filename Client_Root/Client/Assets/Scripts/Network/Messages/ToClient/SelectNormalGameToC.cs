@@ -1,11 +1,11 @@
-﻿using System.Text;
+﻿using FlatBuffers;
 
 public class SelectNormalGameToC : IMessage
 {
     public const ushort MESSAGE_ID = MessageID.SelectNormalGameToC_ID;
 
-    public int m_nResult;           //  json field name : Result
-    public int m_nExpectedTime;     //  json field name : ExpectedTime
+    public int m_nResult;
+    public int m_nExpectedTime;
 
     public ushort GetID()
     {
@@ -19,20 +19,26 @@ public class SelectNormalGameToC : IMessage
 
     public byte[] Serialize()
     {
-        JSONObject jsonObj = new JSONObject(JSONObject.Type.OBJECT);
+        FlatBufferBuilder builder = new FlatBufferBuilder(1024);
 
-        JSONHelper.AddField(jsonObj, "Result", m_nResult);
-        JSONHelper.AddField(jsonObj, "ExpectedTime", m_nExpectedTime);
+        SelectNormalGameToC_Data.StartSelectNormalGameToC_Data(builder);
+        SelectNormalGameToC_Data.AddResult(builder, m_nResult);
+        SelectNormalGameToC_Data.AddExpectedTime(builder, m_nExpectedTime);
+        var data = SelectNormalGameToC_Data.EndSelectNormalGameToC_Data(builder);
 
-        return Encoding.Default.GetBytes(jsonObj.Print());
+        builder.Finish(data.Value);
+
+        return builder.SizedByteArray();
     }
 
     public bool Deserialize(byte[] bytes)
     {
-        JSONObject jsonObj = new JSONObject(Encoding.UTF8.GetString(bytes));
+        var buf = new ByteBuffer(bytes);
 
-        if(!JSONHelper.GetField(jsonObj, "Result", ref m_nResult)) return false;
-        if(!JSONHelper.GetField(jsonObj, "ExpectedTime", ref m_nExpectedTime)) return false;
+        var data = SelectNormalGameToC_Data.GetRootAsSelectNormalGameToC_Data(buf);
+
+        m_nResult = data.Result;
+        m_nExpectedTime = data.ExpectedTime;
 
         return true;
     }

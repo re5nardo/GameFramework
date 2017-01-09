@@ -1,18 +1,13 @@
 #include "stdafx.h"
 #include "CreateRoomToR.h"
-#include "../../CommonSources/Message/JSONHelper.h"
+#include "CreateRoomToR_Data_generated.h"
 
-
-CreateRoomToR::CreateRoomToR()
+CreateRoomToR::CreateRoomToR() : m_Builder(1024)
 {
-	m_buffer = new GenericStringBuffer<UTF8<>>();
-	m_writer = new Writer<StringBuffer, UTF8<>>(*m_buffer);
 }
 
 CreateRoomToR::~CreateRoomToR()
 {
-	delete m_buffer;
-	delete m_writer;
 }
 
 unsigned short CreateRoomToR::GetID()
@@ -25,31 +20,38 @@ IMessage* CreateRoomToR::Clone()
 	return NULL;
 }
 
-const char* CreateRoomToR::Serialize()
+const char* CreateRoomToR::Serialize(int* pLength)
 {
-	Document document;
-	document.SetObject();
+	vector<Offset<flatbuffers::String>> vecPlayers;
 
-	JSONHelper::AddField(&document, &document, "MatchID", m_nMatchID);
-	JSONHelper::AddField(&document, &document, "Players", m_vecPlayers);
+	for (vector<string>::iterator it = m_vecPlayers.begin(); it != m_vecPlayers.end(); ++it)
+	{
+		vecPlayers.push_back(m_Builder.CreateString(*it));
+	}
 
-	m_buffer->Clear();
-	document.Accept(*m_writer);
+	auto players = m_Builder.CreateVector(vecPlayers);
 
-	return m_buffer->GetString();
+	CreateRoomToR_DataBuilder data_builder(m_Builder);
+	data_builder.add_MatchID(m_nMatchID);
+	data_builder.add_Players(players);
+	auto data = data_builder.Finish();
+
+	m_Builder.Finish(data);
+
+	*pLength = m_Builder.GetSize();
+
+	return (char*)m_Builder.GetBufferPointer();
 }
 
 bool CreateRoomToR::Deserialize(const char* pChar)
 {
-	Document document;
-	document.Parse<0>(pChar);
-	if (!document.IsObject())
-	{
-		return false;
-	}
+	auto data = flatbuffers::GetRoot<CreateRoomToR_Data>((const void*)pChar);
 
-	if (!JSONHelper::GetField(&document, "MatchID", &m_nMatchID)) return false;
-	if (!JSONHelper::GetField(&document, "Players", &m_vecPlayers)) return false;
+	m_nMatchID = data->MatchID();
+	for (int i = 0; i < data->Players()->size(); ++i)
+	{
+		m_vecPlayers.push_back(data->Players()->Get(i)->str());
+	}
 
 	return true;
 }

@@ -1,18 +1,13 @@
 #include "stdafx.h"
 #include "GameEventMoveToR.h"
-#include "../../CommonSources/Message/JSONHelper.h"
+#include "GameEventMoveToR_Data_generated.h"
 
-
-GameEventMoveToR::GameEventMoveToR()
+GameEventMoveToR::GameEventMoveToR() : m_Builder(1024)
 {
-	m_buffer = new GenericStringBuffer<UTF8<>>();
-	m_writer = new Writer<StringBuffer, UTF8<>>(*m_buffer);
 }
 
 GameEventMoveToR::~GameEventMoveToR()
 {
-	delete m_buffer;
-	delete m_writer;
 }
 
 unsigned short GameEventMoveToR::GetID()
@@ -22,43 +17,38 @@ unsigned short GameEventMoveToR::GetID()
 
 IMessage* GameEventMoveToR::Clone()
 {
-	GameEventMoveToR* clone = new GameEventMoveToR();
+	GameEventMoveToR* pClone = new GameEventMoveToR();
 
-	clone->m_nPlayerIndex = m_nPlayerIndex;
-	clone->m_vec3Dest = m_vec3Dest;
+	pClone->m_nPlayerIndex = m_nPlayerIndex;
+	pClone->m_vec3Dest = m_vec3Dest;
 
-	return clone;
+	return pClone;
 }
 
-const char* GameEventMoveToR::Serialize()
+const char* GameEventMoveToR::Serialize(int* pLength)
 {
-	Document document;
-	document.SetObject();
+	FBSData::Vector3 dest(m_vec3Dest.x, m_vec3Dest.y, m_vec3Dest.z);
 
-	JSONHelper::AddField(&document, &document, "PlayerIndex", m_nPlayerIndex);
-	JSONHelper::AddField(&document, &document, "Pos_X", m_vec3Dest.x);
-	JSONHelper::AddField(&document, &document, "Pos_Y", m_vec3Dest.y);
-	JSONHelper::AddField(&document, &document, "Pos_Z", m_vec3Dest.z);
+	GameEventMoveToR_DataBuilder data_builder(m_Builder);
+	data_builder.add_PlayerIndex(m_nPlayerIndex);
+	data_builder.add_Dest(&dest);
+	auto data = data_builder.Finish();
 
-	m_buffer->Clear();
-	document.Accept(*m_writer);
+	m_Builder.Finish(data);
 
-	return m_buffer->GetString();
+	*pLength = m_Builder.GetSize();
+
+	return (char*)m_Builder.GetBufferPointer();
 }
 
 bool GameEventMoveToR::Deserialize(const char* pChar)
 {
-	Document document;
-	document.Parse<0>(pChar);
-	if (!document.IsObject())
-	{
-		return false;
-	}
+	auto data = flatbuffers::GetRoot<GameEventMoveToR_Data>((const void*)pChar);
 
-	if (!JSONHelper::GetField(&document, "PlayerIndex", &m_nPlayerIndex)) return false;
-	if (!JSONHelper::GetField(&document, "Pos_X", &m_vec3Dest.x)) return false;
-	if (!JSONHelper::GetField(&document, "Pos_Y", &m_vec3Dest.y)) return false;
-	if (!JSONHelper::GetField(&document, "Pos_Z", &m_vec3Dest.z)) return false;
+	m_nPlayerIndex = data->PlayerIndex();
+	m_vec3Dest.x = data->Dest()->x();
+	m_vec3Dest.y = data->Dest()->y();
+	m_vec3Dest.z = data->Dest()->z();
 
 	return true;
 }

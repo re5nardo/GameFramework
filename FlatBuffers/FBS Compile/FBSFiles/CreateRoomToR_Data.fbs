@@ -1,0 +1,6 @@
+
+table CreateRoomToR_Data
+{
+	MatchID:int;
+	Players:[string];
+}

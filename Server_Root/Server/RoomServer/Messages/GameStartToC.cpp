@@ -1,18 +1,13 @@
 #include "stdafx.h"
 #include "GameStartToC.h"
-#include "../../CommonSources/Message/JSONHelper.h"
+#include "GameStartToC_Data_generated.h"
 
-
-GameStartToC::GameStartToC()
+GameStartToC::GameStartToC() : m_Builder(1024)
 {
-	m_buffer = new GenericStringBuffer<UTF8<>>();
-	m_writer = new Writer<StringBuffer, UTF8<>>(*m_buffer);
 }
 
 GameStartToC::~GameStartToC()
 {
-	delete m_buffer;
-	delete m_writer;
 }
 
 unsigned short GameStartToC::GetID()
@@ -25,25 +20,21 @@ IMessage* GameStartToC::Clone()
 	return NULL;
 }
 
-const char* GameStartToC::Serialize()
+const char* GameStartToC::Serialize(int* pLength)
 {
-	Document document;
-	document.SetObject();
+	GameStartToC_DataBuilder data_builder(m_Builder);
+	auto data = data_builder.Finish();
 
-	m_buffer->Clear();
-	document.Accept(*m_writer);
+	m_Builder.Finish(data);
 
-	return m_buffer->GetString();
+	*pLength = m_Builder.GetSize();
+
+	return (char*)m_Builder.GetBufferPointer();
 }
 
 bool GameStartToC::Deserialize(const char* pChar)
 {
-	Document document;
-	document.Parse<0>(pChar);
-	if (!document.IsObject())
-	{
-		return false;
-	}
+	auto data = flatbuffers::GetRoot<GameStartToC_Data>((const void*)pChar);
 
 	return true;
 }

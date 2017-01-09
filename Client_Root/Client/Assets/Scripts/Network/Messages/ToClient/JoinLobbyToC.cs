@@ -1,10 +1,10 @@
-﻿using System.Text;
+﻿using FlatBuffers;
 
 public class JoinLobbyToC : IMessage
 {
     public const ushort MESSAGE_ID = MessageID.JoinLobbyToC_ID;
 
-    public int m_nResult;     //  json field name : Result
+    public int m_nResult;
 
     public ushort GetID()
     {
@@ -18,18 +18,24 @@ public class JoinLobbyToC : IMessage
 
     public byte[] Serialize()
     {
-        JSONObject jsonObj = new JSONObject(JSONObject.Type.OBJECT);
+        FlatBufferBuilder builder = new FlatBufferBuilder(1024);
 
-        JSONHelper.AddField(jsonObj, "Result", m_nResult);
+        JoinLobbyToC_Data.StartJoinLobbyToC_Data(builder);
+        JoinLobbyToC_Data.AddResult(builder, m_nResult);
+        var data = JoinLobbyToC_Data.EndJoinLobbyToC_Data(builder);
 
-        return Encoding.Default.GetBytes(jsonObj.Print());
+        builder.Finish(data.Value);
+
+        return builder.SizedByteArray();
     }
 
     public bool Deserialize(byte[] bytes)
     {
-        JSONObject jsonObj = new JSONObject(Encoding.UTF8.GetString(bytes));
+        var buf = new ByteBuffer(bytes);
 
-        if(!JSONHelper.GetField(jsonObj, "Result", ref m_nResult)) return false;
+        var data = JoinLobbyToC_Data.GetRootAsJoinLobbyToC_Data(buf);
+
+        m_nResult = data.Result;
 
         return true;
     }
