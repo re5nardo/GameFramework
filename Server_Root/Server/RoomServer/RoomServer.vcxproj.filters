@@ -58,6 +58,48 @@
     <Filter Include="헤더 파일\Messages\ToRoom">
       <UniqueIdentifier>{54cc6227-df8e-4bde-8962-4a5949d64018}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\Behavior">
+      <UniqueIdentifier>{cee94be0-8f68-4bfe-9854-be947ecf8159}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Behavior">
+      <UniqueIdentifier>{88b964e1-8f93-4622-b100-ec09f99c2d40}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Condition">
+      <UniqueIdentifier>{434a1f7f-43e4-443f-81eb-dac56de13f60}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Condition">
+      <UniqueIdentifier>{61929637-43e9-4b3c-841c-b3faa41fff96}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Entity">
+      <UniqueIdentifier>{01eb0fa1-452d-4f11-9f9c-67712daa1d9c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Entity">
+      <UniqueIdentifier>{c39f38ac-6c95-4a34-a71d-b02908fb72bd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Entity\Entities">
+      <UniqueIdentifier>{245de508-a872-486c-a85d-9f8389aefedc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Behavior\Behaviors">
+      <UniqueIdentifier>{101e9ce8-539f-4026-bd49-59c4913e500b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Entity\Entities\Character">
+      <UniqueIdentifier>{d194f4bb-7f3f-4f6e-b60a-9ce08f107215}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Entity\Entities\Character\Characters">
+      <UniqueIdentifier>{543ed8af-d34f-4edc-939b-70fef06b6090}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Behavior\Behaviors">
+      <UniqueIdentifier>{6a8682e7-3bda-43ff-b18e-962d641e9b49}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Data\Entities">
+      <UniqueIdentifier>{f5850074-022c-4246-9539-b90700735120}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Data\Entities\Character">
+      <UniqueIdentifier>{a79b78e8-79bb-422f-804f-6637f306a5b0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Data\Entities\Character\Characters">
+      <UniqueIdentifier>{02759604-a752-4987-9f58-e3c27e80a57f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -177,6 +219,36 @@
     <ClInclude Include="Messages\GameEventTeleportToC.h">
       <Filter>헤더 파일\Messages\ToClient</Filter>
     </ClInclude>
+    <ClInclude Include="Entity\IEntity.h">
+      <Filter>헤더 파일\Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="Condition\ICondition.h">
+      <Filter>헤더 파일\Condition</Filter>
+    </ClInclude>
+    <ClInclude Include="Behavior\IBehavior.h">
+      <Filter>헤더 파일\Behavior</Filter>
+    </ClInclude>
+    <ClInclude Include="Behavior\Behaviors\Move.h">
+      <Filter>헤더 파일\Behavior\Behaviors</Filter>
+    </ClInclude>
+    <ClInclude Include="Messages\WorldSnapShotToC.h">
+      <Filter>헤더 파일\Messages\ToClient</Filter>
+    </ClInclude>
+    <ClInclude Include="Behavior\BehaviorIDs.h">
+      <Filter>헤더 파일\Behavior</Filter>
+    </ClInclude>
+    <ClInclude Include="Entity\Entities\Character\ICharacter.h">
+      <Filter>헤더 파일\Data\Entities\Character</Filter>
+    </ClInclude>
+    <ClInclude Include="Entity\Entities\Character\Characters\MisterBae.h">
+      <Filter>헤더 파일\Data\Entities\Character\Characters</Filter>
+    </ClInclude>
+    <ClInclude Include="Behavior\Behaviors\Idle.h">
+      <Filter>헤더 파일\Behavior\Behaviors</Filter>
+    </ClInclude>
+    <ClInclude Include="Util.h">
+      <Filter>소스 파일\Common</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -256,6 +328,30 @@
     </ClCompile>
     <ClCompile Include="Messages\GameEventTeleportToC.cpp">
       <Filter>소스 파일\Messages\ToClient</Filter>
+    </ClCompile>
+    <ClCompile Include="Behavior\Behaviors\Move.cpp">
+      <Filter>소스 파일\Behavior\Behaviors</Filter>
+    </ClCompile>
+    <ClCompile Include="Entity\Entities\Character\ICharacter.cpp">
+      <Filter>소스 파일\Entity\Entities\Character</Filter>
+    </ClCompile>
+    <ClCompile Include="Entity\IEntity.cpp">
+      <Filter>소스 파일\Entity</Filter>
+    </ClCompile>
+    <ClCompile Include="Messages\WorldSnapShotToC.cpp">
+      <Filter>소스 파일\Messages\ToClient</Filter>
+    </ClCompile>
+    <ClCompile Include="Behavior\Behaviors\Idle.cpp">
+      <Filter>소스 파일\Behavior\Behaviors</Filter>
+    </ClCompile>
+    <ClCompile Include="Behavior\IBehavior.cpp">
+      <Filter>소스 파일\Behavior</Filter>
+    </ClCompile>
+    <ClCompile Include="Condition\Condition.cpp">
+      <Filter>소스 파일\Condition</Filter>
+    </ClCompile>
+    <ClCompile Include="Entity\Entities\Character\Characters\MisterBae.cpp">
+      <Filter>소스 파일\Entity\Entities\Character\Characters</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

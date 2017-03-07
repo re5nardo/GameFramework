@@ -56,7 +56,7 @@ bool EnterRoomToC::Deserialize(const char* pChar)
 	m_nPlayerIndex = data->PlayerIndex();
 	for (int i = 0; i < data->PlayersMapKey()->size(); ++i)
 	{
-		m_mapPlayers.insert(pair<int, string>(data->PlayersMapKey()->Get(i), data->PlayersMapValue()->Get(i)->str()));
+		m_mapPlayers[data->PlayersMapKey()->Get(i)] = data->PlayersMapValue()->Get(i)->str();
 	}
 
 	return true;

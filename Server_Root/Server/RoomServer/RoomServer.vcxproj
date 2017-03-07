@@ -96,8 +96,16 @@
     <ClInclude Include="..\CommonSources\Network\NetworkCore.h" />
     <ClInclude Include="..\CommonSources\Network\NetworkDefines.h" />
     <ClInclude Include="..\CommonSources\Singleton.h" />
+    <ClInclude Include="Behavior\BehaviorIDs.h" />
+    <ClInclude Include="Behavior\Behaviors\Idle.h" />
+    <ClInclude Include="Behavior\Behaviors\Move.h" />
+    <ClInclude Include="Behavior\IBehavior.h" />
+    <ClInclude Include="Condition\ICondition.h" />
     <ClInclude Include="Data.h" />
     <ClInclude Include="Defines.h" />
+    <ClInclude Include="Entity\Entities\Character\Characters\MisterBae.h" />
+    <ClInclude Include="Entity\Entities\Character\ICharacter.h" />
+    <ClInclude Include="Entity\IEntity.h" />
     <ClInclude Include="Game\BaeGameRoom.h" />
     <ClInclude Include="Messages\EnterRoomToC.h" />
     <ClInclude Include="Messages\EnterRoomToR.h" />
@@ -114,11 +122,13 @@
     <ClInclude Include="Messages\PreparationStateToC.h" />
     <ClInclude Include="Messages\PreparationStateToR.h" />
     <ClInclude Include="Messages\ReadyForStartToR.h" />
+    <ClInclude Include="Messages\WorldSnapShotToC.h" />
     <ClInclude Include="Room.h" />
     <ClInclude Include="RoomMessageConvertor.h" />
     <ClInclude Include="RoomMessageHeader.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="Util.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\CommonSources\Messages\CreateRoomToL.cpp" />
@@ -127,6 +137,13 @@
     <ClCompile Include="..\CommonSources\Network\Accepter.cpp" />
     <ClCompile Include="..\CommonSources\Network\Network.cpp" />
     <ClCompile Include="..\CommonSources\Network\NetworkCore.cpp" />
+    <ClCompile Include="Behavior\Behaviors\Idle.cpp" />
+    <ClCompile Include="Behavior\Behaviors\Move.cpp" />
+    <ClCompile Include="Behavior\IBehavior.cpp" />
+    <ClCompile Include="Condition\Condition.cpp" />
+    <ClCompile Include="Entity\Entities\Character\Characters\MisterBae.cpp" />
+    <ClCompile Include="Entity\Entities\Character\ICharacter.cpp" />
+    <ClCompile Include="Entity\IEntity.cpp" />
     <ClCompile Include="Game\BaeGameRoom.cpp" />
     <ClCompile Include="Messages\EnterRoomToC.cpp" />
     <ClCompile Include="Messages\EnterRoomToR.cpp" />
@@ -143,6 +160,7 @@
     <ClCompile Include="Messages\PreparationStateToC.cpp" />
     <ClCompile Include="Messages\PreparationStateToR.cpp" />
     <ClCompile Include="Messages\ReadyForStartToR.cpp" />
+    <ClCompile Include="Messages\WorldSnapShotToC.cpp" />
     <ClCompile Include="Room.cpp" />
     <ClCompile Include="RoomMessageConvertor.cpp" />
     <ClCompile Include="RoomServer.cpp" />
