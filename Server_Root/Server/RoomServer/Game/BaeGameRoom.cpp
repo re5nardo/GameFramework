@@ -93,7 +93,7 @@ void BaeGameRoom::ProcessInput()
 		}
 
 		delete pPlayerInputMsg;
-		pPlayerInputMsg = NULL;
+		it->second = NULL;
 	}
 
 	m_LockPlayerInput.unlock();
