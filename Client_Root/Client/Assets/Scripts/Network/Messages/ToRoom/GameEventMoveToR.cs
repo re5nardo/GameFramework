@@ -22,11 +22,9 @@ public class GameEventMoveToR : IMessage
     {
         FlatBufferBuilder builder = new FlatBufferBuilder(1024);
 
-        var dest = FBSData.Vector3.CreateVector3(builder, m_vec3Dest.x, m_vec3Dest.y, m_vec3Dest.z);
-
         GameEventMoveToR_Data.StartGameEventMoveToR_Data(builder);
         GameEventMoveToR_Data.AddPlayerIndex(builder, m_nPlayerIndex);
-        GameEventMoveToR_Data.AddDest(builder, dest);
+        GameEventMoveToR_Data.AddDest(builder, FBSData.Vector3.CreateVector3(builder, m_vec3Dest.x, m_vec3Dest.y, m_vec3Dest.z));
         var data = GameEventMoveToR_Data.EndGameEventMoveToR_Data(builder);
 
         builder.Finish(data.Value);

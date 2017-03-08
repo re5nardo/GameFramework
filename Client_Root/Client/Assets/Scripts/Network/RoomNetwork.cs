@@ -19,11 +19,13 @@ public class RoomNetwork : MonoSingleton<RoomNetwork>
     {
         lock (m_MessagesReceived)
         {
-            if (m_MessagesReceived.Count > 0)
+            while (m_MessagesReceived.Count > 0)
             {
+                IMessage msg = m_MessagesReceived.Dequeue();
+
                 if (m_RecvMessageCallback != null)
                 {
-                    m_RecvMessageCallback(m_MessagesReceived.Dequeue ());
+                    m_RecvMessageCallback(msg);
                 }
             }
         }
@@ -238,6 +240,10 @@ public class RoomNetwork : MonoSingleton<RoomNetwork>
         else if (nMessageID == GameEventTeleportToC.MESSAGE_ID)
         {
             msg = new GameEventTeleportToC();
+        }
+        else if (nMessageID == WorldSnapShotToC.MESSAGE_ID)
+        {
+            msg = new WorldSnapShotToC();
         }
 
         if (msg != null)

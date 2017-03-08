@@ -31,4 +31,5 @@ public class MessageID
     public const ushort GameEventIdleToC_ID =               50005;
     public const ushort GameEventStopToC_ID =               50006;
     public const ushort GameEventTeleportToC_ID =           50007;
+    public const ushort WorldSnapShotToC_ID =               50008;
 }

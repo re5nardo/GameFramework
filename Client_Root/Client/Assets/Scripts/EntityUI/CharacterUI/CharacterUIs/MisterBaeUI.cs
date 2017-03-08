@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class MisterBaeUI : ICharacterUI
+public class MisterBaeUI : IEntityUI
 {
-    
+
 }

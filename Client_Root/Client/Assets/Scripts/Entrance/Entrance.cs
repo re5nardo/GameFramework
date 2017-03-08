@@ -3,7 +3,7 @@ using UnityEngine.SceneManagement;
 
 public class Entrance : MonoBehaviour
 {
-    private string m_strIP = "175.197.227.73";
+    private string m_strIP = "175.197.228.224";
     private int m_nPort = 9110;
 
     private void Start()

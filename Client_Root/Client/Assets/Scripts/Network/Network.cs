@@ -24,13 +24,15 @@ public class Network : MonoSingleton<Network>
 	{
 		lock (m_MessagesReceived)
 		{
-			if (m_MessagesReceived.Count > 0)
-			{
-				if (m_RecvMessageCallback != null)
-				{
-					m_RecvMessageCallback(m_MessagesReceived.Dequeue ());
-				}
-			}
+            while (m_MessagesReceived.Count > 0)
+            {
+                IMessage msg = m_MessagesReceived.Dequeue();
+
+                if (m_RecvMessageCallback != null)
+                {
+                    m_RecvMessageCallback(msg);
+                }
+            }
 		}
 
         if (m_bConnectCallbacked)

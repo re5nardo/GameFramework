@@ -20,7 +20,7 @@ public class MisterBaeObstacleAI : IBehaviorBasedObjectAI
         Stat stat = new Stat();
         stat.fSpeed = 4f;
 
-        m_MisterBae.Initialize(stat);
+//        m_MisterBae.Initialize(stat);
     }
 
 
@@ -28,6 +28,6 @@ public class MisterBaeObstacleAI : IBehaviorBasedObjectAI
     {
         yield return new WaitForSeconds(m_fStartDelay);
 
-        m_MisterBae.Patrol(m_vec3PatrolStart, m_vec3PatrolDest);
+//        m_MisterBae.Patrol(m_vec3PatrolStart, m_vec3PatrolDest);
     }
 }
