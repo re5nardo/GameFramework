@@ -54,7 +54,14 @@ public class BaeGameRoom : IGameRoom
     {
         if (FindEqualOrFirstSmallerSnapshot(m_fElapsedTime) != null && FindEqualOrFirstBiggerSnapshot(m_fElapsedTime) != null)
         {
-            m_fElapsedTime += Time.deltaTime;
+            if (m_fLastSnapshotTime - m_fElapsedTime > 0.015f)
+            {
+                m_fElapsedTime = m_fLastSnapshotTime - 0.015f;
+            }
+            else
+            {
+                m_fElapsedTime += Time.deltaTime;
+            }
         }
     }
 
