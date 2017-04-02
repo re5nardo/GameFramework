@@ -103,8 +103,8 @@ void NetworkCore::AccepterThread()
 
 		LPPER_IO_DATA ioInfo = (LPPER_IO_DATA)malloc(sizeof(PER_IO_DATA));
 		memset(&(ioInfo->Overlapped), 0, sizeof(OVERLAPPED));
-		ioInfo->WsaBuf.len = BUF_SIZE;
-		ioInfo->WsaBuf.buf = new char[BUF_SIZE];
+		ioInfo->WsaBuf.len = WSA_BUF_SIZE;
+		ioInfo->WsaBuf.buf = new char[WSA_BUF_SIZE];
 		ioInfo->Mode = IOMode::Read;
 		ioInfo->Disposable = false;
 		ioInfo->CurPos = 0;

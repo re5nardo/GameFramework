@@ -9,6 +9,8 @@
 #include "../Messages/WorldSnapShotToC.h"
 #include "../Behavior/BehaviorIDs.h"
 #include "../Entity/Entities/Character/Characters/MisterBae.h"
+#include "../../CommonSources/tinyxml2.h"
+#include "../../CommonSources/QuadTree.h"
 
 BaeGameRoom::BaeGameRoom(int nMatchID, vector<string> vecMatchedPlayerKey)
 {
@@ -25,7 +27,6 @@ BaeGameRoom::BaeGameRoom(int nMatchID, vector<string> vecMatchedPlayerKey)
 
 BaeGameRoom::~BaeGameRoom()
 {
-
 }
 
 
@@ -89,7 +90,7 @@ void BaeGameRoom::ProcessInput()
 		{
 			GameEventMoveToR* pMoveToR = (GameEventMoveToR*)pPlayerInputMsg;
 
-			m_mapCharacter[nPlayerIndex]->GetBehavior(Move_ID)->Start(m_lLastUpdateTime, pMoveToR->m_vec3Dest);
+			m_mapCharacter[nPlayerIndex]->GetBehavior(Move_ID)->Start(m_lLastUpdateTime, pMoveToR->m_vec3Dest, &m_MapManager);
 		}
 
 		delete pPlayerInputMsg;
@@ -146,7 +147,9 @@ void BaeGameRoom::StartGame()
 {
 	m_bPlaying = true;
 	m_nTick = 0;
-	
+
+	m_MapManager.LoadMap(1);
+
 	GameStartToC* gameStartToC = new GameStartToC();
 	SendToAllUsers(gameStartToC);
 

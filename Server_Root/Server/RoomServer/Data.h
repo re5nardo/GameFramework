@@ -1,28 +1,18 @@
 #pragma once
 
-struct Vector3
+#include <vector>
+#include "../CommonSources/MathematicalData.h"
+
+using namespace std;
+
+struct MapData
 {
 public:
-	Vector3(){ x = 0.0f; y = 0.0f; z = 0.0f; };
-	Vector3(float x, float y, float z){ this->x = x; this->y = y; this->z = z; };
-public:
-	float x;
-	float y;
-	float z;
+	int nID = 0;
+	float fWidth = 0.0f;
+	float fHeight = 0.0f;
+	vector<MathematicalData::Polygon*> vecTerrainObject;
 };
-
-//enum GameEventType
-//{
-//	None,
-//	Idle,
-//	Move,
-//	Stop,
-//	Skill,
-//	Gesture,
-//	GetItem,
-//	Collision,
-//	Die,
-//};
 
 struct Stat
 {
@@ -30,6 +20,6 @@ public:
 	Stat(){ fSpeed = 0.0f; fAgility = 0.0f; };
 	Stat(float fSpeed, float fAgility){ this->fSpeed = fSpeed; this->fAgility = fAgility; };
 public:
-	float fSpeed;
-	float fAgility;
+	float fSpeed = 0.0f;
+	float fAgility = 0.0f;
 };

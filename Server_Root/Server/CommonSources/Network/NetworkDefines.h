@@ -2,7 +2,7 @@
 
 #include <WinSock2.h>
 
-#define BUF_SIZE				256
+#define WSA_BUF_SIZE			256
 #define MESSAGE_HEADER_SIZE		4		//	msg id(2) + msg length info(2)
 
 enum IOMode

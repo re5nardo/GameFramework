@@ -2,12 +2,13 @@
 
 #include "../../CommonSources/Message/IMessage.h"
 #include "../../CommonSources/Message/MessageIDs.h"
-#include "../../RoomServer/Data.h"
+#include "../../CommonSources/MathematicalData.h"
 #ifdef max
 #undef max
 #undef min
 #endif
 #include "flatbuffers/flatbuffers.h"
+using namespace MathematicalData;
 
 using namespace flatbuffers;
 

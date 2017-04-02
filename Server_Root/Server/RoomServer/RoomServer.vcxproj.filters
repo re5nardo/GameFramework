@@ -162,9 +162,6 @@
     <ClInclude Include="Data.h">
       <Filter>헤더 파일\Data</Filter>
     </ClInclude>
-    <ClInclude Include="Defines.h">
-      <Filter>소스 파일\Common</Filter>
-    </ClInclude>
     <ClInclude Include="..\CommonSources\Messages\CreateRoomToR.h">
       <Filter>헤더 파일\Messages\ToRoom</Filter>
     </ClInclude>
@@ -247,7 +244,31 @@
       <Filter>헤더 파일\Behavior\Behaviors</Filter>
     </ClInclude>
     <ClInclude Include="Util.h">
-      <Filter>소스 파일\Common</Filter>
+      <Filter>헤더 파일\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Defines.h">
+      <Filter>헤더 파일\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CommonSources\tinyxml2.h">
+      <Filter>헤더 파일\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CommonSources\QuadTree.h">
+      <Filter>헤더 파일\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CommonSources\QuadTreePrerequisites.h">
+      <Filter>헤더 파일\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CommonSources\PhysicsHelper.h">
+      <Filter>헤더 파일\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\MapManager.h">
+      <Filter>헤더 파일\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\TerrainObjectInsertChecker.h">
+      <Filter>헤더 파일\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CommonSources\MathematicalData.h">
+      <Filter>헤더 파일\Common</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -352,6 +373,21 @@
     </ClCompile>
     <ClCompile Include="Entity\Entities\Character\Characters\MisterBae.cpp">
       <Filter>소스 파일\Entity\Entities\Character\Characters</Filter>
+    </ClCompile>
+    <ClCompile Include="..\CommonSources\tinyxml2.cpp">
+      <Filter>소스 파일\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\CommonSources\QuadTreePrerequisites.cpp">
+      <Filter>소스 파일\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\CommonSources\PhysicsHelper.cpp">
+      <Filter>소스 파일\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\MapManager.cpp">
+      <Filter>소스 파일\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\TerrainObjectInsertChecker.cpp">
+      <Filter>소스 파일\Game</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -2,7 +2,7 @@
 
 #include "../../CommonSources/Message/IMessage.h"
 #include "../../CommonSources/Message/MessageIDs.h"
-#include "../../RoomServer/Data.h"
+#include "../../CommonSources/MathematicalData.h"
 #ifdef max
 #undef max
 #undef min
@@ -10,6 +10,7 @@
 #include "flatbuffers/flatbuffers.h"
 
 using namespace flatbuffers;
+using namespace MathematicalData;
 
 class GameEventMoveToC : public IMessage
 {

@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<Map>
+  <ID>1</ID>
+  <SceneName>TestMap</SceneName>
+  <Width>200</Width>
+  <Height>200</Height>
+  <StartArea>0,0,0,20,20</StartArea>
+  <CheckPoints />
+  <SpawnPoints />
+  <Obstacles>
+    <Obstacle>
+      <Vertex>-35.03804,6.126716E-16,-27.59227</Vertex>
+      <Vertex>-29.05846,5.597143E-16,-25.20729</Vertex>
+      <Vertex>-25.39569,4.687834E-16,-21.11213</Vertex>
+      <Vertex>-24.66593,3.538794E-16,-15.93731</Vertex>
+      <Vertex>-26.17635,1.724733,-14.12994</Vertex>
+      <Vertex>-28.18831,4.182148,-12.49311</Vertex>
+      <Vertex>-32.4502,5.077665,-9.946642</Vertex>
+      <Vertex>-38.32611,2.828256,-7.578666</Vertex>
+      <Vertex>-44.24121,2.756845,-7.957111</Vertex>
+      <Vertex>-49.63876,2.831714,-10.26415</Vertex>
+      <Vertex>-53.31881,2.484742,-14.0498</Vertex>
+      <Vertex>-54.9414,4.137146E-16,-18.63205</Vertex>
+      <Vertex>-52.69806,5.167845E-16,-23.2739</Vertex>
+      <Vertex>-47.98576,5.930474E-16,-26.70848</Vertex>
+      <Vertex>-40.95309,6.319638E-16,-28.46112</Vertex>
+    </Obstacle>
+    <Obstacle>
+      <Vertex>-25.31866,3.24722E-16,-14.62418</Vertex>
+      <Vertex>-23.58085,3.240681E-16,-14.59473</Vertex>
+      <Vertex>-18.71752,2.746134E-16,-12.36749</Vertex>
+      <Vertex>-15.95449,0.2428485,-9.168886</Vertex>
+      <Vertex>-15.14708,1.230949E-16,-5.543699</Vertex>
+      <Vertex>-17.21555,1.14243,-2.242246</Vertex>
+      <Vertex>-20.6863,0.8443001,0.5096967</Vertex>
+      <Vertex>-25.98273,1.316656,1.692171</Vertex>
+      <Vertex>-30.66102,1.906078,1.083</Vertex>
+      <Vertex>-35.05587,2.149352,-0.9343061</Vertex>
+      <Vertex>-38.14312,1.41246,-3.742761</Vertex>
+      <Vertex>-38.4563,2.150617,-7.352531</Vertex>
+    </Obstacle>
+  </Obstacles>
+</Map>

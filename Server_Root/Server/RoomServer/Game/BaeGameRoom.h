@@ -5,6 +5,7 @@
 #include <vector>
 #include <chrono>
 #include <mutex>
+#include "MapManager.h"
 
 class IMessage;
 class CreateRoomToR;
@@ -53,6 +54,9 @@ private:
 	int							m_nTick;
 	__int64						m_lDeltaTime;			//	ElapsedTime after previous tick (Milliseconds)
 	__int64						m_lLastUpdateTime;		//	ElapsedTime after game was started (Milliseconds)
+
+private:
+	MapManager m_MapManager;
 
 public:
 	void OnRecvMessage(unsigned int socket, IMessage* pMsg);

@@ -3,6 +3,7 @@
 #include "../../Entity/IEntity.h"
 #include <math.h>
 #include "../../Util.h"
+#include "../../Game/MapManager.h"
 
 Move::Move(IEntity* pEntity) : IBehavior(pEntity)
 {
@@ -27,6 +28,7 @@ void Move::Start(__int64 lStartTime, ...)
 	va_list ap;
 	va_start(ap, lStartTime);
 	m_vec3Dest = va_arg(ap, Vector3);
+	m_pMapManager = va_arg(ap, MapManager*);
 	va_end(ap);
 
 	if (m_pEntity->GetBehavior(Idle_ID)->IsActivated())
@@ -57,7 +59,14 @@ void Move::Update(__int64 lUpdateTime)
 	else
 	{
 		Vector3 current = Util::Lerp(vec3Pos, m_vec3Dest, fDeltaTime / fExpectedTime);
-		
-		m_pEntity->SetPosition(current);
+
+		if (m_pMapManager->CanMoveStraightly(vec3Pos, current))
+		{
+			m_pEntity->SetPosition(current);
+		}
+		else
+		{
+			m_bActivated = false;
+		}
 	}
 }

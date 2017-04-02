@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Data.h"
+#include "../CommonSources/MathematicalData.h"
 
 using namespace std;
 

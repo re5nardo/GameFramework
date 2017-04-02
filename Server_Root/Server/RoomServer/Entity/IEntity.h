@@ -2,9 +2,10 @@
 
 #include <list>
 #include "../Behavior/IBehavior.h"
-#include "../Data.h"
+#include "../../CommonSources/MathematicalData.h"
 
 using namespace std;
+using namespace MathematicalData;
 
 class IEntity
 {

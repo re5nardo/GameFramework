@@ -2,7 +2,7 @@
 #include <WinSock2.h>
 #include "NetworkDefines.h"
 #include "../Message/IMessageConvertor.h"
-#include "../../CommonSources/Singleton.h"
+#include "../Singleton.h"
 
 using namespace std;
 

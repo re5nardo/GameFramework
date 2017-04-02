@@ -2,7 +2,11 @@
 
 #include "../IBehavior.h"
 #include "../BehaviorIDs.h"
-#include "../../Data.h"
+#include "../../../CommonSources/MathematicalData.h"
+
+class MapManager;
+
+using namespace MathematicalData;
 
 class Move : public IBehavior
 {
@@ -15,6 +19,7 @@ public:
 
 private:
 	Vector3 m_vec3Dest;
+	MapManager* m_pMapManager = NULL;
 
 public:
 	int GetID() override;
