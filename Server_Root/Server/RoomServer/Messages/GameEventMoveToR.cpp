@@ -27,7 +27,7 @@ IMessage* GameEventMoveToR::Clone()
 
 const char* GameEventMoveToR::Serialize(int* pLength)
 {
-	FBSData::Vector3 dest(m_vec3Dest.x, m_vec3Dest.y, m_vec3Dest.z);
+	FBSData::Vector3 dest(m_vec3Dest.x(), m_vec3Dest.y(), m_vec3Dest.z());
 
 	GameEventMoveToR_DataBuilder data_builder(m_Builder);
 	data_builder.add_PlayerIndex(m_nPlayerIndex);
@@ -46,9 +46,9 @@ bool GameEventMoveToR::Deserialize(const char* pChar)
 	auto data = flatbuffers::GetRoot<GameEventMoveToR_Data>((const void*)pChar);
 
 	m_nPlayerIndex = data->PlayerIndex();
-	m_vec3Dest.x = data->Dest()->x();
-	m_vec3Dest.y = data->Dest()->y();
-	m_vec3Dest.z = data->Dest()->z();
+	m_vec3Dest.setX(data->Dest()->x());
+	m_vec3Dest.setY(data->Dest()->y());
+	m_vec3Dest.setZ(data->Dest()->z());
 
 	return true;
 }

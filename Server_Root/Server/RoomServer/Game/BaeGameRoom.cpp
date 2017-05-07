@@ -92,7 +92,7 @@ void BaeGameRoom::ProcessInput()
 		{
 			GameEventMoveToR* pMoveToR = (GameEventMoveToR*)pPlayerInputMsg;
 
-			m_mapCharacter[nPlayerIndex]->GetBehavior(Move_ID)->Start(m_lLastUpdateTime, &btVector3(pMoveToR->m_vec3Dest.x, pMoveToR->m_vec3Dest.y, pMoveToR->m_vec3Dest.z), this);
+			m_mapCharacter[nPlayerIndex]->GetBehavior(Move_ID)->Start(m_lLastUpdateTime, &pMoveToR->m_vec3Dest, this);
 		}
 
 		delete pPlayerInputMsg;
@@ -307,88 +307,28 @@ void BaeGameRoom::OnRecvMessage(unsigned int socket, IMessage* pMsg)
 	{
 		OnGameEventMoveToR((GameEventMoveToR*)pMsg, socket);
 	}
-	else if (pMsg->GetID() == GameEventIdleToR::MESSAGE_ID)
-	{
-		OnGameEventIdleToR((GameEventIdleToR*)pMsg, socket);
-	}
 	else if (pMsg->GetID() == GameEventStopToR::MESSAGE_ID)
 	{
 		OnGameEventStopToR((GameEventStopToR*)pMsg, socket);
-	}
-	else if (pMsg->GetID() == GameEventTeleportToR::MESSAGE_ID)
-	{
-		GameEventTeleportToR* tt = (GameEventTeleportToR*)pMsg;
-
-		__int64 lEventTime = GetElapsedTime();
-
-		GameEventTeleportToC* res = new GameEventTeleportToC();
-		res->m_nPlayerIndex = tt->m_nPlayerIndex;
-		res->m_lEventTime = lEventTime;
-		res->m_vec3Start = tt->m_vec3Start;
-		res->m_vec3Dest = tt->m_vec3Dest;
-		res->m_nState = tt->m_nState;
-
-		//m_vecGameEventRecord.push_back(make_pair(lEventTime, res->Clone()));
-
-		SendToAllUsers(res);
 	}
 }
 
 void BaeGameRoom::OnGameEventMoveToR(GameEventMoveToR* pMsg, unsigned int socket)
 {
-	/*__int64 lEventTime = GetElapsedTime();
-
-	GameEventMoveToC* res = new GameEventMoveToC();
-	res->m_nPlayerIndex = pMsg->m_nPlayerIndex;
-	res->m_lEventTime = lEventTime;
-	res->m_vec3Dest = pMsg->m_vec3Dest;
-
-	m_vecGameEventRecord.push_back(make_pair(lEventTime, res->Clone()));
-
-	SendToAllUsers(res);*/
-
-	/*MoveInput* moveInput = new MoveInput();
-	moveInput->playerIndex = pMsg->m_nPlayerIndex;
-	moveInput->pos.x = pMsg->m_vec3Dest.x;
-	moveInput->pos.y = pMsg->m_vec3Dest.y;
-	moveInput->pos.z = pMsg->m_vec3Dest.z;*/
-
 	m_LockPlayerInput.lock();
 
-
 	m_mapPlayerInput[pMsg->m_nPlayerIndex] = pMsg->Clone();
-
-	//m_mapPlayerInput[pMsg->m_nPlayerIndex] = pMsg->Clone();
 
 	m_LockPlayerInput.unlock();
 }
 
-void BaeGameRoom::OnGameEventIdleToR(GameEventIdleToR* pMsg, unsigned int socket)
-{
-	__int64 lEventTime = GetElapsedTime();
-
-	GameEventIdleToC* res = new GameEventIdleToC();
-	res->m_nPlayerIndex = pMsg->m_nPlayerIndex;
-	res->m_lEventTime = lEventTime;
-	res->m_vec3Pos = pMsg->m_vec3Pos;
-
-	//m_vecGameEventRecord.push_back(make_pair(lEventTime, res->Clone()));
-
-	SendToAllUsers(res);
-}
-
 void BaeGameRoom::OnGameEventStopToR(GameEventStopToR* pMsg, unsigned int socket)
 {
-	__int64 lEventTime = GetElapsedTime();
+	m_LockPlayerInput.lock();
 
-	GameEventStopToC* res = new GameEventStopToC();
-	res->m_nPlayerIndex = pMsg->m_nPlayerIndex;
-	res->m_lEventTime = lEventTime;
-	res->m_vec3Pos = pMsg->m_vec3Pos;
+	m_mapPlayerInput[pMsg->m_nPlayerIndex] = pMsg->Clone();
 
-	//m_vecGameEventRecord.push_back(make_pair(lEventTime, res->Clone()));
-
-	SendToAllUsers(res);
+	m_LockPlayerInput.unlock();
 }
 
 void BaeGameRoom::OnEnterRoomToR(EnterRoomToR* pMsg, unsigned int socket)

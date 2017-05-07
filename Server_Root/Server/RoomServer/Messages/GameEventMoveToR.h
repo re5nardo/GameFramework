@@ -2,7 +2,7 @@
 
 #include "../../CommonSources/Message/IMessage.h"
 #include "../../CommonSources/Message/MessageIDs.h"
-#include "../../CommonSources/MathematicalData.h"
+#include "btBulletCollisionCommon.h"
 #ifdef max
 #undef max
 #undef min
@@ -10,7 +10,6 @@
 #include "flatbuffers/flatbuffers.h"
 
 using namespace flatbuffers;
-using namespace MathematicalData;
 
 class GameEventMoveToR : public IMessage
 {
@@ -26,7 +25,7 @@ private:
 
 public:
 	int m_nPlayerIndex;
-	Vector3 m_vec3Dest;
+	btVector3 m_vec3Dest;
 
 public:
 	unsigned short GetID() override;

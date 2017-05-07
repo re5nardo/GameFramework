@@ -153,9 +153,6 @@
     <ClInclude Include="..\CommonSources\Message\JSONHelper.h">
       <Filter>헤더 파일\Messages</Filter>
     </ClInclude>
-    <ClInclude Include="Messages\GameEventMoveToC.h">
-      <Filter>헤더 파일\Messages\ToClient</Filter>
-    </ClInclude>
     <ClInclude Include="Messages\GameStartToC.h">
       <Filter>헤더 파일\Messages\ToClient</Filter>
     </ClInclude>
@@ -195,26 +192,11 @@
     <ClInclude Include="Messages\PlayerEnterRoomToC.h">
       <Filter>헤더 파일\Messages\ToClient</Filter>
     </ClInclude>
-    <ClInclude Include="Messages\GameEventIdleToC.h">
-      <Filter>헤더 파일\Messages\ToClient</Filter>
-    </ClInclude>
-    <ClInclude Include="Messages\GameEventStopToC.h">
-      <Filter>헤더 파일\Messages\ToClient</Filter>
-    </ClInclude>
-    <ClInclude Include="Messages\GameEventIdleToR.h">
-      <Filter>헤더 파일\Messages\ToRoom</Filter>
-    </ClInclude>
     <ClInclude Include="Messages\GameEventStopToR.h">
       <Filter>헤더 파일\Messages\ToRoom</Filter>
     </ClInclude>
     <ClInclude Include="..\CommonSources\Message\IJSONObjectConvertible.h">
       <Filter>헤더 파일\Messages</Filter>
-    </ClInclude>
-    <ClInclude Include="Messages\GameEventTeleportToR.h">
-      <Filter>헤더 파일\Messages\ToRoom</Filter>
-    </ClInclude>
-    <ClInclude Include="Messages\GameEventTeleportToC.h">
-      <Filter>헤더 파일\Messages\ToClient</Filter>
     </ClInclude>
     <ClInclude Include="Entity\IEntity.h">
       <Filter>헤더 파일\Entity</Filter>
@@ -258,14 +240,8 @@
     <ClInclude Include="..\CommonSources\QuadTreePrerequisites.h">
       <Filter>헤더 파일\Common</Filter>
     </ClInclude>
-    <ClInclude Include="..\CommonSources\PhysicsHelper.h">
-      <Filter>헤더 파일\Common</Filter>
-    </ClInclude>
     <ClInclude Include="Game\TerrainObjectInsertChecker.h">
       <Filter>헤더 파일\Game</Filter>
-    </ClInclude>
-    <ClInclude Include="..\CommonSources\MathematicalData.h">
-      <Filter>헤더 파일\Common</Filter>
     </ClInclude>
     <ClInclude Include="Game\CollisionManager.h">
       <Filter>헤더 파일\Game</Filter>
@@ -295,9 +271,6 @@
     </ClCompile>
     <ClCompile Include="..\CommonSources\Message\JSONHelper.cpp">
       <Filter>소스 파일\Messages</Filter>
-    </ClCompile>
-    <ClCompile Include="Messages\GameEventMoveToC.cpp">
-      <Filter>소스 파일\Messages\ToClient</Filter>
     </ClCompile>
     <ClCompile Include="Messages\GameStartToC.cpp">
       <Filter>소스 파일\Messages\ToClient</Filter>
@@ -332,23 +305,8 @@
     <ClCompile Include="Messages\PlayerEnterRoomToC.cpp">
       <Filter>소스 파일\Messages\ToClient</Filter>
     </ClCompile>
-    <ClCompile Include="Messages\GameEventIdleToC.cpp">
-      <Filter>소스 파일\Messages\ToClient</Filter>
-    </ClCompile>
-    <ClCompile Include="Messages\GameEventStopToC.cpp">
-      <Filter>소스 파일\Messages\ToClient</Filter>
-    </ClCompile>
-    <ClCompile Include="Messages\GameEventIdleToR.cpp">
-      <Filter>소스 파일\Messages\ToRoom</Filter>
-    </ClCompile>
     <ClCompile Include="Messages\GameEventStopToR.cpp">
       <Filter>소스 파일\Messages\ToRoom</Filter>
-    </ClCompile>
-    <ClCompile Include="Messages\GameEventTeleportToR.cpp">
-      <Filter>소스 파일\Messages\ToRoom</Filter>
-    </ClCompile>
-    <ClCompile Include="Messages\GameEventTeleportToC.cpp">
-      <Filter>소스 파일\Messages\ToClient</Filter>
     </ClCompile>
     <ClCompile Include="Behavior\Behaviors\Move.cpp">
       <Filter>소스 파일\Behavior\Behaviors</Filter>
@@ -378,9 +336,6 @@
       <Filter>소스 파일\Common</Filter>
     </ClCompile>
     <ClCompile Include="..\CommonSources\QuadTreePrerequisites.cpp">
-      <Filter>소스 파일\Common</Filter>
-    </ClCompile>
-    <ClCompile Include="..\CommonSources\PhysicsHelper.cpp">
       <Filter>소스 파일\Common</Filter>
     </ClCompile>
     <ClCompile Include="Game\TerrainObjectInsertChecker.cpp">

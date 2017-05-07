@@ -27,7 +27,7 @@ IMessage* GameEventStopToR::Clone()
 
 const char* GameEventStopToR::Serialize(int* pLength)
 {
-	FBSData::Vector3 pos(m_vec3Pos.x, m_vec3Pos.y, m_vec3Pos.z);
+	FBSData::Vector3 pos(m_vec3Pos.x(), m_vec3Pos.y(), m_vec3Pos.z());
 
 	GameEventStopToR_DataBuilder data_builder(m_Builder);
 	data_builder.add_PlayerIndex(m_nPlayerIndex);
@@ -46,9 +46,9 @@ bool GameEventStopToR::Deserialize(const char* pChar)
 	auto data = flatbuffers::GetRoot<GameEventStopToR_Data>((const void*)pChar);
 
 	m_nPlayerIndex = data->PlayerIndex();
-	m_vec3Pos.x = data->Pos()->x();
-	m_vec3Pos.y = data->Pos()->y();
-	m_vec3Pos.z = data->Pos()->z();
+	m_vec3Pos.setX(data->Pos()->x());
+	m_vec3Pos.setY(data->Pos()->y());
+	m_vec3Pos.setZ(data->Pos()->z());
 
 	return true;
 }

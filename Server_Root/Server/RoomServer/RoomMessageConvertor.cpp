@@ -31,17 +31,9 @@ IMessage* RoomMessageConvertor::GetMessage(const unsigned short nMessageID, cons
 	{
 		pMsg = new PreparationStateToR();
 	}
-	else if (nMessageID == GameEventIdleToR::MESSAGE_ID)
-	{
-		pMsg = new GameEventIdleToR();
-	}
 	else if (nMessageID == GameEventStopToR::MESSAGE_ID)
 	{
 		pMsg = new GameEventStopToR();
-	}
-	else if (nMessageID == GameEventTeleportToR::MESSAGE_ID)
-	{
-		pMsg = new GameEventTeleportToR();
 	}
 
 	if (pMsg != NULL)

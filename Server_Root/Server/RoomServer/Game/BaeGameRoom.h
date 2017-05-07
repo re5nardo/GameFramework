@@ -78,7 +78,6 @@ private:
 
 	//	Protocol Handler
 	void OnGameEventMoveToR(GameEventMoveToR* pMsg, unsigned int socket);
-	void OnGameEventIdleToR(GameEventIdleToR* pMsg, unsigned int socket);
 	void OnGameEventStopToR(GameEventStopToR* pMsg, unsigned int socket);
 	void OnEnterRoomToR(EnterRoomToR* pMsg, unsigned int socket);
 	void OnPreparationStateToR(PreparationStateToR* pMsg, unsigned int socket);

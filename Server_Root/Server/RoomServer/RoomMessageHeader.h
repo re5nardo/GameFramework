@@ -1,6 +1,5 @@
 #pragma once
 
-#include "Messages/GameEventMoveToC.h"
 #include "Messages/GameEventMoveToR.h"
 #include "Messages/GameStartToC.h"
 #include "Messages/ReadyForStartToR.h"
@@ -11,9 +10,4 @@
 #include "Messages\PlayerEnterRoomToC.h"
 #include "Messages\PreparationStateToC.h"
 #include "Messages\PreparationStateToR.h"
-#include "Messages\GameEventIdleToC.h"
-#include "Messages\GameEventIdleToR.h"
-#include "Messages\GameEventStopToC.h"
 #include "Messages\GameEventStopToR.h"
-#include "Messages\GameEventTeleportToC.h"
-#include "Messages\GameEventTeleportToR.h"
