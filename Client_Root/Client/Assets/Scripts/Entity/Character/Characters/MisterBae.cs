@@ -5,10 +5,8 @@ public class MisterBae : IEntity
 {
     [SerializeField] private BehaviorAnimationInfo[] m_arrBehaviorAnimationInfo;
 
-    public override void Initialize(params object[] arrParam)
+    public override void Initialize()
     {
-        m_DefaultStat = m_CurrentStat = (Stat)arrParam[0];
-
         //  Temp
         m_arrBehaviorAnimationInfo = new BehaviorAnimationInfo[2];
         m_arrBehaviorAnimationInfo[0] = new BehaviorAnimationInfo();

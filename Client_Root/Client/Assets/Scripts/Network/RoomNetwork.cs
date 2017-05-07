@@ -209,11 +209,7 @@ public class RoomNetwork : MonoSingleton<RoomNetwork>
     {
         IMessage msg = null;
 
-        if (nMessageID == GameEventMoveToC.MESSAGE_ID)
-        {
-            msg = new GameEventMoveToC();
-        }
-        else if (nMessageID == EnterRoomToC.MESSAGE_ID)
+        if (nMessageID == EnterRoomToC.MESSAGE_ID)
         {
             msg = new EnterRoomToC();
         }
@@ -228,18 +224,6 @@ public class RoomNetwork : MonoSingleton<RoomNetwork>
         else if (nMessageID == PlayerEnterRoomToC.MESSAGE_ID)
         {
             msg = new PlayerEnterRoomToC();
-        }
-        else if (nMessageID == GameEventIdleToC.MESSAGE_ID)
-        {
-            msg = new GameEventIdleToC();
-        }
-        else if (nMessageID == GameEventStopToC.MESSAGE_ID)
-        {
-            msg = new GameEventStopToC();
-        }
-        else if (nMessageID == GameEventTeleportToC.MESSAGE_ID)
-        {
-            msg = new GameEventTeleportToC();
         }
         else if (nMessageID == WorldSnapShotToC.MESSAGE_ID)
         {

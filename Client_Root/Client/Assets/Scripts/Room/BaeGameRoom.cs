@@ -11,10 +11,9 @@ public class BaeGameRoom : IGameRoom
 
 
     //  Temp
-    private string m_strIP = "175.197.228.224";
+    private string m_strIP = "172.30.1.18";
     private int m_nPort = 9111;
 
-    private Dictionary<int, ICharacter>         m_dicCharacter = new Dictionary<int, ICharacter>();
     private Dictionary<int, IEntity>            m_dicEntity = new Dictionary<int, IEntity>();
 
     private int m_nOldFrameRate = 0;
@@ -96,12 +95,7 @@ public class BaeGameRoom : IGameRoom
         m_fElapsedTime = 0f;
         m_fLastSnapshotTime = 0f;
 
-        m_InputManager.Work(m_MapManager.GetWidth(), m_MapManager.GetHeight(), m_CameraMain, OnClicked);
-
-        foreach (IBehaviorBasedObjectAI obstacle in m_listObstacle)
-        {
-            obstacle.StartAI();
-        }
+        m_InputManager.Work(200, 200/*temp.. always 200, 200*/, m_CameraMain, OnClicked);
 
         StartCoroutine(Loop());
     }
@@ -109,12 +103,7 @@ public class BaeGameRoom : IGameRoom
     private IEnumerator PrepareGame()
     {
         //  prefare for game
-        yield return StartCoroutine(m_MapManager.LoadMap(1));
-
-        foreach (IBehaviorBasedObjectAI obstacle in m_listObstacle)
-        {
-            obstacle.Init();
-        }
+        yield return SceneManager.LoadSceneAsync("TestMap"/*temp.. always TestMap*/, LoadSceneMode.Additive);
 
         PreparationStateToR preparationStateToR = new PreparationStateToR();
         preparationStateToR.m_fState = 1.0f;
@@ -127,41 +116,7 @@ public class BaeGameRoom : IGameRoom
     {
         if (iMsg.GetID() == EnterRoomToC.MESSAGE_ID)
         {
-            EnterRoomToC msg = (EnterRoomToC)iMsg;
-
-            if (msg.m_nResult == 0)
-            {
-                m_nPlayerIndex = msg.m_nPlayerIndex;
-
-                foreach(KeyValuePair<int, string> kv in msg.m_dicPlayers)
-                {
-                    GameObject goCharacter = new GameObject("Player_" + kv.Key.ToString());
-                    MisterBae misterBae = goCharacter.AddComponent<MisterBae>();
-
-                    Stat stat = new Stat();
-                    stat.fSpeed = 4f;
-
-                    m_dicEntity[kv.Key] = misterBae;
-
-                    misterBae.Initialize(stat);
-
-                    if(kv.Key == m_nPlayerIndex)
-                        m_CameraController.FollowTarget(misterBae.GetUITransform());
-                }
-
-                StartCoroutine(PrepareGame());
-            }
-            else
-            {
-                Debug.LogError("Enter Room Fail! m_nResult : " + msg.m_nResult);
-                SceneManager.LoadScene("Lobby");
-            }
-        }
-        else if (iMsg.GetID() == GameEventTeleportToC.MESSAGE_ID)
-        {
-            GameEventTeleportToC msg = (GameEventTeleportToC)iMsg;
-
-            m_dicCharacter[msg.m_nPlayerIndex].GameEvent(iMsg);
+            OnEnterRoomToC((EnterRoomToC)iMsg);
         }
         else if (iMsg.GetID() == PlayerEnterRoomToC.MESSAGE_ID)
         {
@@ -169,56 +124,62 @@ public class BaeGameRoom : IGameRoom
         }
         else if (iMsg.GetID() == GameStartToC.MESSAGE_ID)
         {
-            StartGame();
-        }
-        else if (iMsg.GetID() == GameEventMoveToC.MESSAGE_ID)
-        {
-            GameEventMoveToC msg = (GameEventMoveToC)iMsg;
-
-            Move(msg.m_nPlayerIndex, msg.m_vec3Dest, msg.m_lEventTime / 1000.0f);
-        }
-        else if (iMsg.GetID() == GameEventIdleToC.MESSAGE_ID)
-        {
-            GameEventIdleToC msg = (GameEventIdleToC)iMsg;
-
-            if (!m_dicCharacter.ContainsKey(msg.m_nPlayerIndex))
-            {
-                Debug.LogWarning("PlayerIndex is invalid!, PlayerIndex : " + msg.m_nPlayerIndex);
-                return;
-            }
-
-            m_dicCharacter[msg.m_nPlayerIndex].Idle();
-        }
-        else if (iMsg.GetID() == GameEventStopToC.MESSAGE_ID)
-        {
-            GameEventStopToC msg = (GameEventStopToC)iMsg;
-
-            if (!m_dicCharacter.ContainsKey(msg.m_nPlayerIndex))
-            {
-                Debug.LogWarning("PlayerIndex is invalid!, PlayerIndex : " + msg.m_nPlayerIndex);
-                return;
-            }
-
-            m_dicCharacter[msg.m_nPlayerIndex].Stop();
+            OnGameStartToC((GameStartToC)iMsg);
         }
         else if (iMsg.GetID() == WorldSnapShotToC.MESSAGE_ID)
         {
-            WorldSnapShotToC msg = (WorldSnapShotToC)iMsg;
-
-            if(msg.m_fTime > m_fLastSnapshotTime)
-                m_fLastSnapshotTime = msg.m_fTime;
-
-            int nSec = (int)msg.m_fTime;
-            int n100MilliSec = (int)((msg.m_fTime - nSec) * 10f);
-
-            if (!m_dicWorldSnapShot.ContainsKey(nSec))
-                m_dicWorldSnapShot.Add(nSec, new Dictionary<int, List<WorldSnapShotToC>>());
-
-            if(!m_dicWorldSnapShot[nSec].ContainsKey(n100MilliSec))
-                m_dicWorldSnapShot[nSec].Add(n100MilliSec, new List<WorldSnapShotToC>());
-
-            m_dicWorldSnapShot[nSec][n100MilliSec].Add(msg);
+            OnWorldSnapShotToC((WorldSnapShotToC)iMsg);
         }
+    }
+
+    private void OnEnterRoomToC(EnterRoomToC msg)
+    {
+        if (msg.m_nResult == 0)
+        {
+            m_nPlayerIndex = msg.m_nPlayerIndex;
+
+            foreach(KeyValuePair<int, string> kv in msg.m_dicPlayers)
+            {
+                GameObject goCharacter = new GameObject("Player_" + kv.Key.ToString());
+                MisterBae misterBae = goCharacter.AddComponent<MisterBae>();
+
+                m_dicEntity[kv.Key] = misterBae;
+
+                misterBae.Initialize();
+
+                if(kv.Key == m_nPlayerIndex)
+                    m_CameraController.FollowTarget(misterBae.GetUITransform());
+            }
+
+            StartCoroutine(PrepareGame());
+        }
+        else
+        {
+            Debug.LogError("Enter Room Fail! m_nResult : " + msg.m_nResult);
+            SceneManager.LoadScene("Lobby");
+        }
+    }
+
+    private void OnGameStartToC(GameStartToC msg)
+    {
+        StartGame();
+    }
+
+    private void OnWorldSnapShotToC(WorldSnapShotToC msg)
+    {
+        if(msg.m_fTime > m_fLastSnapshotTime)
+            m_fLastSnapshotTime = msg.m_fTime;
+
+        int nSec = (int)msg.m_fTime;
+        int n100MilliSec = (int)((msg.m_fTime - nSec) * 10f);
+
+        if (!m_dicWorldSnapShot.ContainsKey(nSec))
+            m_dicWorldSnapShot.Add(nSec, new Dictionary<int, List<WorldSnapShotToC>>());
+
+        if(!m_dicWorldSnapShot[nSec].ContainsKey(n100MilliSec))
+            m_dicWorldSnapShot[nSec].Add(n100MilliSec, new List<WorldSnapShotToC>());
+
+        m_dicWorldSnapShot[nSec][n100MilliSec].Add(msg);
     }
 #endregion
 
@@ -232,25 +193,6 @@ public class BaeGameRoom : IGameRoom
         RoomNetwork.Instance.Send(moveToR);
     }
 #endregion
-
-    private void Move(int nPlayerIndex, Vector3 vec3Pos, float fEventTime)
-    {
-        if (!m_dicCharacter.ContainsKey(nPlayerIndex))
-        {
-            Debug.LogError("nPlayerIndex is invalid!, nPlayerIndex : " + nPlayerIndex);
-            return;
-        }
-
-        LinkedList<Node> listPath = GetMovePath(m_dicCharacter[nPlayerIndex].GetPosition(), vec3Pos);
-
-        if (listPath == null)
-        {
-            Debug.LogError("Position is invalid!, vec3Pos : " + vec3Pos);
-            return;
-        }
-
-        m_dicCharacter[nPlayerIndex].Move(listPath, fEventTime);
-    }
 
     private void OnDestroy()
     {
