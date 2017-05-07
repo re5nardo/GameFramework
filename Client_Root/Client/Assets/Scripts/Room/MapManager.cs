@@ -130,34 +130,38 @@ public class MapManager : MonoBehaviour
             m_Map.m_listSpawnPoint.Add(vec3SpawnPoint);
         }
 
-        //  Obstacles
-        XmlNode Obstacles = Map.SelectSingleNode("Obstacles");
-        XmlNodeList listObstacle = Obstacles.SelectNodes("Obstacle");
-        foreach (XmlNode Obstacle in listObstacle)
+		//	TerrainObjects
+		XmlNode TerrainObjects = Map.SelectSingleNode("TerrainObjects");
+		XmlNodeList listTerrainObject = TerrainObjects.SelectNodes("TerrainObject");
+		foreach (XmlNode TerrainObject in listTerrainObject)
         {
-            Polygon obstacle = new Polygon();
+			string strShape = TerrainObject.InnerText.Split (',')[0];
 
-            m_Map.m_listObstacle.Add(obstacle);
+			TerrainObject terrainObject = CreateTerrainObject (strShape);
+			terrainObject.SetData (TerrainObject.InnerText);
 
-            XmlNodeList listVertex = Obstacle.SelectNodes("Vertex");
-            foreach (XmlNode Vertex in listVertex)
-            {
-                string[] arrPos = Vertex.InnerText.Split(',');
-                if (arrPos.Length != 3)
-                {
-                    Debug.LogWarning("arrPos.Length is not 3!");
-                    continue;
-                }
-
-                Vector3 vec3Vertex = Vector3.zero;
-                vec3Vertex.x = float.Parse(arrPos[0]);
-                vec3Vertex.y = float.Parse(arrPos[1]);
-                vec3Vertex.z = float.Parse(arrPos[2]);
-
-                obstacle.m_listVertex.Add(vec3Vertex);
-            }
+			m_Map.m_listTerrainObject.Add(terrainObject);
         }
     }
+		
+	private TerrainObject CreateTerrainObject(string strShape)
+	{
+		if (strShape == TerrainObject.ShapeType.Box2d.ToString ())
+		{
+			return new Box2dShapeTerrainObject();
+		}
+		else if (strShape == TerrainObject.ShapeType.Sphere2d.ToString ())
+		{
+            return new Sphere2dShapeTerrainObject();
+		}
+		else if (strShape == TerrainObject.ShapeType.ConvexPolygon2d.ToString ())
+		{
+            return new ConvexPolygon2dShapeTerrainObject();
+		}
+
+		Debug.LogWarning ("strShape is invalid!, strShape : " + strShape);
+		return null;
+	}
 
     private IEnumerator SeedingNode(Vector3 vec3Pos)
     {
@@ -242,13 +246,13 @@ public class MapManager : MonoBehaviour
         Line2D line = new Line2D(new Vector2(start.x, start.z), new Vector2(dest.x, dest.z));
         Vector2 intersectionPos = Vector2.zero;
 
-        foreach (Polygon polygon in m_Map.m_listObstacle)
-        {
-            if (PhysicsHelper.Collision.FindLineAndPolygonIntersection(line, polygon, ref intersectionPos))
-            {
-                return false;
-            }
-        }
+//        foreach (Polygon polygon in m_Map.m_listObstacle)
+//        {
+//            if (PhysicsHelper.Collision.FindLineAndPolygonIntersection(line, polygon, ref intersectionPos))
+//            {
+//                return false;
+//            }
+//        }
 
         return true;
     }
@@ -260,13 +264,13 @@ public class MapManager : MonoBehaviour
             return false;
         }
 
-        foreach (Polygon polygon in m_Map.m_listObstacle)
-        {
-            if (PhysicsHelper.Collision.PointInConvexPolygon(vec3Pos, polygon))
-            {
-                return false;
-            }
-        }
+//        foreach (Polygon polygon in m_Map.m_listObstacle)
+//        {
+//            if (PhysicsHelper.Collision.PointInConvexPolygon(vec3Pos, polygon))
+//            {
+//                return false;
+//            }
+//        }
 
         return true;
     }

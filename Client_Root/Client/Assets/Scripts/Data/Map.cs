@@ -10,7 +10,5 @@ public class Map
     public Rect3D               m_rectStartArea = default(Rect3D);
     public List<Vector3>        m_listCheckPoint = new List<Vector3>();
     public List<Vector3>        m_listSpawnPoint = new List<Vector3>();
-    public List<Polygon>        m_listObstacle = new List<Polygon>();
-    public List<INode>          m_listNode = new List<INode>();
-    public List<IEdge>          m_listEdge = new List<IEdge>();
+	public List<TerrainObject> 	m_listTerrainObject = new List<TerrainObject>();
 }

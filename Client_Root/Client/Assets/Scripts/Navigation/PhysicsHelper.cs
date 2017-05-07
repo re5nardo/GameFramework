@@ -106,7 +106,7 @@ namespace PhysicsHelper
             m.distance = -Vector3.Dot(n, p.m_listVertex[0]);
 
             // No intersection if sphere not intersecting plane of polygon
-            //if (!TestSpherePlane(s, m)) return false;
+            if (!TestSpherePlane(s, m)) return false;
 
             // Test to see if any one of the polygon edges pierces the sphere   
             for (int k = p.m_listVertex.Count, i = 0, j = k - 1; i < k; j = i, i++)

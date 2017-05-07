@@ -35,7 +35,7 @@ public class MapEditor : EditorWindow
         Normal,
         AddCheckPoint,
         AddSpawnPoint,
-        AddObstacleVertex,
+        AddConvexPolygon2dVertex,
     }
 
     private const float MOUSE_CLICK_THRESHOLD = 1;
@@ -46,13 +46,14 @@ public class MapEditor : EditorWindow
     private Vector2 m_vec2MainScrollPos = Vector2.zero;
     private Vector2 m_vec2CheckPointsScrollPos = Vector2.zero;
     private Vector2 m_vec2SpawnPointsScrollPos = Vector2.zero;
-    private Vector2 m_vec2ObstaclesScrollPos = Vector2.zero;
+    private Vector2 m_vec2TerrainObjectsScrollPos = Vector2.zero;
 
     private List<bool> m_listSpawnPointsHighlight = new List<bool>();
-    private List<AnimBool> m_listAnimBool = new List<AnimBool>();
+    private List<AnimBool> m_listAnimBool_TerrainObject = new List<AnimBool>();
 
-    private int m_ObstacleIndex = -1;
+    private int m_ConvexPolygon2dIndex = -1;
 
+    private TerrainObject.ShapeType m_ShapeTypeSelected = TerrainObject.ShapeType.Box2d;
 
     private Map m_Map = new Map();
     private State m_State = State.Normal;
@@ -96,33 +97,21 @@ public class MapEditor : EditorWindow
 
         //  Start area
         XmlNode StartArea = Map.SelectSingleNode("StartArea");
-        string[] arrRect = StartArea.InnerText.Split(',');
-        if (arrRect.Length != 5)
+        string[] arrRect = StartArea.InnerText.Split('/');
+        if (arrRect.Length != 3)
         {
-            Debug.LogWarning("arrRect.Length is not 5!");
+            Debug.LogWarning("arrRect.Length is not 3!");
             return;
         }
 
-        map.m_rectStartArea = new Rect3D(new Vector3(float.Parse(arrRect[0]), float.Parse(arrRect[1]), float.Parse(arrRect[2])), float.Parse(arrRect[3]), float.Parse(arrRect[4]));
+        map.m_rectStartArea = new Rect3D(arrRect[0].ToVector3(), float.Parse(arrRect[1]), float.Parse(arrRect[2]));
 
         //  Check points
         XmlNode CheckPoints = Map.SelectSingleNode("CheckPoints");
         XmlNodeList listCheckPoint = CheckPoints.SelectNodes("CheckPoint");
         foreach (XmlNode CheckPoint in listCheckPoint)
         {
-            string[] arrPos = CheckPoint.InnerText.Split(',');
-            if (arrPos.Length != 3)
-            {
-                Debug.LogWarning("arrPos.Length is not 3!");
-                continue;
-            }
-
-            Vector3 vec3CheckPoint = Vector3.zero;
-            vec3CheckPoint.x = float.Parse(arrPos[0]);
-            vec3CheckPoint.y = float.Parse(arrPos[1]);
-            vec3CheckPoint.z = float.Parse(arrPos[2]);
-
-            AddCheckPoint(vec3CheckPoint);
+            AddCheckPoint(CheckPoint.InnerText.ToVector3());
         }
 
         //  Spawn points
@@ -130,45 +119,20 @@ public class MapEditor : EditorWindow
         XmlNodeList listSpawnPoint = SpawnPoints.SelectNodes("SpawnPoint");
         foreach (XmlNode SpawnPoint in listSpawnPoint)
         {
-            string[] arrPos = SpawnPoint.InnerText.Split(',');
-            if (arrPos.Length != 3)
-            {
-                Debug.LogWarning("arrPos.Length is not 3!");
-                continue;
-            }
-
-            Vector3 vec3SpawnPoint = Vector3.zero;
-            vec3SpawnPoint.x = float.Parse(arrPos[0]);
-            vec3SpawnPoint.y = float.Parse(arrPos[1]);
-            vec3SpawnPoint.z = float.Parse(arrPos[2]);
-
-            AddSpawnPoint(vec3SpawnPoint);
+            AddSpawnPoint(SpawnPoint.InnerText.ToVector3());
         }
 
-        //  Obstacles
-        XmlNode Obstacles = Map.SelectSingleNode("Obstacles");
-        XmlNodeList listObstacle = Obstacles.SelectNodes("Obstacle");
-        foreach (XmlNode Obstacle in listObstacle)
+        //  TerrainObjects
+        XmlNode TerrainObjects = Map.SelectSingleNode("TerrainObjects");
+        XmlNodeList listTerrainObject = TerrainObjects.SelectNodes("TerrainObject");
+        foreach (XmlNode TerrainObject in listTerrainObject)
         {
-            Polygon obstacle =  AddObstacle();
+            string strShape = TerrainObject.InnerText.Split('/')[0];
 
-            XmlNodeList listVertex = Obstacle.SelectNodes("Vertex");
-            foreach (XmlNode Vertex in listVertex)
-            {
-                string[] arrPos = Vertex.InnerText.Split(',');
-                if (arrPos.Length != 3)
-                {
-                    Debug.LogWarning("arrPos.Length is not 3!");
-                    continue;
-                }
-                    
-                Vector3 vec3Vertex = Vector3.zero;
-                vec3Vertex.x = float.Parse(arrPos[0]);
-                vec3Vertex.y = float.Parse(arrPos[1]);
-                vec3Vertex.z = float.Parse(arrPos[2]);
+            TerrainObject terrainObject = CreateTerrainObject(strShape);
+            terrainObject.SetData(TerrainObject.InnerText);
 
-                obstacle.m_listVertex.Add(vec3Vertex);
-            }
+            AddTerrainObject(terrainObject);
         }
     }
 
@@ -205,7 +169,7 @@ public class MapEditor : EditorWindow
 
         //  start area
         XmlNode StartArea = xmlDoc.CreateElement("StartArea");
-        StartArea.InnerText = m_Map.m_rectStartArea.center.x.ToString() + "," + m_Map.m_rectStartArea.center.y.ToString() + "," + m_Map.m_rectStartArea.center.z.ToString() + "," + m_Map.m_rectStartArea.width.ToString() + "," + m_Map.m_rectStartArea.height.ToString();
+        StartArea.InnerText = m_Map.m_rectStartArea.center.ToString() + '/' + m_Map.m_rectStartArea.width.ToString() + '/' + m_Map.m_rectStartArea.height.ToString();
         Map.AppendChild(StartArea);
 
         //  check points
@@ -215,7 +179,7 @@ public class MapEditor : EditorWindow
         foreach (Vector3 vec3CheckPoint in m_Map.m_listCheckPoint)
         {
             XmlNode CheckPoint = xmlDoc.CreateElement("CheckPoint");
-            CheckPoint.InnerText = vec3CheckPoint.x.ToString() + "," + vec3CheckPoint.y.ToString() + "," + vec3CheckPoint.z.ToString();
+            CheckPoint.InnerText = vec3CheckPoint.ToString();
             CheckPoints.AppendChild(CheckPoint);
         }
 
@@ -226,49 +190,21 @@ public class MapEditor : EditorWindow
         foreach (Vector3 vec3SpawnPoint in m_Map.m_listSpawnPoint)
         {
             XmlNode SpawnPoint = xmlDoc.CreateElement("SpawnPoint");
-            SpawnPoint.InnerText = vec3SpawnPoint.x.ToString() + "," + vec3SpawnPoint.y.ToString() + "," + vec3SpawnPoint.z.ToString();
+            SpawnPoint.InnerText = vec3SpawnPoint.ToString();
             SpawnPoints.AppendChild(SpawnPoint);
         }
 
-        //  obstacles
-        XmlNode Obstacles = xmlDoc.CreateElement("Obstacles");
-        Map.AppendChild(Obstacles);
+		//	terrain objects
+		XmlNode TerrainObjectsNode = xmlDoc.CreateElement("TerrainObjects");
+		Map.AppendChild(TerrainObjectsNode);
 
-        foreach (Polygon polyObstacle in m_Map.m_listObstacle)
+		foreach (TerrainObject terrainObject in m_Map.m_listTerrainObject)
         {
-            XmlNode Obstacle = xmlDoc.CreateElement("Obstacle");
+			XmlNode terrainObjectNode = xmlDoc.CreateElement("TerrainObject");
+			terrainObjectNode.InnerText = terrainObject.ToString();
 
-            foreach (Vector3 vec3Vertex in polyObstacle.m_listVertex)
-            {
-                XmlNode Vertex = xmlDoc.CreateElement("Vertex");
-                Vertex.InnerText = vec3Vertex.x.ToString() + "," + vec3Vertex.y.ToString() + "," + vec3Vertex.z.ToString();
-                Obstacle.AppendChild(Vertex);
-            }
-
-            Obstacles.AppendChild(Obstacle);
+			TerrainObjectsNode.AppendChild(terrainObjectNode);
         }
-
-//        //  nodes
-//        XmlNode Nodes = xmlDoc.CreateElement("Nodes");
-//        xmlDoc.AppendChild(Nodes);
-//
-//        foreach (INode iNode in m_Map.m_listNode)
-//        {
-//            XmlNode Node = xmlDoc.CreateElement("Node");
-//            Node.InnerText = iNode.ToString();
-//            Obstacles.AppendChild(Node);
-//        }
-//
-//        //  edges
-//        XmlNode Edges = xmlDoc.CreateElement("Edges");
-//        xmlDoc.AppendChild(Edges);
-//
-//        foreach (IEdge iEdge in m_Map.m_listEdge)
-//        {
-//            XmlNode Edge = xmlDoc.CreateElement("Edge");
-//            Edge.InnerText = iEdge.ToString();
-//            Obstacles.AppendChild(Edge);
-//        }
 
         string strFilePath = EditorUtility.SaveFilePanel("Save Map", "", "map_" + m_Map.m_nID, "xml");
         if (strFilePath.Length == 0)
@@ -277,6 +213,44 @@ public class MapEditor : EditorWindow
         }
 
         XmlEditor.Instance.SaveXml(strFilePath, xmlDoc);
+    }
+
+    private TerrainObject CreateTerrainObject(string strShape)
+    {
+        if (strShape == TerrainObject.ShapeType.Box2d.ToString())
+        {
+            return new Box2dShapeTerrainObject();
+        }
+        else if (strShape == TerrainObject.ShapeType.Sphere2d.ToString())
+        {
+            return new Sphere2dShapeTerrainObject();
+        }
+        else if (strShape == TerrainObject.ShapeType.ConvexPolygon2d.ToString())
+        {
+            return new ConvexPolygon2dShapeTerrainObject();
+        }
+
+        Debug.LogWarning("strShape is invalid!, strShape : " + strShape);
+        return null;
+    }
+
+    private TerrainObject CreateTerrainObject(TerrainObject.ShapeType shapeType)
+    {
+        if (shapeType == TerrainObject.ShapeType.Box2d)
+        {
+            return new Box2dShapeTerrainObject();
+        }
+        else if (shapeType == TerrainObject.ShapeType.Sphere2d)
+        {
+            return new Sphere2dShapeTerrainObject();
+        }
+        else if (shapeType == TerrainObject.ShapeType.ConvexPolygon2d)
+        {
+            return new ConvexPolygon2dShapeTerrainObject();
+        }
+
+        Debug.LogWarning("strShape is invalid!, strShape : " + shapeType.ToString());
+        return null;
     }
 
     private void SceneGUIEventHandler()
@@ -339,44 +313,46 @@ public class MapEditor : EditorWindow
         m_listSpawnPointsHighlight.RemoveAt(nIndex);
     }
 
-    private Polygon AddObstacle()
-    {
-        Polygon obstacle = new Polygon();
-
-        m_Map.m_listObstacle.Add(obstacle);
+    private TerrainObject AddTerrainObject(TerrainObject terrainObject)
+	{
+        m_Map.m_listTerrainObject.Add(terrainObject);
 
         AnimBool animBool = new AnimBool();
         animBool.value = true;
         animBool.valueChanged.AddListener(Repaint);
         animBool.target = true;
 
-        m_listAnimBool.Add(animBool);
+        m_listAnimBool_TerrainObject.Add(animBool);
 
-        return obstacle;
-    }
+        return terrainObject;
+	}
 
-    private void RemoveObstacle(int nIndex)
-    {
-        m_Map.m_listObstacle.RemoveAt(nIndex);
+	private void RemoveTerrainObject(int nIndex)
+	{
+        m_Map.m_listTerrainObject.RemoveAt(nIndex);
 
-        m_listAnimBool.RemoveAt(nIndex);
+        m_listAnimBool_TerrainObject.RemoveAt(nIndex);
 
-        if (nIndex == m_ObstacleIndex)
+        if (nIndex == m_ConvexPolygon2dIndex)
         {
             m_State = State.Normal;
 
-            m_ObstacleIndex = -1;
+            m_ConvexPolygon2dIndex = -1;
         }
+	}
+
+    private void AddConvexPolygon2dVertex(int nTerrainObjectIndex, Vector3 vec3Pos = default(Vector3))
+    {
+        ConvexPolygon2dShapeTerrainObject terrainObject = (ConvexPolygon2dShapeTerrainObject)m_Map.m_listTerrainObject[nTerrainObjectIndex];
+
+        terrainObject.AddVertex(vec3Pos);
     }
 
-    private void AddObstacleVertex(int nObstacleIndex, Vector3 vec3Pos = default(Vector3))
+    private void RemoveConvexPolygon2dVertex(int nTerrainObjectIndex, int nVertexIndex)
     {
-        m_Map.m_listObstacle[nObstacleIndex].m_listVertex.Add(vec3Pos);
-    }
+        ConvexPolygon2dShapeTerrainObject terrainObject = (ConvexPolygon2dShapeTerrainObject)m_Map.m_listTerrainObject[nTerrainObjectIndex];
 
-    private void RemoveObstacleVertex(int nObstacleIndex, int nVertexIndex)
-    {
-        m_Map.m_listObstacle[nObstacleIndex].m_listVertex.RemoveAt(nVertexIndex);
+        terrainObject.RemoveVertex(nVertexIndex);
     }
 
 	#region GUI
@@ -409,7 +385,7 @@ public class MapEditor : EditorWindow
         EditorGUILayout.Space();
         EditorGUILayout.Space();
 
-        DrawObstaclesUI();
+		DrawTerrainObjectsUI();
 
         EditorGUILayout.EndScrollView();
 
@@ -500,28 +476,30 @@ public class MapEditor : EditorWindow
         EditorGUILayout.EndScrollView();
     }
 
-    private void DrawObstaclesUI()
-    {
+	private void DrawTerrainObjectsUI()
+	{
         EditorGUILayout.BeginHorizontal();
         {
-            EditorGUILayout.LabelField("[Obstacles]", EditorStyles.boldLabel, GUILayout.Width(150f));
+			EditorGUILayout.LabelField("[TerrainObjects]", EditorStyles.boldLabel, GUILayout.Width(150f));
 
-            if (GUILayout.Button("Add Obstacle", GUILayout.Width(150f)))
+            if (GUILayout.Button("Add TerrainObject", GUILayout.Width(150f)))
             {
-                OnObstacleAddClicked();
+                OnTerrainObjectAddClicked();
             }
+
+            m_ShapeTypeSelected = (TerrainObject.ShapeType)EditorGUILayout.EnumPopup("ShapeType to add:", m_ShapeTypeSelected, GUILayout.Width(300f));
         }
         EditorGUILayout.EndHorizontal();
 
         GUILayout.Space(10f);
 
-        m_vec2ObstaclesScrollPos = EditorGUILayout.BeginScrollView(m_vec2ObstaclesScrollPos, GUILayout.Height(300f));
-        for (int nIndex = 0; nIndex < m_Map.m_listObstacle.Count; ++nIndex)
+        m_vec2TerrainObjectsScrollPos = EditorGUILayout.BeginScrollView(m_vec2TerrainObjectsScrollPos, GUILayout.Height(300f));
+		for (int nIndex = 0; nIndex < m_Map.m_listTerrainObject.Count; ++nIndex)
         {
-            DrawObstacleItem(nIndex);
+            DrawTerrainObjectUI(nIndex);
         }
         EditorGUILayout.EndScrollView();
-    }
+	}
 
     private void DrawCheckPointItem(int nIndex)
     {
@@ -587,13 +565,13 @@ public class MapEditor : EditorWindow
         EditorGUILayout.EndHorizontal();
     }
 
-    private void DrawObstacleItem(int nIndex)
-    {
+	private void DrawTerrainObjectUI(int nIndex)
+	{
         EditorGUILayout.BeginHorizontal();
         {
             GUIStyle style = new GUIStyle();
 
-            if (m_State == State.AddObstacleVertex && nIndex == m_ObstacleIndex)
+            if (m_State == State.AddConvexPolygon2dVertex && nIndex == m_ConvexPolygon2dIndex)
             {
                 style.normal.textColor = Color.yellow;
             }
@@ -602,71 +580,169 @@ public class MapEditor : EditorWindow
                 style.normal.textColor = Color.black;
             }
 
-            m_listAnimBool[nIndex].target = EditorGUILayout.Foldout(m_listAnimBool[nIndex].target, "Obstacle_" + nIndex.ToString(), style);
+            string strTitle = string.Format("TerrainObject_{0} ({1})", nIndex, m_Map.m_listTerrainObject[nIndex].GetShapeType().ToString());
+            m_listAnimBool_TerrainObject[nIndex].target = EditorGUILayout.Foldout(m_listAnimBool_TerrainObject[nIndex].target, strTitle, style);
 
-            if (GUILayout.Button("Remove Obstacle", GUILayout.Width(150f)))
+            if (GUILayout.Button("Remove TerrainObject", GUILayout.Width(150f)))
             {
-                OnObstacleRemoveClicked(nIndex);
+                OnTerrainObjectRemoveClicked(nIndex);
             }
 
-            if (GUILayout.Button("Add", GUILayout.Width(150f)))
+            if (nIndex < m_Map.m_listTerrainObject.Count && m_Map.m_listTerrainObject[nIndex].GetShapeType() == TerrainObject.ShapeType.ConvexPolygon2d)
             {
-                OnObstacleVertexAddClicked(nIndex);
-            }
+                if (GUILayout.Button("Add", GUILayout.Width(150f)))
+                {
+                    OnConvexPolygon2dVertexAddClicked(nIndex);
+                }
 
-            if (GUILayout.Button("Add From Click", GUILayout.Width(150f)))
-            {
-                OnObstacleVertexAddFromClickClicked(nIndex);
+                if (GUILayout.Button("Add From Click", GUILayout.Width(150f)))
+                {
+                    OnConvexPolygon2dVertexAddFromClickClicked(nIndex);
+                }
             }
         }
         EditorGUILayout.EndHorizontal();
 
         EditorGUILayout.Space();
 
-        if (m_listAnimBool.Count - 1 >= nIndex)
+        //  TerrainObject may be removed at OnTerrainObjectRemoveClicked above
+        if (nIndex >= m_Map.m_listTerrainObject.Count)   
         {
-            if (EditorGUILayout.BeginFadeGroup(m_listAnimBool[nIndex].faded))
-            {
-                EditorGUI.indentLevel++;
-
-                EditorGUILayout.BeginVertical(); 
-                {
-                    for (int nVertexIndex = 0; nVertexIndex < m_Map.m_listObstacle[nIndex].m_listVertex.Count; ++nVertexIndex)
-                    {
-                        DrawObstacleVertexItem(nIndex, nVertexIndex);
-                    }
-                }
-                EditorGUILayout.EndVertical();
-
-                EditorGUI.indentLevel--;
-            }
-            EditorGUILayout.EndFadeGroup();
+            return;
         }
-    }
 
-    private void DrawObstacleVertexItem(int nObstacleIndex, int nVertexIndex)
+        if (EditorGUILayout.BeginFadeGroup(m_listAnimBool_TerrainObject[nIndex].faded))
+        {
+            EditorGUI.indentLevel++;
+
+            EditorGUILayout.BeginVertical();
+            {
+                TerrainObject.ShapeType shapeType = m_Map.m_listTerrainObject[nIndex].GetShapeType();
+                if (shapeType == TerrainObject.ShapeType.Box2d) DrawBox2dShapeTerrainObjectUI(nIndex);
+                else if (shapeType == TerrainObject.ShapeType.Sphere2d) DrawSphere2dShapeTerrainObjectUI(nIndex);
+                else if (shapeType == TerrainObject.ShapeType.ConvexPolygon2d) DrawConvexPolygon2dShapeTerrainObjectUI(nIndex);
+            }
+            EditorGUILayout.EndVertical();
+
+            EditorGUI.indentLevel--;
+        }
+        EditorGUILayout.EndFadeGroup();
+	}
+
+    private void DrawBox2dShapeTerrainObjectUI(int nIndex)
     {
+        Box2dShapeTerrainObject terrainObject = (Box2dShapeTerrainObject)m_Map.m_listTerrainObject[nIndex];
+
         EditorGUILayout.BeginHorizontal();
         {
             EditorGUILayout.LabelField("Position", GUILayout.MaxWidth(65f));
 
             GUILayout.Space(5f);
 
-            Vector3 vec3OldValue = m_Map.m_listObstacle[nObstacleIndex].m_listVertex[nVertexIndex];
-            m_Map.m_listObstacle[nObstacleIndex].m_listVertex[nVertexIndex] = EditorGUILayout.Vector3Field("", m_Map.m_listObstacle[nObstacleIndex].m_listVertex[nVertexIndex]);
-            if (vec3OldValue != m_Map.m_listObstacle[nObstacleIndex].m_listVertex[nVertexIndex])
+            Vector3 vec3OldValue = terrainObject.GetPosition();
+            terrainObject.SetPosition(EditorGUILayout.Vector3Field("", vec3OldValue));
+            if (vec3OldValue != terrainObject.GetPosition())
             {
                 SceneView.RepaintAll();
             }
+        }
+        EditorGUILayout.EndHorizontal();
 
-            GUILayout.Space(10f);
+        EditorGUILayout.BeginHorizontal();
+        {
+            EditorGUILayout.LabelField("Rotation", GUILayout.MaxWidth(65f));
 
-            if (GUILayout.Button("Remove Vertex", GUILayout.Width(150f)))
+            GUILayout.Space(5f);
+
+            Vector3 vec3OldValue = terrainObject.GetRotation();
+            terrainObject.SetRotation(EditorGUILayout.Vector3Field("", vec3OldValue));
+            if (vec3OldValue != terrainObject.GetRotation())
             {
-                OnObstacleVertexRemoveClicked(nObstacleIndex, nVertexIndex);
+                SceneView.RepaintAll();
             }
         }
         EditorGUILayout.EndHorizontal();
+
+        EditorGUILayout.BeginHorizontal();
+        {
+            EditorGUILayout.LabelField("HalfExtents", GUILayout.MaxWidth(65f));
+
+            GUILayout.Space(5f);
+
+            Vector3 vec3OldValue = terrainObject.GetHalfExtents();
+            terrainObject.SetHalfExtents(EditorGUILayout.Vector3Field("", vec3OldValue));
+            if (vec3OldValue != terrainObject.GetHalfExtents())
+            {
+                SceneView.RepaintAll();
+            }
+        }
+        EditorGUILayout.EndHorizontal();
+    }
+
+    private void DrawSphere2dShapeTerrainObjectUI(int nIndex)
+    {
+        Sphere2dShapeTerrainObject terrainObject = (Sphere2dShapeTerrainObject)m_Map.m_listTerrainObject[nIndex];
+
+        EditorGUILayout.BeginHorizontal();
+        {
+            EditorGUILayout.LabelField("Position", GUILayout.MaxWidth(65f));
+
+            GUILayout.Space(5f);
+
+            Vector3 vec3OldValue = terrainObject.GetPosition();
+            terrainObject.SetPosition(EditorGUILayout.Vector3Field("", vec3OldValue));
+            if (vec3OldValue != terrainObject.GetPosition())
+            {
+                SceneView.RepaintAll();
+            }
+        }
+        EditorGUILayout.EndHorizontal();
+
+        EditorGUILayout.BeginHorizontal();
+        {
+            EditorGUILayout.LabelField("Radius", GUILayout.MaxWidth(65f));
+
+            GUILayout.Space(5f);
+
+            float fOldValue = terrainObject.GetRadius();
+            terrainObject.SetRadius(EditorGUILayout.FloatField("", fOldValue));
+            if (fOldValue != terrainObject.GetRadius())
+            {
+                SceneView.RepaintAll();
+            }
+        }
+        EditorGUILayout.EndHorizontal();
+    }
+
+    private void DrawConvexPolygon2dShapeTerrainObjectUI(int nIndex)
+    {
+        ConvexPolygon2dShapeTerrainObject terrainObject = (ConvexPolygon2dShapeTerrainObject)m_Map.m_listTerrainObject[nIndex];
+        List<Vector3> listVertex = terrainObject.GetVertices();
+
+        for (int nVertexIndex = 0; nVertexIndex < listVertex.Count; ++nVertexIndex)
+        {
+            EditorGUILayout.BeginHorizontal();
+            {
+                EditorGUILayout.LabelField("Position", GUILayout.MaxWidth(65f));
+
+                GUILayout.Space(5f);
+
+                Vector3 vec3OldValue = listVertex[nVertexIndex];
+                terrainObject.SetVertex(nVertexIndex, EditorGUILayout.Vector3Field("", vec3OldValue));
+                if (vec3OldValue != terrainObject.GetVertex(nVertexIndex))
+                {
+                    SceneView.RepaintAll();
+                }
+
+                GUILayout.Space(10f);
+
+                if (GUILayout.Button("Remove Vertex", GUILayout.Width(150f)))
+                {
+                    OnConvexPolygon2dVertexRemoveClicked(nIndex, nVertexIndex);
+                }
+            }
+            EditorGUILayout.EndHorizontal();
+        }
     }
 
     private void DrawAdditionalInfo()
@@ -675,11 +751,11 @@ public class MapEditor : EditorWindow
 
         EditorGUILayout.BeginHorizontal();
         {
-            EditorGUILayout.LabelField("State : " + m_State.ToString(), GUILayout.Width(200f));
+            EditorGUILayout.LabelField("State : " + m_State.ToString(), GUILayout.Width(250f));
 
-            if (m_State == State.AddObstacleVertex)
+            if (m_State == State.AddConvexPolygon2dVertex)
             {
-                EditorGUILayout.LabelField("Selected Obstacle Index : " + m_ObstacleIndex.ToString(), GUILayout.Width(200f));
+                EditorGUILayout.LabelField("Selected ConvexPolygon2d Index : " + m_ConvexPolygon2dIndex.ToString(), GUILayout.Width(300f));
             }
         }
         EditorGUILayout.EndHorizontal();
@@ -711,8 +787,8 @@ public class MapEditor : EditorWindow
         DrawMapBorder();
         DrawStartAreaBorder();
         DrawCheckPoints();
-        DrawObstacleBorders();
         DrawSpawnPoints();
+        DrawTerrainObjects();
     }
 
     private void DrawMapBorder()
@@ -745,30 +821,6 @@ public class MapEditor : EditorWindow
         Handles.DrawPolyLine(new Vector3[]{vec3TopLeft, vec3TopRight, vec3BottomRight, vec3BottomLeft, vec3TopLeft});
 
         Handles.color = colorOld;
-    }
-
-    private void DrawObstacleBorders()
-    {
-        foreach (Polygon obstacle in m_Map.m_listObstacle)
-        {
-            if (obstacle.m_listVertex.Count == 0)
-            {
-                continue;
-            }
-
-            List<Vector3> listVertex = new List<Vector3>(obstacle.m_listVertex);
-
-            //  draw vertex
-            for (int nIndex = 0; nIndex < listVertex.Count; ++nIndex)
-            {
-                Handles.SphereCap(nIndex, listVertex[nIndex], Quaternion.identity, 1);
-            }
-
-            //  draw line
-            listVertex.Add(obstacle.m_listVertex[0]);
-
-            Handles.DrawPolyLine(listVertex.ToArray());
-        }
     }
 
     private void DrawCheckPoints()
@@ -805,6 +857,86 @@ public class MapEditor : EditorWindow
             Handles.color = colorOld;
         }
     }
+
+    private void DrawTerrainObjects()
+    {
+        for (int nIndex = 0; nIndex < m_Map.m_listTerrainObject.Count; ++nIndex)
+        {
+            TerrainObject.ShapeType shapeType = m_Map.m_listTerrainObject[nIndex].GetShapeType();
+            if (shapeType == TerrainObject.ShapeType.Box2d) DrawBox2dShapeTerrainObject(nIndex);
+            else if (shapeType == TerrainObject.ShapeType.Sphere2d) DrawSphere2dShapeTerrainObject(nIndex);
+            else if (shapeType == TerrainObject.ShapeType.ConvexPolygon2d) DrawConvexPolygon2dShapeTerrainObject(nIndex);
+        }
+    }
+
+    private void DrawBox2dShapeTerrainObject(int nIndex)
+    {
+        Box2dShapeTerrainObject terrainObject = (Box2dShapeTerrainObject)m_Map.m_listTerrainObject[nIndex];
+
+        Vector3 pos = terrainObject.GetPosition();
+        Vector3 rot = terrainObject.GetRotation();
+        Vector3 half = terrainObject.GetHalfExtents();
+
+        Vector3 p1 = new Vector3(-half.x, 0, -half.z);
+        Vector3 p2 = new Vector3(half.x, 0, -half.z);
+        Vector3 p3 = new Vector3(half.x, 0, half.z);
+        Vector3 p4 = new Vector3(-half.x, 0, half.z);
+
+        p1 = Quaternion.Euler(0, rot.y, 0) * p1 + pos;
+        p2 = Quaternion.Euler(0, rot.y, 0) * p2 + pos;
+        p3 = Quaternion.Euler(0, rot.y, 0) * p3 + pos;
+        p4 = Quaternion.Euler(0, rot.y, 0) * p4 + pos;
+
+        Handles.SphereCap(0, p1, Quaternion.identity, 1);
+        Handles.SphereCap(0, p2, Quaternion.identity, 1);
+        Handles.SphereCap(0, p3, Quaternion.identity, 1);
+        Handles.SphereCap(0, p4, Quaternion.identity, 1);
+
+        Handles.DrawLine(p1, p2);
+        Handles.DrawLine(p2, p3);
+        Handles.DrawLine(p3, p4);
+        Handles.DrawLine(p4, p1);
+    }
+
+    private void DrawSphere2dShapeTerrainObject(int nIndex)
+    {
+        Sphere2dShapeTerrainObject terrainObject = (Sphere2dShapeTerrainObject)m_Map.m_listTerrainObject[nIndex];
+
+        Vector3 pos = terrainObject.GetPosition();
+        float fRadius = terrainObject.GetRadius();
+
+        Vector3 p1 = new Vector3(pos.x - fRadius, 0, pos.z);
+        Vector3 p2 = new Vector3(pos.x, 0, pos.z - fRadius);
+        Vector3 p3 = new Vector3(pos.x + fRadius, 0, pos.z);
+        Vector3 p4 = new Vector3(pos.x, 0, pos.z + fRadius);
+
+        Handles.SphereCap(0, p1, Quaternion.identity, 1);
+        Handles.SphereCap(0, p2, Quaternion.identity, 1);
+        Handles.SphereCap(0, p3, Quaternion.identity, 1);
+        Handles.SphereCap(0, p4, Quaternion.identity, 1);
+
+        Handles.DrawWireDisc(terrainObject.GetPosition(), Vector3.up, fRadius);
+    }
+
+    private void DrawConvexPolygon2dShapeTerrainObject(int nIndex)
+    {
+        ConvexPolygon2dShapeTerrainObject terrainObject = (ConvexPolygon2dShapeTerrainObject)m_Map.m_listTerrainObject[nIndex];
+
+        List<Vector3> listVertex = new List<Vector3>(terrainObject.GetVertices());
+        if (listVertex.Count == 0)
+        {
+            return;
+        }
+
+        foreach(Vector3 vertex in listVertex)
+        {
+            Handles.SphereCap(0, vertex, Quaternion.identity, 1);
+        }
+
+        listVertex.Add(listVertex[0]);
+            
+        Handles.DrawPolyLine(listVertex.ToArray());
+    }
     #endregion
 
 	#region Event Handlers
@@ -834,9 +966,9 @@ public class MapEditor : EditorWindow
         {
             AddSpawnPoint(vec3Pos);
         }
-        else if (m_State == State.AddObstacleVertex)
+        else if (m_State == State.AddConvexPolygon2dVertex)
         {
-            AddObstacleVertex(m_ObstacleIndex, vec3Pos);
+            AddConvexPolygon2dVertex(m_ConvexPolygon2dIndex, vec3Pos);
         }
 
         Repaint();
@@ -866,37 +998,37 @@ public class MapEditor : EditorWindow
         m_State = State.AddSpawnPoint;
     }
 
-    private void OnObstacleAddClicked()
+    private void OnTerrainObjectAddClicked()
     {
-        AddObstacle();
+        AddTerrainObject(CreateTerrainObject(m_ShapeTypeSelected));
 
         SceneView.RepaintAll();
     }
 
-    private void OnObstacleRemoveClicked(int nIndex)
+    private void OnTerrainObjectRemoveClicked(int nIndex)
     {
-        RemoveObstacle(nIndex);
+        RemoveTerrainObject(nIndex);
 
         SceneView.RepaintAll();
     }
 
-    private void OnObstacleVertexAddClicked(int nObstacleIndex)
+    private void OnConvexPolygon2dVertexAddClicked(int nTerrainObjectIndex)
     {
-        AddObstacleVertex(nObstacleIndex);
+        AddConvexPolygon2dVertex(nTerrainObjectIndex);
 
         SceneView.RepaintAll();
     }
 
-    private void OnObstacleVertexAddFromClickClicked(int nIndex)
+    private void OnConvexPolygon2dVertexAddFromClickClicked(int nIndex)
     {
-        m_State = State.AddObstacleVertex;
+        m_State = State.AddConvexPolygon2dVertex;
 
-        m_ObstacleIndex = nIndex;
+        m_ConvexPolygon2dIndex = nIndex;
     }
 
-    private void OnObstacleVertexRemoveClicked(int nObstacleIndex, int nVertexIndex)
+    private void OnConvexPolygon2dVertexRemoveClicked(int nTerrainObjectIndex, int nVertexIndex)
     {
-        RemoveObstacleVertex(nObstacleIndex, nVertexIndex);
+        RemoveConvexPolygon2dVertex(nTerrainObjectIndex, nVertexIndex);
 
         SceneView.RepaintAll();
     }
