@@ -93,9 +93,6 @@
     <ClInclude Include="..\CommonSources\Message\IDeserializable.h">
       <Filter>헤더 파일\Messages</Filter>
     </ClInclude>
-    <ClInclude Include="..\CommonSources\Message\IJSONObjectable.h">
-      <Filter>헤더 파일\Messages</Filter>
-    </ClInclude>
     <ClInclude Include="..\CommonSources\Message\IMessage.h">
       <Filter>헤더 파일\Messages</Filter>
     </ClInclude>
@@ -103,9 +100,6 @@
       <Filter>헤더 파일\Messages</Filter>
     </ClInclude>
     <ClInclude Include="..\CommonSources\Message\ISerializable.h">
-      <Filter>헤더 파일\Messages</Filter>
-    </ClInclude>
-    <ClInclude Include="..\CommonSources\Message\JSONHelper.h">
       <Filter>헤더 파일\Messages</Filter>
     </ClInclude>
     <ClInclude Include="Messages\JoinLobbyToC.h">
@@ -138,9 +132,6 @@
     <ClInclude Include="..\CommonSources\Message\MessageIDs.h">
       <Filter>헤더 파일\Messages</Filter>
     </ClInclude>
-    <ClInclude Include="..\CommonSources\Message\IJSONObjectConvertible.h">
-      <Filter>헤더 파일\Messages</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -166,9 +157,6 @@
     </ClCompile>
     <ClCompile Include="..\CommonSources\Network\NetworkCore.cpp">
       <Filter>소스 파일\Network</Filter>
-    </ClCompile>
-    <ClCompile Include="..\CommonSources\Message\JSONHelper.cpp">
-      <Filter>소스 파일\Messages</Filter>
     </ClCompile>
     <ClCompile Include="Messages\JoinLobbyToC.cpp">
       <Filter>소스 파일\Messages\ToClient</Filter>

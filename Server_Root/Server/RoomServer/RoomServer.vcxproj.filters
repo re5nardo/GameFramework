@@ -91,13 +91,13 @@
     <Filter Include="소스 파일\Behavior\Behaviors">
       <UniqueIdentifier>{6a8682e7-3bda-43ff-b18e-962d641e9b49}</UniqueIdentifier>
     </Filter>
-    <Filter Include="헤더 파일\Data\Entities">
+    <Filter Include="헤더 파일\Entity\Entities">
       <UniqueIdentifier>{f5850074-022c-4246-9539-b90700735120}</UniqueIdentifier>
     </Filter>
-    <Filter Include="헤더 파일\Data\Entities\Character">
+    <Filter Include="헤더 파일\Entity\Entities\Character">
       <UniqueIdentifier>{a79b78e8-79bb-422f-804f-6637f306a5b0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="헤더 파일\Data\Entities\Character\Characters">
+    <Filter Include="헤더 파일\Entity\Entities\Character\Characters">
       <UniqueIdentifier>{02759604-a752-4987-9f58-e3c27e80a57f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -138,9 +138,6 @@
     <ClInclude Include="..\CommonSources\Message\IDeserializable.h">
       <Filter>헤더 파일\Messages</Filter>
     </ClInclude>
-    <ClInclude Include="..\CommonSources\Message\IJSONObjectable.h">
-      <Filter>헤더 파일\Messages</Filter>
-    </ClInclude>
     <ClInclude Include="..\CommonSources\Message\IMessage.h">
       <Filter>헤더 파일\Messages</Filter>
     </ClInclude>
@@ -148,9 +145,6 @@
       <Filter>헤더 파일\Messages</Filter>
     </ClInclude>
     <ClInclude Include="..\CommonSources\Message\ISerializable.h">
-      <Filter>헤더 파일\Messages</Filter>
-    </ClInclude>
-    <ClInclude Include="..\CommonSources\Message\JSONHelper.h">
       <Filter>헤더 파일\Messages</Filter>
     </ClInclude>
     <ClInclude Include="Messages\GameStartToC.h">
@@ -195,9 +189,6 @@
     <ClInclude Include="Messages\GameEventStopToR.h">
       <Filter>헤더 파일\Messages\ToRoom</Filter>
     </ClInclude>
-    <ClInclude Include="..\CommonSources\Message\IJSONObjectConvertible.h">
-      <Filter>헤더 파일\Messages</Filter>
-    </ClInclude>
     <ClInclude Include="Entity\IEntity.h">
       <Filter>헤더 파일\Entity</Filter>
     </ClInclude>
@@ -217,10 +208,10 @@
       <Filter>헤더 파일\Behavior</Filter>
     </ClInclude>
     <ClInclude Include="Entity\Entities\Character\ICharacter.h">
-      <Filter>헤더 파일\Data\Entities\Character</Filter>
+      <Filter>헤더 파일\Entity\Entities\Character</Filter>
     </ClInclude>
     <ClInclude Include="Entity\Entities\Character\Characters\MisterBae.h">
-      <Filter>헤더 파일\Data\Entities\Character\Characters</Filter>
+      <Filter>헤더 파일\Entity\Entities\Character\Characters</Filter>
     </ClInclude>
     <ClInclude Include="Behavior\Behaviors\Idle.h">
       <Filter>헤더 파일\Behavior\Behaviors</Filter>
@@ -268,9 +259,6 @@
     </ClCompile>
     <ClCompile Include="..\CommonSources\Network\NetworkCore.cpp">
       <Filter>소스 파일\Network</Filter>
-    </ClCompile>
-    <ClCompile Include="..\CommonSources\Message\JSONHelper.cpp">
-      <Filter>소스 파일\Messages</Filter>
     </ClCompile>
     <ClCompile Include="Messages\GameStartToC.cpp">
       <Filter>소스 파일\Messages\ToClient</Filter>
