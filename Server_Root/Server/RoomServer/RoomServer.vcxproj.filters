@@ -261,14 +261,14 @@
     <ClInclude Include="..\CommonSources\PhysicsHelper.h">
       <Filter>헤더 파일\Common</Filter>
     </ClInclude>
-    <ClInclude Include="Game\MapManager.h">
-      <Filter>헤더 파일\Game</Filter>
-    </ClInclude>
     <ClInclude Include="Game\TerrainObjectInsertChecker.h">
       <Filter>헤더 파일\Game</Filter>
     </ClInclude>
     <ClInclude Include="..\CommonSources\MathematicalData.h">
       <Filter>헤더 파일\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\CollisionManager.h">
+      <Filter>헤더 파일\Game</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -383,10 +383,10 @@
     <ClCompile Include="..\CommonSources\PhysicsHelper.cpp">
       <Filter>소스 파일\Common</Filter>
     </ClCompile>
-    <ClCompile Include="Game\MapManager.cpp">
+    <ClCompile Include="Game\TerrainObjectInsertChecker.cpp">
       <Filter>소스 파일\Game</Filter>
     </ClCompile>
-    <ClCompile Include="Game\TerrainObjectInsertChecker.cpp">
+    <ClCompile Include="Game\CollisionManager.cpp">
       <Filter>소스 파일\Game</Filter>
     </ClCompile>
   </ItemGroup>

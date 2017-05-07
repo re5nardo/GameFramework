@@ -5,7 +5,7 @@
 class MisterBae : public ICharacter
 {
 public:
-	MisterBae();
+	MisterBae(int nID);
 	virtual ~MisterBae();
 
 protected:

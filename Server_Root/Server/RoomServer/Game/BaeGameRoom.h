@@ -1,11 +1,16 @@
 #pragma once
 
+///////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////
+//	@ PlayerKey : Player's unique key used in all server sides
+//	@ PlayerIndex : Player's index used in game room (PlayerIndex is used for communication between Server and client)
+
 #include <map>
 #include <string>
 #include <vector>
 #include <chrono>
 #include <mutex>
-#include "MapManager.h"
+#include "CollisionManager.h"
 
 class IMessage;
 class CreateRoomToR;
@@ -27,21 +32,24 @@ public:
 	virtual ~BaeGameRoom();
 
 private:
-	const __int64 TIME_STEP = 15;		//	Milliseconds
-	//	So TickRate is 66.6666...    (1000(1sec) / 15 = 66.6666...)
+	const __int64 TIME_STEP = 15;		//	<-- milliseconds, So TickRate is 66.6666... (1000(1sec) / 15 = 66.6666...)
+
+private:
+	mutex m_LockEntitySequence;
+	int m_nEntitySequence = 0;
 
 private:
 	int								m_nMatchID;
-	vector<string>					m_vecMatchedPlayerKey;
-	map<string, unsigned int>		m_mapPlayerKeySocket;				
-	map<unsigned int, string>		m_mapSocketPlayerKey;
+	vector<string>					m_vecMatchedPlayerKey;					//	element : PlayerKey
+	map<string, unsigned int>		m_mapPlayerKeySocket;					//	key : PlayerKey, value : Socket
+	map<unsigned int, string>		m_mapSocketPlayerKey;					//	key : Socket, value : PlayerKey
 	map<int, float>					m_mapPlayerIndexPreparationState;		//	key : PlayerIndex, value : PreparationState
 
 private:
-	map<int, ICharacter*> m_mapCharacter;
-
-private:
-	map<int, IMessage*> m_mapPlayerInput;
+	map<int, ICharacter*>	m_mapCharacter;			//	key : PlayerIndex, value : Character
+	map<int, IMessage*>		m_mapPlayerInput;		//	key : PlayerIndex, value : Input Message
+	//map<int, int>			m_mapPlayerEntity;		//	key : PlayerIndex, value : Entity ID
+	map<int, int>			m_mapEntityPlayer;		//	key : Entity ID, value : PlayerIndex
 
 private:
 	bool m_bPlaying;
@@ -56,7 +64,8 @@ private:
 	__int64						m_lLastUpdateTime;		//	ElapsedTime after game was started (Milliseconds)
 
 private:
-	MapManager m_MapManager;
+	CollisionManager m_CollisionManager;
+	map<int, int> m_mapPlayerCollision;		//	key : PlayerIndex, value : CollisionObject ID
 
 public:
 	void OnRecvMessage(unsigned int socket, IMessage* pMsg);
@@ -82,6 +91,17 @@ private:
 
 private:
 	__int64 GetElapsedTime();	//	Milliseconds
+
+private:
+	void LoadMap(int nID);
+
+public:
+	bool TryMove(int nEntityID, btVector3& vec3Dest, btTransform& trHit);
+
+public:
+	void SetPlayerCollision();
+	void SetCollisionObjectPosition(int nEntityID, btVector3& vec3Position);
+	void SetCollisionObjectRotation(int nEntityID, btVector3& vec3Rotation);
 
 private:
 	void Loop();

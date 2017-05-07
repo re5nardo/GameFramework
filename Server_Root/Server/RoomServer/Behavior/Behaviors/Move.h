@@ -2,11 +2,9 @@
 
 #include "../IBehavior.h"
 #include "../BehaviorIDs.h"
-#include "../../../CommonSources/MathematicalData.h"
+#include "btBulletCollisionCommon.h"
 
-class MapManager;
-
-using namespace MathematicalData;
+class BaeGameRoom;
 
 class Move : public IBehavior
 {
@@ -18,8 +16,8 @@ public:
 	static const unsigned short BEHAVIOR_ID = Move_ID;
 
 private:
-	Vector3 m_vec3Dest;
-	MapManager* m_pMapManager = NULL;
+	btVector3 m_vec3Dest;
+	BaeGameRoom* m_pGameRoom = NULL;
 
 public:
 	int GetID() override;

@@ -2,20 +2,22 @@
 
 #include <list>
 #include "../Behavior/IBehavior.h"
-#include "../../CommonSources/MathematicalData.h"
+#include "btBulletCollisionCommon.h"
 
 using namespace std;
-using namespace MathematicalData;
 
 class IEntity
 {
 public:
-	IEntity();
+	IEntity(int nID);
 	virtual ~IEntity();
 
 private:
-	Vector3 m_vec3Position;
-	Vector3 m_vec3Rotation;
+	int m_nID;
+
+private:
+	btVector3 m_vec3Position = btVector3(0, 0, 0);
+	btVector3 m_vec3Rotation = btVector3(0, 0, 0);
 
 protected:
 	list<IBehavior*> m_listBehavior;
@@ -27,11 +29,13 @@ public:
 	virtual float GetSpeed() = 0;
 
 public:
-	Vector3 GetPosition();
-	void SetPosition(Vector3 vec3Position);
+	int GetID();
 
-	Vector3 GetRotation();
-	void SetRotation(Vector3 vec3Rotation);
+	btVector3 GetPosition();
+	void SetPosition(btVector3& vec3Position);
+
+	btVector3 GetRotation();
+	void SetRotation(btVector3& vec3Rotation);
 
 	IBehavior* GetBehavior(int nID);
 	list<IBehavior*> GetAllBehaviors();

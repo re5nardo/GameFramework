@@ -6,7 +6,7 @@
 class ICharacter : public IEntity
 {
 public:
-	ICharacter();
+	ICharacter(int nID);
 	virtual ~ICharacter();
 
 protected:

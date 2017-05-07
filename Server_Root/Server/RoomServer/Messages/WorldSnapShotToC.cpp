@@ -29,8 +29,8 @@ const char* WorldSnapShotToC::Serialize(int* pLength)
 		int nPlayerIndex = it->first;
 		IEntity* pEntity = it->second;
 
-		FBSData::Vector3 pos(pEntity->GetPosition().x, pEntity->GetPosition().y, pEntity->GetPosition().z);
-		FBSData::Vector3 rot(pEntity->GetRotation().x, pEntity->GetRotation().y, pEntity->GetRotation().z);
+		FBSData::Vector3 pos(pEntity->GetPosition().x(), pEntity->GetPosition().y(), pEntity->GetPosition().z());
+		FBSData::Vector3 rot(pEntity->GetRotation().x(), pEntity->GetRotation().y(), pEntity->GetRotation().z());
 
 		vector<int> vecKeys;
 		vector<float> vecValues;

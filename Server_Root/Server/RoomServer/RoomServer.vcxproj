@@ -52,12 +52,13 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>C:\Users\Bae\Documents\BaeProject\FlatBuffers\flatbuffers-1.4.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\Bae\Documents\BaeProject\FlatBuffers\flatbuffers-1.4.0\include;C:\Users\Bae\Documents\BaeProject\Server_Root\bullet-2.80-rev2531\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>ws2_32.lib;BulletCollision_debug.lib;BulletDynamics_debug.lib;LinearMath_debug.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\Users\Bae\Documents\BaeProject\Server_Root\bullet-2.80-rev2531\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -112,7 +113,7 @@
     <ClInclude Include="Entity\Entities\Character\ICharacter.h" />
     <ClInclude Include="Entity\IEntity.h" />
     <ClInclude Include="Game\BaeGameRoom.h" />
-    <ClInclude Include="Game\MapManager.h" />
+    <ClInclude Include="Game\CollisionManager.h" />
     <ClInclude Include="Game\TerrainObjectInsertChecker.h" />
     <ClInclude Include="Messages\EnterRoomToC.h" />
     <ClInclude Include="Messages\EnterRoomToR.h" />
@@ -155,7 +156,7 @@
     <ClCompile Include="Entity\Entities\Character\ICharacter.cpp" />
     <ClCompile Include="Entity\IEntity.cpp" />
     <ClCompile Include="Game\BaeGameRoom.cpp" />
-    <ClCompile Include="Game\MapManager.cpp" />
+    <ClCompile Include="Game\CollisionManager.cpp" />
     <ClCompile Include="Game\TerrainObjectInsertChecker.cpp" />
     <ClCompile Include="Messages\EnterRoomToC.cpp" />
     <ClCompile Include="Messages\EnterRoomToR.cpp" />

@@ -1,7 +1,7 @@
 #pragma once
 
 #include <vector>
-#include "../CommonSources/MathematicalData.h"
+#include "btBulletCollisionCommon.h"
 
 using namespace std;
 
@@ -11,7 +11,7 @@ public:
 	int nID = 0;
 	float fWidth = 0.0f;
 	float fHeight = 0.0f;
-	vector<MathematicalData::Polygon*> vecTerrainObject;
+	vector<btCollisionShape> vecTerrainObjectShape;
 };
 
 struct Stat

@@ -1,8 +1,9 @@
 #include "stdafx.h"
 #include "IEntity.h"
 
-IEntity::IEntity()
+IEntity::IEntity(int nID)
 {
+	m_nID = nID;
 }
 
 IEntity::~IEntity()
@@ -14,22 +15,27 @@ IEntity::~IEntity()
 	m_listBehavior.clear();
 }
 
-Vector3 IEntity::GetPosition()
+int IEntity::GetID()
+{
+	return m_nID;
+}
+
+btVector3 IEntity::GetPosition()
 {
 	return m_vec3Position;
 }
 
-void IEntity::SetPosition(Vector3 vec3Position)
+void IEntity::SetPosition(btVector3& vec3Position)
 {
 	m_vec3Position = vec3Position;
 }
 
-Vector3 IEntity::GetRotation()
+btVector3 IEntity::GetRotation()
 {
 	return m_vec3Rotation;
 }
 
-void IEntity::SetRotation(Vector3 vec3Rotation)
+void IEntity::SetRotation(btVector3& vec3Rotation)
 {
 	m_vec3Rotation = vec3Rotation;
 }

@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "ICharacter.h"
 
-ICharacter::ICharacter()
+ICharacter::ICharacter(int nID) : IEntity(nID)
 {
 }
 

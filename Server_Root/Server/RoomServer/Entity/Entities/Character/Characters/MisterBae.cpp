@@ -3,7 +3,7 @@
 #include "../../../../Behavior/Behaviors/Idle.h"
 #include "../../../../Behavior/Behaviors/Move.h"
 
-MisterBae::MisterBae()
+MisterBae::MisterBae(int nID) : ICharacter(nID)
 {
 	InitializeBehavior();
 }

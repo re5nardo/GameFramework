@@ -11,6 +11,8 @@
 #include "../Entity/Entities/Character/Characters/MisterBae.h"
 #include "../../CommonSources/tinyxml2.h"
 #include "../../CommonSources/QuadTree.h"
+#include "../Util.h"
+#include "btBulletCollisionCommon.h"
 
 BaeGameRoom::BaeGameRoom(int nMatchID, vector<string> vecMatchedPlayerKey)
 {
@@ -90,7 +92,7 @@ void BaeGameRoom::ProcessInput()
 		{
 			GameEventMoveToR* pMoveToR = (GameEventMoveToR*)pPlayerInputMsg;
 
-			m_mapCharacter[nPlayerIndex]->GetBehavior(Move_ID)->Start(m_lLastUpdateTime, pMoveToR->m_vec3Dest, &m_MapManager);
+			m_mapCharacter[nPlayerIndex]->GetBehavior(Move_ID)->Start(m_lLastUpdateTime, &btVector3(pMoveToR->m_vec3Dest.x, pMoveToR->m_vec3Dest.y, pMoveToR->m_vec3Dest.z), this);
 		}
 
 		delete pPlayerInputMsg;
@@ -148,7 +150,8 @@ void BaeGameRoom::StartGame()
 	m_bPlaying = true;
 	m_nTick = 0;
 
-	m_MapManager.LoadMap(1);
+	LoadMap(1/*temp.. always 1*/);
+	SetPlayerCollision();
 
 	GameStartToC* gameStartToC = new GameStartToC();
 	SendToAllUsers(gameStartToC);
@@ -163,6 +166,7 @@ void BaeGameRoom::EndGame()
 
 void BaeGameRoom::Reset()
 {
+	m_nEntitySequence = 0;
 	m_nTick = 0;
 	m_lDeltaTime = 0;
 	m_lLastUpdateTime = 0;
@@ -180,6 +184,101 @@ void BaeGameRoom::Reset()
 		delete it->second;
 	}
 	m_mapCharacter.clear();
+
+	m_CollisionManager.Reset();
+	m_mapPlayerCollision.clear();
+	//m_mapPlayerEntity.clear();
+	m_mapEntityPlayer.clear();
+}
+
+void BaeGameRoom::LoadMap(int nID)
+{
+	stringstream mapFileName;
+	mapFileName << "map_" << to_string(nID) << ".xml";
+
+	tinyxml2::XMLDocument doc;
+	doc.LoadFile(mapFileName.str().c_str());
+
+	tinyxml2::XMLElement* pMap = doc.FirstChildElement("Map");
+
+	float fHalfWidth = atof(pMap->FirstChildElement("Width")->GetText());
+	float fHalfHeight = atof(pMap->FirstChildElement("Height")->GetText());
+
+	m_CollisionManager.Init(btVector3(fHalfWidth, 0, fHalfHeight));
+
+	tinyxml2::XMLElement* pTerrainObjectsElement = pMap->FirstChildElement("TerrainObjects");
+	for (tinyxml2::XMLElement* pTerrainObjectElement = pTerrainObjectsElement->FirstChildElement("TerrainObject"); pTerrainObjectElement; pTerrainObjectElement = pTerrainObjectElement->NextSiblingElement("TerrainObject"))
+	{
+		vector<string> vecText;
+		Util::StringSplit(pTerrainObjectElement->GetText(), '/', &vecText);
+
+		if (vecText[0] == "Box2d")
+		{
+			btVector3 vec3Position = Util::StringToVector3(vecText[1]);
+			btVector3 vec3Rotation = Util::StringToVector3(vecText[2]);
+			btVector3 vec3HalfExtents = Util::StringToVector3(vecText[3]);
+
+			m_CollisionManager.AddBox2dShapeTerrainObject(vec3Position, vec3Rotation, vec3HalfExtents);
+		}
+		else if (vecText[0] == "Sphere2d")
+		{
+			btVector3 vec3Position = Util::StringToVector3(vecText[1]);
+			float fRadius = atof(vecText[2].c_str());
+
+			m_CollisionManager.AddSphere2dShapeTerrainObject(vec3Position, fRadius);
+		}
+		else if (vecText[0] == "ConvexPolygon2d")
+		{
+			btVector3 vec3Position = Util::StringToVector3(vecText[1]);
+			list<btVector3> listPoint;
+			for (int i = 2; i < vecText.size(); ++i)
+			{
+				listPoint.push_back(Util::StringToVector3(vecText[i]));
+			}
+
+			m_CollisionManager.AddConvexPolygon2dShapeTerrainObject(vec3Position, listPoint);
+		}
+	}
+}
+
+bool BaeGameRoom::TryMove(int nEntityID, btVector3& vec3Dest, btTransform& trHit)
+{
+	int nPlayerIndex = m_mapEntityPlayer[nEntityID];
+	int nCollisionObjectID = m_mapPlayerCollision[nPlayerIndex];
+
+	if (m_CollisionManager.ContinuousCollisionDectection(nCollisionObjectID, vec3Dest, &trHit))
+	{
+		return false;
+	}
+
+	return true;
+}
+
+void BaeGameRoom::SetPlayerCollision()
+{
+	for (map<int, ICharacter*>::iterator it = m_mapCharacter.begin(); it != m_mapCharacter.end(); ++it)
+	{
+		int nPlayerIndex = it->first;
+		int nCollisionObjectID = m_CollisionManager.AddCharacter(it->second->GetPosition(), 1);
+
+		m_mapPlayerCollision[nPlayerIndex] = nCollisionObjectID;
+	}
+}
+
+void BaeGameRoom::SetCollisionObjectPosition(int nEntityID, btVector3& vec3Position)
+{
+	int nPlayerIndex = m_mapEntityPlayer[nEntityID];
+	int nCollisionObjectID = m_mapPlayerCollision[nPlayerIndex];
+
+	m_CollisionManager.SetPosition(nCollisionObjectID, vec3Position);
+}
+
+void BaeGameRoom::SetCollisionObjectRotation(int nEntityID, btVector3& vec3Rotation)
+{
+	int nPlayerIndex = m_mapEntityPlayer[nEntityID];
+	int nCollisionObjectID = m_mapPlayerCollision[nPlayerIndex];
+
+	m_CollisionManager.SetRotation(nCollisionObjectID, vec3Rotation);
 }
 
 void BaeGameRoom::SendToAllUsers(IMessage* pMsg, string strExclusionKey, bool bDelete)
@@ -303,11 +402,17 @@ void BaeGameRoom::OnEnterRoomToR(EnterRoomToR* pMsg, unsigned int socket)
 		m_mapPlayerKeySocket[pMsg->m_strPlayerKey] = socket;
 		m_mapSocketPlayerKey[socket] = pMsg->m_strPlayerKey;
 
-		m_mapCharacter[nPlayerIndex] = new MisterBae();
-		m_mapCharacter[nPlayerIndex]->Initialize();
-		m_mapCharacter[nPlayerIndex]->SetStat(Stat(3.0f, 1.0f));
-		m_mapCharacter[nPlayerIndex]->SetPosition(Vector3());
-		m_mapCharacter[nPlayerIndex]->SetRotation(Vector3());
+		m_LockEntitySequence.lock();
+		int nEntityID = m_nEntitySequence++;
+		m_LockEntitySequence.unlock();
+		MisterBae* pCharacter = new MisterBae(nEntityID);
+		pCharacter->Initialize();
+		pCharacter->SetStat(Stat(3.0f, 1.0f));
+		pCharacter->SetPosition(btVector3(0, 0, 0));
+		pCharacter->SetRotation(btVector3(0, 0, 0));
+		m_mapCharacter[nPlayerIndex] = pCharacter;
+		//m_mapPlayerEntity[nPlayerIndex] = nEntityID;
+		m_mapEntityPlayer[nEntityID] = nPlayerIndex;
 
 		enterRoomToC->m_nResult = 0;
 		enterRoomToC->m_nPlayerIndex = nPlayerIndex;
