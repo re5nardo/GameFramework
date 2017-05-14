@@ -46,6 +46,11 @@ public class InputManager : MonoBehaviour
             return;
         }
 
+        if(UICamera.hoveredObject != UICamera.fallThrough)
+        {
+            return;
+        }
+
         RaycastHit hitInfo;
 
         if (Input.GetMouseButtonDown(0))

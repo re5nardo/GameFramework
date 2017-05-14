@@ -150,7 +150,7 @@ void BaeGameRoom::StartGame()
 	m_bPlaying = true;
 	m_nTick = 0;
 
-	LoadMap(1/*temp.. always 1*/);
+	LoadMap(2/*temp.. always 1*/);
 	SetPlayerCollision();
 
 	GameStartToC* gameStartToC = new GameStartToC();

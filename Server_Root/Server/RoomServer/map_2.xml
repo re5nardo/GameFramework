@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<Map>
+  <ID>2</ID>
+  <SceneName>BasicStraightWay</SceneName>
+  <Width>100</Width>
+  <Height>500</Height>
+  <StartArea>(0.0, 0.0, -235.0)/100/30</StartArea>
+  <CheckPoints />
+  <SpawnPoints />
+  <TerrainObjects>
+    <TerrainObject>Box2d/(-35.0, 0.0, 0.0)/(0.0, 0.0, 0.0)/(15.0, 0.0, 250.0)</TerrainObject>
+    <TerrainObject>Box2d/(35.0, 0.0, 0.0)/(0.0, 0.0, 0.0)/(15.0, 0.0, 250.0)</TerrainObject>
+  </TerrainObjects>
+</Map>

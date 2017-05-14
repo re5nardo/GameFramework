@@ -48,9 +48,15 @@ public class IEntityUI : MonoBehaviour
         return m_animEntityUI.GetClip(strClipName) != null;
     }
 
-    //  Local pos
-    public void SetPosition(Vector3 vec3Pos)
+    //  Local position
+    public void SetPosition(Vector3 vec3Position)
     {
-        m_trEntityUI.localPosition = vec3Pos;
+        m_trEntityUI.localPosition = vec3Position;
+    }
+
+    //  Local rotation
+    public void SetRotation(Vector3 vec3Rotation)
+    {
+        m_trEntityUI.localRotation = Quaternion.Euler(vec3Rotation);
     }
 }

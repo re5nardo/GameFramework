@@ -5,6 +5,7 @@ public abstract class IEntity : MonoBehaviour
 {
     protected IEntityUI             m_EntityUI = null;
     protected Vector3               m_vec3Position = Vector3.zero;
+    protected Vector3               m_vec3Rotation = Vector3.zero;
 
     protected abstract void CreateUI();
     public abstract void Initialize();
@@ -16,16 +17,28 @@ public abstract class IEntity : MonoBehaviour
         CreateUI();
     }
 
-    public void SetPosition(Vector3 vec3Pos)
+    public void SetPosition(Vector3 vec3Position)
     {
-        m_vec3Position = vec3Pos;
+        m_vec3Position = vec3Position;
 
-        m_EntityUI.SetPosition(vec3Pos);
+        m_EntityUI.SetPosition(vec3Position);
     }
 
     public Vector3 GetPosition()
     {
         return m_vec3Position;
+    }
+
+    public void SetRotation(Vector3 vec3Rotation)
+    {
+        m_vec3Rotation = vec3Rotation;
+
+        m_EntityUI.SetRotation(vec3Rotation);
+    }
+
+    public Vector3 GetRotation()
+    {
+        return m_vec3Rotation;
     }
 
     public Transform GetUITransform()

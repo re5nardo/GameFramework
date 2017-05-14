@@ -95,7 +95,7 @@ public class BaeGameRoom : IGameRoom
         m_fElapsedTime = 0f;
         m_fLastSnapshotTime = 0f;
 
-        m_InputManager.Work(200, 200/*temp.. always 200, 200*/, m_CameraMain, OnClicked);
+        m_InputManager.Work(100, 500/*temp.. always 200, 200*/, m_CameraMain, OnClicked);
 
         StartCoroutine(Loop());
     }
@@ -103,7 +103,7 @@ public class BaeGameRoom : IGameRoom
     private IEnumerator PrepareGame()
     {
         //  prefare for game
-        yield return SceneManager.LoadSceneAsync("TestMap"/*temp.. always TestMap*/, LoadSceneMode.Additive);
+        yield return SceneManager.LoadSceneAsync("BasicStraightWay"/*temp.. always TestMap*/, LoadSceneMode.Additive);
 
         PreparationStateToR preparationStateToR = new PreparationStateToR();
         preparationStateToR.m_fState = 1.0f;
@@ -147,8 +147,11 @@ public class BaeGameRoom : IGameRoom
 
                 misterBae.Initialize();
 
-                if(kv.Key == m_nPlayerIndex)
-                    m_CameraController.FollowTarget(misterBae.GetUITransform());
+                if (kv.Key == m_nPlayerIndex)
+                {
+                    m_CameraController.SetTarget(misterBae.GetUITransform());
+                    m_CameraController.StartFollowTarget();
+                }
             }
 
             StartCoroutine(PrepareGame());
@@ -203,9 +206,6 @@ public class BaeGameRoom : IGameRoom
         }
 
         Application.targetFrameRate = m_nOldFrameRate;
-
-        m_InputManager.Stop();
-        m_CameraController.StopFollow();
     }
 
     public override float GetElapsedTime()
@@ -306,6 +306,56 @@ public class BaeGameRoom : IGameRoom
             vecPosition.z = Mathf.Lerp(dicPlayerPosition[playerPosition.Key].Key.z, dicPlayerPosition[playerPosition.Key].Value.z, fInterpolationValue);
 
             m_dicEntity[playerPosition.Key].SetPosition(vecPosition);
+        }
+
+        //  Rotation
+        Dictionary<int, KeyValuePair<Vector3, Vector3>> dicPlayerRotation = new Dictionary<int, KeyValuePair<Vector3, Vector3>>();
+        foreach (EntityState entityState in start.m_listEntityState)
+        {
+            if(!dicPlayerRotation.ContainsKey(entityState.PlayerIndex))
+                dicPlayerRotation.Add(entityState.PlayerIndex, new KeyValuePair<Vector3, Vector3>());
+
+            dicPlayerRotation[entityState.PlayerIndex] = new KeyValuePair<Vector3, Vector3>(new Vector3(entityState.Rotation.X, entityState.Rotation.Y, entityState.Rotation.Z), Vector3.zero);
+        }
+
+        foreach (EntityState entityState in end.m_listEntityState)
+        {
+            if(!dicPlayerRotation.ContainsKey(entityState.PlayerIndex))
+                dicPlayerRotation.Add(entityState.PlayerIndex, new KeyValuePair<Vector3, Vector3>());
+
+            dicPlayerRotation[entityState.PlayerIndex] = new KeyValuePair<Vector3, Vector3>(dicPlayerRotation[entityState.PlayerIndex].Key, new Vector3(entityState.Rotation.X, entityState.Rotation.Y, entityState.Rotation.Z));
+        }
+
+        foreach(KeyValuePair<int, KeyValuePair<Vector3, Vector3>> playerRotation in dicPlayerRotation)
+        {
+            Vector3 vec3PrevRotation = dicPlayerRotation[playerRotation.Key].Key;
+            Vector3 vec3NextRotation = dicPlayerRotation[playerRotation.Key].Value;
+
+            if (vec3NextRotation.y < vec3PrevRotation.y)
+            {
+                vec3NextRotation.y += 360;
+            }
+
+            //  For lerp calculation
+            //  Clockwise rotation
+            if (vec3NextRotation.y - vec3PrevRotation.y <= 180)
+            {
+                if (vec3PrevRotation.y > vec3NextRotation.y)
+                    vec3NextRotation.y += 360;
+            }
+            //  CounterClockwise rotation
+            else
+            {
+                if (vec3PrevRotation.y < vec3NextRotation.y)
+                    vec3PrevRotation.y += 360;
+            }
+
+            Vector3 vecRotation;
+            vecRotation.x = Mathf.Lerp(dicPlayerRotation[playerRotation.Key].Key.x, dicPlayerRotation[playerRotation.Key].Value.x, fInterpolationValue);
+            vecRotation.y = Mathf.Lerp(vec3PrevRotation.y, vec3NextRotation.y, fInterpolationValue);
+            vecRotation.z = Mathf.Lerp(dicPlayerRotation[playerRotation.Key].Key.z, dicPlayerRotation[playerRotation.Key].Value.z, fInterpolationValue);
+
+            m_dicEntity[playerRotation.Key].SetRotation(vecRotation);
         }
     }
 

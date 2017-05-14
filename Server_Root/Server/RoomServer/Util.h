@@ -148,4 +148,18 @@ public:
 
 		return true;
 	}
+
+	static float GetAngle_Y(btVector3& vec3Target)
+	{
+		btVector3 criteria(0, 0, 1);
+		btScalar angle = 0;
+
+		angle = criteria.angle(vec3Target) * 180 / M_PI;
+		if (criteria.x() >= vec3Target.x())
+		{
+			angle = 360 - angle;
+		}
+
+		return angle;
+	}
 };

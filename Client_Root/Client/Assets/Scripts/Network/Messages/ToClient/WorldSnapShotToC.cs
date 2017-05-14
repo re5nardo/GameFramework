@@ -47,6 +47,7 @@ public class WorldSnapShotToC : IMessage
             EntityState.StartEntityState(builder);
             EntityState.AddPlayerIndex(builder, entityState.PlayerIndex);
             EntityState.AddPosition(builder, pos);
+            EntityState.AddRotation(builder, rot);
             EntityState.AddBehaviorsMapKey(builder, behaviorsMapKey);
             EntityState.AddBehaviorsMapValue(builder, behaviorsMapValue);
 

@@ -49,6 +49,36 @@ void Move::Update(__int64 lUpdateTime)
 	float fDeltaTime = (lUpdateTime - m_lLastUpdateTime) / 1000.0f;
 	m_lLastUpdateTime = lUpdateTime;
 
+	//	Rotation
+	btVector3 vec3Move = m_vec3Dest - m_pEntity->GetPosition();
+	float fTargetRotation_Y = Util::GetAngle_Y(vec3Move);
+	btVector3 vec3Rotation = m_pEntity->GetRotation();
+
+	if (fTargetRotation_Y < vec3Rotation.y())
+	{
+		fTargetRotation_Y += 360;
+	}
+
+	//	For lerp calculation
+	//	Clockwise rotation
+	if (fTargetRotation_Y - vec3Rotation.y() <= 180)
+	{
+		if (vec3Rotation.y() > fTargetRotation_Y)
+			fTargetRotation_Y += 360;
+	}
+	//	CounterClockwise rotation
+	else
+	{
+		if (vec3Rotation.y() < fTargetRotation_Y)
+			vec3Rotation.setY(vec3Rotation.y() + 360);
+	}
+
+	float RotationTime = 0.1f;
+	float fCurrent_Y = Util::Lerp(vec3Rotation.y(), fTargetRotation_Y, fDeltaTime / RotationTime);
+	if (fCurrent_Y >= 360) fCurrent_Y -= 360;
+	m_pEntity->SetRotation(btVector3(vec3Rotation.x(), fCurrent_Y, vec3Rotation.z()));
+	//	Rotation end
+
 	btVector3 vec3Pos = m_pEntity->GetPosition();
 	float fExpectedTime = sqrt(powf(m_vec3Dest.x() - vec3Pos.x(), 2.0f) /*+ powf(m_vec3Dest.y - vec3Pos.y, 2.0f)*/ + powf(m_vec3Dest.z() - vec3Pos.z(), 2.0f)) / m_pEntity->GetSpeed();
 
