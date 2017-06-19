@@ -5,14 +5,14 @@
 #include "../../RoomServer/RoomMessageHeader.h"
 //#include "RoomMessageHeader.h"
 #include <process.h>
-#include "../Entity/Entities/Character/ICharacter.h"
+#include "../Entity/Entities/Character/Character.h"
 #include "../Messages/WorldSnapShotToC.h"
 #include "../Behavior/BehaviorIDs.h"
-#include "../Entity/Entities/Character/Characters/MisterBae.h"
 #include "../../CommonSources/tinyxml2.h"
 #include "../../CommonSources/QuadTree.h"
 #include "../Util.h"
 #include "btBulletCollisionCommon.h"
+#include "../Factory.h"
 
 BaeGameRoom::BaeGameRoom(int nMatchID, vector<string> vecMatchedPlayerKey)
 {
@@ -35,6 +35,7 @@ BaeGameRoom::~BaeGameRoom()
 void BaeGameRoom::Loop()
 {
 	//	must create game worker thread cuz lock delay..
+	//(네트워크 쓰레드로 게임 로직 돌리면 게임 룸 락 때문에 네트워크 쓰레드가 대기하게 되고 네트워크 요청을 원활하게 수행할 수 없다.)
 
 	//	Tick Process
 	while (m_bPlaying)
@@ -92,7 +93,18 @@ void BaeGameRoom::ProcessInput()
 		{
 			GameEventMoveToR* pMoveToR = (GameEventMoveToR*)pPlayerInputMsg;
 
-			m_mapCharacter[nPlayerIndex]->GetBehavior(Move_ID)->Start(m_lLastUpdateTime, &pMoveToR->m_vec3Dest, this);
+			m_mapCharacter[nPlayerIndex]->GetBehavior(BehaviorID::MOVE)->Start(m_lLastUpdateTime, &pMoveToR->m_vec3Dest, this);
+		}
+		else if (pPlayerInputMsg->GetID() == GameInputSkillToR_ID)
+		{
+			GameInputSkillToR* pMsg = (GameInputSkillToR*)pPlayerInputMsg;
+
+			list<ISkill*> listSkill = m_mapCharacter[nPlayerIndex]->GetAllSkills();
+			for (list<ISkill*>::iterator it = listSkill.begin(); it != listSkill.end(); ++it)
+			{
+				if (pMsg->m_nSkillID == (*it)->GetMasterDataID())
+					(*it)->ProcessInput(m_lLastUpdateTime, this);
+			}
 		}
 
 		delete pPlayerInputMsg;
@@ -104,28 +116,23 @@ void BaeGameRoom::ProcessInput()
 
 void BaeGameRoom::Update()
 {
-	for (map<int, ICharacter*>::iterator it = m_mapCharacter.begin(); it != m_mapCharacter.end(); ++it)
+	//	Character
+	for (map<int, Character*>::iterator it = m_mapCharacter.begin(); it != m_mapCharacter.end(); ++it)
 	{
-		ICharacter* pCharacter = it->second;
-
-		list<IBehavior*> listBehavior = pCharacter->GetActivatedBehaviors();
-		for (list<IBehavior*>::iterator iteratorBehavior = listBehavior.begin(); iteratorBehavior != listBehavior.end(); ++iteratorBehavior)
-		{
-			IBehavior* pBehavior = *iteratorBehavior;
-			pBehavior->Update(m_lLastUpdateTime);
-		}
+		Character* pCharacter = it->second;
+		pCharacter->Update(m_lLastUpdateTime);
 	}
 }
 
 void BaeGameRoom::LateUpdate()
 {
-	for (map<int, ICharacter*>::iterator it = m_mapCharacter.begin(); it != m_mapCharacter.end(); ++it)
+	for (map<int, Character*>::iterator it = m_mapCharacter.begin(); it != m_mapCharacter.end(); ++it)
 	{
-		ICharacter* pCharacter = it->second;
+		Character* pCharacter = it->second;
 
 		if (!pCharacter->IsBehavioring())
 		{
-			pCharacter->GetBehavior(Idle_ID)->Start(m_lLastUpdateTime);
+			pCharacter->GetBehavior(BehaviorID::IDLE)->Start(m_lLastUpdateTime);
 		}
 	}
 }
@@ -137,7 +144,7 @@ void BaeGameRoom::SendWorldSnapShot()
 	pWorldSnapShotToC->m_nTick = m_nTick;
 	pWorldSnapShotToC->m_fTime = m_lLastUpdateTime / 1000.0f;
 
-	for (map<int, ICharacter*>::iterator it = m_mapCharacter.begin(); it != m_mapCharacter.end(); ++it)
+	for (map<int, Character*>::iterator it = m_mapCharacter.begin(); it != m_mapCharacter.end(); ++it)
 	{
 		pWorldSnapShotToC->m_mapEntity[it->first] = it->second;
 	}
@@ -179,7 +186,7 @@ void BaeGameRoom::Reset()
 	}
 	m_mapPlayerInput.clear();
 
-	for (map<int, ICharacter*>::iterator it = m_mapCharacter.begin(); it != m_mapCharacter.end(); ++it)
+	for (map<int, Character*>::iterator it = m_mapCharacter.begin(); it != m_mapCharacter.end(); ++it)
 	{
 		delete it->second;
 	}
@@ -210,7 +217,7 @@ void BaeGameRoom::LoadMap(int nID)
 	for (tinyxml2::XMLElement* pTerrainObjectElement = pTerrainObjectsElement->FirstChildElement("TerrainObject"); pTerrainObjectElement; pTerrainObjectElement = pTerrainObjectElement->NextSiblingElement("TerrainObject"))
 	{
 		vector<string> vecText;
-		Util::StringSplit(pTerrainObjectElement->GetText(), '/', &vecText);
+		Util::Parse(pTerrainObjectElement->GetText(), '/', &vecText);
 
 		if (vecText[0] == "Box2d")
 		{
@@ -256,7 +263,7 @@ bool BaeGameRoom::TryMove(int nEntityID, btVector3& vec3Dest, btTransform& trHit
 
 void BaeGameRoom::SetPlayerCollision()
 {
-	for (map<int, ICharacter*>::iterator it = m_mapCharacter.begin(); it != m_mapCharacter.end(); ++it)
+	for (map<int, Character*>::iterator it = m_mapCharacter.begin(); it != m_mapCharacter.end(); ++it)
 	{
 		int nPlayerIndex = it->first;
 		int nCollisionObjectID = m_CollisionManager.AddCharacter(it->second->GetPosition(), 1);
@@ -311,6 +318,10 @@ void BaeGameRoom::OnRecvMessage(unsigned int socket, IMessage* pMsg)
 	{
 		OnGameEventStopToR((GameEventStopToR*)pMsg, socket);
 	}
+	else if (pMsg->GetID() == GameInputSkillToR::MESSAGE_ID)
+	{
+		OnGameInputSkillToR((GameInputSkillToR*)pMsg, socket);
+	}
 }
 
 void BaeGameRoom::OnGameEventMoveToR(GameEventMoveToR* pMsg, unsigned int socket)
@@ -345,11 +356,10 @@ void BaeGameRoom::OnEnterRoomToR(EnterRoomToR* pMsg, unsigned int socket)
 		m_LockEntitySequence.lock();
 		int nEntityID = m_nEntitySequence++;
 		m_LockEntitySequence.unlock();
-		MisterBae* pCharacter = new MisterBae(nEntityID);
+
+		//	Temp..0 is MisterBae
+		Character* pCharacter = Factory::Instance()->CreateCharacter(nEntityID, 0);
 		pCharacter->Initialize();
-		pCharacter->SetStat(Stat(3.0f, 1.0f));
-		pCharacter->SetPosition(btVector3(0, 0, 0));
-		pCharacter->SetRotation(btVector3(0, 0, 0));
 		m_mapCharacter[nPlayerIndex] = pCharacter;
 		//m_mapPlayerEntity[nPlayerIndex] = nEntityID;
 		m_mapEntityPlayer[nEntityID] = nPlayerIndex;
@@ -395,6 +405,15 @@ void BaeGameRoom::OnPreparationStateToR(PreparationStateToR* pMsg, unsigned int 
 	{
 		StartGame();
 	}
+}
+
+void BaeGameRoom::OnGameInputSkillToR(GameInputSkillToR* pMsg, unsigned int socket)
+{
+	m_LockPlayerInput.lock();
+
+	m_mapPlayerInput[pMsg->m_nPlayerIndex] = pMsg->Clone();
+
+	m_LockPlayerInput.unlock();
 }
 
 int BaeGameRoom::GetPlayerIndexByPlayerKey(string strPlayerKey)

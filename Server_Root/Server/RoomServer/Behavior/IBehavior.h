@@ -7,8 +7,11 @@ class IEntity;
 class IBehavior
 {
 public:
-	IBehavior(IEntity* pEntity);
+	IBehavior(IEntity* pEntity, int nMasterDataID);
 	virtual ~IBehavior();
+
+protected:
+	int m_nMasterDataID = -1;
 
 protected:
 	IEntity* m_pEntity;
@@ -19,7 +22,7 @@ protected:
 	__int64	m_lLastUpdateTime;		//	ElapsedTime after game was started (Milliseconds)
 
 public:
-	virtual int GetID() = 0;
+	int GetMasterDataID();
 	virtual void Initialize() = 0;
 	virtual void Update(__int64 lUpdateTime) = 0;
 

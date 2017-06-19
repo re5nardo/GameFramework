@@ -52,13 +52,14 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>C:\Users\Bae\Documents\BaeProject\FlatBuffers\flatbuffers-1.4.0\include;C:\Users\Bae\Documents\BaeProject\Server_Root\bullet-2.80-rev2531\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\libxl-win-3.8.0\libxl-3.8.0.0\include_cpp;..\..\..\FlatBuffers\flatbuffers-1.4.0\include;..\..\bullet-2.80-rev2531\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <ObjectFileName>$(IntDir)/%(RelativeDir)/</ObjectFileName>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>ws2_32.lib;BulletCollision_debug.lib;BulletDynamics_debug.lib;LinearMath_debug.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>C:\Users\Bae\Documents\BaeProject\Server_Root\bullet-2.80-rev2531\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>ws2_32.lib;BulletCollision_debug.lib;BulletDynamics_debug.lib;LinearMath_debug.lib;libxl.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\..\bullet-2.80-rev2531\lib;..\..\libxl-win-3.8.0\libxl-3.8.0.0\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -98,22 +99,29 @@
     <ClInclude Include="..\CommonSources\Singleton.h" />
     <ClInclude Include="..\CommonSources\tinyxml2.h" />
     <ClInclude Include="Behavior\BehaviorIDs.h" />
+    <ClInclude Include="Behavior\Behaviors\Dash.h" />
     <ClInclude Include="Behavior\Behaviors\Idle.h" />
     <ClInclude Include="Behavior\Behaviors\Move.h" />
     <ClInclude Include="Behavior\IBehavior.h" />
-    <ClInclude Include="Condition\ICondition.h" />
     <ClInclude Include="Data.h" />
     <ClInclude Include="Defines.h" />
-    <ClInclude Include="Entity\Entities\Character\Characters\MisterBae.h" />
-    <ClInclude Include="Entity\Entities\Character\ICharacter.h" />
+    <ClInclude Include="Entity\Entities\Character\Character.h" />
     <ClInclude Include="Entity\IEntity.h" />
+    <ClInclude Include="Factory.h" />
     <ClInclude Include="Game\BaeGameRoom.h" />
     <ClInclude Include="Game\CollisionManager.h" />
     <ClInclude Include="Game\TerrainObjectInsertChecker.h" />
+    <ClInclude Include="MasterData\Behavior.h" />
+    <ClInclude Include="MasterData\Character.h" />
+    <ClInclude Include="MasterData\IMasterData.h" />
+    <ClInclude Include="MasterData\MasterDataManager.h" />
+    <ClInclude Include="MasterData\Skill.h" />
+    <ClInclude Include="MasterData\State.h" />
     <ClInclude Include="Messages\EnterRoomToC.h" />
     <ClInclude Include="Messages\EnterRoomToR.h" />
     <ClInclude Include="Messages\GameEventMoveToR.h" />
     <ClInclude Include="Messages\GameEventStopToR.h" />
+    <ClInclude Include="Messages\GameInputSkillToR.h" />
     <ClInclude Include="Messages\GameStartToC.h" />
     <ClInclude Include="Messages\PlayerEnterRoomToC.h" />
     <ClInclude Include="Messages\PreparationStateToC.h" />
@@ -123,6 +131,11 @@
     <ClInclude Include="Room.h" />
     <ClInclude Include="RoomMessageConvertor.h" />
     <ClInclude Include="RoomMessageHeader.h" />
+    <ClInclude Include="Skill\ISkill.h" />
+    <ClInclude Include="Skill\Skills\ContinueSkill.h" />
+    <ClInclude Include="State\IState.h" />
+    <ClInclude Include="State\StateIDs.h" />
+    <ClInclude Include="State\States\Acceleration.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="Util.h" />
@@ -135,20 +148,27 @@
     <ClCompile Include="..\CommonSources\Network\NetworkCore.cpp" />
     <ClCompile Include="..\CommonSources\QuadTreePrerequisites.cpp" />
     <ClCompile Include="..\CommonSources\tinyxml2.cpp" />
+    <ClCompile Include="Behavior\Behaviors\Dash.cpp" />
     <ClCompile Include="Behavior\Behaviors\Idle.cpp" />
     <ClCompile Include="Behavior\Behaviors\Move.cpp" />
     <ClCompile Include="Behavior\IBehavior.cpp" />
-    <ClCompile Include="Condition\Condition.cpp" />
-    <ClCompile Include="Entity\Entities\Character\Characters\MisterBae.cpp" />
-    <ClCompile Include="Entity\Entities\Character\ICharacter.cpp" />
+    <ClCompile Include="Entity\Entities\Character\Character.cpp" />
     <ClCompile Include="Entity\IEntity.cpp" />
+    <ClCompile Include="Factory.cpp" />
     <ClCompile Include="Game\BaeGameRoom.cpp" />
     <ClCompile Include="Game\CollisionManager.cpp" />
     <ClCompile Include="Game\TerrainObjectInsertChecker.cpp" />
+    <ClCompile Include="MasterData\Behavior.cpp" />
+    <ClCompile Include="MasterData\Character.cpp" />
+    <ClCompile Include="MasterData\IMasterData.cpp" />
+    <ClCompile Include="MasterData\MasterDataManager.cpp" />
+    <ClCompile Include="MasterData\SKill.cpp" />
+    <ClCompile Include="MasterData\State.cpp" />
     <ClCompile Include="Messages\EnterRoomToC.cpp" />
     <ClCompile Include="Messages\EnterRoomToR.cpp" />
     <ClCompile Include="Messages\GameEventMoveToR.cpp" />
     <ClCompile Include="Messages\GameEventStopToR.cpp" />
+    <ClCompile Include="Messages\GameInputSkillToR.cpp" />
     <ClCompile Include="Messages\GameStartToC.cpp" />
     <ClCompile Include="Messages\PlayerEnterRoomToC.cpp" />
     <ClCompile Include="Messages\PreparationStateToC.cpp" />
@@ -158,6 +178,10 @@
     <ClCompile Include="Room.cpp" />
     <ClCompile Include="RoomMessageConvertor.cpp" />
     <ClCompile Include="RoomServer.cpp" />
+    <ClCompile Include="Skill\ISkill.cpp" />
+    <ClCompile Include="Skill\Skills\ContinueSkill.cpp" />
+    <ClCompile Include="State\IState.cpp" />
+    <ClCompile Include="State\States\Acceleration.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>

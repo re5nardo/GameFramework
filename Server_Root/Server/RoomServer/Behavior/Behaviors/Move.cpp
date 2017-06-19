@@ -6,7 +6,9 @@
 #include "../../Game/BaeGameRoom.h"
 #include "btBulletCollisionCommon.h"
 
-Move::Move(IEntity* pEntity) : IBehavior(pEntity)
+const string Move::NAME = "Move";
+
+Move::Move(IEntity* pEntity, int nMasterDataID) : IBehavior(pEntity, nMasterDataID)
 {
 }
 
@@ -14,17 +16,9 @@ Move::~Move()
 {
 }
 
-int Move::GetID()
-{
-	return BEHAVIOR_ID;
-}
-
 void Move::Start(__int64 lStartTime, ...)
 {
-	if (!m_bActivated)
-	{
-		IBehavior::Start(lStartTime);
-	}
+	__super::Start(lStartTime);
 
 	va_list ap;
 	va_start(ap, lStartTime);
@@ -33,8 +27,8 @@ void Move::Start(__int64 lStartTime, ...)
 	m_pGameRoom = va_arg(ap, BaeGameRoom*);
 	va_end(ap);
 
-	if (m_pEntity->GetBehavior(Idle_ID)->IsActivated())
-		m_pEntity->GetBehavior(Idle_ID)->Stop();
+	if (m_pEntity->GetBehavior(BehaviorID::IDLE)->IsActivated())
+		m_pEntity->GetBehavior(BehaviorID::IDLE)->Stop();
 }
 
 void Move::Initialize()
@@ -80,7 +74,7 @@ void Move::Update(__int64 lUpdateTime)
 	//	Rotation end
 
 	btVector3 vec3Pos = m_pEntity->GetPosition();
-	float fExpectedTime = sqrt(powf(m_vec3Dest.x() - vec3Pos.x(), 2.0f) /*+ powf(m_vec3Dest.y - vec3Pos.y, 2.0f)*/ + powf(m_vec3Dest.z() - vec3Pos.z(), 2.0f)) / m_pEntity->GetSpeed();
+	float fExpectedTime = sqrt(powf(m_vec3Dest.x() - vec3Pos.x(), 2.0f) /*+ powf(m_vec3Dest.y - vec3Pos.y, 2.0f)*/ + powf(m_vec3Dest.z() - vec3Pos.z(), 2.0f)) / m_pEntity->GetMoveSpeed();
 
 	btVector3 current = Util::Lerp(vec3Pos, m_vec3Dest, fDeltaTime / fExpectedTime);
 	btTransform trHit;

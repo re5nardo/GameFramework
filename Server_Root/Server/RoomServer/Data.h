@@ -17,9 +17,16 @@ public:
 struct Stat
 {
 public:
-	Stat(){ fSpeed = 0.0f; fAgility = 0.0f; };
-	Stat(float fSpeed, float fAgility){ this->fSpeed = fSpeed; this->fAgility = fAgility; };
+	Stat() {};
+	Stat(float fMoveSpeed, int nHP, int nMP)
+	{
+		m_fMoveSpeed = fMoveSpeed;
+		m_nHP = nHP;
+		m_nMP = nMP;
+	};
+
 public:
-	float fSpeed = 0.0f;
-	float fAgility = 0.0f;
+	float m_fMoveSpeed = 0.0f;
+	int m_nHP = 0;					//	Health Point
+	int m_nMP = 0;					//	Mana Point
 };

@@ -64,12 +64,6 @@
     <Filter Include="헤더 파일\Behavior">
       <UniqueIdentifier>{88b964e1-8f93-4622-b100-ec09f99c2d40}</UniqueIdentifier>
     </Filter>
-    <Filter Include="헤더 파일\Condition">
-      <UniqueIdentifier>{434a1f7f-43e4-443f-81eb-dac56de13f60}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="소스 파일\Condition">
-      <UniqueIdentifier>{61929637-43e9-4b3c-841c-b3faa41fff96}</UniqueIdentifier>
-    </Filter>
     <Filter Include="헤더 파일\Entity">
       <UniqueIdentifier>{01eb0fa1-452d-4f11-9f9c-67712daa1d9c}</UniqueIdentifier>
     </Filter>
@@ -99,6 +93,36 @@
     </Filter>
     <Filter Include="헤더 파일\Entity\Entities\Character\Characters">
       <UniqueIdentifier>{02759604-a752-4987-9f58-e3c27e80a57f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\State">
+      <UniqueIdentifier>{42787dbf-24c6-45ff-a6f1-b2808b4b8ac1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\State\States">
+      <UniqueIdentifier>{0b80c5a4-8e3a-459c-8c67-253d8194cd27}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\State">
+      <UniqueIdentifier>{26a2bc29-77df-4391-87e0-24b0aff9ed69}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\State\States">
+      <UniqueIdentifier>{25d54140-483d-4329-b225-3380c62c2161}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\MasterData">
+      <UniqueIdentifier>{ce4c8ba4-a115-4797-9483-3326acda1f00}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\MasterData">
+      <UniqueIdentifier>{ea8e4474-340d-4428-a2f0-0a07a761eda0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Skill">
+      <UniqueIdentifier>{958dcb05-82e1-4cee-88e9-de1491af01c0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Skill">
+      <UniqueIdentifier>{8dfc48cd-a7a0-4b50-8b9d-a7e9d6144290}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Skill\Skills">
+      <UniqueIdentifier>{b3ae6677-a683-48da-9c59-5f96377f3a01}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Skill\Skills">
+      <UniqueIdentifier>{e410c0e4-3cf0-4886-be48-15894d81c9f7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -192,9 +216,6 @@
     <ClInclude Include="Entity\IEntity.h">
       <Filter>헤더 파일\Entity</Filter>
     </ClInclude>
-    <ClInclude Include="Condition\ICondition.h">
-      <Filter>헤더 파일\Condition</Filter>
-    </ClInclude>
     <ClInclude Include="Behavior\IBehavior.h">
       <Filter>헤더 파일\Behavior</Filter>
     </ClInclude>
@@ -206,12 +227,6 @@
     </ClInclude>
     <ClInclude Include="Behavior\BehaviorIDs.h">
       <Filter>헤더 파일\Behavior</Filter>
-    </ClInclude>
-    <ClInclude Include="Entity\Entities\Character\ICharacter.h">
-      <Filter>헤더 파일\Entity\Entities\Character</Filter>
-    </ClInclude>
-    <ClInclude Include="Entity\Entities\Character\Characters\MisterBae.h">
-      <Filter>헤더 파일\Entity\Entities\Character\Characters</Filter>
     </ClInclude>
     <ClInclude Include="Behavior\Behaviors\Idle.h">
       <Filter>헤더 파일\Behavior\Behaviors</Filter>
@@ -236,6 +251,51 @@
     </ClInclude>
     <ClInclude Include="Game\CollisionManager.h">
       <Filter>헤더 파일\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="State\IState.h">
+      <Filter>헤더 파일\State</Filter>
+    </ClInclude>
+    <ClInclude Include="State\StateIDs.h">
+      <Filter>헤더 파일\State</Filter>
+    </ClInclude>
+    <ClInclude Include="State\States\Acceleration.h">
+      <Filter>헤더 파일\State\States</Filter>
+    </ClInclude>
+    <ClInclude Include="Messages\GameInputSkillToR.h">
+      <Filter>헤더 파일\Messages\ToRoom</Filter>
+    </ClInclude>
+    <ClInclude Include="MasterData\MasterDataManager.h">
+      <Filter>헤더 파일\MasterData</Filter>
+    </ClInclude>
+    <ClInclude Include="MasterData\IMasterData.h">
+      <Filter>헤더 파일\MasterData</Filter>
+    </ClInclude>
+    <ClInclude Include="MasterData\Skill.h">
+      <Filter>헤더 파일\MasterData</Filter>
+    </ClInclude>
+    <ClInclude Include="MasterData\Character.h">
+      <Filter>헤더 파일\MasterData</Filter>
+    </ClInclude>
+    <ClInclude Include="MasterData\Behavior.h">
+      <Filter>헤더 파일\MasterData</Filter>
+    </ClInclude>
+    <ClInclude Include="MasterData\State.h">
+      <Filter>헤더 파일\MasterData</Filter>
+    </ClInclude>
+    <ClInclude Include="Factory.h">
+      <Filter>헤더 파일\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Entity\Entities\Character\Character.h">
+      <Filter>헤더 파일\Entity\Entities\Character</Filter>
+    </ClInclude>
+    <ClInclude Include="Skill\ISkill.h">
+      <Filter>헤더 파일\Skill</Filter>
+    </ClInclude>
+    <ClInclude Include="Behavior\Behaviors\Dash.h">
+      <Filter>헤더 파일\Behavior\Behaviors</Filter>
+    </ClInclude>
+    <ClInclude Include="Skill\Skills\ContinueSkill.h">
+      <Filter>헤더 파일\Skill\Skills</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -299,9 +359,6 @@
     <ClCompile Include="Behavior\Behaviors\Move.cpp">
       <Filter>소스 파일\Behavior\Behaviors</Filter>
     </ClCompile>
-    <ClCompile Include="Entity\Entities\Character\ICharacter.cpp">
-      <Filter>소스 파일\Entity\Entities\Character</Filter>
-    </ClCompile>
     <ClCompile Include="Entity\IEntity.cpp">
       <Filter>소스 파일\Entity</Filter>
     </ClCompile>
@@ -314,12 +371,6 @@
     <ClCompile Include="Behavior\IBehavior.cpp">
       <Filter>소스 파일\Behavior</Filter>
     </ClCompile>
-    <ClCompile Include="Condition\Condition.cpp">
-      <Filter>소스 파일\Condition</Filter>
-    </ClCompile>
-    <ClCompile Include="Entity\Entities\Character\Characters\MisterBae.cpp">
-      <Filter>소스 파일\Entity\Entities\Character\Characters</Filter>
-    </ClCompile>
     <ClCompile Include="..\CommonSources\tinyxml2.cpp">
       <Filter>소스 파일\Common</Filter>
     </ClCompile>
@@ -331,6 +382,48 @@
     </ClCompile>
     <ClCompile Include="Game\CollisionManager.cpp">
       <Filter>소스 파일\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="State\IState.cpp">
+      <Filter>소스 파일\State</Filter>
+    </ClCompile>
+    <ClCompile Include="State\States\Acceleration.cpp">
+      <Filter>소스 파일\State\States</Filter>
+    </ClCompile>
+    <ClCompile Include="Messages\GameInputSkillToR.cpp">
+      <Filter>소스 파일\Messages\ToRoom</Filter>
+    </ClCompile>
+    <ClCompile Include="MasterData\MasterDataManager.cpp">
+      <Filter>소스 파일\MasterData</Filter>
+    </ClCompile>
+    <ClCompile Include="MasterData\IMasterData.cpp">
+      <Filter>소스 파일\MasterData</Filter>
+    </ClCompile>
+    <ClCompile Include="MasterData\SKill.cpp">
+      <Filter>소스 파일\MasterData</Filter>
+    </ClCompile>
+    <ClCompile Include="MasterData\Character.cpp">
+      <Filter>소스 파일\MasterData</Filter>
+    </ClCompile>
+    <ClCompile Include="MasterData\Behavior.cpp">
+      <Filter>소스 파일\MasterData</Filter>
+    </ClCompile>
+    <ClCompile Include="MasterData\State.cpp">
+      <Filter>소스 파일\MasterData</Filter>
+    </ClCompile>
+    <ClCompile Include="Factory.cpp">
+      <Filter>소스 파일\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Entity\Entities\Character\Character.cpp">
+      <Filter>소스 파일\Entity\Entities\Character</Filter>
+    </ClCompile>
+    <ClCompile Include="Skill\ISkill.cpp">
+      <Filter>소스 파일\Skill</Filter>
+    </ClCompile>
+    <ClCompile Include="Behavior\Behaviors\Dash.cpp">
+      <Filter>소스 파일\Behavior\Behaviors</Filter>
+    </ClCompile>
+    <ClCompile Include="Skill\Skills\ContinueSkill.cpp">
+      <Filter>소스 파일\Skill\Skills</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

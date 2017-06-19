@@ -11,3 +11,4 @@
 #include "Messages\PreparationStateToC.h"
 #include "Messages\PreparationStateToR.h"
 #include "Messages\GameEventStopToR.h"
+#include "Messages\GameInputSkillToR.h"

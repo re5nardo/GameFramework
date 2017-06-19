@@ -1,0 +1,10 @@
+include "FBSData.fbs";
+
+table GameInputSkillToR_Data
+{
+	PlayerIndex:int;
+	SkillID:int;
+	Vector3s:[FBSData.Vector3];
+	Ints:[int];
+	Floats:[float];
+}

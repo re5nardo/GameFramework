@@ -64,3 +64,6 @@ flatc --cpp -o SourceFiles\cpp FBSFiles\SelectNormalGameToL_Data.fbs
 
 flatc --csharp -o SourceFiles\csharp FBSFiles\WorldSnapShotToC_Data.fbs
 flatc --cpp -o SourceFiles\cpp FBSFiles\WorldSnapShotToC_Data.fbs
+
+flatc --csharp -o SourceFiles\csharp FBSFiles\GameInputSkillToR_Data.fbs
+flatc --cpp -o SourceFiles\cpp FBSFiles\GameInputSkillToR_Data.fbs

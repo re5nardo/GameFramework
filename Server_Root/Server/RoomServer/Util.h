@@ -97,15 +97,39 @@ public:
 		return q;
 	}
 
-	static void StringSplit(string text, char delim, vector<string>* output)
+	static void Parse(string text, char delim, vector<string>* output)
 	{
 		stringstream ss;
 		ss.str(text);
 		string item;
-		vector<string> vecText;
+		output->clear();
 		while (getline(ss, item, delim))
 		{
 			output->push_back(item);
+		}
+	}
+
+	static void Parse(string text, char delim, vector<int>* output)
+	{
+		vector<string> temp;
+		Parse(text, delim, &temp);
+
+		output->clear();
+		for (vector<string>::iterator it = temp.begin(); it != temp.end(); ++it)
+		{
+			output->push_back(atoi((*it).c_str()));
+		}
+	}
+
+	static void Parse(string text, char delim, vector<double>* output)
+	{
+		vector<string> temp;
+		Parse(text, delim, &temp);
+
+		output->clear();
+		for (vector<string>::iterator it = temp.begin(); it != temp.end(); ++it)
+		{
+			output->push_back(atof((*it).c_str()));
 		}
 	}
 
@@ -117,7 +141,7 @@ public:
 		}
 
 		vector<string> output;
-		StringSplit(text, ',', &output);
+		Parse(text, ',', &output);
 
 		return btVector3(atof(output[0].c_str()), atof(output[1].c_str()), atof(output[2].c_str()));
 	}

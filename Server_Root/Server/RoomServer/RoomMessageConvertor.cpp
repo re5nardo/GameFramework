@@ -35,6 +35,10 @@ IMessage* RoomMessageConvertor::GetMessage(const unsigned short nMessageID, cons
 	{
 		pMsg = new GameEventStopToR();
 	}
+	else if (nMessageID == GameInputSkillToR::MESSAGE_ID)
+	{
+		pMsg = new GameInputSkillToR();
+	}
 
 	if (pMsg != NULL)
 	{

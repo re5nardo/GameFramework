@@ -2,6 +2,8 @@
 
 #include <list>
 #include "../Behavior/IBehavior.h"
+#include "../State/IState.h"
+#include "../Skill/ISkill.h"
 #include "btBulletCollisionCommon.h"
 
 using namespace std;
@@ -9,11 +11,12 @@ using namespace std;
 class IEntity
 {
 public:
-	IEntity(int nID);
+	IEntity(int nID, int nMasterDataID);
 	virtual ~IEntity();
 
-private:
-	int m_nID;
+protected:
+	int m_nID = -1;
+	int m_nMasterDataID = -1;
 
 private:
 	btVector3 m_vec3Position = btVector3(0, 0, 0);
@@ -21,15 +24,16 @@ private:
 
 protected:
 	list<IBehavior*> m_listBehavior;
-
-protected:
-	virtual void InitializeBehavior() = 0;
+	list<IState*> m_listState;
+	list<ISkill*> m_listSkill;
 
 public:
-	virtual float GetSpeed() = 0;
+	virtual void Initialize() = 0;
+	virtual float GetMoveSpeed() = 0;
 
 public:
 	int GetID();
+	int GetMasterDataID();
 
 	btVector3 GetPosition();
 	void SetPosition(btVector3& vec3Position);
@@ -37,8 +41,21 @@ public:
 	btVector3 GetRotation();
 	void SetRotation(btVector3& vec3Rotation);
 
-	IBehavior* GetBehavior(int nID);
+public:
+	IBehavior* GetBehavior(int nMasterDataID);
 	list<IBehavior*> GetAllBehaviors();
 	list<IBehavior*> GetActivatedBehaviors();
 	bool IsBehavioring();
+
+public:
+	IState* GetState(int nID);
+	list<IState*> GetStates();
+	void AddState(IState* pState);
+	void RemoveState(int nID);
+
+public:
+	ISkill* GetSkill(int nID);
+	list<ISkill*> GetAllSkills();
+	list<ISkill*> GetActivatedSkills();
+	bool IsSkilling();
 };

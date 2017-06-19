@@ -1,17 +1,14 @@
 #include "stdafx.h"
 #include "Idle.h"
 
-Idle::Idle(IEntity* pEntity) : IBehavior(pEntity)
+const string Idle::NAME = "Idle";
+
+Idle::Idle(IEntity* pEntity, int nMasterDataID) : IBehavior(pEntity, nMasterDataID)
 {
 }
 
 Idle::~Idle()
 {
-}
-
-int Idle::GetID()
-{
-	return BEHAVIOR_ID;
 }
 
 void Idle::Initialize()

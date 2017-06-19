@@ -5,10 +5,10 @@ using UnityEngine.SceneManagement;
 
 public class BaeGameRoom : IGameRoom
 {
-    [SerializeField] private InputManager         m_InputManager = null;
-    [SerializeField] private Camera               m_CameraMain = null;
-    [SerializeField] private CameraController     m_CameraController;
-
+    [SerializeField] private InputManager           m_InputManager = null;
+    [SerializeField] private Camera                 m_CameraMain = null;
+    [SerializeField] private CameraController       m_CameraController = null;
+    [SerializeField] private SkillController        m_SkillController = null;
 
     //  Temp
     private string m_strIP = "172.30.1.18";
@@ -151,6 +151,8 @@ public class BaeGameRoom : IGameRoom
                 {
                     m_CameraController.SetTarget(misterBae.GetUITransform());
                     m_CameraController.StartFollowTarget();
+
+                    m_SkillController.SetSkills(new List<int>(){0, 1, 2});
                 }
             }
 

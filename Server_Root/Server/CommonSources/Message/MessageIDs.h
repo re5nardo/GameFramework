@@ -25,6 +25,7 @@
 #define GameEventMoveToR_ID						40002
 #define EnterRoomToR_ID							40003
 #define GameEventStopToR_ID						40005
+#define GameInputSkillToR_ID					40006
 
 
 //	Room -> Client (50000 ~ 59999)

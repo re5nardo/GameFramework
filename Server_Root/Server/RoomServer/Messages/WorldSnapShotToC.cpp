@@ -37,7 +37,7 @@ const char* WorldSnapShotToC::Serialize(int* pLength)
 		list<IBehavior*> listBehavior = pEntity->GetActivatedBehaviors();
 		for (list<IBehavior*>::iterator it = listBehavior.begin(); it != listBehavior.end(); ++it)
 		{
-			vecKeys.push_back((*it)->GetID());
+			vecKeys.push_back((*it)->GetMasterDataID());
 			vecValues.push_back((*it)->GetTime());
 		}
 

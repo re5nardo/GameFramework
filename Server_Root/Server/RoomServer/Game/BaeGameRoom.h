@@ -20,7 +20,8 @@ class GameEventStopToR;
 class EnterRoomToR;
 class PreparationStateToR;
 class IMessage;
-class ICharacter;
+class Character;
+class GameInputSkillToR;
 
 using namespace std;
 using namespace chrono;
@@ -32,7 +33,7 @@ public:
 	virtual ~BaeGameRoom();
 
 private:
-	const __int64 TIME_STEP = 15;		//	<-- milliseconds, So TickRate is 66.6666... (1000(1sec) / 15 = 66.6666...)
+	const __int64 TIME_STEP = 15;		//	<-- milliseconds, TickRate is 1000(1sec) / TIME_STEP
 
 private:
 	mutex m_LockEntitySequence;
@@ -46,7 +47,7 @@ private:
 	map<int, float>					m_mapPlayerIndexPreparationState;		//	key : PlayerIndex, value : PreparationState
 
 private:
-	map<int, ICharacter*>	m_mapCharacter;			//	key : PlayerIndex, value : Character
+	map<int, Character*>	m_mapCharacter;			//	key : PlayerIndex, value : Character
 	map<int, IMessage*>		m_mapPlayerInput;		//	key : PlayerIndex, value : Input Message
 	//map<int, int>			m_mapPlayerEntity;		//	key : PlayerIndex, value : Entity ID
 	map<int, int>			m_mapEntityPlayer;		//	key : Entity ID, value : PlayerIndex
@@ -81,6 +82,7 @@ private:
 	void OnGameEventStopToR(GameEventStopToR* pMsg, unsigned int socket);
 	void OnEnterRoomToR(EnterRoomToR* pMsg, unsigned int socket);
 	void OnPreparationStateToR(PreparationStateToR* pMsg, unsigned int socket);
+	void OnGameInputSkillToR(GameInputSkillToR* pMsg, unsigned int socket);
 
 private:
 	int GetPlayerIndexByPlayerKey(string strPlayerKey);
