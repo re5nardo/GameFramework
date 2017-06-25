@@ -4,6 +4,7 @@
 
 class IEntity;
 class BaeGameRoom;
+class GameInputSkillToR;
 
 class ISkill
 {
@@ -32,7 +33,7 @@ public:
 	int GetMasterDataID();
 	virtual void Initialize() = 0;
 	virtual void Update(__int64 lUpdateTime) = 0;
-	virtual void ProcessInput(__int64 lTime, BaeGameRoom* pBaeGameRoom) = 0;
+	virtual void ProcessInput(__int64 lTime, BaeGameRoom* pBaeGameRoom, GameInputSkillToR* pMsg) = 0;
 
 public:
 	float GetTime();

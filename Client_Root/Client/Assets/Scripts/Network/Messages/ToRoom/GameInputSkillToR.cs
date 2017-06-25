@@ -6,11 +6,19 @@ public class GameInputSkillToR : IMessage
 {
     public const ushort MESSAGE_ID = MessageID.GameInputSkillToR_ID;
 
+    public enum InputType
+    {
+        Click = 0,
+        Press,
+        Release,
+    }
+
     public int m_nPlayerIndex;
     public int m_nSkillID;
     public List<Vector3> m_listVector3 = new List<Vector3>();
     public List<int> m_listInt = new List<int>();
     public List<float> m_listFloat = new List<float>();
+    public InputType m_InputType;
 
     public ushort GetID()
     {
@@ -41,6 +49,7 @@ public class GameInputSkillToR : IMessage
         GameInputSkillToR_Data.AddVector3s(builder, vector3s);
         GameInputSkillToR_Data.AddInts(builder, ints);
         GameInputSkillToR_Data.AddFloats(builder, floats);
+        GameInputSkillToR_Data.AddInputType(builder, (int)m_InputType);
         var data = GameInputSkillToR_Data.EndGameInputSkillToR_Data(builder);
 
         builder.Finish(data.Value);
@@ -69,6 +78,7 @@ public class GameInputSkillToR : IMessage
         {
             m_listFloat.Add(data.GetFloats(i));
         }
+        m_InputType = (InputType)data.InputType;
 
         return true;
     }

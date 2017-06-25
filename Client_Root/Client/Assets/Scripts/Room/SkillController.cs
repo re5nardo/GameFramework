@@ -7,7 +7,7 @@ public class SkillController : MonoBehaviour
     private const int       SKILL_BUTTON_COUNT_MAX = 4;
     private const float     SKILL_BUTTON_INTERVAL = 170;
 
-    public IntHandler onSkillButtonClicked = null;
+//    public IntHandler onSkillButtonClicked = null;
 
     private List<SkillButton> m_listSkillButton = new List<SkillButton>();
     private Transform m_trSkillController = null;
@@ -56,6 +56,8 @@ public class SkillController : MonoBehaviour
         skillButton.transform.localRotation = Quaternion.identity;
         skillButton.transform.localScale = Vector3.one;
         skillButton.onClicked += OnSkillButtonClicked;
+        skillButton.onPressed += OnSkillButtonPressed;
+        skillButton.onReleased += OnSkillButtonReleased;
 
         m_listSkillButton.Add(skillButton);
 
@@ -67,6 +69,8 @@ public class SkillController : MonoBehaviour
         foreach(SkillButton skillButton in m_listSkillButton)
         {
             skillButton.onClicked -= OnSkillButtonClicked;
+            skillButton.onPressed -= OnSkillButtonPressed;
+            skillButton.onReleased -= OnSkillButtonReleased;
             Destroy(skillButton.gameObject);
         }
         m_listSkillButton.Clear();
@@ -75,12 +79,30 @@ public class SkillController : MonoBehaviour
 #region Event Handler
     private void OnSkillButtonClicked(int nSkillID)
     {
-        if (onSkillButtonClicked != null)
-            onSkillButtonClicked(nSkillID);
-
         GameInputSkillToR skillToR = new GameInputSkillToR();
         skillToR.m_nPlayerIndex = 0;
         skillToR.m_nSkillID = nSkillID;
+        skillToR.m_InputType = GameInputSkillToR.InputType.Click;
+
+        RoomNetwork.Instance.Send(skillToR);
+    }
+
+    private void OnSkillButtonPressed(int nSkillID)
+    {
+        GameInputSkillToR skillToR = new GameInputSkillToR();
+        skillToR.m_nPlayerIndex = 0;
+        skillToR.m_nSkillID = nSkillID;
+        skillToR.m_InputType = GameInputSkillToR.InputType.Press;
+
+        RoomNetwork.Instance.Send(skillToR);
+    }
+
+    private void OnSkillButtonReleased(int nSkillID)
+    {
+        GameInputSkillToR skillToR = new GameInputSkillToR();
+        skillToR.m_nPlayerIndex = 0;
+        skillToR.m_nSkillID = nSkillID;
+        skillToR.m_InputType = GameInputSkillToR.InputType.Release;
 
         RoomNetwork.Instance.Send(skillToR);
     }

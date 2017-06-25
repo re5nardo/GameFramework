@@ -7,4 +7,5 @@ table GameInputSkillToR_Data
 	Vector3s:[FBSData.Vector3];
 	Ints:[int];
 	Floats:[float];
+	InputType:int;
 }

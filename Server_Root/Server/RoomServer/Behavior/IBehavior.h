@@ -23,6 +23,8 @@ protected:
 
 public:
 	int GetMasterDataID();
+
+public:
 	virtual void Initialize() = 0;
 	virtual void Update(__int64 lUpdateTime) = 0;
 

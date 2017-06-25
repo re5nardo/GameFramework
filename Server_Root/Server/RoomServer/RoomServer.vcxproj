@@ -99,6 +99,7 @@
     <ClInclude Include="..\CommonSources\Singleton.h" />
     <ClInclude Include="..\CommonSources\tinyxml2.h" />
     <ClInclude Include="Behavior\BehaviorIDs.h" />
+    <ClInclude Include="Behavior\Behaviors\AddState.h" />
     <ClInclude Include="Behavior\Behaviors\Dash.h" />
     <ClInclude Include="Behavior\Behaviors\Idle.h" />
     <ClInclude Include="Behavior\Behaviors\Move.h" />
@@ -133,9 +134,11 @@
     <ClInclude Include="RoomMessageHeader.h" />
     <ClInclude Include="Skill\ISkill.h" />
     <ClInclude Include="Skill\Skills\ContinueSkill.h" />
+    <ClInclude Include="Skill\Skills\FireSkill.h" />
     <ClInclude Include="State\IState.h" />
     <ClInclude Include="State\StateIDs.h" />
     <ClInclude Include="State\States\Acceleration.h" />
+    <ClInclude Include="State\States\Shield.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="Util.h" />
@@ -148,6 +151,7 @@
     <ClCompile Include="..\CommonSources\Network\NetworkCore.cpp" />
     <ClCompile Include="..\CommonSources\QuadTreePrerequisites.cpp" />
     <ClCompile Include="..\CommonSources\tinyxml2.cpp" />
+    <ClCompile Include="Behavior\Behaviors\AddState.cpp" />
     <ClCompile Include="Behavior\Behaviors\Dash.cpp" />
     <ClCompile Include="Behavior\Behaviors\Idle.cpp" />
     <ClCompile Include="Behavior\Behaviors\Move.cpp" />
@@ -180,8 +184,10 @@
     <ClCompile Include="RoomServer.cpp" />
     <ClCompile Include="Skill\ISkill.cpp" />
     <ClCompile Include="Skill\Skills\ContinueSkill.cpp" />
+    <ClCompile Include="Skill\Skills\FireSkill.cpp" />
     <ClCompile Include="State\IState.cpp" />
     <ClCompile Include="State\States\Acceleration.cpp" />
+    <ClCompile Include="State\States\Shield.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>

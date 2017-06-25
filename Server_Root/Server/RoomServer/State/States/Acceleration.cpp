@@ -2,8 +2,12 @@
 #include "Acceleration.h"
 #include "../../Entity/IEntity.h"
 #include "../../Entity/Entities/Character/Character.h"
+#include "../../MasterData/MasterDataManager.h"
+#include "../../MasterData/State.h"
 
-Acceleration::Acceleration(IEntity* pEntity, __int64 lStartTime) : IState(pEntity, lStartTime)
+const string Acceleration::NAME = "Acceleration";
+
+Acceleration::Acceleration(IEntity* pEntity, int nMasterDataID, __int64 lStartTime) : IState(pEntity, nMasterDataID, lStartTime)
 {
 }
 
@@ -16,61 +20,45 @@ int Acceleration::GetID()
 	return STATE_ID;
 }
 
+void Acceleration::Initialize()
+{
+	MasterData::State* pMasterState = NULL;
+	MasterDataManager::Instance()->GetData<MasterData::State>(m_nMasterDataID, pMasterState);
+
+	m_fLength = pMasterState->m_fLength;
+
+	for (int i = 0; i < pMasterState->m_vecDoubleParam1.size(); ++i)
+	{
+		m_vecEvent.push_back(make_pair(pMasterState->m_vecDoubleParam1[i], pMasterState->m_vecDoubleParam2[i]));
+	}
+}
+
 void Acceleration::Update(__int64 lUpdateTime)
 {
-	//	Validation check
-	if (lUpdateTime != m_lStartTime && lUpdateTime <= m_lLastUpdateTime)
+	if (m_lLastUpdateTime == lUpdateTime)
 		return;
 
-	__int64 last = m_lLastUpdateTime - m_lStartTime;
-	__int64 cur = lUpdateTime - m_lStartTime;
-
-	if (last < 1000 && cur >= 1000)
+	float fLast = 0, fCur = 0;
+	if (m_lStartTime != lUpdateTime)
 	{
-		((Character*)m_pEntity)->PlusMoveSpeed(1);
-	}
-	else if (last < 2000 && cur >= 2000)
-	{
-		((Character*)m_pEntity)->PlusMoveSpeed(1);
-	}
-	else if (last < 3000 && cur >= 3000)
-	{
-		((Character*)m_pEntity)->PlusMoveSpeed(1);
-	}
-	else if (last < 4000 && cur >= 4000)
-	{
-		((Character*)m_pEntity)->PlusMoveSpeed(1);
-	}
-	else if (last < 5000 && cur >= 5000)
-	{
-		((Character*)m_pEntity)->PlusMoveSpeed(1);
-	}
-	else if (last < 6000 && cur >= 6000)
-	{
-		((Character*)m_pEntity)->MinusMoveSpeed(1);
-	}
-	else if (last < 7000 && cur >= 7000)
-	{
-		((Character*)m_pEntity)->MinusMoveSpeed(1);
-	}
-	else if (last < 8000 && cur >= 8000)
-	{
-		((Character*)m_pEntity)->MinusMoveSpeed(1);
-	}
-	else if (last < 9000 && cur >= 9000)
-	{
-		((Character*)m_pEntity)->MinusMoveSpeed(1);
-	}
-	else if (last - m_lStartTime < 10000 && cur >= 10000)
-	{
-		((Character*)m_pEntity)->MinusMoveSpeed(1);
+		fLast = (m_lLastUpdateTime - m_lStartTime) / 1000.0f;
+		fCur = (lUpdateTime - m_lStartTime) / 1000.0f;
 	}
 
-	if (cur >= 10000)
+	for (int i = 0; i <m_vecEvent.size(); ++i)
+	{
+		if (fLast < m_vecEvent[i].first && m_vecEvent[i].first <= fCur)
+		{
+			((Character*)m_pEntity)->PlusMoveSpeed(m_vecEvent[i].second);
+		}
+	}
+
+	if (fCur >= m_fLength)
 	{
 		m_pEntity->RemoveState(STATE_ID);
-		return;
 	}
-
-	m_lLastUpdateTime = lUpdateTime;
+	else
+	{
+		m_lLastUpdateTime = lUpdateTime;
+	}
 }

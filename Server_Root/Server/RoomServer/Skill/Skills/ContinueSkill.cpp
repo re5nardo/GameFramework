@@ -4,6 +4,7 @@
 #include "../../Entity/Entities/Character/Character.h"
 #include "../../MasterData/MasterDataManager.h"
 #include "../../MasterData/Skill.h"
+#include "../../Messages/GameInputSkillToR.h"
 
 const string ContinueSkill::NAME = "ContinueSkill";
 
@@ -32,17 +33,12 @@ void ContinueSkill::Start(__int64 lStartTime, ...)
 {
 	__super::Start(lStartTime);
 
-	BaeGameRoom* pBaeGameRoom;
-
 	va_list ap;
 	va_start(ap, lStartTime);
-	pBaeGameRoom = va_arg(ap, BaeGameRoom*);
+	m_pBaeGameRoom = va_arg(ap, BaeGameRoom*);
 	va_end(ap);
 
 	m_bContinue = true;
-
-	m_pTargetBehavior = m_pEntity->GetBehavior(m_nTargetBehaviorID);
-	m_pTargetBehavior->Start(lStartTime, pBaeGameRoom);
 }
 
 void ContinueSkill::Initialize()
@@ -58,36 +54,50 @@ void ContinueSkill::Initialize()
 
 void ContinueSkill::Update(__int64 lUpdateTime)
 {
-	if (!m_bActivated || (lUpdateTime != m_lStartTime && lUpdateTime <= m_lLastUpdateTime))
+	if (!m_bActivated || (m_lLastUpdateTime == lUpdateTime))
 		return;
 
-	if ((lUpdateTime - m_lStartTime) / 1000 >= m_fLength || !m_bContinue)
+	float fLast = 0, fCur = 0;
+	if (m_lStartTime != lUpdateTime)
 	{
-		m_pTargetBehavior->Stop();
-		m_pTargetBehavior = NULL;
-
-		m_bContinue = false;
-		m_bActivated = false;
-		m_lEndTime = lUpdateTime;
-
-		return;
+		fLast = (m_lLastUpdateTime - m_lStartTime) / 1000.0f;
+		fCur = (lUpdateTime - m_lStartTime) / 1000.0f;
 	}
-
-	m_bContinue = false;
-	m_lLastUpdateTime = lUpdateTime;
-}
-
-void ContinueSkill::ProcessInput(__int64 lTime, BaeGameRoom* pBaeGameRoom)
-{
-	if (m_bActivated)
+	
+	if (fCur == 0)
 	{
-		m_bContinue = true;
+		m_pTargetBehavior = m_pEntity->GetBehavior(m_nTargetBehaviorID);
+		m_pTargetBehavior->Start(lUpdateTime, m_pBaeGameRoom);
+		m_pTargetBehavior->Update(lUpdateTime);
 	}
 	else
 	{
-		if (!IsValidToStart(lTime))
-			return;
+		if (fCur >= m_fLength || !m_bContinue)
+		{
+			m_pTargetBehavior->Stop();
+			m_pTargetBehavior = NULL;
 
-		Start(lTime, pBaeGameRoom);
+			m_bContinue = false;
+			m_bActivated = false;
+			m_lEndTime = lUpdateTime;
+		}
+	}
+
+	m_lLastUpdateTime = lUpdateTime;
+}
+
+void ContinueSkill::ProcessInput(__int64 lTime, BaeGameRoom* pBaeGameRoom, GameInputSkillToR* pMsg)
+{
+	if (m_bActivated)
+	{
+		if (pMsg->m_InputType == GameInputSkillToR::InputType::Release)
+			m_bContinue = false;
+	}
+	else
+	{
+		if (pMsg->m_InputType == GameInputSkillToR::InputType::Press && IsValidToStart(lTime))
+		{
+			Start(lTime, pBaeGameRoom);
+		}
 	}
 }

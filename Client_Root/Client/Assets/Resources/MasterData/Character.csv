@@ -1,0 +1,2 @@
+ID,Name,ClassName,SkillIDs,BehaviorIDs,HP,MP,MoveSpeed,Size
+0,MisterBae,Character,"0,1,2","0,1,2,3,4,5",1,100,5,1

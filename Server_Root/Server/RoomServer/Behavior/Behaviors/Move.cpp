@@ -37,11 +37,14 @@ void Move::Initialize()
 
 void Move::Update(__int64 lUpdateTime)
 {
-	if (!m_bActivated)
+	if (!m_bActivated || (m_lLastUpdateTime == lUpdateTime))
 		return;
 
-	float fDeltaTime = (lUpdateTime - m_lLastUpdateTime) / 1000.0f;
-	m_lLastUpdateTime = lUpdateTime;
+	float fDeltaTime = 0;
+	if (m_lStartTime != lUpdateTime)
+	{
+		fDeltaTime = (lUpdateTime - m_lLastUpdateTime) / 1000.0f;
+	}
 
 	//	Rotation
 	btVector3 vec3Move = m_vec3Dest - m_pEntity->GetPosition();
@@ -96,4 +99,6 @@ void Move::Update(__int64 lUpdateTime)
 
 		m_bActivated = false;
 	}
+
+	m_lLastUpdateTime = lUpdateTime;
 }

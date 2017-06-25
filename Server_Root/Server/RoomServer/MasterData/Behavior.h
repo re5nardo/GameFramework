@@ -14,9 +14,10 @@ namespace MasterData
 		virtual ~Behavior();
 
 	public:
-		string m_strName;
-		string m_strClassName;
-		string m_strStringParams;
+		string	m_strName;
+		string	m_strClassName;
+		float	m_fLength;
+		string	m_strStringParams;
 
 	public:
 		void SetData(Sheet* pSheet, int nRow) override;

@@ -19,14 +19,17 @@ public sealed class GameInputSkillToR_Data : Table {
   public float GetFloats(int j) { int o = __offset(12); return o != 0 ? bb.GetFloat(__vector(o) + j * 4) : (float)0; }
   public int FloatsLength { get { int o = __offset(12); return o != 0 ? __vector_len(o) : 0; } }
   public ArraySegment<byte>? GetFloatsBytes() { return __vector_as_arraysegment(12); }
+  public int InputType { get { int o = __offset(14); return o != 0 ? bb.GetInt(o + bb_pos) : (int)0; } }
 
   public static Offset<GameInputSkillToR_Data> CreateGameInputSkillToR_Data(FlatBufferBuilder builder,
       int PlayerIndex = 0,
       int SkillID = 0,
       VectorOffset Vector3sOffset = default(VectorOffset),
       VectorOffset IntsOffset = default(VectorOffset),
-      VectorOffset FloatsOffset = default(VectorOffset)) {
-    builder.StartObject(5);
+      VectorOffset FloatsOffset = default(VectorOffset),
+      int InputType = 0) {
+    builder.StartObject(6);
+    GameInputSkillToR_Data.AddInputType(builder, InputType);
     GameInputSkillToR_Data.AddFloats(builder, FloatsOffset);
     GameInputSkillToR_Data.AddInts(builder, IntsOffset);
     GameInputSkillToR_Data.AddVector3s(builder, Vector3sOffset);
@@ -35,7 +38,7 @@ public sealed class GameInputSkillToR_Data : Table {
     return GameInputSkillToR_Data.EndGameInputSkillToR_Data(builder);
   }
 
-  public static void StartGameInputSkillToR_Data(FlatBufferBuilder builder) { builder.StartObject(5); }
+  public static void StartGameInputSkillToR_Data(FlatBufferBuilder builder) { builder.StartObject(6); }
   public static void AddPlayerIndex(FlatBufferBuilder builder, int PlayerIndex) { builder.AddInt(0, PlayerIndex, 0); }
   public static void AddSkillID(FlatBufferBuilder builder, int SkillID) { builder.AddInt(1, SkillID, 0); }
   public static void AddVector3s(FlatBufferBuilder builder, VectorOffset Vector3sOffset) { builder.AddOffset(2, Vector3sOffset.Value, 0); }
@@ -46,6 +49,7 @@ public sealed class GameInputSkillToR_Data : Table {
   public static void AddFloats(FlatBufferBuilder builder, VectorOffset FloatsOffset) { builder.AddOffset(4, FloatsOffset.Value, 0); }
   public static VectorOffset CreateFloatsVector(FlatBufferBuilder builder, float[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddFloat(data[i]); return builder.EndVector(); }
   public static void StartFloatsVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddInputType(FlatBufferBuilder builder, int InputType) { builder.AddInt(5, InputType, 0); }
   public static Offset<GameInputSkillToR_Data> EndGameInputSkillToR_Data(FlatBufferBuilder builder) {
     int o = builder.EndObject();
     return new Offset<GameInputSkillToR_Data>(o);

@@ -1,0 +1,7 @@
+ID,Name,ClassName,Length,StringParams,AnimationName
+0,Idle,Idle,0,,Idle
+1,Move,Move,0,,Move
+2,Stop,Stop,0.5,,Stop
+3,OverHeat,AddState,0.3,0:0.2,OverHeat
+4,ElectronicShield,AddState,0.6,1:0.5,ElectronicShield
+5,RobotDash,Dash,7,Linear:0.2,RobotDash

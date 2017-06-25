@@ -24,6 +24,7 @@ IMessage* GameInputSkillToR::Clone()
 	pClone->m_vecVector3 = m_vecVector3;
 	pClone->m_vecInt = m_vecInt;
 	pClone->m_vecFloat = m_vecFloat;
+	pClone->m_InputType = m_InputType;
 
 	return pClone;
 }
@@ -47,6 +48,7 @@ const char* GameInputSkillToR::Serialize(int* pLength)
 	data_builder.add_Vector3s(vector3s);
 	data_builder.add_Ints(ints);
 	data_builder.add_Floats(floats);
+	data_builder.add_InputType((int)m_InputType);
 	auto data = data_builder.Finish();
 
 	m_Builder.Finish(data);
@@ -75,6 +77,7 @@ bool GameInputSkillToR::Deserialize(const char* pChar)
 	{
 		m_vecFloat.push_back(data->Floats()->Get(i));
 	}
+	m_InputType = (InputType)data->InputType();
 
 	return true;
 }

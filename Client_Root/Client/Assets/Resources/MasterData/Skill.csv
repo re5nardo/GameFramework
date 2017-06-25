@@ -1,0 +1,4 @@
+ID,Name,ClassName,Behaviors,States,StringParams,Length,CoolTime,MP,Res Name
+0,RobotDash,ContinueSkill,5:0,,,5,10,20,
+1,OverHeat,FireSkill,3:0,,,0,20,10,
+2,ElectronicShield,FireSkill,4:0,,,0,30,50,

@@ -18,11 +18,11 @@ int ISkill::GetMasterDataID()
 
 void ISkill::Start(__int64 lStartTime, ...)
 {
-	if (m_bActivated) return;
+	if (m_bActivated)
+		return;
 
 	m_bActivated = true;
 	m_lStartTime = lStartTime;
-	m_lLastUpdateTime = lStartTime;
 }
 
 float ISkill::GetTime()

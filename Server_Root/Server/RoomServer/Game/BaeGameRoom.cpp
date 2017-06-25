@@ -103,7 +103,7 @@ void BaeGameRoom::ProcessInput()
 			for (list<ISkill*>::iterator it = listSkill.begin(); it != listSkill.end(); ++it)
 			{
 				if (pMsg->m_nSkillID == (*it)->GetMasterDataID())
-					(*it)->ProcessInput(m_lLastUpdateTime, this);
+					(*it)->ProcessInput(m_lLastUpdateTime, this, pMsg);
 			}
 		}
 

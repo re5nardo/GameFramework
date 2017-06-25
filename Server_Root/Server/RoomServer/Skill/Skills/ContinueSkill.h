@@ -19,6 +19,7 @@ public:
 private:
 	bool m_bContinue = false;
 	IBehavior* m_pTargetBehavior = NULL;
+	BaeGameRoom* m_pBaeGameRoom = NULL;
 
 private:
 	int		m_nTargetBehaviorID;
@@ -34,5 +35,5 @@ protected:
 public:
 	void Initialize() override;
 	void Update(__int64 lUpdateTime) override;
-	void ProcessInput(__int64 lTime, BaeGameRoom* pBaeGameRoom) override;
+	void ProcessInput(__int64 lTime, BaeGameRoom* pBaeGameRoom, GameInputSkillToR* pMsg) override;
 };

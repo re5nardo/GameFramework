@@ -297,6 +297,15 @@
     <ClInclude Include="Skill\Skills\ContinueSkill.h">
       <Filter>헤더 파일\Skill\Skills</Filter>
     </ClInclude>
+    <ClInclude Include="Skill\Skills\FireSkill.h">
+      <Filter>헤더 파일\Skill\Skills</Filter>
+    </ClInclude>
+    <ClInclude Include="Behavior\Behaviors\AddState.h">
+      <Filter>헤더 파일\Behavior\Behaviors</Filter>
+    </ClInclude>
+    <ClInclude Include="State\States\Shield.h">
+      <Filter>헤더 파일\State\States</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -424,6 +433,15 @@
     </ClCompile>
     <ClCompile Include="Skill\Skills\ContinueSkill.cpp">
       <Filter>소스 파일\Skill\Skills</Filter>
+    </ClCompile>
+    <ClCompile Include="Skill\Skills\FireSkill.cpp">
+      <Filter>소스 파일\Skill\Skills</Filter>
+    </ClCompile>
+    <ClCompile Include="Behavior\Behaviors\AddState.cpp">
+      <Filter>소스 파일\Behavior\Behaviors</Filter>
+    </ClCompile>
+    <ClCompile Include="State\States\Shield.cpp">
+      <Filter>소스 파일\State\States</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
