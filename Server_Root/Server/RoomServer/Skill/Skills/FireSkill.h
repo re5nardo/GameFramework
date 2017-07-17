@@ -12,7 +12,7 @@ using namespace std;
 class FireSkill : public ISkill
 {
 public:
-	FireSkill(IEntity* pEntity, int nMasterDataID);
+	FireSkill(BaeGameRoom* pGameRoom, IEntity* pEntity, int nMasterDataID);
 	virtual ~FireSkill();
 
 public:

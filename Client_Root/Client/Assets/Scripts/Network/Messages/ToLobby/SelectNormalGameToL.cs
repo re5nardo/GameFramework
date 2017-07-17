@@ -4,29 +4,27 @@ public class SelectNormalGameToL : IMessage
 {
     public const ushort MESSAGE_ID = MessageID.SelectNormalGameToL_ID;
 
-    public ushort GetID()
+    public override ushort GetID()
     {
         return MESSAGE_ID;
     }
 
-    public IMessage Clone()
+    public override IMessage Clone()
     {
         return null; 
     }
 
-    public byte[] Serialize()
+    public override byte[] Serialize()
     {
-        FlatBufferBuilder builder = new FlatBufferBuilder(1024);
+        SelectNormalGameToL_Data.StartSelectNormalGameToL_Data(m_Builder);
+        var data = SelectNormalGameToL_Data.EndSelectNormalGameToL_Data(m_Builder);
 
-        SelectNormalGameToL_Data.StartSelectNormalGameToL_Data(builder);
-        var data = SelectNormalGameToL_Data.EndSelectNormalGameToL_Data(builder);
+        m_Builder.Finish(data.Value);
 
-        builder.Finish(data.Value);
-
-        return builder.SizedByteArray();
+        return m_Builder.SizedByteArray();
     }
 
-    public bool Deserialize(byte[] bytes)
+    public override bool Deserialize(byte[] bytes)
     {
         var buf = new ByteBuffer(bytes);
 

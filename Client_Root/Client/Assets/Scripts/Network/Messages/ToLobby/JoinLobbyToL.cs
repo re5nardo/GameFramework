@@ -7,33 +7,31 @@ public class JoinLobbyToL : IMessage
     public string m_strPlayerKey;
     public int m_nAuthKey;
 
-    public ushort GetID()
+    public override ushort GetID()
     {
         return MESSAGE_ID;
     }
 
-    public IMessage Clone()
+    public override IMessage Clone()
     {
         return null; 
     }
 
-    public byte[] Serialize()
+    public override byte[] Serialize()
     {
-        FlatBufferBuilder builder = new FlatBufferBuilder(1024);
+        var playerKey = m_Builder.CreateString(m_strPlayerKey);
 
-        var playerKey = builder.CreateString(m_strPlayerKey);
+        JoinLobbyToL_Data.StartJoinLobbyToL_Data(m_Builder);
+        JoinLobbyToL_Data.AddPlayerKey(m_Builder, playerKey);
+        JoinLobbyToL_Data.AddAuthKey(m_Builder, m_nAuthKey);
+        var data = JoinLobbyToL_Data.EndJoinLobbyToL_Data(m_Builder);
 
-        JoinLobbyToL_Data.StartJoinLobbyToL_Data(builder);
-        JoinLobbyToL_Data.AddPlayerKey(builder, playerKey);
-        JoinLobbyToL_Data.AddAuthKey(builder, m_nAuthKey);
-        var data = JoinLobbyToL_Data.EndJoinLobbyToL_Data(builder);
+        m_Builder.Finish(data.Value);
 
-        builder.Finish(data.Value);
-
-        return builder.SizedByteArray();
+        return m_Builder.SizedByteArray();
     }
 
-    public bool Deserialize(byte[] bytes)
+    public override bool Deserialize(byte[] bytes)
     {
         var buf = new ByteBuffer(bytes);
 

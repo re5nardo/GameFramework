@@ -6,13 +6,18 @@
 #include "../Skill/ISkill.h"
 #include "btBulletCollisionCommon.h"
 
+class BaeGameRoom;
+
 using namespace std;
 
 class IEntity
 {
 public:
-	IEntity(int nID, int nMasterDataID);
+	IEntity(BaeGameRoom* pGameRoom, int nID, int nMasterDataID);
 	virtual ~IEntity();
+
+protected:
+	BaeGameRoom* m_pGameRoom;
 
 protected:
 	int m_nID = -1;

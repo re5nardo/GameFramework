@@ -2,7 +2,7 @@
 #include "GameStartToC.h"
 #include "GameStartToC_Data_generated.h"
 
-GameStartToC::GameStartToC() : m_Builder(1024)
+GameStartToC::GameStartToC()
 {
 }
 

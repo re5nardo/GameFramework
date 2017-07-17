@@ -229,6 +229,10 @@ public class RoomNetwork : MonoSingleton<RoomNetwork>
         {
             msg = new WorldSnapShotToC();
         }
+        else if (nMessageID == WorldInfoToC.MESSAGE_ID)
+        {
+            msg = new WorldInfoToC();
+        }
 
         if (msg != null)
         {

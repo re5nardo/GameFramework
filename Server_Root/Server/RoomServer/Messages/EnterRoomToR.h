@@ -2,13 +2,6 @@
 
 #include "../../CommonSources/Message/IMessage.h"
 #include "../../CommonSources/Message/MessageIDs.h"
-#ifdef max
-#undef max
-#undef min
-#endif
-#include "flatbuffers/flatbuffers.h"
-
-using namespace flatbuffers;
 
 class EnterRoomToR : public IMessage
 {
@@ -18,9 +11,6 @@ public:
 
 public:
 	static const unsigned short MESSAGE_ID = EnterRoomToR_ID;
-
-private:
-	FlatBufferBuilder m_Builder;
 
 public:
 	string m_strPlayerKey;

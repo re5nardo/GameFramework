@@ -3,17 +3,19 @@
 #include <stdarg.h>
 
 class IEntity;
+class BaeGameRoom;
 
 class IBehavior
 {
 public:
-	IBehavior(IEntity* pEntity, int nMasterDataID);
+	IBehavior(BaeGameRoom* pGameRoom, IEntity* pEntity, int nMasterDataID);
 	virtual ~IBehavior();
 
 protected:
 	int m_nMasterDataID = -1;
 
 protected:
+	BaeGameRoom* m_pGameRoom;
 	IEntity* m_pEntity;
 
 protected:
@@ -30,7 +32,7 @@ public:
 
 public:
 	virtual void Start(__int64 lStartTime, ...);
-	virtual void Stop();
+	virtual void Stop(__int64 lTime);
 
 public:
 	float GetTime();

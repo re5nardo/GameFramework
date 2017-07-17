@@ -5,10 +5,13 @@
 #include "../../Util.h"
 #include "../../Game/BaeGameRoom.h"
 #include "btBulletCollisionCommon.h"
+#include "../../GameEvent/GameEvents/BehaviorEnd.h"
+#include "../../GameEvent/GameEvents/Position.h"
+#include "../../GameEvent/GameEvents/Rotation.h"
 
 const string Move::NAME = "Move";
 
-Move::Move(IEntity* pEntity, int nMasterDataID) : IBehavior(pEntity, nMasterDataID)
+Move::Move(BaeGameRoom* pGameRoom, IEntity* pEntity, int nMasterDataID) : IBehavior(pGameRoom, pEntity, nMasterDataID)
 {
 }
 
@@ -24,11 +27,10 @@ void Move::Start(__int64 lStartTime, ...)
 	va_start(ap, lStartTime);
 	btVector3* pVec3Dest = va_arg(ap, btVector3*);
 	m_vec3Dest = *pVec3Dest;
-	m_pGameRoom = va_arg(ap, BaeGameRoom*);
 	va_end(ap);
 
 	if (m_pEntity->GetBehavior(BehaviorID::IDLE)->IsActivated())
-		m_pEntity->GetBehavior(BehaviorID::IDLE)->Stop();
+		m_pEntity->GetBehavior(BehaviorID::IDLE)->Stop(lStartTime);
 }
 
 void Move::Initialize()
@@ -46,7 +48,14 @@ void Move::Update(__int64 lUpdateTime)
 		fDeltaTime = (lUpdateTime - m_lLastUpdateTime) / 1000.0f;
 	}
 
+	if (fDeltaTime <= 0)
+	{
+		m_lLastUpdateTime = lUpdateTime;
+		return;
+	}
+
 	//	Rotation
+	btVector3 vec3StartRotation = m_pEntity->GetRotation();
 	btVector3 vec3Move = m_vec3Dest - m_pEntity->GetPosition();
 	float fTargetRotation_Y = Util::GetAngle_Y(vec3Move);
 	btVector3 vec3Rotation = m_pEntity->GetRotation();
@@ -74,6 +83,16 @@ void Move::Update(__int64 lUpdateTime)
 	float fCurrent_Y = Util::Lerp(vec3Rotation.y(), fTargetRotation_Y, fDeltaTime / RotationTime);
 	if (fCurrent_Y >= 360) fCurrent_Y -= 360;
 	m_pEntity->SetRotation(btVector3(vec3Rotation.x(), fCurrent_Y, vec3Rotation.z()));
+
+	GameEvent::Rotation* pRotation = new GameEvent::Rotation();
+	pRotation->m_fEventTime = m_lLastUpdateTime / 1000.0f;
+	pRotation->m_nEntityID = m_pEntity->GetID();
+	pRotation->m_fStartTime = m_lLastUpdateTime / 1000.0f;
+	pRotation->m_fEndTime = lUpdateTime / 1000.0f;
+	pRotation->m_vec3StartRotation = vec3StartRotation;
+	pRotation->m_vec3EndRotation = m_pEntity->GetRotation();
+
+	m_pGameRoom->AddGameEvent(pRotation);
 	//	Rotation end
 
 	btVector3 vec3Pos = m_pEntity->GetPosition();
@@ -87,9 +106,27 @@ void Move::Update(__int64 lUpdateTime)
 		m_pEntity->SetPosition(current);
 		m_pGameRoom->SetCollisionObjectPosition(m_pEntity->GetID(), current);
 
+		GameEvent::Position* pPosition = new GameEvent::Position();
+		pPosition->m_fEventTime = m_lLastUpdateTime / 1000.0f;
+		pPosition->m_nEntityID = m_pEntity->GetID();
+		pPosition->m_fStartTime = m_lLastUpdateTime / 1000.0f;
+		pPosition->m_fEndTime = lUpdateTime / 1000.0f;
+		pPosition->m_vec3StartPosition = vec3Pos;
+		pPosition->m_vec3EndPosition = current;
+
+		m_pGameRoom->AddGameEvent(pPosition);
+
 		if (fDeltaTime >= fExpectedTime)
 		{
 			m_bActivated = false;
+
+			GameEvent::BehaviorEnd* pBehaviorEnd = new GameEvent::BehaviorEnd();
+			pBehaviorEnd->m_fEventTime = lUpdateTime / 1000.0f;
+			pBehaviorEnd->m_nEntityID = m_pEntity->GetID();
+			pBehaviorEnd->m_fEndTime = lUpdateTime / 1000.0f;
+			pBehaviorEnd->m_nBehaviorID = m_nMasterDataID;
+
+			m_pGameRoom->AddGameEvent(pBehaviorEnd);
 		}
 	}
 	else
@@ -97,7 +134,25 @@ void Move::Update(__int64 lUpdateTime)
 		m_pEntity->SetPosition(trHit.getOrigin());
 		m_pGameRoom->SetCollisionObjectPosition(m_pEntity->GetID(), trHit.getOrigin());
 
+		GameEvent::Position* pPosition = new GameEvent::Position();
+		pPosition->m_fEventTime = m_lLastUpdateTime / 1000.0f;
+		pPosition->m_nEntityID = m_pEntity->GetID();
+		pPosition->m_fStartTime = m_lLastUpdateTime / 1000.0f;
+		pPosition->m_fEndTime = lUpdateTime / 1000.0f;
+		pPosition->m_vec3StartPosition = vec3Pos;
+		pPosition->m_vec3EndPosition = trHit.getOrigin();
+
+		m_pGameRoom->AddGameEvent(pPosition);
+
 		m_bActivated = false;
+
+		GameEvent::BehaviorEnd* pBehaviorEnd = new GameEvent::BehaviorEnd();
+		pBehaviorEnd->m_fEventTime = lUpdateTime / 1000.0f;
+		pBehaviorEnd->m_nEntityID = m_pEntity->GetID();
+		pBehaviorEnd->m_fEndTime = lUpdateTime / 1000.0f;
+		pBehaviorEnd->m_nBehaviorID = m_nMasterDataID;
+
+		m_pGameRoom->AddGameEvent(pBehaviorEnd);
 	}
 
 	m_lLastUpdateTime = lUpdateTime;

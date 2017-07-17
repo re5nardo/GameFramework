@@ -8,34 +8,32 @@ public class EnterRoomToR : IMessage
     public int m_nAuthKey;
     public int m_nMatchID;
 
-    public ushort GetID()
+    public override ushort GetID()
     {
         return MESSAGE_ID;
     }
 
-    public IMessage Clone()
+    public override IMessage Clone()
     {
         return null; 
     }
 
-    public byte[] Serialize()
+    public override byte[] Serialize()
     {
-        FlatBufferBuilder builder = new FlatBufferBuilder(1024);
+        var playerKey = m_Builder.CreateString(m_strPlayerKey);
 
-        var playerKey = builder.CreateString(m_strPlayerKey);
+        EnterRoomToR_Data.StartEnterRoomToR_Data(m_Builder);
+        EnterRoomToR_Data.AddPlayerKey(m_Builder, playerKey);
+        EnterRoomToR_Data.AddAuthKey(m_Builder, m_nAuthKey);
+        EnterRoomToR_Data.AddMatchID(m_Builder, m_nMatchID);
+        var data = EnterRoomToR_Data.EndEnterRoomToR_Data(m_Builder);
 
-        EnterRoomToR_Data.StartEnterRoomToR_Data(builder);
-        EnterRoomToR_Data.AddPlayerKey(builder, playerKey);
-        EnterRoomToR_Data.AddAuthKey(builder, m_nAuthKey);
-        EnterRoomToR_Data.AddMatchID(builder, m_nMatchID);
-        var data = EnterRoomToR_Data.EndEnterRoomToR_Data(builder);
+        m_Builder.Finish(data.Value);
 
-        builder.Finish(data.Value);
-
-        return builder.SizedByteArray();
+        return m_Builder.SizedByteArray();
     }
 
-    public bool Deserialize(byte[] bytes)
+    public override bool Deserialize(byte[] bytes)
     {
         var buf = new ByteBuffer(bytes);
 

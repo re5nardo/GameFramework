@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class IEntityUI : MonoBehaviour
 {
@@ -58,5 +59,28 @@ public class IEntityUI : MonoBehaviour
     public void SetRotation(Vector3 vec3Rotation)
     {
         m_trEntityUI.localRotation = Quaternion.Euler(vec3Rotation);
+    }
+
+    public void Sample(Dictionary<int, float> dicBehavior)
+    {
+        foreach(KeyValuePair<int, float> kv in dicBehavior)
+        {
+            MasterData.Behavior behavior = null;
+            MasterDataManager.Instance.GetData<MasterData.Behavior>(kv.Key, ref behavior);
+
+            m_animEntityUI[behavior.m_strAnimationName].time = kv.Value % m_animEntityUI[behavior.m_strAnimationName].length;
+            m_animEntityUI[behavior.m_strAnimationName].enabled = true;
+            m_animEntityUI[behavior.m_strAnimationName].weight = 1;
+        }
+
+        m_animEntityUI.Sample();
+
+        foreach(KeyValuePair<int, float> kv in dicBehavior)
+        {
+            MasterData.Behavior behavior = null;
+            MasterDataManager.Instance.GetData<MasterData.Behavior>(kv.Key, ref behavior);
+
+            m_animEntityUI[behavior.m_strAnimationName].enabled = false;
+        }
     }
 }

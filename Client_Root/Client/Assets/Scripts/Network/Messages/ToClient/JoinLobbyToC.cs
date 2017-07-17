@@ -6,30 +6,28 @@ public class JoinLobbyToC : IMessage
 
     public int m_nResult;
 
-    public ushort GetID()
+    public override ushort GetID()
     {
         return MESSAGE_ID;
     }
 
-    public IMessage Clone()
+    public override IMessage Clone()
     {
         return null; 
     }
 
-    public byte[] Serialize()
+    public override byte[] Serialize()
     {
-        FlatBufferBuilder builder = new FlatBufferBuilder(1024);
+        JoinLobbyToC_Data.StartJoinLobbyToC_Data(m_Builder);
+        JoinLobbyToC_Data.AddResult(m_Builder, m_nResult);
+        var data = JoinLobbyToC_Data.EndJoinLobbyToC_Data(m_Builder);
 
-        JoinLobbyToC_Data.StartJoinLobbyToC_Data(builder);
-        JoinLobbyToC_Data.AddResult(builder, m_nResult);
-        var data = JoinLobbyToC_Data.EndJoinLobbyToC_Data(builder);
+        m_Builder.Finish(data.Value);
 
-        builder.Finish(data.Value);
-
-        return builder.SizedByteArray();
+        return m_Builder.SizedByteArray();
     }
 
-    public bool Deserialize(byte[] bytes)
+    public override bool Deserialize(byte[] bytes)
     {
         var buf = new ByteBuffer(bytes);
 

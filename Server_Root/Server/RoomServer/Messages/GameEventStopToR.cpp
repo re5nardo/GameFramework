@@ -2,7 +2,7 @@
 #include "GameEventStopToR.h"
 #include "GameEventStopToR_Data_generated.h"
 
-GameEventStopToR::GameEventStopToR() : m_Builder(1024)
+GameEventStopToR::GameEventStopToR()
 {
 }
 

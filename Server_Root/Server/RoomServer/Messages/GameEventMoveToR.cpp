@@ -2,7 +2,7 @@
 #include "GameEventMoveToR.h"
 #include "GameEventMoveToR_Data_generated.h"
 
-GameEventMoveToR::GameEventMoveToR() : m_Builder(1024)
+GameEventMoveToR::GameEventMoveToR()
 {
 }
 

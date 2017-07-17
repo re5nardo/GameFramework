@@ -20,44 +20,42 @@ public class GameInputSkillToR : IMessage
     public List<float> m_listFloat = new List<float>();
     public InputType m_InputType;
 
-    public ushort GetID()
+    public override ushort GetID()
     {
         return MESSAGE_ID;
     }
 
-    public IMessage Clone()
+    public override IMessage Clone()
     {
         return null; 
     }
 
-    public byte[] Serialize()
+    public override byte[] Serialize()
     {
-        FlatBufferBuilder builder = new FlatBufferBuilder(1024);
-
-        GameInputSkillToR_Data.StartVector3sVector(builder, m_listVector3.Count);
+        GameInputSkillToR_Data.StartVector3sVector(m_Builder, m_listVector3.Count);
         foreach(Vector3 vec3 in m_listVector3)
         {
-            FBSData.Vector3.CreateVector3(builder, vec3.x, vec3.y, vec3.z);
+            FBSData.Vector3.CreateVector3(m_Builder, vec3.x, vec3.y, vec3.z);
         }
-        var vector3s = builder.EndVector();
-        var ints = GameInputSkillToR_Data.CreateIntsVector(builder, m_listInt.ToArray());
-        var floats = GameInputSkillToR_Data.CreateFloatsVector(builder, m_listFloat.ToArray());
+        var vector3s = m_Builder.EndVector();
+        var ints = GameInputSkillToR_Data.CreateIntsVector(m_Builder, m_listInt.ToArray());
+        var floats = GameInputSkillToR_Data.CreateFloatsVector(m_Builder, m_listFloat.ToArray());
 
-        GameInputSkillToR_Data.StartGameInputSkillToR_Data(builder);
-        GameInputSkillToR_Data.AddPlayerIndex(builder, m_nPlayerIndex);
-        GameInputSkillToR_Data.AddSkillID(builder, m_nSkillID);
-        GameInputSkillToR_Data.AddVector3s(builder, vector3s);
-        GameInputSkillToR_Data.AddInts(builder, ints);
-        GameInputSkillToR_Data.AddFloats(builder, floats);
-        GameInputSkillToR_Data.AddInputType(builder, (int)m_InputType);
-        var data = GameInputSkillToR_Data.EndGameInputSkillToR_Data(builder);
+        GameInputSkillToR_Data.StartGameInputSkillToR_Data(m_Builder);
+        GameInputSkillToR_Data.AddPlayerIndex(m_Builder, m_nPlayerIndex);
+        GameInputSkillToR_Data.AddSkillID(m_Builder, m_nSkillID);
+        GameInputSkillToR_Data.AddVector3s(m_Builder, vector3s);
+        GameInputSkillToR_Data.AddInts(m_Builder, ints);
+        GameInputSkillToR_Data.AddFloats(m_Builder, floats);
+        GameInputSkillToR_Data.AddInputType(m_Builder, (int)m_InputType);
+        var data = GameInputSkillToR_Data.EndGameInputSkillToR_Data(m_Builder);
 
-        builder.Finish(data.Value);
+        m_Builder.Finish(data.Value);
 
-        return builder.SizedByteArray();
+        return m_Builder.SizedByteArray();
     }
 
-    public bool Deserialize(byte[] bytes)
+    public override bool Deserialize(byte[] bytes)
     {
         var buf = new ByteBuffer(bytes);
 

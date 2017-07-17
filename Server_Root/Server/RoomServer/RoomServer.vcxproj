@@ -109,6 +109,13 @@
     <ClInclude Include="Entity\Entities\Character\Character.h" />
     <ClInclude Include="Entity\IEntity.h" />
     <ClInclude Include="Factory.h" />
+    <ClInclude Include="GameEvent\GameEvents\BehaviorEnd.h" />
+    <ClInclude Include="GameEvent\GameEvents\BehaviorStart.h" />
+    <ClInclude Include="GameEvent\GameEvents\Position.h" />
+    <ClInclude Include="GameEvent\GameEvents\Rotation.h" />
+    <ClInclude Include="GameEvent\GameEvents\StateEnd.h" />
+    <ClInclude Include="GameEvent\GameEvents\StateStart.h" />
+    <ClInclude Include="GameEvent\IGameEvent.h" />
     <ClInclude Include="Game\BaeGameRoom.h" />
     <ClInclude Include="Game\CollisionManager.h" />
     <ClInclude Include="Game\TerrainObjectInsertChecker.h" />
@@ -128,6 +135,7 @@
     <ClInclude Include="Messages\PreparationStateToC.h" />
     <ClInclude Include="Messages\PreparationStateToR.h" />
     <ClInclude Include="Messages\ReadyForStartToR.h" />
+    <ClInclude Include="Messages\WorldInfoToC.h" />
     <ClInclude Include="Messages\WorldSnapShotToC.h" />
     <ClInclude Include="Room.h" />
     <ClInclude Include="RoomMessageConvertor.h" />
@@ -159,6 +167,13 @@
     <ClCompile Include="Entity\Entities\Character\Character.cpp" />
     <ClCompile Include="Entity\IEntity.cpp" />
     <ClCompile Include="Factory.cpp" />
+    <ClCompile Include="GameEvent\GameEvents\BehaviorEnd.cpp" />
+    <ClCompile Include="GameEvent\GameEvents\BehaviorStart.cpp" />
+    <ClCompile Include="GameEvent\GameEvents\Position.cpp" />
+    <ClCompile Include="GameEvent\GameEvents\Rotation.cpp" />
+    <ClCompile Include="GameEvent\GameEvents\StateEnd.cpp" />
+    <ClCompile Include="GameEvent\GameEvents\StateStart.cpp" />
+    <ClCompile Include="GameEvent\IGameEvent.cpp" />
     <ClCompile Include="Game\BaeGameRoom.cpp" />
     <ClCompile Include="Game\CollisionManager.cpp" />
     <ClCompile Include="Game\TerrainObjectInsertChecker.cpp" />
@@ -178,6 +193,7 @@
     <ClCompile Include="Messages\PreparationStateToC.cpp" />
     <ClCompile Include="Messages\PreparationStateToR.cpp" />
     <ClCompile Include="Messages\ReadyForStartToR.cpp" />
+    <ClCompile Include="Messages\WorldInfoToC.cpp" />
     <ClCompile Include="Messages\WorldSnapShotToC.cpp" />
     <ClCompile Include="Room.cpp" />
     <ClCompile Include="RoomMessageConvertor.cpp" />

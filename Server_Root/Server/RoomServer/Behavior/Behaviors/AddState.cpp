@@ -6,10 +6,12 @@
 #include "../../MasterData/Behavior.h"
 #include "../../Util.h"
 #include "../../Factory.h"
+#include "../../GameEvent/GameEvents/BehaviorEnd.h"
+#include "../../Game/BaeGameRoom.h"
 
 const string AddState::NAME = "AddState";
 
-AddState::AddState(IEntity* pEntity, int nMasterDataID) : IBehavior(pEntity, nMasterDataID)
+AddState::AddState(BaeGameRoom* pGameRoom, IEntity* pEntity, int nMasterDataID) : IBehavior(pGameRoom, pEntity, nMasterDataID)
 {
 }
 
@@ -22,7 +24,7 @@ void AddState::Start(__int64 lStartTime, ...)
 	__super::Start(lStartTime);
 
 	if (m_pEntity->GetBehavior(BehaviorID::IDLE)->IsActivated())
-		m_pEntity->GetBehavior(BehaviorID::IDLE)->Stop();
+		m_pEntity->GetBehavior(BehaviorID::IDLE)->Stop(lStartTime);
 }
 
 void AddState::Initialize()
@@ -51,7 +53,7 @@ void AddState::Update(__int64 lUpdateTime)
 
 	if ((fCur == 0 && m_fTime == 0) || (fLast < m_fTime && m_fTime <= fCur))
 	{
-		IState* pState = Factory::Instance()->CreateState(m_pEntity, m_nStateID, lUpdateTime);
+		IState* pState = Factory::Instance()->CreateState(m_pGameRoom, m_pEntity, m_nStateID, lUpdateTime);
 		pState->Initialize();
 		m_pEntity->AddState(pState);
 		pState->Update(lUpdateTime);
@@ -60,6 +62,14 @@ void AddState::Update(__int64 lUpdateTime)
 	if (fCur >= m_fLength)
 	{
 		m_bActivated = false;
+
+		GameEvent::BehaviorEnd* pBehaviorEnd = new GameEvent::BehaviorEnd();
+		pBehaviorEnd->m_fEventTime = lUpdateTime / 1000.0f;
+		pBehaviorEnd->m_nEntityID = m_pEntity->GetID();
+		pBehaviorEnd->m_fEndTime = lUpdateTime / 1000.0f;
+		pBehaviorEnd->m_nBehaviorID = m_nMasterDataID;
+
+		m_pGameRoom->AddGameEvent(pBehaviorEnd);
 	}
 
 	m_lLastUpdateTime = lUpdateTime;

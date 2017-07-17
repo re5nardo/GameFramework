@@ -124,6 +124,18 @@
     <Filter Include="소스 파일\Skill\Skills">
       <UniqueIdentifier>{e410c0e4-3cf0-4886-be48-15894d81c9f7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\GameEvent">
+      <UniqueIdentifier>{3cedbf31-9ced-4726-aa97-d1d213a88091}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\GameEvent\GameEvents">
+      <UniqueIdentifier>{b72b0724-03cc-44cc-9505-1295be9002d5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\GameEvent">
+      <UniqueIdentifier>{6ccfe582-d9ab-4bbe-9659-0686ba86450e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\GameEvent\GameEvents">
+      <UniqueIdentifier>{2de21456-74f4-410d-8f64-6fa1fd1ef6cf}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -306,6 +318,30 @@
     <ClInclude Include="State\States\Shield.h">
       <Filter>헤더 파일\State\States</Filter>
     </ClInclude>
+    <ClInclude Include="Messages\WorldInfoToC.h">
+      <Filter>헤더 파일\Messages\ToClient</Filter>
+    </ClInclude>
+    <ClInclude Include="GameEvent\IGameEvent.h">
+      <Filter>헤더 파일\GameEvent</Filter>
+    </ClInclude>
+    <ClInclude Include="GameEvent\GameEvents\BehaviorStart.h">
+      <Filter>헤더 파일\GameEvent\GameEvents</Filter>
+    </ClInclude>
+    <ClInclude Include="GameEvent\GameEvents\BehaviorEnd.h">
+      <Filter>헤더 파일\GameEvent\GameEvents</Filter>
+    </ClInclude>
+    <ClInclude Include="GameEvent\GameEvents\Position.h">
+      <Filter>헤더 파일\GameEvent\GameEvents</Filter>
+    </ClInclude>
+    <ClInclude Include="GameEvent\GameEvents\Rotation.h">
+      <Filter>헤더 파일\GameEvent\GameEvents</Filter>
+    </ClInclude>
+    <ClInclude Include="GameEvent\GameEvents\StateEnd.h">
+      <Filter>헤더 파일\GameEvent\GameEvents</Filter>
+    </ClInclude>
+    <ClInclude Include="GameEvent\GameEvents\StateStart.h">
+      <Filter>헤더 파일\GameEvent\GameEvents</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -442,6 +478,30 @@
     </ClCompile>
     <ClCompile Include="State\States\Shield.cpp">
       <Filter>소스 파일\State\States</Filter>
+    </ClCompile>
+    <ClCompile Include="Messages\WorldInfoToC.cpp">
+      <Filter>소스 파일\Messages\ToClient</Filter>
+    </ClCompile>
+    <ClCompile Include="GameEvent\IGameEvent.cpp">
+      <Filter>소스 파일\GameEvent</Filter>
+    </ClCompile>
+    <ClCompile Include="GameEvent\GameEvents\BehaviorStart.cpp">
+      <Filter>소스 파일\GameEvent\GameEvents</Filter>
+    </ClCompile>
+    <ClCompile Include="GameEvent\GameEvents\BehaviorEnd.cpp">
+      <Filter>소스 파일\GameEvent\GameEvents</Filter>
+    </ClCompile>
+    <ClCompile Include="GameEvent\GameEvents\Position.cpp">
+      <Filter>소스 파일\GameEvent\GameEvents</Filter>
+    </ClCompile>
+    <ClCompile Include="GameEvent\GameEvents\Rotation.cpp">
+      <Filter>소스 파일\GameEvent\GameEvents</Filter>
+    </ClCompile>
+    <ClCompile Include="GameEvent\GameEvents\StateEnd.cpp">
+      <Filter>소스 파일\GameEvent\GameEvents</Filter>
+    </ClCompile>
+    <ClCompile Include="GameEvent\GameEvents\StateStart.cpp">
+      <Filter>소스 파일\GameEvent\GameEvents</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

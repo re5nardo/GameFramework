@@ -1,0 +1,19 @@
+namespace FBS;
+
+enum GameEventType:byte
+{
+	BehaviorStart = 0,
+	BehaviorEnd,
+	StateStart,
+	StateEnd,
+	Position,
+	Rotation,
+	Collision,
+}
+
+table GameEventData
+{
+	Type:GameEventType;
+	EventTime:float;
+	Data:[byte];
+}

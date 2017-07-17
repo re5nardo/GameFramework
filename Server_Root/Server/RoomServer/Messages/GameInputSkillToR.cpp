@@ -2,7 +2,7 @@
 #include "GameInputSkillToR.h"
 #include "GameInputSkillToR_Data_generated.h"
 
-GameInputSkillToR::GameInputSkillToR() : m_Builder(1024)
+GameInputSkillToR::GameInputSkillToR()
 {
 }
 

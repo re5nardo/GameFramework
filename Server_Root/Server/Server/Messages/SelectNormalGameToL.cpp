@@ -2,7 +2,7 @@
 #include "SelectNormalGameToL.h"
 #include "SelectNormalGameToL_Data_generated.h"
 
-SelectNormalGameToL::SelectNormalGameToL() : m_Builder(1024)
+SelectNormalGameToL::SelectNormalGameToL()
 {
 }
 

@@ -5,17 +5,19 @@
 class IEntity;
 class BaeGameRoom;
 class GameInputSkillToR;
+class BaeGameRoom;
 
 class ISkill
 {
 public:
-	ISkill(IEntity* pEntity, int nMasterDataID);
+	ISkill(BaeGameRoom* pGameRoom, IEntity* pEntity, int nMasterDataID);
 	virtual ~ISkill();
 
 protected:
 	int m_nMasterDataID = -1;
 
 protected:
+	BaeGameRoom* m_pGameRoom;
 	IEntity* m_pEntity;
 
 protected:

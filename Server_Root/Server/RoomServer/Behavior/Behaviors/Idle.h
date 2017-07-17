@@ -9,7 +9,7 @@ using namespace std;
 class Idle : public IBehavior
 {
 public:
-	Idle(IEntity* pEntity, int nMasterDataID);
+	Idle(BaeGameRoom* pGameRoom, IEntity* pEntity, int nMasterDataID);
 	virtual ~Idle();
 
 public:

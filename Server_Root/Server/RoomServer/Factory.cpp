@@ -23,7 +23,7 @@ Factory::~Factory()
 {
 }
 
-ISkill* Factory::CreateSkill(IEntity* pEntity, int nMasterDataID)
+ISkill* Factory::CreateSkill(BaeGameRoom* pGameRoom, IEntity* pEntity, int nMasterDataID)
 {
 	MasterData::Skill* pSkill = NULL;
 	MasterDataManager::Instance()->GetData<MasterData::Skill>(nMasterDataID, pSkill);
@@ -32,17 +32,17 @@ ISkill* Factory::CreateSkill(IEntity* pEntity, int nMasterDataID)
 
 	if (ContinueSkill::NAME.compare(strClassName) == 0)
 	{
-		return new ContinueSkill(pEntity, nMasterDataID);
+		return new ContinueSkill(pGameRoom, pEntity, nMasterDataID);
 	}
 	else if (FireSkill::NAME.compare(strClassName) == 0)
 	{
-		return new FireSkill(pEntity, nMasterDataID);
+		return new FireSkill(pGameRoom, pEntity, nMasterDataID);
 	}
 
 	return NULL;
 }
 
-IBehavior* Factory::CreateBehavior(IEntity* pEntity, int nMasterDataID)
+IBehavior* Factory::CreateBehavior(BaeGameRoom* pGameRoom, IEntity* pEntity, int nMasterDataID)
 {
 	MasterData::Behavior* pMasterBehavior = NULL;
 	MasterDataManager::Instance()->GetData<MasterData::Behavior>(nMasterDataID, pMasterBehavior);
@@ -51,25 +51,25 @@ IBehavior* Factory::CreateBehavior(IEntity* pEntity, int nMasterDataID)
 
 	if (Idle::NAME.compare(strClassName) == 0)
 	{
-		return new Idle(pEntity, nMasterDataID);
+		return new Idle(pGameRoom, pEntity, nMasterDataID);
 	}
 	else if (Move::NAME.compare(strClassName) == 0)
 	{
-		return new Move(pEntity, nMasterDataID);
+		return new Move(pGameRoom, pEntity, nMasterDataID);
 	}
 	else if (Dash::NAME.compare(strClassName) == 0)
 	{
-		return new Dash(pEntity, nMasterDataID);
+		return new Dash(pGameRoom, pEntity, nMasterDataID);
 	}
 	else if (AddState::NAME.compare(strClassName) == 0)
 	{
-		return new AddState(pEntity, nMasterDataID);
+		return new AddState(pGameRoom, pEntity, nMasterDataID);
 	}
 
 	return NULL;
 }
 
-IState* Factory::CreateState(IEntity* pEntity, int nMasterDataID, __int64 lStartTime)
+IState* Factory::CreateState(BaeGameRoom* pGameRoom, IEntity* pEntity, int nMasterDataID, __int64 lStartTime)
 {
 	MasterData::State* pMasterState = NULL;
 	MasterDataManager::Instance()->GetData<MasterData::State>(nMasterDataID, pMasterState);
@@ -88,7 +88,7 @@ IState* Factory::CreateState(IEntity* pEntity, int nMasterDataID, __int64 lStart
 	return NULL;
 }
 
-Character* Factory::CreateCharacter(int nID, int nMasterDataID)
+Character* Factory::CreateCharacter(BaeGameRoom* pGameRoom, int nID, int nMasterDataID)
 {
-	return new Character(nID, nMasterDataID);
+	return new Character(pGameRoom, nID, nMasterDataID);
 }

@@ -4,29 +4,27 @@ public class GameStartToC : IMessage
 {
     public const ushort MESSAGE_ID = MessageID.GameStartToC_ID;
 
-    public ushort GetID()
+    public override ushort GetID()
     {
         return MESSAGE_ID;
     }
 
-    public IMessage Clone()
+    public override IMessage Clone()
     {
         return null; 
     }
 
-    public byte[] Serialize()
+    public override byte[] Serialize()
     {
-        FlatBufferBuilder builder = new FlatBufferBuilder(1024);
+        GameStartToC_Data.StartGameStartToC_Data(m_Builder);
+        var data = GameStartToC_Data.EndGameStartToC_Data(m_Builder);
 
-        GameStartToC_Data.StartGameStartToC_Data(builder);
-        var data = GameStartToC_Data.EndGameStartToC_Data(builder);
+        m_Builder.Finish(data.Value);
 
-        builder.Finish(data.Value);
-
-        return builder.SizedByteArray();
+        return m_Builder.SizedByteArray();
     }
 
-    public bool Deserialize(byte[] bytes)
+    public override bool Deserialize(byte[] bytes)
     {
         var buf = new ByteBuffer(bytes);
 

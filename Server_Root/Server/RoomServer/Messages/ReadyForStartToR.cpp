@@ -2,7 +2,7 @@
 #include "ReadyForStartToR.h"
 #include "ReadyForStartToR_Data_generated.h"
 
-ReadyForStartToR::ReadyForStartToR() : m_Builder(1024)
+ReadyForStartToR::ReadyForStartToR()
 {
 }
 

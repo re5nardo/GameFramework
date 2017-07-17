@@ -8,7 +8,7 @@
 
 const string ContinueSkill::NAME = "ContinueSkill";
 
-ContinueSkill::ContinueSkill(IEntity* pEntity, int nMasterDataID) : ISkill(pEntity, nMasterDataID)
+ContinueSkill::ContinueSkill(BaeGameRoom* pGameRoom, IEntity* pEntity, int nMasterDataID) : ISkill(pGameRoom, pEntity, nMasterDataID)
 {
 }
 
@@ -74,7 +74,7 @@ void ContinueSkill::Update(__int64 lUpdateTime)
 	{
 		if (fCur >= m_fLength || !m_bContinue)
 		{
-			m_pTargetBehavior->Stop();
+			m_pTargetBehavior->Stop(lUpdateTime);
 			m_pTargetBehavior = NULL;
 
 			m_bContinue = false;

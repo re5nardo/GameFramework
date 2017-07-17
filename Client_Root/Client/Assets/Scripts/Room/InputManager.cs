@@ -64,7 +64,7 @@ public class InputManager : MonoBehaviour
         {
             if (Physics.Raycast(m_Camera.ScreenPointToRay(Input.mousePosition), out hitInfo, Mathf.Infinity, 1 << INPUT_PLANE_LAYER))
             {
-                if (Vector3.Distance(m_vec3InputDownPos, hitInfo.point) <= INPUT_THRESHOLD)
+//                if (Vector3.Distance(m_vec3InputDownPos, hitInfo.point) <= INPUT_THRESHOLD)
                 {
                     if (m_OnClicked != null)
                     {

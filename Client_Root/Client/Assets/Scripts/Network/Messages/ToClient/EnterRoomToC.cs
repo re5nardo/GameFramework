@@ -9,20 +9,18 @@ public class EnterRoomToC : IMessage
     public int m_nPlayerIndex;
     public Dictionary<int, string> m_dicPlayers = new Dictionary<int, string>();
 
-    public ushort GetID()
+    public override ushort GetID()
     {
         return MESSAGE_ID;
     }
 
-    public IMessage Clone()
+    public override IMessage Clone()
     {
         return null; 
     }
 
-    public byte[] Serialize()
+    public override byte[] Serialize()
     {
-        FlatBufferBuilder builder = new FlatBufferBuilder(1024);
-
         int[] keys = new int[m_dicPlayers.Keys.Count];
         StringOffset[] values = new StringOffset[m_dicPlayers.Values.Count];
 
@@ -30,25 +28,25 @@ public class EnterRoomToC : IMessage
         foreach(KeyValuePair<int, string> kv in m_dicPlayers)
         {
             keys[nIndex++] = kv.Key;
-            values[nIndex++] = builder.CreateString(kv.Value);
+            values[nIndex++] = m_Builder.CreateString(kv.Value);
         }
 
-        var playersMapKey = EnterRoomToC_Data.CreatePlayersMapKeyVector(builder, keys);
-        var playersMapValue = EnterRoomToC_Data.CreatePlayersMapValueVector(builder, values);
+        var playersMapKey = EnterRoomToC_Data.CreatePlayersMapKeyVector(m_Builder, keys);
+        var playersMapValue = EnterRoomToC_Data.CreatePlayersMapValueVector(m_Builder, values);
 
-        EnterRoomToC_Data.StartEnterRoomToC_Data(builder);
-        EnterRoomToC_Data.AddResult(builder, m_nResult);
-        EnterRoomToC_Data.AddPlayerIndex(builder, m_nPlayerIndex);
-        EnterRoomToC_Data.AddPlayersMapKey(builder, playersMapKey);
-        EnterRoomToC_Data.AddPlayersMapValue(builder, playersMapValue);
-        var data = EnterRoomToC_Data.EndEnterRoomToC_Data(builder);
+        EnterRoomToC_Data.StartEnterRoomToC_Data(m_Builder);
+        EnterRoomToC_Data.AddResult(m_Builder, m_nResult);
+        EnterRoomToC_Data.AddPlayerIndex(m_Builder, m_nPlayerIndex);
+        EnterRoomToC_Data.AddPlayersMapKey(m_Builder, playersMapKey);
+        EnterRoomToC_Data.AddPlayersMapValue(m_Builder, playersMapValue);
+        var data = EnterRoomToC_Data.EndEnterRoomToC_Data(m_Builder);
 
-        builder.Finish(data.Value);
+        m_Builder.Finish(data.Value);
 
-        return builder.SizedByteArray();
+        return m_Builder.SizedByteArray();
     }
 
-    public bool Deserialize(byte[] bytes)
+    public override bool Deserialize(byte[] bytes)
     {
         var buf = new ByteBuffer(bytes);
 

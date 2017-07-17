@@ -7,31 +7,29 @@ public class SelectNormalGameToC : IMessage
     public int m_nResult;
     public int m_nExpectedTime;
 
-    public ushort GetID()
+    public override ushort GetID()
     {
         return MESSAGE_ID;
     }
 
-    public IMessage Clone()
+    public override IMessage Clone()
     {
         return null; 
     }
 
-    public byte[] Serialize()
+    public override byte[] Serialize()
     {
-        FlatBufferBuilder builder = new FlatBufferBuilder(1024);
+        SelectNormalGameToC_Data.StartSelectNormalGameToC_Data(m_Builder);
+        SelectNormalGameToC_Data.AddResult(m_Builder, m_nResult);
+        SelectNormalGameToC_Data.AddExpectedTime(m_Builder, m_nExpectedTime);
+        var data = SelectNormalGameToC_Data.EndSelectNormalGameToC_Data(m_Builder);
 
-        SelectNormalGameToC_Data.StartSelectNormalGameToC_Data(builder);
-        SelectNormalGameToC_Data.AddResult(builder, m_nResult);
-        SelectNormalGameToC_Data.AddExpectedTime(builder, m_nExpectedTime);
-        var data = SelectNormalGameToC_Data.EndSelectNormalGameToC_Data(builder);
+        m_Builder.Finish(data.Value);
 
-        builder.Finish(data.Value);
-
-        return builder.SizedByteArray();
+        return m_Builder.SizedByteArray();
     }
 
-    public bool Deserialize(byte[] bytes)
+    public override bool Deserialize(byte[] bytes)
     {
         var buf = new ByteBuffer(bytes);
 

@@ -8,33 +8,31 @@ public class GameEventStopToR : IMessage
     public int m_nPlayerIndex;
     public Vector3 m_vec3Pos;
 
-    public ushort GetID()
+    public override ushort GetID()
     {
         return MESSAGE_ID;
     }
 
-    public IMessage Clone()
+    public override IMessage Clone()
     {
         return null; 
     }
 
-    public byte[] Serialize()
+    public override byte[] Serialize()
     {
-        FlatBufferBuilder builder = new FlatBufferBuilder(1024);
+        var pos = FBSData.Vector3.CreateVector3(m_Builder, m_vec3Pos.x, m_vec3Pos.y, m_vec3Pos.z);
 
-        var pos = FBSData.Vector3.CreateVector3(builder, m_vec3Pos.x, m_vec3Pos.y, m_vec3Pos.z);
+        GameEventStopToR_Data.StartGameEventStopToR_Data(m_Builder);
+        GameEventStopToR_Data.AddPlayerIndex(m_Builder, m_nPlayerIndex);
+        GameEventStopToR_Data.AddPos(m_Builder, pos);
+        var data = GameEventStopToR_Data.EndGameEventStopToR_Data(m_Builder);
 
-        GameEventStopToR_Data.StartGameEventStopToR_Data(builder);
-        GameEventStopToR_Data.AddPlayerIndex(builder, m_nPlayerIndex);
-        GameEventStopToR_Data.AddPos(builder, pos);
-        var data = GameEventStopToR_Data.EndGameEventStopToR_Data(builder);
+        m_Builder.Finish(data.Value);
 
-        builder.Finish(data.Value);
-
-        return builder.SizedByteArray();
+        return m_Builder.SizedByteArray();
     }
 
-    public bool Deserialize(byte[] bytes)
+    public override bool Deserialize(byte[] bytes)
     {
         var buf = new ByteBuffer(bytes);
 

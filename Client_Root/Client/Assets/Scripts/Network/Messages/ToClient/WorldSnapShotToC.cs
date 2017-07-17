@@ -9,28 +9,26 @@ public class WorldSnapShotToC : IMessage
     public float m_fTime;
     public List<EntityState> m_listEntityState = new List<EntityState>();
 
-    public ushort GetID()
+    public override ushort GetID()
     {
         return MESSAGE_ID;
     }
 
-    public IMessage Clone()
+    public override IMessage Clone()
     {
         return null;
     }
 
-    public byte[] Serialize()
+    public override byte[] Serialize()
     {
-        FlatBufferBuilder builder = new FlatBufferBuilder(1024);
-
         var OffsetEntityState = new Offset<EntityState>[m_listEntityState.Count];
 
         for (int i = 0; i < m_listEntityState.Count; ++i)
         {
             EntityState entityState = m_listEntityState[i];
 
-            var pos = FBSData.Vector3.CreateVector3(builder, entityState.Position.X, entityState.Position.Y, entityState.Position.Z);
-            var rot = FBSData.Vector3.CreateVector3(builder, entityState.Rotation.X, entityState.Rotation.Y, entityState.Rotation.Z);
+            var pos = FBSData.Vector3.CreateVector3(m_Builder, entityState.Position.X, entityState.Position.Y, entityState.Position.Z);
+            var rot = FBSData.Vector3.CreateVector3(m_Builder, entityState.Rotation.X, entityState.Rotation.Y, entityState.Rotation.Z);
 
             int[] keys = new int[entityState.BehaviorsMapKeyLength];
             float[] values = new float[entityState.BehaviorsMapValueLength];
@@ -41,33 +39,33 @@ public class WorldSnapShotToC : IMessage
                 values[j] = entityState.GetBehaviorsMapValue(j);
             }
 
-            var behaviorsMapKey = EntityState.CreateBehaviorsMapKeyVector(builder, keys);
-            var behaviorsMapValue = EntityState.CreateBehaviorsMapValueVector(builder, values);
+            var behaviorsMapKey = EntityState.CreateBehaviorsMapKeyVector(m_Builder, keys);
+            var behaviorsMapValue = EntityState.CreateBehaviorsMapValueVector(m_Builder, values);
 
-            EntityState.StartEntityState(builder);
-            EntityState.AddPlayerIndex(builder, entityState.PlayerIndex);
-            EntityState.AddPosition(builder, pos);
-            EntityState.AddRotation(builder, rot);
-            EntityState.AddBehaviorsMapKey(builder, behaviorsMapKey);
-            EntityState.AddBehaviorsMapValue(builder, behaviorsMapValue);
+            EntityState.StartEntityState(m_Builder);
+            EntityState.AddPlayerIndex(m_Builder, entityState.PlayerIndex);
+            EntityState.AddPosition(m_Builder, pos);
+            EntityState.AddRotation(m_Builder, rot);
+            EntityState.AddBehaviorsMapKey(m_Builder, behaviorsMapKey);
+            EntityState.AddBehaviorsMapValue(m_Builder, behaviorsMapValue);
 
-            OffsetEntityState[i] = EntityState.EndEntityState(builder);
+            OffsetEntityState[i] = EntityState.EndEntityState(m_Builder);
         }
 
-        var entityStates = WorldSnapShotToC_Data.CreateEntityStatesVector(builder, OffsetEntityState);
+        var entityStates = WorldSnapShotToC_Data.CreateEntityStatesVector(m_Builder, OffsetEntityState);
 
-        WorldSnapShotToC_Data.StartWorldSnapShotToC_Data(builder);
-        WorldSnapShotToC_Data.AddTick(builder, m_nTick);
-        WorldSnapShotToC_Data.AddTime(builder, m_fTime);
-        WorldSnapShotToC_Data.AddEntityStates(builder, entityStates);
-        var data = WorldSnapShotToC_Data.EndWorldSnapShotToC_Data(builder);
+        WorldSnapShotToC_Data.StartWorldSnapShotToC_Data(m_Builder);
+        WorldSnapShotToC_Data.AddTick(m_Builder, m_nTick);
+        WorldSnapShotToC_Data.AddTime(m_Builder, m_fTime);
+        WorldSnapShotToC_Data.AddEntityStates(m_Builder, entityStates);
+        var data = WorldSnapShotToC_Data.EndWorldSnapShotToC_Data(m_Builder);
 
-        builder.Finish(data.Value);
+        m_Builder.Finish(data.Value);
 
-        return builder.SizedByteArray();
+        return m_Builder.SizedByteArray();
     }
 
-    public bool Deserialize(byte[] bytes)
+    public override bool Deserialize(byte[] bytes)
     {
         var buf = new ByteBuffer(bytes);
 

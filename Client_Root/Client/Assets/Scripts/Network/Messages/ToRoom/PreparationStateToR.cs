@@ -6,30 +6,28 @@ public class PreparationStateToR : IMessage
 
     public float m_fState;
 
-    public ushort GetID()
+    public override ushort GetID()
     {
         return MESSAGE_ID;
     }
 
-    public IMessage Clone()
+    public override IMessage Clone()
     {
         return null; 
     }
 
-    public byte[] Serialize()
+    public override byte[] Serialize()
     {
-        FlatBufferBuilder builder = new FlatBufferBuilder(1024);
+        PreparationStateToR_Data.StartPreparationStateToR_Data(m_Builder);
+        PreparationStateToR_Data.AddState(m_Builder, m_fState);
+        var data = PreparationStateToR_Data.EndPreparationStateToR_Data(m_Builder);
 
-        PreparationStateToR_Data.StartPreparationStateToR_Data(builder);
-        PreparationStateToR_Data.AddState(builder, m_fState);
-        var data = PreparationStateToR_Data.EndPreparationStateToR_Data(builder);
+        m_Builder.Finish(data.Value);
 
-        builder.Finish(data.Value);
-
-        return builder.SizedByteArray();
+        return m_Builder.SizedByteArray();
     }
 
-    public bool Deserialize(byte[] bytes)
+    public override bool Deserialize(byte[] bytes)
     {
         var buf = new ByteBuffer(bytes);
 

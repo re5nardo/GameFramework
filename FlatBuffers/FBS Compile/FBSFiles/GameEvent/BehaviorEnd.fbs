@@ -1,0 +1,8 @@
+namespace FBS.GameEvent;
+
+table BehaviorEnd
+{
+	EntityID:int;
+	EndTime:float;
+	BehaviorID:int;
+}

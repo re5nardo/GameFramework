@@ -1,0 +1,11 @@
+include "../FBSData.fbs";
+namespace FBS.GameEvent;
+
+table Position
+{
+	EntityID:int;
+	StartTime:float;
+	EndTime:float;
+	StartPos:FBSData.Vector3;
+	EndPos:FBSData.Vector3;
+}

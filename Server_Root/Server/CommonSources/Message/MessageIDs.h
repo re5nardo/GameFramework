@@ -34,3 +34,4 @@
 #define EnterRoomToC_ID							50003
 #define PlayerEnterRoomToC_ID					50004
 #define WorldSnapShotToC_ID						50008
+#define WorldInfoToC_ID							50009

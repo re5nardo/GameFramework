@@ -10,7 +10,7 @@ using namespace std;
 class AddState : public IBehavior
 {
 public:
-	AddState(IEntity* pEntity, int nMasterDataID);
+	AddState(BaeGameRoom* pGameRoom, IEntity* pEntity, int nMasterDataID);
 	virtual ~AddState();
 
 public:

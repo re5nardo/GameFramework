@@ -2,7 +2,7 @@
 #include "PreparationStateToR.h"
 #include "PreparationStateToR_Data_generated.h"
 
-PreparationStateToR::PreparationStateToR() : m_Builder(1024)
+PreparationStateToR::PreparationStateToR()
 {
 }
 

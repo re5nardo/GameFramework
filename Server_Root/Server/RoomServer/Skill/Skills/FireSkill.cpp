@@ -9,7 +9,7 @@
 
 const string FireSkill::NAME = "FireSkill";
 
-FireSkill::FireSkill(IEntity* pEntity, int nMasterDataID) : ISkill(pEntity, nMasterDataID)
+FireSkill::FireSkill(BaeGameRoom* pGameRoom, IEntity* pEntity, int nMasterDataID) : ISkill(pGameRoom, pEntity, nMasterDataID)
 {
 }
 
@@ -70,7 +70,7 @@ void FireSkill::Update(__int64 lUpdateTime)
 		float fTime = (*it).second;
 		if ((fCur == 0 && fTime == 0) || (fLast < fTime && fTime <= fCur))
 		{
-			IState* pState = Factory::Instance()->CreateState(m_pEntity, m_nMasterDataID, lUpdateTime);
+			IState* pState = Factory::Instance()->CreateState(m_pGameRoom, m_pEntity, m_nMasterDataID, lUpdateTime);
 			pState->Initialize();
 			m_pEntity->AddState(pState);
 			pState->Update(lUpdateTime);

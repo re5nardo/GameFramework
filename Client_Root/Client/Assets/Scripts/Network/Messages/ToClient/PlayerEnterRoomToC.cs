@@ -7,33 +7,31 @@ public class PlayerEnterRoomToC : IMessage
     public int m_nPlayerIndex;
     public string m_strCharacterID;
 
-    public ushort GetID()
+    public override ushort GetID()
     {
         return MESSAGE_ID;
     }
 
-    public IMessage Clone()
+    public override IMessage Clone()
     {
         return null; 
     }
 
-    public byte[] Serialize()
+    public override byte[] Serialize()
     {
-        FlatBufferBuilder builder = new FlatBufferBuilder(1024);
+        var characterID = m_Builder.CreateString(m_strCharacterID);
 
-        var characterID = builder.CreateString(m_strCharacterID);
+        PlayerEnterRoomToC_Data.StartPlayerEnterRoomToC_Data(m_Builder);
+        PlayerEnterRoomToC_Data.AddPlayerIndex(m_Builder, m_nPlayerIndex);
+        PlayerEnterRoomToC_Data.AddCharacterID(m_Builder, characterID);
+        var data = PlayerEnterRoomToC_Data.EndPlayerEnterRoomToC_Data(m_Builder);
 
-        PlayerEnterRoomToC_Data.StartPlayerEnterRoomToC_Data(builder);
-        PlayerEnterRoomToC_Data.AddPlayerIndex(builder, m_nPlayerIndex);
-        PlayerEnterRoomToC_Data.AddCharacterID(builder, characterID);
-        var data = PlayerEnterRoomToC_Data.EndPlayerEnterRoomToC_Data(builder);
+        m_Builder.Finish(data.Value);
 
-        builder.Finish(data.Value);
-
-        return builder.SizedByteArray();
+        return m_Builder.SizedByteArray();
     }
 
-    public bool Deserialize(byte[] bytes)
+    public override bool Deserialize(byte[] bytes)
     {
         var buf = new ByteBuffer(bytes);
 

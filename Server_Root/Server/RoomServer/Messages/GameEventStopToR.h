@@ -3,13 +3,6 @@
 #include "../../CommonSources/Message/IMessage.h"
 #include "../../CommonSources/Message/MessageIDs.h"
 #include "btBulletCollisionCommon.h"
-#ifdef max
-#undef max
-#undef min
-#endif
-#include "flatbuffers/flatbuffers.h"
-
-using namespace flatbuffers;
 
 class GameEventStopToR : public IMessage
 {
@@ -19,9 +12,6 @@ public:
 
 public:
 	static const unsigned short MESSAGE_ID = GameEventStopToR_ID;
-
-private:
-	FlatBufferBuilder m_Builder;
 
 public:
 	int m_nPlayerIndex;

@@ -9,7 +9,7 @@
 
 const string Dash::NAME = "Dash";
 
-Dash::Dash(IEntity* pEntity, int nMasterDataID) : IBehavior(pEntity, nMasterDataID)
+Dash::Dash(BaeGameRoom* pGameRoom, IEntity* pEntity, int nMasterDataID) : IBehavior(pGameRoom, pEntity, nMasterDataID)
 {
 }
 
@@ -27,7 +27,7 @@ void Dash::Start(__int64 lStartTime, ...)
 	va_end(ap);
 
 	if (m_pEntity->GetBehavior(BehaviorID::IDLE)->IsActivated())
-		m_pEntity->GetBehavior(BehaviorID::IDLE)->Stop();
+		m_pEntity->GetBehavior(BehaviorID::IDLE)->Stop(lStartTime);
 }
 
 void Dash::Initialize()

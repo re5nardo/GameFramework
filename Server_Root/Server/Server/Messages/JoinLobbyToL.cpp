@@ -2,7 +2,7 @@
 #include "JoinLobbyToL.h"
 #include "JoinLobbyToL_Data_generated.h"
 
-JoinLobbyToL::JoinLobbyToL() : m_Builder(1024)
+JoinLobbyToL::JoinLobbyToL()
 {
 }
 

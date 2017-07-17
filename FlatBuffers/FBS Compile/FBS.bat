@@ -67,3 +67,27 @@ flatc --cpp -o SourceFiles\cpp FBSFiles\WorldSnapShotToC_Data.fbs
 
 flatc --csharp -o SourceFiles\csharp FBSFiles\GameInputSkillToR_Data.fbs
 flatc --cpp -o SourceFiles\cpp FBSFiles\GameInputSkillToR_Data.fbs
+
+flatc --csharp -o SourceFiles\csharp FBSFiles\WorldInfoToC.fbs
+flatc --cpp -o SourceFiles\cpp FBSFiles\WorldInfoToC.fbs
+
+flatc --csharp -o SourceFiles\csharp FBSFiles\GameEventData.fbs
+flatc --cpp -o SourceFiles\cpp FBSFiles\GameEventData.fbs
+
+flatc --csharp -o SourceFiles\csharp FBSFiles\GameEvent\Rotation.fbs
+flatc --cpp -o SourceFiles\cpp FBSFiles\GameEvent\Rotation.fbs
+
+flatc --csharp -o SourceFiles\csharp FBSFiles\GameEvent\Position.fbs
+flatc --cpp -o SourceFiles\cpp FBSFiles\GameEvent\Position.fbs
+
+flatc --csharp -o SourceFiles\csharp FBSFiles\GameEvent\StateEnd.fbs
+flatc --cpp -o SourceFiles\cpp FBSFiles\GameEvent\StateEnd.fbs
+
+flatc --csharp -o SourceFiles\csharp FBSFiles\GameEvent\StateStart.fbs
+flatc --cpp -o SourceFiles\cpp FBSFiles\GameEvent\StateStart.fbs
+
+flatc --csharp -o SourceFiles\csharp FBSFiles\GameEvent\BehaviorEnd.fbs
+flatc --cpp -o SourceFiles\cpp FBSFiles\GameEvent\BehaviorEnd.fbs
+
+flatc --csharp -o SourceFiles\csharp FBSFiles\GameEvent\BehaviorStart.fbs
+flatc --cpp -o SourceFiles\cpp FBSFiles\GameEvent\BehaviorStart.fbs

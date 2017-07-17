@@ -2,7 +2,7 @@
 #include "CreateRoomToL.h"
 #include "CreateRoomToL_Data_generated.h"
 
-CreateRoomToL::CreateRoomToL() : m_Builder(1024)
+CreateRoomToL::CreateRoomToL()
 {
 }
 

@@ -10,6 +10,8 @@ public class BaeGameRoom : IGameRoom
     [SerializeField] private CameraController       m_CameraController = null;
     [SerializeField] private SkillController        m_SkillController = null;
 
+    public static float deltaTime = 0;
+
     //  Temp
     private string m_strIP = "172.30.1.18";
     private int m_nPort = 9111;
@@ -17,17 +19,16 @@ public class BaeGameRoom : IGameRoom
     private Dictionary<int, IEntity>            m_dicEntity = new Dictionary<int, IEntity>();
 
     private int m_nOldFrameRate = 0;
-
     private int m_nPlayerIndex = -1;
 
-    private bool m_bPlaying = false;
-    private float m_fElapsedTime = 0f;
+    //  Snapshot logic is legacy..
     private float m_fLastSnapshotTime = 0f;
-
-    private List<KeyValuePair<float, IMessage>> m_listGameEventRecord = new List<KeyValuePair<float, IMessage>>();
-
     private Dictionary<int, Dictionary<int, List<WorldSnapShotToC>>> m_dicWorldSnapShot = new Dictionary<int, Dictionary<int, List<WorldSnapShotToC>>>();
 
+    private float m_fLastUpdateTime = -0.001f;  //  exclude (The reason why default value is -0.001 is for processing events that happen at 0 sec)
+    private float m_fElapsedTime = 0;           //  include
+    private float m_fLastWorldInfoTime = -1;
+    private Dictionary<int, List<IGameEvent>> m_dicGameEvent = new Dictionary<int, List<IGameEvent>>();
 
     private void Start()
     {
@@ -41,32 +42,116 @@ public class BaeGameRoom : IGameRoom
     {
         while (true)
         {
+            if (m_fLastWorldInfoTime == -1)
+                yield return null;
+
             UpdateWorld();
 
             yield return null;
 
-            UpdateElapsedTime();
-        }
-    }
-
-    private void UpdateElapsedTime()
-    {
-        if (FindEqualOrFirstSmallerSnapshot(m_fElapsedTime) != null && FindEqualOrFirstBiggerSnapshot(m_fElapsedTime) != null)
-        {
-            if (m_fLastSnapshotTime - m_fElapsedTime > 0.015f)
-            {
-                m_fElapsedTime = m_fLastSnapshotTime - 0.015f;
-            }
-            else
-            {
-                m_fElapsedTime += Time.deltaTime;
-            }
+            UpdateTime();
         }
     }
 
     private void UpdateWorld()
     {
-        WorldSnapshotInterpolation();
+        if (m_fLastUpdateTime >= m_fElapsedTime)
+            return;
+
+        ProcessWorldInfo();
+
+        foreach (KeyValuePair<int, IEntity> kv in m_dicEntity)
+        {
+            kv.Value.Sample();
+        }
+
+        m_fLastUpdateTime = m_fElapsedTime;
+    }
+
+    private void UpdateTime()
+    {
+        if (m_fLastWorldInfoTime > m_fElapsedTime)
+        {
+            if (m_fLastWorldInfoTime > m_fElapsedTime + Time.deltaTime)
+            {
+                float fPlaySpeed = 1;
+                if (m_fLastWorldInfoTime - m_fElapsedTime > 0.5f)
+                {
+                    fPlaySpeed = 3;
+                }
+                else if (m_fLastWorldInfoTime - m_fElapsedTime > 0.1f)
+                {
+                    fPlaySpeed = 2;
+                }
+
+                deltaTime = Time.deltaTime * fPlaySpeed;
+                if (m_fLastWorldInfoTime < m_fElapsedTime + deltaTime)
+                {
+                    deltaTime = m_fLastWorldInfoTime - m_fElapsedTime;
+                }
+            }
+            else
+            {
+                deltaTime = m_fLastWorldInfoTime - m_fElapsedTime;
+            }
+
+            m_fElapsedTime += deltaTime;
+        }
+    }
+
+    private void ProcessWorldInfo()
+    {
+        for (int sec = (int)m_fLastUpdateTime; sec <= (int)m_fElapsedTime; ++sec)
+        {
+            if (m_dicGameEvent.ContainsKey(sec))
+            {
+                for (int i = 0; i < m_dicGameEvent[sec].Count; ++i)
+                {
+                    IGameEvent iGameEvent = m_dicGameEvent[sec][i];
+
+                    if (iGameEvent.m_fEventTime <= m_fLastUpdateTime)
+                    {
+                        continue;
+                    }
+                    else if (m_fElapsedTime < iGameEvent.m_fEventTime)
+                    {
+                        return;
+                    }
+                    else
+                    {
+                        ProcessGameEvent(m_dicGameEvent[sec][i]);
+                    }
+                }
+            }
+        }
+    }
+
+    private void ProcessGameEvent(IGameEvent iGameEvent)
+    {
+        if (iGameEvent.GetEventType() == FBS.GameEventType.BehaviorStart)
+        {
+            GameEvent.BehaviorStart gameEvent = (GameEvent.BehaviorStart)iGameEvent;
+
+            m_dicEntity[gameEvent.m_nEntityID].ProcessGameEvent(gameEvent);
+        }
+        else if (iGameEvent.GetEventType() == FBS.GameEventType.BehaviorEnd)
+        {
+            GameEvent.BehaviorEnd gameEvent = (GameEvent.BehaviorEnd)iGameEvent;
+
+            m_dicEntity[gameEvent.m_nEntityID].ProcessGameEvent(gameEvent);
+        }
+        else if (iGameEvent.GetEventType() == FBS.GameEventType.Position)
+        {
+            GameEvent.Position gameEvent = (GameEvent.Position)iGameEvent;
+
+            m_dicEntity[gameEvent.m_nEntityID].ProcessGameEvent(gameEvent);
+        }
+        else if (iGameEvent.GetEventType() == FBS.GameEventType.Rotation)
+        {
+            GameEvent.Rotation gameEvent = (GameEvent.Rotation)iGameEvent;
+
+            m_dicEntity[gameEvent.m_nEntityID].ProcessGameEvent(gameEvent);
+        }
     }
 
     private void OnConnected(bool bResult)
@@ -91,9 +176,12 @@ public class BaeGameRoom : IGameRoom
 
     private void StartGame()
     {
-        m_bPlaying = true;
         m_fElapsedTime = 0f;
         m_fLastSnapshotTime = 0f;
+        deltaTime = 0;
+        m_fLastUpdateTime = -0.001f;
+        m_fLastWorldInfoTime = -1;
+        m_dicGameEvent.Clear();
 
         m_InputManager.Work(100, 500/*temp.. always 200, 200*/, m_CameraMain, OnClicked);
 
@@ -129,6 +217,10 @@ public class BaeGameRoom : IGameRoom
         else if (iMsg.GetID() == WorldSnapShotToC.MESSAGE_ID)
         {
             OnWorldSnapShotToC((WorldSnapShotToC)iMsg);
+        }
+        else if (iMsg.GetID() == WorldInfoToC.MESSAGE_ID)
+        {
+            OnWorldInfoToC((WorldInfoToC)iMsg);
         }
     }
 
@@ -185,6 +277,21 @@ public class BaeGameRoom : IGameRoom
             m_dicWorldSnapShot[nSec].Add(n100MilliSec, new List<WorldSnapShotToC>());
 
         m_dicWorldSnapShot[nSec][n100MilliSec].Add(msg);
+    }
+
+    private void OnWorldInfoToC(WorldInfoToC msg)
+    {
+        m_fLastWorldInfoTime = msg.m_fEndTime;
+
+        foreach(IGameEvent iGameEvent in msg.m_listGameEvent)
+        {
+            int nSec = (int)iGameEvent.m_fEventTime;
+
+            if (!m_dicGameEvent.ContainsKey(nSec))
+                m_dicGameEvent.Add(nSec, new List<IGameEvent>());
+            
+            m_dicGameEvent[nSec].Add(iGameEvent);
+        }
     }
 #endregion
 

@@ -3,7 +3,7 @@
 
 const string Idle::NAME = "Idle";
 
-Idle::Idle(IEntity* pEntity, int nMasterDataID) : IBehavior(pEntity, nMasterDataID)
+Idle::Idle(BaeGameRoom* pGameRoom, IEntity* pEntity, int nMasterDataID) : IBehavior(pGameRoom, pEntity, nMasterDataID)
 {
 }
 

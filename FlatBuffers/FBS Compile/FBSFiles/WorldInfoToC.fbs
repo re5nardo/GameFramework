@@ -1,0 +1,10 @@
+include "GameEventData.fbs";
+namespace FBS;
+
+table WorldInfoToC
+{
+	Tick:int;
+	StartTime:float;		//	Exclude
+	EndTime:float;			//	Include
+	GameEvents:[GameEventData];
+}

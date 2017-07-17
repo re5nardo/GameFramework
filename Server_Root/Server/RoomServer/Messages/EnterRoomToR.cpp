@@ -2,7 +2,7 @@
 #include "EnterRoomToR.h"
 #include "EnterRoomToR_Data_generated.h"
 
-EnterRoomToR::EnterRoomToR() : m_Builder(1024)
+EnterRoomToR::EnterRoomToR()
 {
 }
 

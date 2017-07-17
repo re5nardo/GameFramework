@@ -8,31 +8,29 @@ public class GameEventMoveToR : IMessage
     public int m_nPlayerIndex;
     public Vector3 m_vec3Dest;
 
-    public ushort GetID()
+    public override ushort GetID()
     {
         return MESSAGE_ID;
     }
 
-    public IMessage Clone()
+    public override IMessage Clone()
     {
         return null; 
     }
 
-    public byte[] Serialize()
+    public override byte[] Serialize()
     {
-        FlatBufferBuilder builder = new FlatBufferBuilder(1024);
+        GameEventMoveToR_Data.StartGameEventMoveToR_Data(m_Builder);
+        GameEventMoveToR_Data.AddPlayerIndex(m_Builder, m_nPlayerIndex);
+        GameEventMoveToR_Data.AddDest(m_Builder, FBSData.Vector3.CreateVector3(m_Builder, m_vec3Dest.x, m_vec3Dest.y, m_vec3Dest.z));
+        var data = GameEventMoveToR_Data.EndGameEventMoveToR_Data(m_Builder);
 
-        GameEventMoveToR_Data.StartGameEventMoveToR_Data(builder);
-        GameEventMoveToR_Data.AddPlayerIndex(builder, m_nPlayerIndex);
-        GameEventMoveToR_Data.AddDest(builder, FBSData.Vector3.CreateVector3(builder, m_vec3Dest.x, m_vec3Dest.y, m_vec3Dest.z));
-        var data = GameEventMoveToR_Data.EndGameEventMoveToR_Data(builder);
+        m_Builder.Finish(data.Value);
 
-        builder.Finish(data.Value);
-
-        return builder.SizedByteArray();
+        return m_Builder.SizedByteArray();
     }
 
-    public bool Deserialize(byte[] bytes)
+    public override bool Deserialize(byte[] bytes)
     {
         var buf = new ByteBuffer(bytes);
 

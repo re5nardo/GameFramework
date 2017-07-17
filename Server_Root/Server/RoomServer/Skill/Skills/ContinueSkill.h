@@ -10,7 +10,7 @@ using namespace std;
 class ContinueSkill : public ISkill
 {
 public:
-	ContinueSkill(IEntity* pEntity, int nMasterDataID);
+	ContinueSkill(BaeGameRoom* pGameRoom, IEntity* pEntity, int nMasterDataID);
 	virtual ~ContinueSkill();
 
 public:

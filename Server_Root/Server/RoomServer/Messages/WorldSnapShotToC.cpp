@@ -1,7 +1,8 @@
 #include "stdafx.h"
 #include "WorldSnapShotToC.h"
+#include "WorldSnapShotToC_Data_generated.h"
 
-WorldSnapShotToC::WorldSnapShotToC() : m_Builder(1024)
+WorldSnapShotToC::WorldSnapShotToC()
 {
 }
 

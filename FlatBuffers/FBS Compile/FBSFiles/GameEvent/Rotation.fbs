@@ -1,0 +1,11 @@
+include "../FBSData.fbs";
+namespace FBS.GameEvent;
+
+table Rotation
+{
+	EntityID:int;
+	StartTime:float;
+	EndTime:float;
+	StartRot:FBSData.Vector3;
+	EndRot:FBSData.Vector3;
+}

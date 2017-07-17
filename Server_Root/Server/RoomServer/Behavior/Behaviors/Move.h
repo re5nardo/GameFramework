@@ -12,7 +12,7 @@ using namespace std;
 class Move : public IBehavior
 {
 public:
-	Move(IEntity* pEntity, int nMasterDataID);
+	Move(BaeGameRoom* pGameRoom, IEntity* pEntity, int nMasterDataID);
 	virtual ~Move();
 
 public:
@@ -20,7 +20,6 @@ public:
 
 private:
 	btVector3 m_vec3Dest;
-	BaeGameRoom* m_pGameRoom = NULL;
 
 public:
 	static const string NAME;

@@ -1,8 +1,9 @@
 #include "stdafx.h"
 #include "ISkill.h"
 
-ISkill::ISkill(IEntity* pEntity, int nMasterDataID)
+ISkill::ISkill(BaeGameRoom* pGameRoom, IEntity* pEntity, int nMasterDataID)
 {
+	m_pGameRoom = pGameRoom;
 	m_pEntity = pEntity;
 	m_nMasterDataID = nMasterDataID;
 }

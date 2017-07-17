@@ -1,8 +1,9 @@
 #include "stdafx.h"
 #include "IEntity.h"
 
-IEntity::IEntity(int nID, int nMasterDataID)
+IEntity::IEntity(BaeGameRoom* pGameRoom, int nID, int nMasterDataID)
 {
+	m_pGameRoom = pGameRoom;
 	m_nID = nID;
 	m_nMasterDataID = nMasterDataID;
 }

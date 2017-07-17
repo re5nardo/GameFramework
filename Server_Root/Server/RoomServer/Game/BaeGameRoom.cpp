@@ -7,6 +7,7 @@
 #include <process.h>
 #include "../Entity/Entities/Character/Character.h"
 #include "../Messages/WorldSnapShotToC.h"
+#include "../Messages/WorldInfoToC.h"
 #include "../Behavior/BehaviorIDs.h"
 #include "../../CommonSources/tinyxml2.h"
 #include "../../CommonSources/QuadTree.h"
@@ -48,7 +49,7 @@ void BaeGameRoom::Loop()
 		Update();
 		LateUpdate();
 
-		SendWorldSnapShot();
+		SendWorldInfo();
 
 		__int64 lTickProcessTime = GetElapsedTime() - m_lLastUpdateTime;
 
@@ -93,7 +94,7 @@ void BaeGameRoom::ProcessInput()
 		{
 			GameEventMoveToR* pMoveToR = (GameEventMoveToR*)pPlayerInputMsg;
 
-			m_mapCharacter[nPlayerIndex]->GetBehavior(BehaviorID::MOVE)->Start(m_lLastUpdateTime, &pMoveToR->m_vec3Dest, this);
+			m_mapCharacter[nPlayerIndex]->GetBehavior(BehaviorID::MOVE)->Start(m_lLastUpdateTime, &pMoveToR->m_vec3Dest);
 		}
 		else if (pPlayerInputMsg->GetID() == GameInputSkillToR_ID)
 		{
@@ -150,6 +151,28 @@ void BaeGameRoom::SendWorldSnapShot()
 	}
 
 	SendToAllUsers(pWorldSnapShotToC);
+}
+
+void BaeGameRoom::SendWorldInfo()
+{
+	WorldInfoToC* pWorldInfoToC = new WorldInfoToC();
+
+	pWorldInfoToC->m_nTick = m_nTick;
+	pWorldInfoToC->m_fStartTime = (m_lLastUpdateTime - m_lDeltaTime) / 1000.0f;
+	pWorldInfoToC->m_fEndTime = m_lLastUpdateTime / 1000.0f;
+
+	for (list<IGameEvent*>::iterator it = m_listGameEvent.begin(); it != m_listGameEvent.end(); ++it)
+	{
+		pWorldInfoToC->m_listGameEvent.push_back(*it);
+	}
+
+	SendToAllUsers(pWorldInfoToC);
+
+	for (list<IGameEvent*>::iterator it = m_listGameEvent.begin(); it != m_listGameEvent.end(); ++it)
+	{
+		delete *it;
+	}
+	m_listGameEvent.clear();
 }
 
 void BaeGameRoom::StartGame()
@@ -288,6 +311,11 @@ void BaeGameRoom::SetCollisionObjectRotation(int nEntityID, btVector3& vec3Rotat
 	m_CollisionManager.SetRotation(nCollisionObjectID, vec3Rotation);
 }
 
+void BaeGameRoom::AddGameEvent(IGameEvent* pGameEvent)
+{
+	m_listGameEvent.push_back(pGameEvent);
+}
+
 void BaeGameRoom::SendToAllUsers(IMessage* pMsg, string strExclusionKey, bool bDelete)
 {
 	for (map<string, unsigned int>::iterator it = m_mapPlayerKeySocket.begin(); it != m_mapPlayerKeySocket.end(); ++it)
@@ -358,7 +386,7 @@ void BaeGameRoom::OnEnterRoomToR(EnterRoomToR* pMsg, unsigned int socket)
 		m_LockEntitySequence.unlock();
 
 		//	Temp..0 is MisterBae
-		Character* pCharacter = Factory::Instance()->CreateCharacter(nEntityID, 0);
+		Character* pCharacter = Factory::Instance()->CreateCharacter(this, nEntityID, 0);
 		pCharacter->Initialize();
 		m_mapCharacter[nPlayerIndex] = pCharacter;
 		//m_mapPlayerEntity[nPlayerIndex] = nEntityID;

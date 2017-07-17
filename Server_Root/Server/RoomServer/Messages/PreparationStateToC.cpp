@@ -2,7 +2,7 @@
 #include "PreparationStateToC.h"
 #include "PreparationStateToC_Data_generated.h"
 
-PreparationStateToC::PreparationStateToC() : m_Builder(1024)
+PreparationStateToC::PreparationStateToC()
 {
 }
 

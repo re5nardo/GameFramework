@@ -2,7 +2,7 @@
 #include "PlayerEnterRoomToC.h"
 #include "PlayerEnterRoomToC_Data_generated.h"
 
-PlayerEnterRoomToC::PlayerEnterRoomToC() : m_Builder(1024)
+PlayerEnterRoomToC::PlayerEnterRoomToC()
 {
 }
 

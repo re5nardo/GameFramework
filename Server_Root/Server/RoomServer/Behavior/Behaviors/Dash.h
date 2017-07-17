@@ -10,7 +10,7 @@ using namespace std;
 class Dash : public IBehavior
 {
 public:
-	Dash(IEntity* pEntity, int nMasterDataID);
+	Dash(BaeGameRoom* pGameRoom, IEntity* pEntity, int nMasterDataID);
 	virtual ~Dash();
 
 private:

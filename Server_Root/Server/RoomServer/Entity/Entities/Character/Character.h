@@ -3,10 +3,12 @@
 #include "../../IEntity.h"
 #include "../../../Data.h"
 
+class BaeGameRoom;
+
 class Character : public IEntity
 {
 public:
-	Character(int nID, int nMasterDataID);
+	Character(BaeGameRoom* pGameRoom, int nID, int nMasterDataID);
 	virtual ~Character();
 
 protected:

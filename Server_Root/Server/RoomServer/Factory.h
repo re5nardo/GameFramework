@@ -7,6 +7,7 @@ class ISkill;
 class IEntity;
 class Character;
 class IState;
+class BaeGameRoom;
 
 class Factory : public Singleton<Factory>
 {
@@ -15,8 +16,8 @@ public:
 	virtual ~Factory();
 
 public:
-	ISkill*		CreateSkill(IEntity* pEntity, int nMasterDataID);
-	IBehavior*	CreateBehavior(IEntity* pEntity, int nMasterDataID);
-	IState*		CreateState(IEntity* pEntity, int nMasterDataID, __int64 lStartTime);
-	Character*	CreateCharacter(int nID, int nMasterDataID);
+	ISkill*		CreateSkill(BaeGameRoom* pGameRoom, IEntity* pEntity, int nMasterDataID);
+	IBehavior*	CreateBehavior(BaeGameRoom* pGameRoom, IEntity* pEntity, int nMasterDataID);
+	IState*		CreateState(BaeGameRoom* pGameRoom, IEntity* pEntity, int nMasterDataID, __int64 lStartTime);
+	Character*	CreateCharacter(BaeGameRoom* pGameRoom, int nID, int nMasterDataID);
 };

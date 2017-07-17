@@ -27,4 +27,5 @@ public class MessageID
     public const ushort EnterRoomToC_ID =                   50003;
     public const ushort PlayerEnterRoomToC_ID =             50004;
     public const ushort WorldSnapShotToC_ID =               50008;
+    public const ushort WorldInfoToC_ID =                   50009;
 }

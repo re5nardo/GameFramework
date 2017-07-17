@@ -5,7 +5,7 @@
 #include "../../../MasterData/Character.h"
 #include "../../../Factory.h"
 
-Character::Character(int nID, int nMasterDataID) : IEntity(nID, nMasterDataID)
+Character::Character(BaeGameRoom* pGameRoom, int nID, int nMasterDataID) : IEntity(pGameRoom, nID, nMasterDataID)
 {
 }
 
@@ -24,7 +24,7 @@ void Character::Initialize()
 
 	for (vector<int>::iterator it = pMasterCharacter->m_vecSkillID.begin(); it != pMasterCharacter->m_vecSkillID.end(); ++it)
 	{
-		ISkill* pSkill = Factory::Instance()->CreateSkill(this, *it);
+		ISkill* pSkill = Factory::Instance()->CreateSkill(m_pGameRoom, this, *it);
 		if (pSkill != NULL)
 		{
 			pSkill->Initialize();
@@ -34,7 +34,7 @@ void Character::Initialize()
 
 	for (vector<int>::iterator it = pMasterCharacter->m_vecBehaviorID.begin(); it != pMasterCharacter->m_vecBehaviorID.end(); ++it)
 	{
-		IBehavior* pBehavior = Factory::Instance()->CreateBehavior(this, *it);
+		IBehavior* pBehavior = Factory::Instance()->CreateBehavior(m_pGameRoom, this, *it);
 		if (pBehavior != NULL)
 		{
 			pBehavior->Initialize();

@@ -1,0 +1,8 @@
+namespace FBS.GameEvent;
+
+table StateStart
+{
+	EntityID:int;
+	StartTime:float;
+	StateID:int;
+}

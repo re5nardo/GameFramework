@@ -22,6 +22,7 @@ class PreparationStateToR;
 class IMessage;
 class Character;
 class GameInputSkillToR;
+class IGameEvent;
 
 using namespace std;
 using namespace chrono;
@@ -33,7 +34,7 @@ public:
 	virtual ~BaeGameRoom();
 
 private:
-	const __int64 TIME_STEP = 15;		//	<-- milliseconds, TickRate is 1000(1sec) / TIME_STEP
+	const __int64 TIME_STEP = 50;		//	<-- milliseconds, TickRate is 1000(1sec) / TIME_STEP
 
 private:
 	mutex m_LockEntitySequence;
@@ -67,6 +68,9 @@ private:
 private:
 	CollisionManager m_CollisionManager;
 	map<int, int> m_mapPlayerCollision;		//	key : PlayerIndex, value : CollisionObject ID
+
+private:
+	list<IGameEvent*> m_listGameEvent;
 
 public:
 	void OnRecvMessage(unsigned int socket, IMessage* pMsg);
@@ -104,6 +108,9 @@ public:
 	void SetCollisionObjectPosition(int nEntityID, btVector3& vec3Position);
 	void SetCollisionObjectRotation(int nEntityID, btVector3& vec3Rotation);
 
+public:
+	void AddGameEvent(IGameEvent* pGameEvent);
+
 private:
 	void Loop();
 	void UpdateTime();
@@ -111,6 +118,7 @@ private:
 	void Update();
 	void LateUpdate();
 	void SendWorldSnapShot();
+	void SendWorldInfo();
 
 private:
 	static unsigned int __stdcall LoopThreadStart(void* param);
