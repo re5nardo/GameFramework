@@ -21,10 +21,10 @@ public class JoinLobbyToL : IMessage
     {
         var playerKey = m_Builder.CreateString(m_strPlayerKey);
 
-        JoinLobbyToL_Data.StartJoinLobbyToL_Data(m_Builder);
-        JoinLobbyToL_Data.AddPlayerKey(m_Builder, playerKey);
-        JoinLobbyToL_Data.AddAuthKey(m_Builder, m_nAuthKey);
-        var data = JoinLobbyToL_Data.EndJoinLobbyToL_Data(m_Builder);
+        FBS.JoinLobbyToL.StartJoinLobbyToL(m_Builder);
+        FBS.JoinLobbyToL.AddPlayerKey(m_Builder, playerKey);
+        FBS.JoinLobbyToL.AddAuthKey(m_Builder, m_nAuthKey);
+        var data = FBS.JoinLobbyToL.EndJoinLobbyToL(m_Builder);
 
         m_Builder.Finish(data.Value);
 
@@ -35,7 +35,7 @@ public class JoinLobbyToL : IMessage
     {
         var buf = new ByteBuffer(bytes);
 
-        var data = JoinLobbyToL_Data.GetRootAsJoinLobbyToL_Data(buf);
+        var data = FBS.JoinLobbyToL.GetRootAsJoinLobbyToL(buf);
 
         m_strPlayerKey = data.PlayerKey;
         m_nAuthKey = data.AuthKey;

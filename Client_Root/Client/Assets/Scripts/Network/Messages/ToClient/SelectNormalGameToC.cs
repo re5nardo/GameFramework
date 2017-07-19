@@ -19,21 +19,14 @@ public class SelectNormalGameToC : IMessage
 
     public override byte[] Serialize()
     {
-        SelectNormalGameToC_Data.StartSelectNormalGameToC_Data(m_Builder);
-        SelectNormalGameToC_Data.AddResult(m_Builder, m_nResult);
-        SelectNormalGameToC_Data.AddExpectedTime(m_Builder, m_nExpectedTime);
-        var data = SelectNormalGameToC_Data.EndSelectNormalGameToC_Data(m_Builder);
-
-        m_Builder.Finish(data.Value);
-
-        return m_Builder.SizedByteArray();
+        return null;
     }
 
     public override bool Deserialize(byte[] bytes)
     {
         var buf = new ByteBuffer(bytes);
 
-        var data = SelectNormalGameToC_Data.GetRootAsSelectNormalGameToC_Data(buf);
+        var data = FBS.SelectNormalGameToC.GetRootAsSelectNormalGameToC(buf);
 
         m_nResult = data.Result;
         m_nExpectedTime = data.ExpectedTime;

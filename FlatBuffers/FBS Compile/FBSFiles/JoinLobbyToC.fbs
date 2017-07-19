@@ -1,0 +1,6 @@
+namespace FBS;
+
+table JoinLobbyToC
+{
+	Result:int;
+}

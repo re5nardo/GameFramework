@@ -1,0 +1,18 @@
+include "FBSData.fbs";
+namespace FBS;
+
+table EntityState
+{
+	PlayerIndex:int;
+	Position:FBS.Data.Vector3;
+	Rotation:FBS.Data.Vector3;
+	BehaviorsMapKey:[int];
+	BehaviorsMapValue:[float];
+}
+
+table WorldSnapShotToC
+{
+	Tick:int;
+	Time:float;
+	EntityStates:[EntityState];
+}

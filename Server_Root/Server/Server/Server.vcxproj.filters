@@ -102,12 +102,6 @@
     <ClInclude Include="..\CommonSources\Message\ISerializable.h">
       <Filter>헤더 파일\Messages</Filter>
     </ClInclude>
-    <ClInclude Include="Messages\JoinLobbyToC.h">
-      <Filter>헤더 파일\Messages\ToClient</Filter>
-    </ClInclude>
-    <ClInclude Include="Messages\SelectNormalGameToC.h">
-      <Filter>헤더 파일\Messages\ToClient</Filter>
-    </ClInclude>
     <ClInclude Include="..\CommonSources\Singleton.h">
       <Filter>헤더 파일\Common</Filter>
     </ClInclude>
@@ -117,20 +111,26 @@
     <ClInclude Include="LobbyMessageHeader.h">
       <Filter>헤더 파일\Messages</Filter>
     </ClInclude>
-    <ClInclude Include="..\CommonSources\Messages\CreateRoomToL.h">
-      <Filter>헤더 파일\Messages\ToLobby</Filter>
-    </ClInclude>
-    <ClInclude Include="Messages\JoinLobbyToL.h">
-      <Filter>헤더 파일\Messages\ToLobby</Filter>
-    </ClInclude>
-    <ClInclude Include="Messages\SelectNormalGameToL.h">
-      <Filter>헤더 파일\Messages\ToLobby</Filter>
-    </ClInclude>
-    <ClInclude Include="..\CommonSources\Messages\CreateRoomToR.h">
-      <Filter>헤더 파일\Messages\ToRoom</Filter>
-    </ClInclude>
     <ClInclude Include="..\CommonSources\Message\MessageIDs.h">
       <Filter>헤더 파일\Messages</Filter>
+    </ClInclude>
+    <ClInclude Include="Messages\ToClient\SelectNormalGameToC.h">
+      <Filter>헤더 파일\Messages\ToClient</Filter>
+    </ClInclude>
+    <ClInclude Include="Messages\ToClient\JoinLobbyToC.h">
+      <Filter>헤더 파일\Messages\ToClient</Filter>
+    </ClInclude>
+    <ClInclude Include="Messages\ToLobby\SelectNormalGameToL.h">
+      <Filter>헤더 파일\Messages\ToLobby</Filter>
+    </ClInclude>
+    <ClInclude Include="Messages\ToLobby\JoinLobbyToL.h">
+      <Filter>헤더 파일\Messages\ToLobby</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CommonSources\Messages\ToLobby\CreateRoomToL.h">
+      <Filter>헤더 파일\Messages\ToLobby</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CommonSources\Messages\ToRoom\CreateRoomToR.h">
+      <Filter>헤더 파일\Messages\ToRoom</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -158,25 +158,25 @@
     <ClCompile Include="..\CommonSources\Network\NetworkCore.cpp">
       <Filter>소스 파일\Network</Filter>
     </ClCompile>
-    <ClCompile Include="Messages\JoinLobbyToC.cpp">
-      <Filter>소스 파일\Messages\ToClient</Filter>
-    </ClCompile>
-    <ClCompile Include="Messages\SelectNormalGameToC.cpp">
-      <Filter>소스 파일\Messages\ToClient</Filter>
-    </ClCompile>
     <ClCompile Include="LobbyMessageConvertor.cpp">
       <Filter>소스 파일\Messages</Filter>
     </ClCompile>
-    <ClCompile Include="..\CommonSources\Messages\CreateRoomToL.cpp">
+    <ClCompile Include="Messages\ToClient\SelectNormalGameToC.cpp">
+      <Filter>소스 파일\Messages\ToClient</Filter>
+    </ClCompile>
+    <ClCompile Include="Messages\ToClient\JoinLobbyToC.cpp">
+      <Filter>소스 파일\Messages\ToClient</Filter>
+    </ClCompile>
+    <ClCompile Include="Messages\ToLobby\SelectNormalGameToL.cpp">
       <Filter>소스 파일\Messages\ToLobby</Filter>
     </ClCompile>
-    <ClCompile Include="Messages\JoinLobbyToL.cpp">
+    <ClCompile Include="Messages\ToLobby\JoinLobbyToL.cpp">
       <Filter>소스 파일\Messages\ToLobby</Filter>
     </ClCompile>
-    <ClCompile Include="Messages\SelectNormalGameToL.cpp">
+    <ClCompile Include="..\CommonSources\Messages\ToLobby\CreateRoomToL.cpp">
       <Filter>소스 파일\Messages\ToLobby</Filter>
     </ClCompile>
-    <ClCompile Include="..\CommonSources\Messages\CreateRoomToR.cpp">
+    <ClCompile Include="..\CommonSources\Messages\ToRoom\CreateRoomToR.cpp">
       <Filter>소스 파일\Messages\ToRoom</Filter>
     </ClCompile>
   </ItemGroup>

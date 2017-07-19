@@ -18,9 +18,9 @@ public class PreparationStateToR : IMessage
 
     public override byte[] Serialize()
     {
-        PreparationStateToR_Data.StartPreparationStateToR_Data(m_Builder);
-        PreparationStateToR_Data.AddState(m_Builder, m_fState);
-        var data = PreparationStateToR_Data.EndPreparationStateToR_Data(m_Builder);
+        FBS.PreparationStateToR.StartPreparationStateToR(m_Builder);
+        FBS.PreparationStateToR.AddState(m_Builder, m_fState);
+        var data = FBS.PreparationStateToR.EndPreparationStateToR(m_Builder);
 
         m_Builder.Finish(data.Value);
 
@@ -31,7 +31,7 @@ public class PreparationStateToR : IMessage
     {
         var buf = new ByteBuffer(bytes);
 
-        var data = PreparationStateToR_Data.GetRootAsPreparationStateToR_Data(buf);
+        var data = FBS.PreparationStateToR.GetRootAsPreparationStateToR(buf);
 
         m_fState = data.State;
 

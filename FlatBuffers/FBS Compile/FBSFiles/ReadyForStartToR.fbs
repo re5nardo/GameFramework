@@ -1,0 +1,6 @@
+namespace FBS;
+
+table ReadyForStartToR
+{
+	PlayerIndex:int;
+}

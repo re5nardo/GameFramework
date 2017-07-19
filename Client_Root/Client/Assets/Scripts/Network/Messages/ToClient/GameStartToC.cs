@@ -16,8 +16,8 @@ public class GameStartToC : IMessage
 
     public override byte[] Serialize()
     {
-        GameStartToC_Data.StartGameStartToC_Data(m_Builder);
-        var data = GameStartToC_Data.EndGameStartToC_Data(m_Builder);
+        FBS.GameStartToC.StartGameStartToC(m_Builder);
+        var data = FBS.GameStartToC.EndGameStartToC(m_Builder);
 
         m_Builder.Finish(data.Value);
 
@@ -28,7 +28,7 @@ public class GameStartToC : IMessage
     {
         var buf = new ByteBuffer(bytes);
 
-        var data = GameStartToC_Data.GetRootAsGameStartToC_Data(buf);
+        var data = FBS.GameStartToC.GetRootAsGameStartToC(buf);
 
         return true;
     }

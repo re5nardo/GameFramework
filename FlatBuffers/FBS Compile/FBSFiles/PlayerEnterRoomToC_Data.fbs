@@ -1,6 +1,0 @@
-
-table PlayerEnterRoomToC_Data
-{
-	PlayerIndex:int;
-	CharacterID:string;
-}

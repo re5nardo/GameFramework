@@ -5,7 +5,7 @@
 #undef min
 #endif
 #include "flatbuffers/flatbuffers.h"
-#include "../Messages/GameEventData_generated.h"
+#include "../../FBSFiles/GameEventData_generated.h"
 #include "../../CommonSources/Message/ISerializable.h"
 
 using namespace flatbuffers;
@@ -25,5 +25,3 @@ public:
 public:
 	virtual FBS::GameEventType GetType() = 0;
 };
-
-//virtual const char* Serialize(int* pLength = NULL) = 0;

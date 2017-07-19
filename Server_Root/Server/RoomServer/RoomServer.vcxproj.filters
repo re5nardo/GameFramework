@@ -183,47 +183,14 @@
     <ClInclude Include="..\CommonSources\Message\ISerializable.h">
       <Filter>헤더 파일\Messages</Filter>
     </ClInclude>
-    <ClInclude Include="Messages\GameStartToC.h">
-      <Filter>헤더 파일\Messages\ToClient</Filter>
-    </ClInclude>
     <ClInclude Include="Data.h">
       <Filter>헤더 파일\Data</Filter>
-    </ClInclude>
-    <ClInclude Include="..\CommonSources\Messages\CreateRoomToR.h">
-      <Filter>헤더 파일\Messages\ToRoom</Filter>
     </ClInclude>
     <ClInclude Include="Game\BaeGameRoom.h">
       <Filter>헤더 파일\Game</Filter>
     </ClInclude>
-    <ClInclude Include="Messages\EnterRoomToC.h">
-      <Filter>헤더 파일\Messages\ToClient</Filter>
-    </ClInclude>
-    <ClInclude Include="Messages\EnterRoomToR.h">
-      <Filter>헤더 파일\Messages\ToRoom</Filter>
-    </ClInclude>
-    <ClInclude Include="Messages\GameEventMoveToR.h">
-      <Filter>헤더 파일\Messages\ToRoom</Filter>
-    </ClInclude>
-    <ClInclude Include="..\CommonSources\Messages\CreateRoomToL.h">
-      <Filter>헤더 파일\Messages\ToLobby</Filter>
-    </ClInclude>
-    <ClInclude Include="Messages\ReadyForStartToR.h">
-      <Filter>헤더 파일\Messages\ToRoom</Filter>
-    </ClInclude>
-    <ClInclude Include="Messages\PreparationStateToR.h">
-      <Filter>헤더 파일\Messages\ToRoom</Filter>
-    </ClInclude>
-    <ClInclude Include="Messages\PreparationStateToC.h">
-      <Filter>헤더 파일\Messages\ToClient</Filter>
-    </ClInclude>
     <ClInclude Include="..\CommonSources\Message\MessageIDs.h">
       <Filter>헤더 파일\Messages</Filter>
-    </ClInclude>
-    <ClInclude Include="Messages\PlayerEnterRoomToC.h">
-      <Filter>헤더 파일\Messages\ToClient</Filter>
-    </ClInclude>
-    <ClInclude Include="Messages\GameEventStopToR.h">
-      <Filter>헤더 파일\Messages\ToRoom</Filter>
     </ClInclude>
     <ClInclude Include="Entity\IEntity.h">
       <Filter>헤더 파일\Entity</Filter>
@@ -233,9 +200,6 @@
     </ClInclude>
     <ClInclude Include="Behavior\Behaviors\Move.h">
       <Filter>헤더 파일\Behavior\Behaviors</Filter>
-    </ClInclude>
-    <ClInclude Include="Messages\WorldSnapShotToC.h">
-      <Filter>헤더 파일\Messages\ToClient</Filter>
     </ClInclude>
     <ClInclude Include="Behavior\BehaviorIDs.h">
       <Filter>헤더 파일\Behavior</Filter>
@@ -272,9 +236,6 @@
     </ClInclude>
     <ClInclude Include="State\States\Acceleration.h">
       <Filter>헤더 파일\State\States</Filter>
-    </ClInclude>
-    <ClInclude Include="Messages\GameInputSkillToR.h">
-      <Filter>헤더 파일\Messages\ToRoom</Filter>
     </ClInclude>
     <ClInclude Include="MasterData\MasterDataManager.h">
       <Filter>헤더 파일\MasterData</Filter>
@@ -318,9 +279,6 @@
     <ClInclude Include="State\States\Shield.h">
       <Filter>헤더 파일\State\States</Filter>
     </ClInclude>
-    <ClInclude Include="Messages\WorldInfoToC.h">
-      <Filter>헤더 파일\Messages\ToClient</Filter>
-    </ClInclude>
     <ClInclude Include="GameEvent\IGameEvent.h">
       <Filter>헤더 파일\GameEvent</Filter>
     </ClInclude>
@@ -341,6 +299,48 @@
     </ClInclude>
     <ClInclude Include="GameEvent\GameEvents\StateStart.h">
       <Filter>헤더 파일\GameEvent\GameEvents</Filter>
+    </ClInclude>
+    <ClInclude Include="Messages\ToClient\WorldSnapShotToC.h">
+      <Filter>헤더 파일\Messages\ToClient</Filter>
+    </ClInclude>
+    <ClInclude Include="Messages\ToClient\EnterRoomToC.h">
+      <Filter>헤더 파일\Messages\ToClient</Filter>
+    </ClInclude>
+    <ClInclude Include="Messages\ToClient\WorldInfoToC.h">
+      <Filter>헤더 파일\Messages\ToClient</Filter>
+    </ClInclude>
+    <ClInclude Include="Messages\ToClient\PreparationStateToC.h">
+      <Filter>헤더 파일\Messages\ToClient</Filter>
+    </ClInclude>
+    <ClInclude Include="Messages\ToClient\PlayerEnterRoomToC.h">
+      <Filter>헤더 파일\Messages\ToClient</Filter>
+    </ClInclude>
+    <ClInclude Include="Messages\ToClient\GameStartToC.h">
+      <Filter>헤더 파일\Messages\ToClient</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CommonSources\Messages\ToLobby\CreateRoomToL.h">
+      <Filter>헤더 파일\Messages\ToLobby</Filter>
+    </ClInclude>
+    <ClInclude Include="Messages\ToRoom\ReadyForStartToR.h">
+      <Filter>헤더 파일\Messages\ToRoom</Filter>
+    </ClInclude>
+    <ClInclude Include="Messages\ToRoom\PreparationStateToR.h">
+      <Filter>헤더 파일\Messages\ToRoom</Filter>
+    </ClInclude>
+    <ClInclude Include="Messages\ToRoom\GameInputSkillToR.h">
+      <Filter>헤더 파일\Messages\ToRoom</Filter>
+    </ClInclude>
+    <ClInclude Include="Messages\ToRoom\GameEventStopToR.h">
+      <Filter>헤더 파일\Messages\ToRoom</Filter>
+    </ClInclude>
+    <ClInclude Include="Messages\ToRoom\GameEventMoveToR.h">
+      <Filter>헤더 파일\Messages\ToRoom</Filter>
+    </ClInclude>
+    <ClInclude Include="Messages\ToRoom\EnterRoomToR.h">
+      <Filter>헤더 파일\Messages\ToRoom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CommonSources\Messages\ToRoom\CreateRoomToR.h">
+      <Filter>헤더 파일\Messages\ToRoom</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -365,50 +365,14 @@
     <ClCompile Include="..\CommonSources\Network\NetworkCore.cpp">
       <Filter>소스 파일\Network</Filter>
     </ClCompile>
-    <ClCompile Include="Messages\GameStartToC.cpp">
-      <Filter>소스 파일\Messages\ToClient</Filter>
-    </ClCompile>
-    <ClCompile Include="..\CommonSources\Messages\CreateRoomToR.cpp">
-      <Filter>소스 파일\Messages\ToRoom</Filter>
-    </ClCompile>
     <ClCompile Include="Game\BaeGameRoom.cpp">
       <Filter>소스 파일\Game</Filter>
-    </ClCompile>
-    <ClCompile Include="Messages\EnterRoomToC.cpp">
-      <Filter>소스 파일\Messages\ToClient</Filter>
-    </ClCompile>
-    <ClCompile Include="..\CommonSources\Messages\CreateRoomToL.cpp">
-      <Filter>소스 파일\Messages\ToLobby</Filter>
-    </ClCompile>
-    <ClCompile Include="Messages\EnterRoomToR.cpp">
-      <Filter>소스 파일\Messages\ToRoom</Filter>
-    </ClCompile>
-    <ClCompile Include="Messages\GameEventMoveToR.cpp">
-      <Filter>소스 파일\Messages\ToRoom</Filter>
-    </ClCompile>
-    <ClCompile Include="Messages\ReadyForStartToR.cpp">
-      <Filter>소스 파일\Messages\ToRoom</Filter>
-    </ClCompile>
-    <ClCompile Include="Messages\PreparationStateToR.cpp">
-      <Filter>소스 파일\Messages\ToRoom</Filter>
-    </ClCompile>
-    <ClCompile Include="Messages\PreparationStateToC.cpp">
-      <Filter>소스 파일\Messages\ToClient</Filter>
-    </ClCompile>
-    <ClCompile Include="Messages\PlayerEnterRoomToC.cpp">
-      <Filter>소스 파일\Messages\ToClient</Filter>
-    </ClCompile>
-    <ClCompile Include="Messages\GameEventStopToR.cpp">
-      <Filter>소스 파일\Messages\ToRoom</Filter>
     </ClCompile>
     <ClCompile Include="Behavior\Behaviors\Move.cpp">
       <Filter>소스 파일\Behavior\Behaviors</Filter>
     </ClCompile>
     <ClCompile Include="Entity\IEntity.cpp">
       <Filter>소스 파일\Entity</Filter>
-    </ClCompile>
-    <ClCompile Include="Messages\WorldSnapShotToC.cpp">
-      <Filter>소스 파일\Messages\ToClient</Filter>
     </ClCompile>
     <ClCompile Include="Behavior\Behaviors\Idle.cpp">
       <Filter>소스 파일\Behavior\Behaviors</Filter>
@@ -433,9 +397,6 @@
     </ClCompile>
     <ClCompile Include="State\States\Acceleration.cpp">
       <Filter>소스 파일\State\States</Filter>
-    </ClCompile>
-    <ClCompile Include="Messages\GameInputSkillToR.cpp">
-      <Filter>소스 파일\Messages\ToRoom</Filter>
     </ClCompile>
     <ClCompile Include="MasterData\MasterDataManager.cpp">
       <Filter>소스 파일\MasterData</Filter>
@@ -479,9 +440,6 @@
     <ClCompile Include="State\States\Shield.cpp">
       <Filter>소스 파일\State\States</Filter>
     </ClCompile>
-    <ClCompile Include="Messages\WorldInfoToC.cpp">
-      <Filter>소스 파일\Messages\ToClient</Filter>
-    </ClCompile>
     <ClCompile Include="GameEvent\IGameEvent.cpp">
       <Filter>소스 파일\GameEvent</Filter>
     </ClCompile>
@@ -502,6 +460,48 @@
     </ClCompile>
     <ClCompile Include="GameEvent\GameEvents\StateStart.cpp">
       <Filter>소스 파일\GameEvent\GameEvents</Filter>
+    </ClCompile>
+    <ClCompile Include="Messages\ToClient\WorldInfoToC.cpp">
+      <Filter>소스 파일\Messages\ToClient</Filter>
+    </ClCompile>
+    <ClCompile Include="Messages\ToClient\WorldSnapShotToC.cpp">
+      <Filter>소스 파일\Messages\ToClient</Filter>
+    </ClCompile>
+    <ClCompile Include="Messages\ToClient\PreparationStateToC.cpp">
+      <Filter>소스 파일\Messages\ToClient</Filter>
+    </ClCompile>
+    <ClCompile Include="Messages\ToClient\PlayerEnterRoomToC.cpp">
+      <Filter>소스 파일\Messages\ToClient</Filter>
+    </ClCompile>
+    <ClCompile Include="Messages\ToClient\GameStartToC.cpp">
+      <Filter>소스 파일\Messages\ToClient</Filter>
+    </ClCompile>
+    <ClCompile Include="Messages\ToClient\EnterRoomToC.cpp">
+      <Filter>소스 파일\Messages\ToClient</Filter>
+    </ClCompile>
+    <ClCompile Include="..\CommonSources\Messages\ToLobby\CreateRoomToL.cpp">
+      <Filter>소스 파일\Messages\ToLobby</Filter>
+    </ClCompile>
+    <ClCompile Include="Messages\ToRoom\ReadyForStartToR.cpp">
+      <Filter>소스 파일\Messages\ToRoom</Filter>
+    </ClCompile>
+    <ClCompile Include="Messages\ToRoom\PreparationStateToR.cpp">
+      <Filter>소스 파일\Messages\ToRoom</Filter>
+    </ClCompile>
+    <ClCompile Include="Messages\ToRoom\GameInputSkillToR.cpp">
+      <Filter>소스 파일\Messages\ToRoom</Filter>
+    </ClCompile>
+    <ClCompile Include="Messages\ToRoom\GameEventStopToR.cpp">
+      <Filter>소스 파일\Messages\ToRoom</Filter>
+    </ClCompile>
+    <ClCompile Include="Messages\ToRoom\GameEventMoveToR.cpp">
+      <Filter>소스 파일\Messages\ToRoom</Filter>
+    </ClCompile>
+    <ClCompile Include="Messages\ToRoom\EnterRoomToR.cpp">
+      <Filter>소스 파일\Messages\ToRoom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\CommonSources\Messages\ToRoom\CreateRoomToR.cpp">
+      <Filter>소스 파일\Messages\ToRoom</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

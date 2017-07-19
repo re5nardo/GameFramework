@@ -18,9 +18,9 @@ public class ReadyForStartToR : IMessage
 
     public override byte[] Serialize()
     {
-        ReadyForStartToR_Data.StartReadyForStartToR_Data(m_Builder);
-        ReadyForStartToR_Data.AddPlayerIndex(m_Builder, m_nPlayerIndex);
-        var data = ReadyForStartToR_Data.EndReadyForStartToR_Data(m_Builder);
+        FBS.ReadyForStartToR.StartReadyForStartToR(m_Builder);
+        FBS.ReadyForStartToR.AddPlayerIndex(m_Builder, m_nPlayerIndex);
+        var data = FBS.ReadyForStartToR.EndReadyForStartToR(m_Builder);
 
         m_Builder.Finish(data.Value);
 
@@ -31,7 +31,7 @@ public class ReadyForStartToR : IMessage
     {
         var buf = new ByteBuffer(bytes);
 
-        var data = ReadyForStartToR_Data.GetRootAsReadyForStartToR_Data(buf);
+        var data = FBS.ReadyForStartToR.GetRootAsReadyForStartToR(buf);
 
         m_nPlayerIndex = data.PlayerIndex;
 

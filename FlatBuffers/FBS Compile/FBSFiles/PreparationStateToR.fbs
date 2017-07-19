@@ -1,0 +1,6 @@
+namespace FBS;
+
+table PreparationStateToR
+{
+	State:float;
+}

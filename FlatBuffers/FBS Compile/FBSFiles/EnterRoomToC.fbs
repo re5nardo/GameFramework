@@ -1,0 +1,9 @@
+namespace FBS;
+
+table EnterRoomToC
+{
+	Result:int;
+	PlayerIndex:int;
+	PlayersMapKey:[int];
+	PlayersMapValue:[string];
+}

@@ -82,8 +82,8 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\CommonSources\Messages\CreateRoomToL.h" />
-    <ClInclude Include="..\CommonSources\Messages\CreateRoomToR.h" />
+    <ClInclude Include="..\CommonSources\Messages\ToLobby\CreateRoomToL.h" />
+    <ClInclude Include="..\CommonSources\Messages\ToRoom\CreateRoomToR.h" />
     <ClInclude Include="..\CommonSources\Message\IDeserializable.h" />
     <ClInclude Include="..\CommonSources\Message\IMessage.h" />
     <ClInclude Include="..\CommonSources\Message\IMessageConvertor.h" />
@@ -100,27 +100,27 @@
     <ClInclude Include="Lobby.h" />
     <ClInclude Include="LobbyMessageConvertor.h" />
     <ClInclude Include="LobbyMessageHeader.h" />
-    <ClInclude Include="Messages\JoinLobbyToC.h" />
-    <ClInclude Include="Messages\JoinLobbyToL.h" />
-    <ClInclude Include="Messages\SelectNormalGameToC.h" />
-    <ClInclude Include="Messages\SelectNormalGameToL.h" />
+    <ClInclude Include="Messages\ToClient\JoinLobbyToC.h" />
+    <ClInclude Include="Messages\ToClient\SelectNormalGameToC.h" />
+    <ClInclude Include="Messages\ToLobby\JoinLobbyToL.h" />
+    <ClInclude Include="Messages\ToLobby\SelectNormalGameToL.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\CommonSources\Messages\CreateRoomToL.cpp" />
-    <ClCompile Include="..\CommonSources\Messages\CreateRoomToR.cpp" />
+    <ClCompile Include="..\CommonSources\Messages\ToLobby\CreateRoomToL.cpp" />
+    <ClCompile Include="..\CommonSources\Messages\ToRoom\CreateRoomToR.cpp" />
     <ClCompile Include="..\CommonSources\Network\Accepter.cpp" />
     <ClCompile Include="..\CommonSources\Network\Network.cpp" />
     <ClCompile Include="..\CommonSources\Network\NetworkCore.cpp" />
     <ClCompile Include="Glicko2.cpp" />
     <ClCompile Include="Lobby.cpp" />
     <ClCompile Include="LobbyMessageConvertor.cpp" />
-    <ClCompile Include="Messages\JoinLobbyToC.cpp" />
-    <ClCompile Include="Messages\JoinLobbyToL.cpp" />
-    <ClCompile Include="Messages\SelectNormalGameToC.cpp" />
-    <ClCompile Include="Messages\SelectNormalGameToL.cpp" />
+    <ClCompile Include="Messages\ToClient\JoinLobbyToC.cpp" />
+    <ClCompile Include="Messages\ToClient\SelectNormalGameToC.cpp" />
+    <ClCompile Include="Messages\ToLobby\JoinLobbyToL.cpp" />
+    <ClCompile Include="Messages\ToLobby\SelectNormalGameToL.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Server.cpp" />
     <ClCompile Include="stdafx.cpp">

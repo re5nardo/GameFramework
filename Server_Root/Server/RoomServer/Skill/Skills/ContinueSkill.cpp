@@ -4,7 +4,7 @@
 #include "../../Entity/Entities/Character/Character.h"
 #include "../../MasterData/MasterDataManager.h"
 #include "../../MasterData/Skill.h"
-#include "../../Messages/GameInputSkillToR.h"
+#include "../../Messages/ToRoom/GameInputSkillToR.h"
 
 const string ContinueSkill::NAME = "ContinueSkill";
 

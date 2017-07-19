@@ -6,6 +6,6 @@ table Position
 	EntityID:int;
 	StartTime:float;
 	EndTime:float;
-	StartPos:FBSData.Vector3;
-	EndPos:FBSData.Vector3;
+	StartPos:FBS.Data.Vector3;
+	EndPos:FBS.Data.Vector3;
 }

@@ -5,7 +5,7 @@
 #include "../../MasterData/MasterDataManager.h"
 #include "../../MasterData/Skill.h"
 #include "../../Factory.h"
-#include "../../Messages/GameInputSkillToR.h"
+#include "../../Messages/ToRoom/GameInputSkillToR.h"
 
 const string FireSkill::NAME = "FireSkill";
 

@@ -1,4 +1,4 @@
-namespace FBSData;
+namespace FBS.Data;
 
 struct Vector3
 {

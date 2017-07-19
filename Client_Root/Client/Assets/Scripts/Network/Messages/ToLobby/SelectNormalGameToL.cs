@@ -16,8 +16,8 @@ public class SelectNormalGameToL : IMessage
 
     public override byte[] Serialize()
     {
-        SelectNormalGameToL_Data.StartSelectNormalGameToL_Data(m_Builder);
-        var data = SelectNormalGameToL_Data.EndSelectNormalGameToL_Data(m_Builder);
+        FBS.SelectNormalGameToL.StartSelectNormalGameToL(m_Builder);
+        var data = FBS.SelectNormalGameToL.EndSelectNormalGameToL(m_Builder);
 
         m_Builder.Finish(data.Value);
 
@@ -28,7 +28,7 @@ public class SelectNormalGameToL : IMessage
     {
         var buf = new ByteBuffer(bytes);
 
-        var data = SelectNormalGameToL_Data.GetRootAsSelectNormalGameToL_Data(buf);
+        var data = FBS.SelectNormalGameToL.GetRootAsSelectNormalGameToL(buf);
 
         return true;
     }

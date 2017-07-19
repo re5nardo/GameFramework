@@ -1,0 +1,7 @@
+namespace FBS;
+
+table CreateRoomToL
+{
+	Result:int;
+	Players:[string];
+}

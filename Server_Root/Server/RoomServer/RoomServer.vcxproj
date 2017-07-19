@@ -83,8 +83,8 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\CommonSources\Messages\CreateRoomToL.h" />
-    <ClInclude Include="..\CommonSources\Messages\CreateRoomToR.h" />
+    <ClInclude Include="..\CommonSources\Messages\ToLobby\CreateRoomToL.h" />
+    <ClInclude Include="..\CommonSources\Messages\ToRoom\CreateRoomToR.h" />
     <ClInclude Include="..\CommonSources\Message\IDeserializable.h" />
     <ClInclude Include="..\CommonSources\Message\IMessage.h" />
     <ClInclude Include="..\CommonSources\Message\IMessageConvertor.h" />
@@ -125,18 +125,18 @@
     <ClInclude Include="MasterData\MasterDataManager.h" />
     <ClInclude Include="MasterData\Skill.h" />
     <ClInclude Include="MasterData\State.h" />
-    <ClInclude Include="Messages\EnterRoomToC.h" />
-    <ClInclude Include="Messages\EnterRoomToR.h" />
-    <ClInclude Include="Messages\GameEventMoveToR.h" />
-    <ClInclude Include="Messages\GameEventStopToR.h" />
-    <ClInclude Include="Messages\GameInputSkillToR.h" />
-    <ClInclude Include="Messages\GameStartToC.h" />
-    <ClInclude Include="Messages\PlayerEnterRoomToC.h" />
-    <ClInclude Include="Messages\PreparationStateToC.h" />
-    <ClInclude Include="Messages\PreparationStateToR.h" />
-    <ClInclude Include="Messages\ReadyForStartToR.h" />
-    <ClInclude Include="Messages\WorldInfoToC.h" />
-    <ClInclude Include="Messages\WorldSnapShotToC.h" />
+    <ClInclude Include="Messages\ToClient\EnterRoomToC.h" />
+    <ClInclude Include="Messages\ToClient\GameStartToC.h" />
+    <ClInclude Include="Messages\ToClient\PlayerEnterRoomToC.h" />
+    <ClInclude Include="Messages\ToClient\PreparationStateToC.h" />
+    <ClInclude Include="Messages\ToClient\WorldInfoToC.h" />
+    <ClInclude Include="Messages\ToClient\WorldSnapShotToC.h" />
+    <ClInclude Include="Messages\ToRoom\EnterRoomToR.h" />
+    <ClInclude Include="Messages\ToRoom\GameEventMoveToR.h" />
+    <ClInclude Include="Messages\ToRoom\GameEventStopToR.h" />
+    <ClInclude Include="Messages\ToRoom\GameInputSkillToR.h" />
+    <ClInclude Include="Messages\ToRoom\PreparationStateToR.h" />
+    <ClInclude Include="Messages\ToRoom\ReadyForStartToR.h" />
     <ClInclude Include="Room.h" />
     <ClInclude Include="RoomMessageConvertor.h" />
     <ClInclude Include="RoomMessageHeader.h" />
@@ -152,8 +152,8 @@
     <ClInclude Include="Util.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\CommonSources\Messages\CreateRoomToL.cpp" />
-    <ClCompile Include="..\CommonSources\Messages\CreateRoomToR.cpp" />
+    <ClCompile Include="..\CommonSources\Messages\ToLobby\CreateRoomToL.cpp" />
+    <ClCompile Include="..\CommonSources\Messages\ToRoom\CreateRoomToR.cpp" />
     <ClCompile Include="..\CommonSources\Network\Accepter.cpp" />
     <ClCompile Include="..\CommonSources\Network\Network.cpp" />
     <ClCompile Include="..\CommonSources\Network\NetworkCore.cpp" />
@@ -183,18 +183,18 @@
     <ClCompile Include="MasterData\MasterDataManager.cpp" />
     <ClCompile Include="MasterData\SKill.cpp" />
     <ClCompile Include="MasterData\State.cpp" />
-    <ClCompile Include="Messages\EnterRoomToC.cpp" />
-    <ClCompile Include="Messages\EnterRoomToR.cpp" />
-    <ClCompile Include="Messages\GameEventMoveToR.cpp" />
-    <ClCompile Include="Messages\GameEventStopToR.cpp" />
-    <ClCompile Include="Messages\GameInputSkillToR.cpp" />
-    <ClCompile Include="Messages\GameStartToC.cpp" />
-    <ClCompile Include="Messages\PlayerEnterRoomToC.cpp" />
-    <ClCompile Include="Messages\PreparationStateToC.cpp" />
-    <ClCompile Include="Messages\PreparationStateToR.cpp" />
-    <ClCompile Include="Messages\ReadyForStartToR.cpp" />
-    <ClCompile Include="Messages\WorldInfoToC.cpp" />
-    <ClCompile Include="Messages\WorldSnapShotToC.cpp" />
+    <ClCompile Include="Messages\ToClient\EnterRoomToC.cpp" />
+    <ClCompile Include="Messages\ToClient\GameStartToC.cpp" />
+    <ClCompile Include="Messages\ToClient\PlayerEnterRoomToC.cpp" />
+    <ClCompile Include="Messages\ToClient\PreparationStateToC.cpp" />
+    <ClCompile Include="Messages\ToClient\WorldInfoToC.cpp" />
+    <ClCompile Include="Messages\ToClient\WorldSnapShotToC.cpp" />
+    <ClCompile Include="Messages\ToRoom\EnterRoomToR.cpp" />
+    <ClCompile Include="Messages\ToRoom\GameEventMoveToR.cpp" />
+    <ClCompile Include="Messages\ToRoom\GameEventStopToR.cpp" />
+    <ClCompile Include="Messages\ToRoom\GameInputSkillToR.cpp" />
+    <ClCompile Include="Messages\ToRoom\PreparationStateToR.cpp" />
+    <ClCompile Include="Messages\ToRoom\ReadyForStartToR.cpp" />
     <ClCompile Include="Room.cpp" />
     <ClCompile Include="RoomMessageConvertor.cpp" />
     <ClCompile Include="RoomServer.cpp" />

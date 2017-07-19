@@ -22,11 +22,11 @@ public class EnterRoomToR : IMessage
     {
         var playerKey = m_Builder.CreateString(m_strPlayerKey);
 
-        EnterRoomToR_Data.StartEnterRoomToR_Data(m_Builder);
-        EnterRoomToR_Data.AddPlayerKey(m_Builder, playerKey);
-        EnterRoomToR_Data.AddAuthKey(m_Builder, m_nAuthKey);
-        EnterRoomToR_Data.AddMatchID(m_Builder, m_nMatchID);
-        var data = EnterRoomToR_Data.EndEnterRoomToR_Data(m_Builder);
+        FBS.EnterRoomToR.StartEnterRoomToR(m_Builder);
+        FBS.EnterRoomToR.AddPlayerKey(m_Builder, playerKey);
+        FBS.EnterRoomToR.AddAuthKey(m_Builder, m_nAuthKey);
+        FBS.EnterRoomToR.AddMatchID(m_Builder, m_nMatchID);
+        var data = FBS.EnterRoomToR.EndEnterRoomToR(m_Builder);
 
         m_Builder.Finish(data.Value);
 
@@ -37,7 +37,7 @@ public class EnterRoomToR : IMessage
     {
         var buf = new ByteBuffer(bytes);
 
-        var data = EnterRoomToR_Data.GetRootAsEnterRoomToR_Data(buf);
+        var data = FBS.EnterRoomToR.GetRootAsEnterRoomToR(buf);
 
         m_strPlayerKey = data.PlayerKey;
         m_nAuthKey = data.AuthKey;

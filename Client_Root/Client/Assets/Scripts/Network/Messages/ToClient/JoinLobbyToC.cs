@@ -18,9 +18,9 @@ public class JoinLobbyToC : IMessage
 
     public override byte[] Serialize()
     {
-        JoinLobbyToC_Data.StartJoinLobbyToC_Data(m_Builder);
-        JoinLobbyToC_Data.AddResult(m_Builder, m_nResult);
-        var data = JoinLobbyToC_Data.EndJoinLobbyToC_Data(m_Builder);
+        FBS.JoinLobbyToC.StartJoinLobbyToC(m_Builder);
+        FBS.JoinLobbyToC.AddResult(m_Builder, m_nResult);
+        var data = FBS.JoinLobbyToC.EndJoinLobbyToC(m_Builder);
 
         m_Builder.Finish(data.Value);
 
@@ -31,7 +31,7 @@ public class JoinLobbyToC : IMessage
     {
         var buf = new ByteBuffer(bytes);
 
-        var data = JoinLobbyToC_Data.GetRootAsJoinLobbyToC_Data(buf);
+        var data = FBS.JoinLobbyToC.GetRootAsJoinLobbyToC(buf);
 
         m_nResult = data.Result;
 

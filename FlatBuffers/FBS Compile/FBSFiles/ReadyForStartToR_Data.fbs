@@ -1,5 +1,0 @@
-
-table ReadyForStartToR_Data
-{
-	PlayerIndex:int;
-}

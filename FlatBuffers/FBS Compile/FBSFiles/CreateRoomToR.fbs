@@ -1,0 +1,7 @@
+namespace FBS;
+
+table CreateRoomToR
+{
+	MatchID:int;
+	Players:[string];
+}

@@ -1,7 +1,0 @@
-include "FBSData.fbs";
-
-table GameEventStopToR_Data
-{
-	PlayerIndex:int;
-	Pos:FBSData.Vector3;
-}

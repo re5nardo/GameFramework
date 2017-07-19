@@ -1,8 +1,0 @@
-include "FBSData.fbs";
-
-table GameEventMoveToC_Data
-{
-	PlayerIndex:int;
-	EventTime:long;
-	Dest:FBSData.Vector3;
-}

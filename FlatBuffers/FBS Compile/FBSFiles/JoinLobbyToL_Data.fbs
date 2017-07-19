@@ -1,6 +1,0 @@
-
-table JoinLobbyToL_Data
-{
-	PlayerKey:string;
-	AuthKey:int;
-}

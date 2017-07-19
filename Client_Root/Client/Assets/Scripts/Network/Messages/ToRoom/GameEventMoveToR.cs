@@ -20,10 +20,10 @@ public class GameEventMoveToR : IMessage
 
     public override byte[] Serialize()
     {
-        GameEventMoveToR_Data.StartGameEventMoveToR_Data(m_Builder);
-        GameEventMoveToR_Data.AddPlayerIndex(m_Builder, m_nPlayerIndex);
-        GameEventMoveToR_Data.AddDest(m_Builder, FBSData.Vector3.CreateVector3(m_Builder, m_vec3Dest.x, m_vec3Dest.y, m_vec3Dest.z));
-        var data = GameEventMoveToR_Data.EndGameEventMoveToR_Data(m_Builder);
+        FBS.GameEventMoveToR.StartGameEventMoveToR(m_Builder);
+        FBS.GameEventMoveToR.AddPlayerIndex(m_Builder, m_nPlayerIndex);
+        FBS.GameEventMoveToR.AddDest(m_Builder, FBS.Data.Vector3.CreateVector3(m_Builder, m_vec3Dest.x, m_vec3Dest.y, m_vec3Dest.z));
+        var data = FBS.GameEventMoveToR.EndGameEventMoveToR(m_Builder);
 
         m_Builder.Finish(data.Value);
 
@@ -34,7 +34,7 @@ public class GameEventMoveToR : IMessage
     {
         var buf = new ByteBuffer(bytes);
 
-        var data = GameEventMoveToR_Data.GetRootAsGameEventMoveToR_Data(buf);
+        var data = FBS.GameEventMoveToR.GetRootAsGameEventMoveToR(buf);
 
         m_nPlayerIndex = data.PlayerIndex;
         m_vec3Dest = new Vector3(data.Dest.X, data.Dest.Y, data.Dest.Z);

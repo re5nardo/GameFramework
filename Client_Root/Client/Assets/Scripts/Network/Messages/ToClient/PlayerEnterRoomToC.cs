@@ -19,23 +19,14 @@ public class PlayerEnterRoomToC : IMessage
 
     public override byte[] Serialize()
     {
-        var characterID = m_Builder.CreateString(m_strCharacterID);
-
-        PlayerEnterRoomToC_Data.StartPlayerEnterRoomToC_Data(m_Builder);
-        PlayerEnterRoomToC_Data.AddPlayerIndex(m_Builder, m_nPlayerIndex);
-        PlayerEnterRoomToC_Data.AddCharacterID(m_Builder, characterID);
-        var data = PlayerEnterRoomToC_Data.EndPlayerEnterRoomToC_Data(m_Builder);
-
-        m_Builder.Finish(data.Value);
-
-        return m_Builder.SizedByteArray();
+        return null;
     }
 
     public override bool Deserialize(byte[] bytes)
     {
         var buf = new ByteBuffer(bytes);
 
-        var data = PlayerEnterRoomToC_Data.GetRootAsPlayerEnterRoomToC_Data(buf);
+        var data = FBS.PlayerEnterRoomToC.GetRootAsPlayerEnterRoomToC(buf);
 
         m_nPlayerIndex = data.PlayerIndex;
         m_strCharacterID = data.CharacterID;

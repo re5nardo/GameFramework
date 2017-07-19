@@ -6,6 +6,6 @@ table Rotation
 	EntityID:int;
 	StartTime:float;
 	EndTime:float;
-	StartRot:FBSData.Vector3;
-	EndRot:FBSData.Vector3;
+	StartRot:FBS.Data.Vector3;
+	EndRot:FBS.Data.Vector3;
 }

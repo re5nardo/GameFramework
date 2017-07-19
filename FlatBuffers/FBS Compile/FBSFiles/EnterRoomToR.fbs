@@ -1,0 +1,8 @@
+namespace FBS;
+
+table EnterRoomToR
+{
+	PlayerKey:string;
+	AuthKey:int;
+	MatchID:int;
+}

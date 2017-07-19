@@ -1,8 +1,0 @@
-
-table EnterRoomToC_Data
-{
-	Result:int;
-	PlayerIndex:int;
-	PlayersMapKey:[int];
-	PlayersMapValue:[string];
-}

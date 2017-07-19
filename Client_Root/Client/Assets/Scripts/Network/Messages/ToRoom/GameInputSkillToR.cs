@@ -32,23 +32,23 @@ public class GameInputSkillToR : IMessage
 
     public override byte[] Serialize()
     {
-        GameInputSkillToR_Data.StartVector3sVector(m_Builder, m_listVector3.Count);
+        FBS.GameInputSkillToR.StartVector3sVector(m_Builder, m_listVector3.Count);
         foreach(Vector3 vec3 in m_listVector3)
         {
-            FBSData.Vector3.CreateVector3(m_Builder, vec3.x, vec3.y, vec3.z);
+            FBS.Data.Vector3.CreateVector3(m_Builder, vec3.x, vec3.y, vec3.z);
         }
         var vector3s = m_Builder.EndVector();
-        var ints = GameInputSkillToR_Data.CreateIntsVector(m_Builder, m_listInt.ToArray());
-        var floats = GameInputSkillToR_Data.CreateFloatsVector(m_Builder, m_listFloat.ToArray());
+        var ints = FBS.GameInputSkillToR.CreateIntsVector(m_Builder, m_listInt.ToArray());
+        var floats = FBS.GameInputSkillToR.CreateFloatsVector(m_Builder, m_listFloat.ToArray());
 
-        GameInputSkillToR_Data.StartGameInputSkillToR_Data(m_Builder);
-        GameInputSkillToR_Data.AddPlayerIndex(m_Builder, m_nPlayerIndex);
-        GameInputSkillToR_Data.AddSkillID(m_Builder, m_nSkillID);
-        GameInputSkillToR_Data.AddVector3s(m_Builder, vector3s);
-        GameInputSkillToR_Data.AddInts(m_Builder, ints);
-        GameInputSkillToR_Data.AddFloats(m_Builder, floats);
-        GameInputSkillToR_Data.AddInputType(m_Builder, (int)m_InputType);
-        var data = GameInputSkillToR_Data.EndGameInputSkillToR_Data(m_Builder);
+        FBS.GameInputSkillToR.StartGameInputSkillToR(m_Builder);
+        FBS.GameInputSkillToR.AddPlayerIndex(m_Builder, m_nPlayerIndex);
+        FBS.GameInputSkillToR.AddSkillID(m_Builder, m_nSkillID);
+        FBS.GameInputSkillToR.AddVector3s(m_Builder, vector3s);
+        FBS.GameInputSkillToR.AddInts(m_Builder, ints);
+        FBS.GameInputSkillToR.AddFloats(m_Builder, floats);
+        FBS.GameInputSkillToR.AddInputType(m_Builder, (int)m_InputType);
+        var data = FBS.GameInputSkillToR.EndGameInputSkillToR(m_Builder);
 
         m_Builder.Finish(data.Value);
 
@@ -59,13 +59,13 @@ public class GameInputSkillToR : IMessage
     {
         var buf = new ByteBuffer(bytes);
 
-        var data = GameInputSkillToR_Data.GetRootAsGameInputSkillToR_Data(buf);
+        var data = FBS.GameInputSkillToR.GetRootAsGameInputSkillToR(buf);
 
         m_nPlayerIndex = data.PlayerIndex;
         m_nSkillID = data.SkillID;
         for (int i = 0; i < data.Vector3sLength; ++i)
         {
-            FBSData.Vector3 vec3 = data.GetVector3s(i);
+            FBS.Data.Vector3 vec3 = data.GetVector3s(i);
             m_listVector3.Add(new Vector3(vec3.X, vec3.Y, vec3.Z));
         }
         for (int i = 0; i < data.IntsLength; ++i)

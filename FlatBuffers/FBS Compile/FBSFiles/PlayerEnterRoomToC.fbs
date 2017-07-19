@@ -1,0 +1,7 @@
+namespace FBS;
+
+table PlayerEnterRoomToC
+{
+	PlayerIndex:int;
+	CharacterID:string;
+}

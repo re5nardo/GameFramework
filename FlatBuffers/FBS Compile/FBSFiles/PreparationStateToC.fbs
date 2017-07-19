@@ -1,0 +1,7 @@
+namespace FBS;
+
+table PreparationStateToC
+{
+	PlayerIndex:int;
+	State:float;
+}

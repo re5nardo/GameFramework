@@ -1,72 +1,54 @@
 flatc --csharp -o SourceFiles\csharp FBSFiles\FBSData.fbs
 flatc --cpp -o SourceFiles\cpp FBSFiles\FBSData.fbs
 
-flatc --cpp -o SourceFiles\cpp FBSFiles\CreateRoomToL_Data.fbs
+flatc --cpp -o SourceFiles\cpp FBSFiles\CreateRoomToL.fbs
 
-flatc --cpp -o SourceFiles\cpp FBSFiles\CreateRoomToR_Data.fbs
+flatc --cpp -o SourceFiles\cpp FBSFiles\CreateRoomToR.fbs
 
-flatc --csharp -o SourceFiles\csharp FBSFiles\EnterRoomToC_Data.fbs
-flatc --cpp -o SourceFiles\cpp FBSFiles\EnterRoomToC_Data.fbs
+flatc --csharp -o SourceFiles\csharp FBSFiles\EnterRoomToC.fbs
+flatc --cpp -o SourceFiles\cpp FBSFiles\EnterRoomToC.fbs
 
-flatc --csharp -o SourceFiles\csharp FBSFiles\EnterRoomToR_Data.fbs
-flatc --cpp -o SourceFiles\cpp FBSFiles\EnterRoomToR_Data.fbs
+flatc --csharp -o SourceFiles\csharp FBSFiles\EnterRoomToR.fbs
+flatc --cpp -o SourceFiles\cpp FBSFiles\EnterRoomToR.fbs
 
-flatc --csharp -o SourceFiles\csharp FBSFiles\GameEventIdleToC_Data.fbs
-flatc --cpp -o SourceFiles\cpp FBSFiles\GameEventIdleToC_Data.fbs
+flatc --csharp -o SourceFiles\csharp FBSFiles\GameEventMoveToR.fbs
+flatc --cpp -o SourceFiles\cpp FBSFiles\GameEventMoveToR.fbs
 
-flatc --csharp -o SourceFiles\csharp FBSFiles\GameEventIdleToR_Data.fbs
-flatc --cpp -o SourceFiles\cpp FBSFiles\GameEventIdleToR_Data.fbs
+flatc --csharp -o SourceFiles\csharp FBSFiles\GameEventStopToR.fbs
+flatc --cpp -o SourceFiles\cpp FBSFiles\GameEventStopToR.fbs
 
-flatc --csharp -o SourceFiles\csharp FBSFiles\GameEventMoveToC_Data.fbs
-flatc --cpp -o SourceFiles\cpp FBSFiles\GameEventMoveToC_Data.fbs
+flatc --csharp -o SourceFiles\csharp FBSFiles\GameStartToC.fbs
+flatc --cpp -o SourceFiles\cpp FBSFiles\GameStartToC.fbs
 
-flatc --csharp -o SourceFiles\csharp FBSFiles\GameEventMoveToR_Data.fbs
-flatc --cpp -o SourceFiles\cpp FBSFiles\GameEventMoveToR_Data.fbs
+flatc --csharp -o SourceFiles\csharp FBSFiles\JoinLobbyToC.fbs
+flatc --cpp -o SourceFiles\cpp FBSFiles\JoinLobbyToC.fbs
 
-flatc --csharp -o SourceFiles\csharp FBSFiles\GameEventStopToR_Data.fbs
-flatc --cpp -o SourceFiles\cpp FBSFiles\GameEventStopToR_Data.fbs
+flatc --csharp -o SourceFiles\csharp FBSFiles\JoinLobbyToL.fbs
+flatc --cpp -o SourceFiles\cpp FBSFiles\JoinLobbyToL.fbs
 
-flatc --csharp -o SourceFiles\csharp FBSFiles\GameEventStopToC_Data.fbs
-flatc --cpp -o SourceFiles\cpp FBSFiles\GameEventStopToC_Data.fbs
+flatc --csharp -o SourceFiles\csharp FBSFiles\PlayerEnterRoomToC.fbs
+flatc --cpp -o SourceFiles\cpp FBSFiles\PlayerEnterRoomToC.fbs
 
-flatc --csharp -o SourceFiles\csharp FBSFiles\GameEventTeleportToC_Data.fbs
-flatc --cpp -o SourceFiles\cpp FBSFiles\GameEventTeleportToC_Data.fbs
+flatc --csharp -o SourceFiles\csharp FBSFiles\PreparationStateToC.fbs
+flatc --cpp -o SourceFiles\cpp FBSFiles\PreparationStateToC.fbs
 
-flatc --csharp -o SourceFiles\csharp FBSFiles\GameEventTeleportToR_Data.fbs
-flatc --cpp -o SourceFiles\cpp FBSFiles\GameEventTeleportToR_Data.fbs
+flatc --csharp -o SourceFiles\csharp FBSFiles\PreparationStateToR.fbs
+flatc --cpp -o SourceFiles\cpp FBSFiles\PreparationStateToR.fbs
 
-flatc --csharp -o SourceFiles\csharp FBSFiles\GameStartToC_Data.fbs
-flatc --cpp -o SourceFiles\cpp FBSFiles\GameStartToC_Data.fbs
+flatc --csharp -o SourceFiles\csharp FBSFiles\ReadyForStartToR.fbs
+flatc --cpp -o SourceFiles\cpp FBSFiles\ReadyForStartToR.fbs
 
-flatc --csharp -o SourceFiles\csharp FBSFiles\JoinLobbyToC_Data.fbs
-flatc --cpp -o SourceFiles\cpp FBSFiles\JoinLobbyToC_Data.fbs
+flatc --csharp -o SourceFiles\csharp FBSFiles\SelectNormalGameToC.fbs
+flatc --cpp -o SourceFiles\cpp FBSFiles\SelectNormalGameToC.fbs
 
-flatc --csharp -o SourceFiles\csharp FBSFiles\JoinLobbyToL_Data.fbs
-flatc --cpp -o SourceFiles\cpp FBSFiles\JoinLobbyToL_Data.fbs
+flatc --csharp -o SourceFiles\csharp FBSFiles\SelectNormalGameToL.fbs
+flatc --cpp -o SourceFiles\cpp FBSFiles\SelectNormalGameToL.fbs
 
-flatc --csharp -o SourceFiles\csharp FBSFiles\PlayerEnterRoomToC_Data.fbs
-flatc --cpp -o SourceFiles\cpp FBSFiles\PlayerEnterRoomToC_Data.fbs
+flatc --csharp -o SourceFiles\csharp FBSFiles\WorldSnapShotToC.fbs
+flatc --cpp -o SourceFiles\cpp FBSFiles\WorldSnapShotToC.fbs
 
-flatc --csharp -o SourceFiles\csharp FBSFiles\PreparationStateToC_Data.fbs
-flatc --cpp -o SourceFiles\cpp FBSFiles\PreparationStateToC_Data.fbs
-
-flatc --csharp -o SourceFiles\csharp FBSFiles\PreparationStateToR_Data.fbs
-flatc --cpp -o SourceFiles\cpp FBSFiles\PreparationStateToR_Data.fbs
-
-flatc --csharp -o SourceFiles\csharp FBSFiles\ReadyForStartToR_Data.fbs
-flatc --cpp -o SourceFiles\cpp FBSFiles\ReadyForStartToR_Data.fbs
-
-flatc --csharp -o SourceFiles\csharp FBSFiles\SelectNormalGameToC_Data.fbs
-flatc --cpp -o SourceFiles\cpp FBSFiles\SelectNormalGameToC_Data.fbs
-
-flatc --csharp -o SourceFiles\csharp FBSFiles\SelectNormalGameToL_Data.fbs
-flatc --cpp -o SourceFiles\cpp FBSFiles\SelectNormalGameToL_Data.fbs
-
-flatc --csharp -o SourceFiles\csharp FBSFiles\WorldSnapShotToC_Data.fbs
-flatc --cpp -o SourceFiles\cpp FBSFiles\WorldSnapShotToC_Data.fbs
-
-flatc --csharp -o SourceFiles\csharp FBSFiles\GameInputSkillToR_Data.fbs
-flatc --cpp -o SourceFiles\cpp FBSFiles\GameInputSkillToR_Data.fbs
+flatc --csharp -o SourceFiles\csharp FBSFiles\GameInputSkillToR.fbs
+flatc --cpp -o SourceFiles\cpp FBSFiles\GameInputSkillToR.fbs
 
 flatc --csharp -o SourceFiles\csharp FBSFiles\WorldInfoToC.fbs
 flatc --cpp -o SourceFiles\cpp FBSFiles\WorldInfoToC.fbs

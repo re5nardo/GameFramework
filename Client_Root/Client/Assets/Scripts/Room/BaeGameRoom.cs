@@ -353,7 +353,7 @@ public class BaeGameRoom : IGameRoom
         //  Behavior
         float fEmptyValue = -1f;
         Dictionary<int, Dictionary<string, KeyValuePair<float, float>>> dicPlayerBehaviors = new Dictionary<int, Dictionary<string, KeyValuePair<float, float>>>();
-        foreach (EntityState entityState in start.m_listEntityState)
+        foreach (FBS.EntityState entityState in start.m_listEntityState)
         {
             if(!dicPlayerBehaviors.ContainsKey(entityState.PlayerIndex))
                 dicPlayerBehaviors.Add(entityState.PlayerIndex, new Dictionary<string, KeyValuePair<float, float>>());
@@ -368,7 +368,7 @@ public class BaeGameRoom : IGameRoom
             }
         }
 
-        foreach (EntityState entityState in end.m_listEntityState)
+        foreach (FBS.EntityState entityState in end.m_listEntityState)
         {
             if(!dicPlayerBehaviors.ContainsKey(entityState.PlayerIndex))
                 dicPlayerBehaviors.Add(entityState.PlayerIndex, new Dictionary<string, KeyValuePair<float, float>>());
@@ -390,7 +390,7 @@ public class BaeGameRoom : IGameRoom
 
         //  Position
         Dictionary<int, KeyValuePair<Vector3, Vector3>> dicPlayerPosition = new Dictionary<int, KeyValuePair<Vector3, Vector3>>();
-        foreach (EntityState entityState in start.m_listEntityState)
+        foreach (FBS.EntityState entityState in start.m_listEntityState)
         {
             if(!dicPlayerPosition.ContainsKey(entityState.PlayerIndex))
                 dicPlayerPosition.Add(entityState.PlayerIndex, new KeyValuePair<Vector3, Vector3>());
@@ -398,7 +398,7 @@ public class BaeGameRoom : IGameRoom
             dicPlayerPosition[entityState.PlayerIndex] = new KeyValuePair<Vector3, Vector3>(new Vector3(entityState.Position.X, entityState.Position.Y, entityState.Position.Z), Vector3.zero);
         }
 
-        foreach (EntityState entityState in end.m_listEntityState)
+        foreach (FBS.EntityState entityState in end.m_listEntityState)
         {
             if(!dicPlayerPosition.ContainsKey(entityState.PlayerIndex))
                 dicPlayerPosition.Add(entityState.PlayerIndex, new KeyValuePair<Vector3, Vector3>());
@@ -419,7 +419,7 @@ public class BaeGameRoom : IGameRoom
 
         //  Rotation
         Dictionary<int, KeyValuePair<Vector3, Vector3>> dicPlayerRotation = new Dictionary<int, KeyValuePair<Vector3, Vector3>>();
-        foreach (EntityState entityState in start.m_listEntityState)
+        foreach (FBS.EntityState entityState in start.m_listEntityState)
         {
             if(!dicPlayerRotation.ContainsKey(entityState.PlayerIndex))
                 dicPlayerRotation.Add(entityState.PlayerIndex, new KeyValuePair<Vector3, Vector3>());
@@ -427,7 +427,7 @@ public class BaeGameRoom : IGameRoom
             dicPlayerRotation[entityState.PlayerIndex] = new KeyValuePair<Vector3, Vector3>(new Vector3(entityState.Rotation.X, entityState.Rotation.Y, entityState.Rotation.Z), Vector3.zero);
         }
 
-        foreach (EntityState entityState in end.m_listEntityState)
+        foreach (FBS.EntityState entityState in end.m_listEntityState)
         {
             if(!dicPlayerRotation.ContainsKey(entityState.PlayerIndex))
                 dicPlayerRotation.Add(entityState.PlayerIndex, new KeyValuePair<Vector3, Vector3>());

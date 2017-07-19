@@ -31,15 +31,15 @@ public class EnterRoomToC : IMessage
             values[nIndex++] = m_Builder.CreateString(kv.Value);
         }
 
-        var playersMapKey = EnterRoomToC_Data.CreatePlayersMapKeyVector(m_Builder, keys);
-        var playersMapValue = EnterRoomToC_Data.CreatePlayersMapValueVector(m_Builder, values);
+        var playersMapKey = FBS.EnterRoomToC.CreatePlayersMapKeyVector(m_Builder, keys);
+        var playersMapValue = FBS.EnterRoomToC.CreatePlayersMapValueVector(m_Builder, values);
 
-        EnterRoomToC_Data.StartEnterRoomToC_Data(m_Builder);
-        EnterRoomToC_Data.AddResult(m_Builder, m_nResult);
-        EnterRoomToC_Data.AddPlayerIndex(m_Builder, m_nPlayerIndex);
-        EnterRoomToC_Data.AddPlayersMapKey(m_Builder, playersMapKey);
-        EnterRoomToC_Data.AddPlayersMapValue(m_Builder, playersMapValue);
-        var data = EnterRoomToC_Data.EndEnterRoomToC_Data(m_Builder);
+        FBS.EnterRoomToC.StartEnterRoomToC(m_Builder);
+        FBS.EnterRoomToC.AddResult(m_Builder, m_nResult);
+        FBS.EnterRoomToC.AddPlayerIndex(m_Builder, m_nPlayerIndex);
+        FBS.EnterRoomToC.AddPlayersMapKey(m_Builder, playersMapKey);
+        FBS.EnterRoomToC.AddPlayersMapValue(m_Builder, playersMapValue);
+        var data = FBS.EnterRoomToC.EndEnterRoomToC(m_Builder);
 
         m_Builder.Finish(data.Value);
 
@@ -50,7 +50,7 @@ public class EnterRoomToC : IMessage
     {
         var buf = new ByteBuffer(bytes);
 
-        var data = EnterRoomToC_Data.GetRootAsEnterRoomToC_Data(buf);
+        var data = FBS.EnterRoomToC.GetRootAsEnterRoomToC(buf);
 
         m_nResult = data.Result;
         m_nPlayerIndex = data.PlayerIndex;

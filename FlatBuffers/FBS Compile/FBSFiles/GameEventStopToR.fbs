@@ -1,0 +1,8 @@
+include "FBSData.fbs";
+namespace FBS;
+
+table GameEventStopToR
+{
+	PlayerIndex:int;
+	Pos:FBS.Data.Vector3;
+}

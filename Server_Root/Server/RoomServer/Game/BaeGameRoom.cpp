@@ -6,8 +6,8 @@
 //#include "RoomMessageHeader.h"
 #include <process.h>
 #include "../Entity/Entities/Character/Character.h"
-#include "../Messages/WorldSnapShotToC.h"
-#include "../Messages/WorldInfoToC.h"
+#include "../Messages/ToClient/WorldSnapShotToC.h"
+#include "../Messages/ToClient/WorldInfoToC.h"
 #include "../Behavior/BehaviorIDs.h"
 #include "../../CommonSources/tinyxml2.h"
 #include "../../CommonSources/QuadTree.h"

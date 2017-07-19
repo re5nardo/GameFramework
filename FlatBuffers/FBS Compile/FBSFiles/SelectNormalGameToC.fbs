@@ -1,0 +1,7 @@
+namespace FBS;
+
+table SelectNormalGameToC
+{
+	Result:int;
+	ExpectedTime:int;
+}

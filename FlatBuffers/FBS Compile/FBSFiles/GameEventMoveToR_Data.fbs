@@ -1,7 +1,0 @@
-include "FBSData.fbs";
-
-table GameEventMoveToR_Data
-{
-	PlayerIndex:int;
-	Dest:FBSData.Vector3;
-}
