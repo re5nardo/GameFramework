@@ -42,22 +42,12 @@ void FireSkill::Initialize()
 	m_fMP = pMasterSkill->m_fMP;
 }
 
-void FireSkill::Update(__int64 lUpdateTime)
+void FireSkill::UpdateBody(__int64 lUpdateTime)
 {
-	if (!m_bActivated || (m_lLastUpdateTime == lUpdateTime))
-		return;
-
-	float fLast = 0, fCur = 0;
-	if (m_lStartTime != lUpdateTime)
-	{
-		fLast = (m_lLastUpdateTime - m_lStartTime) / 1000.0f;
-		fCur = (lUpdateTime - m_lStartTime) / 1000.0f;
-	}
-
 	for (vector<pair<int, float>>::iterator it = m_vecBehavior.begin(); it != m_vecBehavior.end(); ++it)
 	{
 		float fTime = (*it).second;
-		if ((fCur == 0 && fTime == 0) || (fLast < fTime && fTime <= fCur))
+		if ((m_fCurrentTime == 0 && fTime == 0) || (m_fPreviousTime < fTime && fTime <= m_fCurrentTime))
 		{
 			IBehavior* pBehavior = m_pEntity->GetBehavior((*it).first);
 			pBehavior->Start(lUpdateTime);
@@ -68,7 +58,7 @@ void FireSkill::Update(__int64 lUpdateTime)
 	for (vector<pair<int, float>>::iterator it = m_vecState.begin(); it != m_vecState.end(); ++it)
 	{
 		float fTime = (*it).second;
-		if ((fCur == 0 && fTime == 0) || (fLast < fTime && fTime <= fCur))
+		if ((m_fCurrentTime == 0 && fTime == 0) || (m_fPreviousTime < fTime && fTime <= m_fCurrentTime))
 		{
 			IState* pState = Factory::Instance()->CreateState(m_pGameRoom, m_pEntity, m_nMasterDataID, lUpdateTime);
 			pState->Initialize();
@@ -77,13 +67,10 @@ void FireSkill::Update(__int64 lUpdateTime)
 		}
 	}
 
-	if (fCur >= m_fLength)
+	if (m_fCurrentTime >= m_fLength)
 	{
-		m_bActivated = false;
-		m_lEndTime = lUpdateTime;
+		Stop(lUpdateTime - (m_fCurrentTime - m_fLength) * 1000);
 	}
-
-	m_lLastUpdateTime = lUpdateTime;
 }
 
 void FireSkill::ProcessInput(__int64 lTime, BaeGameRoom* pBaeGameRoom, GameInputSkillToR* pMsg)

@@ -31,6 +31,6 @@ protected:
 
 public:
 	void Initialize() override;
-	void Update(__int64 lUpdateTime) override;
+	void UpdateBody(__int64 lUpdateTime) override;
 	void ProcessInput(__int64 lTime, BaeGameRoom* pBaeGameRoom, GameInputSkillToR* pMsg) override;
 };

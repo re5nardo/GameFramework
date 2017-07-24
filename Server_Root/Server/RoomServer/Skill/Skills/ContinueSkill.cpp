@@ -52,19 +52,9 @@ void ContinueSkill::Initialize()
 	m_fMP = pMasterSkill->m_fMP;
 }
 
-void ContinueSkill::Update(__int64 lUpdateTime)
+void ContinueSkill::UpdateBody(__int64 lUpdateTime)
 {
-	if (!m_bActivated || (m_lLastUpdateTime == lUpdateTime))
-		return;
-
-	float fLast = 0, fCur = 0;
-	if (m_lStartTime != lUpdateTime)
-	{
-		fLast = (m_lLastUpdateTime - m_lStartTime) / 1000.0f;
-		fCur = (lUpdateTime - m_lStartTime) / 1000.0f;
-	}
-	
-	if (fCur == 0)
+	if (m_fCurrentTime == 0)
 	{
 		m_pTargetBehavior = m_pEntity->GetBehavior(m_nTargetBehaviorID);
 		m_pTargetBehavior->Start(lUpdateTime, m_pBaeGameRoom);
@@ -72,18 +62,14 @@ void ContinueSkill::Update(__int64 lUpdateTime)
 	}
 	else
 	{
-		if (fCur >= m_fLength || !m_bContinue)
+		if (m_fCurrentTime >= m_fLength || !m_bContinue)
 		{
 			m_pTargetBehavior->Stop(lUpdateTime);
 			m_pTargetBehavior = NULL;
 
-			m_bContinue = false;
-			m_bActivated = false;
-			m_lEndTime = lUpdateTime;
+			Stop(lUpdateTime - (m_fCurrentTime - m_fLength) * 1000);
 		}
 	}
-
-	m_lLastUpdateTime = lUpdateTime;
 }
 
 void ContinueSkill::ProcessInput(__int64 lTime, BaeGameRoom* pBaeGameRoom, GameInputSkillToR* pMsg)

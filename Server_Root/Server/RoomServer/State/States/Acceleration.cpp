@@ -33,32 +33,18 @@ void Acceleration::Initialize()
 	}
 }
 
-void Acceleration::Update(__int64 lUpdateTime)
+void Acceleration::UpdateBody(__int64 lUpdateTime)
 {
-	if (m_lLastUpdateTime == lUpdateTime)
-		return;
-
-	float fLast = 0, fCur = 0;
-	if (m_lStartTime != lUpdateTime)
-	{
-		fLast = (m_lLastUpdateTime - m_lStartTime) / 1000.0f;
-		fCur = (lUpdateTime - m_lStartTime) / 1000.0f;
-	}
-
 	for (int i = 0; i <m_vecEvent.size(); ++i)
 	{
-		if (fLast < m_vecEvent[i].first && m_vecEvent[i].first <= fCur)
+		if (m_fPreviousTime < m_vecEvent[i].first && m_vecEvent[i].first <= m_fCurrentTime)
 		{
 			((Character*)m_pEntity)->PlusMoveSpeed(m_vecEvent[i].second);
 		}
 	}
 
-	if (fCur >= m_fLength)
+	if (m_fCurrentTime >= m_fLength)
 	{
-		m_pEntity->RemoveState(STATE_ID);
-	}
-	else
-	{
-		m_lLastUpdateTime = lUpdateTime;
+		Remove(lUpdateTime - (m_fCurrentTime - m_fLength) * 1000);
 	}
 }

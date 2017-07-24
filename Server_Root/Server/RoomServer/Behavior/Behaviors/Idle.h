@@ -20,5 +20,5 @@ public:
 
 public:
 	void Initialize() override;
-	void Update(__int64 lUpdateTime) override;
+	void UpdateBody(__int64 lUpdateTime) override;
 };

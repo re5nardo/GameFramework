@@ -37,22 +37,10 @@ void Move::Initialize()
 {
 }
 
-void Move::Update(__int64 lUpdateTime)
+void Move::UpdateBody(__int64 lUpdateTime)
 {
-	if (!m_bActivated || (m_lLastUpdateTime == lUpdateTime))
+	if (m_fDeltaTime == 0)
 		return;
-
-	float fDeltaTime = 0;
-	if (m_lStartTime != lUpdateTime)
-	{
-		fDeltaTime = (lUpdateTime - m_lLastUpdateTime) / 1000.0f;
-	}
-
-	if (fDeltaTime <= 0)
-	{
-		m_lLastUpdateTime = lUpdateTime;
-		return;
-	}
 
 	//	Rotation
 	btVector3 vec3StartRotation = m_pEntity->GetRotation();
@@ -80,7 +68,7 @@ void Move::Update(__int64 lUpdateTime)
 	}
 
 	float RotationTime = 0.1f;
-	float fCurrent_Y = Util::Lerp(vec3Rotation.y(), fTargetRotation_Y, fDeltaTime / RotationTime);
+	float fCurrent_Y = Util::Lerp(vec3Rotation.y(), fTargetRotation_Y, m_fDeltaTime / RotationTime);
 	if (fCurrent_Y >= 360) fCurrent_Y -= 360;
 	m_pEntity->SetRotation(btVector3(vec3Rotation.x(), fCurrent_Y, vec3Rotation.z()));
 
@@ -98,7 +86,7 @@ void Move::Update(__int64 lUpdateTime)
 	btVector3 vec3Pos = m_pEntity->GetPosition();
 	float fExpectedTime = sqrt(powf(m_vec3Dest.x() - vec3Pos.x(), 2.0f) /*+ powf(m_vec3Dest.y - vec3Pos.y, 2.0f)*/ + powf(m_vec3Dest.z() - vec3Pos.z(), 2.0f)) / m_pEntity->GetMoveSpeed();
 
-	btVector3 current = Util::Lerp(vec3Pos, m_vec3Dest, fDeltaTime / fExpectedTime);
+	btVector3 current = Util::Lerp(vec3Pos, m_vec3Dest, m_fDeltaTime / fExpectedTime);
 	btTransform trHit;
 
 	if (m_pGameRoom->TryMove(m_pEntity->GetID(), current, trHit))
@@ -116,17 +104,9 @@ void Move::Update(__int64 lUpdateTime)
 
 		m_pGameRoom->AddGameEvent(pPosition);
 
-		if (fDeltaTime >= fExpectedTime)
+		if (m_fDeltaTime >= fExpectedTime)
 		{
-			m_bActivated = false;
-
-			GameEvent::BehaviorEnd* pBehaviorEnd = new GameEvent::BehaviorEnd();
-			pBehaviorEnd->m_fEventTime = lUpdateTime / 1000.0f;
-			pBehaviorEnd->m_nEntityID = m_pEntity->GetID();
-			pBehaviorEnd->m_fEndTime = lUpdateTime / 1000.0f;
-			pBehaviorEnd->m_nBehaviorID = m_nMasterDataID;
-
-			m_pGameRoom->AddGameEvent(pBehaviorEnd);
+			Stop(lUpdateTime - (m_fDeltaTime - fExpectedTime) * 1000);
 		}
 	}
 	else
@@ -144,16 +124,6 @@ void Move::Update(__int64 lUpdateTime)
 
 		m_pGameRoom->AddGameEvent(pPosition);
 
-		m_bActivated = false;
-
-		GameEvent::BehaviorEnd* pBehaviorEnd = new GameEvent::BehaviorEnd();
-		pBehaviorEnd->m_fEventTime = lUpdateTime / 1000.0f;
-		pBehaviorEnd->m_nEntityID = m_pEntity->GetID();
-		pBehaviorEnd->m_fEndTime = lUpdateTime / 1000.0f;
-		pBehaviorEnd->m_nBehaviorID = m_nMasterDataID;
-
-		m_pGameRoom->AddGameEvent(pBehaviorEnd);
+		Stop(lUpdateTime);
 	}
-
-	m_lLastUpdateTime = lUpdateTime;
 }

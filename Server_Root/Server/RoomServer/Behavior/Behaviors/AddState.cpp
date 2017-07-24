@@ -39,19 +39,9 @@ void AddState::Initialize()
 	m_fTime = atof(vecText[1].c_str());
 }
 
-void AddState::Update(__int64 lUpdateTime)
+void AddState::UpdateBody(__int64 lUpdateTime)
 {
-	if (!m_bActivated || (m_lLastUpdateTime == lUpdateTime))
-		return;
-
-	float fLast = 0, fCur = 0;
-	if (m_lStartTime != lUpdateTime)
-	{
-		fLast = (m_lLastUpdateTime - m_lStartTime) / 1000.0f;
-		fCur = (lUpdateTime - m_lStartTime) / 1000.0f;
-	}
-
-	if ((fCur == 0 && m_fTime == 0) || (fLast < m_fTime && m_fTime <= fCur))
+	if ((m_fCurrentTime == 0 && m_fTime == 0) || (m_fPreviousTime < m_fTime && m_fTime <= m_fCurrentTime))
 	{
 		IState* pState = Factory::Instance()->CreateState(m_pGameRoom, m_pEntity, m_nStateID, lUpdateTime);
 		pState->Initialize();
@@ -59,18 +49,8 @@ void AddState::Update(__int64 lUpdateTime)
 		pState->Update(lUpdateTime);
 	}
 
-	if (fCur >= m_fLength)
+	if (m_fCurrentTime >= m_fLength)
 	{
-		m_bActivated = false;
-
-		GameEvent::BehaviorEnd* pBehaviorEnd = new GameEvent::BehaviorEnd();
-		pBehaviorEnd->m_fEventTime = lUpdateTime / 1000.0f;
-		pBehaviorEnd->m_nEntityID = m_pEntity->GetID();
-		pBehaviorEnd->m_fEndTime = lUpdateTime / 1000.0f;
-		pBehaviorEnd->m_nBehaviorID = m_nMasterDataID;
-
-		m_pGameRoom->AddGameEvent(pBehaviorEnd);
+		Stop(lUpdateTime - (m_fCurrentTime - m_fLength) * 1000);
 	}
-
-	m_lLastUpdateTime = lUpdateTime;
 }

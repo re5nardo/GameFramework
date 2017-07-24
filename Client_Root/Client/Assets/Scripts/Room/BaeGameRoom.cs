@@ -25,10 +25,11 @@ public class BaeGameRoom : IGameRoom
     private float m_fLastSnapshotTime = 0f;
     private Dictionary<int, Dictionary<int, List<WorldSnapShotToC>>> m_dicWorldSnapShot = new Dictionary<int, Dictionary<int, List<WorldSnapShotToC>>>();
 
-    private float m_fLastUpdateTime = -0.001f;  //  exclude (The reason why default value is -0.001 is for processing events that happen at 0 sec)
+    private float m_fLastUpdateTime = -0.001f;  //  include (The reason why default value is -0.001 is for processing events that happen at 0 sec)
     private float m_fElapsedTime = 0;           //  include
     private float m_fLastWorldInfoTime = -1;
     private Dictionary<int, List<IGameEvent>> m_dicGameEvent = new Dictionary<int, List<IGameEvent>>();
+    private HashSet<IGameEvent> m_ProcessedGameEvent = new HashSet<IGameEvent>();
 
     private void Start()
     {
@@ -105,11 +106,9 @@ public class BaeGameRoom : IGameRoom
         {
             if (m_dicGameEvent.ContainsKey(sec))
             {
-                for (int i = 0; i < m_dicGameEvent[sec].Count; ++i)
+                foreach(IGameEvent iGameEvent in m_dicGameEvent[sec])
                 {
-                    IGameEvent iGameEvent = m_dicGameEvent[sec][i];
-
-                    if (iGameEvent.m_fEventTime <= m_fLastUpdateTime)
+                    if (iGameEvent.m_fEventTime < m_fLastUpdateTime)
                     {
                         continue;
                     }
@@ -117,9 +116,13 @@ public class BaeGameRoom : IGameRoom
                     {
                         return;
                     }
+                    else if (m_ProcessedGameEvent.Contains(iGameEvent))
+                    {
+                        continue;
+                    }
                     else
                     {
-                        ProcessGameEvent(m_dicGameEvent[sec][i]);
+                        ProcessGameEvent(iGameEvent);
                     }
                 }
             }
@@ -152,6 +155,8 @@ public class BaeGameRoom : IGameRoom
 
             m_dicEntity[gameEvent.m_nEntityID].ProcessGameEvent(gameEvent);
         }
+
+        m_ProcessedGameEvent.Add(iGameEvent);
     }
 
     private void OnConnected(bool bResult)
@@ -182,6 +187,7 @@ public class BaeGameRoom : IGameRoom
         m_fLastUpdateTime = -0.001f;
         m_fLastWorldInfoTime = -1;
         m_dicGameEvent.Clear();
+        m_ProcessedGameEvent.Clear();
 
         m_InputManager.Work(100, 500/*temp.. always 200, 200*/, m_CameraMain, OnClicked);
 

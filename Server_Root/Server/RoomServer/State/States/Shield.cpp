@@ -27,24 +27,10 @@ void Shield::Initialize()
 	m_fLength = pMasterState->m_fLength;
 }
 
-void Shield::Update(__int64 lUpdateTime)
+void Shield::UpdateBody(__int64 lUpdateTime)
 {
-	if (m_lLastUpdateTime == lUpdateTime)
-		return;
-
-	float fLast = 0, fCur = 0;
-	if (m_lStartTime != lUpdateTime)
+	if (m_fCurrentTime >= m_fLength)
 	{
-		fLast = (m_lLastUpdateTime - m_lStartTime) / 1000.0f;
-		fCur = (lUpdateTime - m_lStartTime) / 1000.0f;
-	}
-
-	if (fCur >= m_fLength)
-	{
-		m_pEntity->RemoveState(STATE_ID);
-	}
-	else
-	{
-		m_lLastUpdateTime = lUpdateTime;
+		Remove(lUpdateTime - (m_fCurrentTime - m_fLength) * 1000);
 	}
 }

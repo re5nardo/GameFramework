@@ -34,17 +34,8 @@ void Dash::Initialize()
 {
 }
 
-void Dash::Update(__int64 lUpdateTime)
+void Dash::UpdateBody(__int64 lUpdateTime)
 {
-	if (!m_bActivated || (m_lLastUpdateTime == lUpdateTime))
-		return;
-
-	float fDeltaTime = 0;
-	if (m_lStartTime != lUpdateTime)
-	{
-		fDeltaTime = (lUpdateTime - m_lLastUpdateTime) / 1000.0f;
-	}
-	
 	btVector3 vec3Pos = m_pEntity->GetPosition();
 	float radian = m_pEntity->GetRotation().y() * M_PI / 180;
 	float x = 2 * btSin(radian);
@@ -63,6 +54,4 @@ void Dash::Update(__int64 lUpdateTime)
 		m_pEntity->SetPosition(trHit.getOrigin());
 		m_pGameRoom->SetCollisionObjectPosition(m_pEntity->GetID(), trHit.getOrigin());
 	}
-
-	m_lLastUpdateTime = lUpdateTime;
 }
