@@ -16,7 +16,7 @@ ContinueSkill::~ContinueSkill()
 {
 }
 
-bool ContinueSkill::IsCoolTime(__int64 lTime)
+bool ContinueSkill::IsCoolTime(long long lTime)
 {
 	if (m_lEndTime == -1)
 		return false;
@@ -24,12 +24,12 @@ bool ContinueSkill::IsCoolTime(__int64 lTime)
 	return (lTime - m_lEndTime) / 1000 <= m_fCooltime;
 }
 
-bool ContinueSkill::IsValidToStart(__int64 lTime)
+bool ContinueSkill::IsValidToStart(long long lTime)
 {
 	return !IsCoolTime(lTime) && ((Character*)m_pEntity)->GetCurrentMP() >= m_fMP;
 }
 
-void ContinueSkill::Start(__int64 lStartTime, ...)
+void ContinueSkill::Start(long long lStartTime, ...)
 {
 	__super::Start(lStartTime);
 
@@ -52,7 +52,7 @@ void ContinueSkill::Initialize()
 	m_fMP = pMasterSkill->m_fMP;
 }
 
-void ContinueSkill::UpdateBody(__int64 lUpdateTime)
+void ContinueSkill::UpdateBody(long long lUpdateTime)
 {
 	if (m_fCurrentTime == 0)
 	{
@@ -72,7 +72,7 @@ void ContinueSkill::UpdateBody(__int64 lUpdateTime)
 	}
 }
 
-void ContinueSkill::ProcessInput(__int64 lTime, BaeGameRoom* pBaeGameRoom, GameInputSkillToR* pMsg)
+void ContinueSkill::ProcessInput(long long lTime, BaeGameRoom* pBaeGameRoom, GameInputSkillToR* pMsg)
 {
 	if (m_bActivated)
 	{

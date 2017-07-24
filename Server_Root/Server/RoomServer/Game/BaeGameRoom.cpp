@@ -51,7 +51,7 @@ void BaeGameRoom::Loop()
 
 		SendWorldInfo();
 
-		__int64 lTickProcessTime = GetElapsedTime() - m_lLastUpdateTime;
+		long long lTickProcessTime = GetElapsedTime() - m_lLastUpdateTime;
 
 		//	Wait tick interval
 		if (TIME_STEP > lTickProcessTime)
@@ -71,7 +71,7 @@ void BaeGameRoom::UpdateTime()
 	}
 	else
 	{
-		__int64 lElapsedTime = GetElapsedTime();
+		long long lElapsedTime = GetElapsedTime();
 
 		m_lDeltaTime = lElapsedTime - m_lLastUpdateTime;
 		m_lLastUpdateTime = lElapsedTime;
@@ -479,7 +479,7 @@ bool BaeGameRoom::IsAllPlayersReady()
 	return true;
 }
 
-__int64 BaeGameRoom::GetElapsedTime()
+long long BaeGameRoom::GetElapsedTime()
 {
 	milliseconds elapsedTime = duration_cast<milliseconds>(system_clock::now() - m_StartTime);
 

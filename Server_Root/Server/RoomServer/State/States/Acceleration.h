@@ -11,7 +11,7 @@ using namespace std;
 class Acceleration : public IState
 {
 public:
-	Acceleration(IEntity* pEntity, int nMasterDataID, __int64 lStartTime);
+	Acceleration(IEntity* pEntity, int nMasterDataID, long long lStartTime);
 	virtual ~Acceleration();
 
 public:
@@ -27,5 +27,5 @@ private:
 public:
 	int GetID() override;
 	void Initialize() override;
-	void UpdateBody(__int64 lUpdateTime) override;
+	void UpdateBody(long long lUpdateTime) override;
 };

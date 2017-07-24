@@ -69,7 +69,7 @@ IBehavior* Factory::CreateBehavior(BaeGameRoom* pGameRoom, IEntity* pEntity, int
 	return NULL;
 }
 
-IState* Factory::CreateState(BaeGameRoom* pGameRoom, IEntity* pEntity, int nMasterDataID, __int64 lStartTime)
+IState* Factory::CreateState(BaeGameRoom* pGameRoom, IEntity* pEntity, int nMasterDataID, long long lStartTime)
 {
 	MasterData::State* pMasterState = NULL;
 	MasterDataManager::Instance()->GetData<MasterData::State>(nMasterDataID, pMasterState);

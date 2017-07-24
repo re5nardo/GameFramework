@@ -28,12 +28,12 @@ private:
 	float	m_fMP;
 
 protected:
-	bool IsCoolTime(__int64 lTime) override;
-	bool IsValidToStart(__int64 lTime) override;
-	void Start(__int64 lStartTime, ...) override;
+	bool IsCoolTime(long long lTime) override;
+	bool IsValidToStart(long long lTime) override;
+	void Start(long long lStartTime, ...) override;
 
 public:
 	void Initialize() override;
-	void UpdateBody(__int64 lUpdateTime) override;
-	void ProcessInput(__int64 lTime, BaeGameRoom* pBaeGameRoom, GameInputSkillToR* pMsg) override;
+	void UpdateBody(long long lUpdateTime) override;
+	void ProcessInput(long long lTime, BaeGameRoom* pBaeGameRoom, GameInputSkillToR* pMsg) override;
 };

@@ -43,7 +43,7 @@ void Character::Initialize()
 	}
 }
 
-void Character::Update(__int64 lUpdateTime)
+void Character::Update(long long lUpdateTime)
 {
 	list<ISkill*> listSkill = GetActivatedSkills();
 	for (list<ISkill*>::iterator it = listSkill.begin(); it != listSkill.end(); ++it)

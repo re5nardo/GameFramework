@@ -7,7 +7,7 @@
 
 const string Acceleration::NAME = "Acceleration";
 
-Acceleration::Acceleration(IEntity* pEntity, int nMasterDataID, __int64 lStartTime) : IState(pEntity, nMasterDataID, lStartTime)
+Acceleration::Acceleration(IEntity* pEntity, int nMasterDataID, long long lStartTime) : IState(pEntity, nMasterDataID, lStartTime)
 {
 }
 
@@ -33,7 +33,7 @@ void Acceleration::Initialize()
 	}
 }
 
-void Acceleration::UpdateBody(__int64 lUpdateTime)
+void Acceleration::UpdateBody(long long lUpdateTime)
 {
 	for (int i = 0; i <m_vecEvent.size(); ++i)
 	{

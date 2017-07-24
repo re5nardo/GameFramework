@@ -6,7 +6,7 @@
 
 const string Shield::NAME = "Shield";
 
-Shield::Shield(IEntity* pEntity, int nMasterDataID, __int64 lStartTime) : IState(pEntity, nMasterDataID, lStartTime)
+Shield::Shield(IEntity* pEntity, int nMasterDataID, long long lStartTime) : IState(pEntity, nMasterDataID, lStartTime)
 {
 }
 
@@ -27,7 +27,7 @@ void Shield::Initialize()
 	m_fLength = pMasterState->m_fLength;
 }
 
-void Shield::UpdateBody(__int64 lUpdateTime)
+void Shield::UpdateBody(long long lUpdateTime)
 {
 	if (m_fCurrentTime >= m_fLength)
 	{

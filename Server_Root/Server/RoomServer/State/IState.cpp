@@ -2,7 +2,7 @@
 #include "IState.h"
 #include "../Entity/IEntity.h"
 
-IState::IState(IEntity* pEntity, int nMasterDataID, __int64 lStartTime)
+IState::IState(IEntity* pEntity, int nMasterDataID, long long lStartTime)
 {
 	m_pEntity = pEntity;
 	m_nMasterDataID = nMasterDataID;
@@ -18,7 +18,7 @@ int IState::GetMasterDataID()
 	return m_nMasterDataID;
 }
 
-void IState::Update(__int64 lUpdateTime)
+void IState::Update(long long lUpdateTime)
 {
 	if (m_lLastUpdateTime == lUpdateTime)
 		return;
@@ -41,7 +41,7 @@ void IState::Update(__int64 lUpdateTime)
 	m_lLastUpdateTime = lUpdateTime;
 }
 
-void IState::Remove(__int64 lTime)
+void IState::Remove(long long lTime)
 {
 	//	State End GameEvent..
 

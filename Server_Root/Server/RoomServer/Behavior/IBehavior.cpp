@@ -22,7 +22,7 @@ int IBehavior::GetMasterDataID()
 	return m_nMasterDataID;
 }
 
-void IBehavior::Start(__int64 lStartTime, ...)
+void IBehavior::Start(long long lStartTime, ...)
 {
 	if (m_bActivated)
 		return;
@@ -39,7 +39,7 @@ void IBehavior::Start(__int64 lStartTime, ...)
 	m_pGameRoom->AddGameEvent(pBehaviorStart);
 }
 
-void IBehavior::Update(__int64 lUpdateTime)
+void IBehavior::Update(long long lUpdateTime)
 {
 	if (!m_bActivated || (m_lLastUpdateTime == lUpdateTime))
 		return;
@@ -72,7 +72,7 @@ bool IBehavior::IsActivated()
 	return m_bActivated;
 }
 
-void IBehavior::Stop(__int64 lTime)
+void IBehavior::Stop(long long lTime)
 {
 	m_bActivated = false;
 

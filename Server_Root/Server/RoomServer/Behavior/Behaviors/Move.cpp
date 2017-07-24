@@ -19,7 +19,7 @@ Move::~Move()
 {
 }
 
-void Move::Start(__int64 lStartTime, ...)
+void Move::Start(long long lStartTime, ...)
 {
 	__super::Start(lStartTime);
 
@@ -37,7 +37,7 @@ void Move::Initialize()
 {
 }
 
-void Move::UpdateBody(__int64 lUpdateTime)
+void Move::UpdateBody(long long lUpdateTime)
 {
 	if (m_fDeltaTime == 0)
 		return;

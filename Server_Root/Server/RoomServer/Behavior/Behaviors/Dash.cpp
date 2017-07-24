@@ -17,7 +17,7 @@ Dash::~Dash()
 {
 }
 
-void Dash::Start(__int64 lStartTime, ...)
+void Dash::Start(long long lStartTime, ...)
 {
 	__super::Start(lStartTime);
 
@@ -34,7 +34,7 @@ void Dash::Initialize()
 {
 }
 
-void Dash::UpdateBody(__int64 lUpdateTime)
+void Dash::UpdateBody(long long lUpdateTime)
 {
 	btVector3 vec3Pos = m_pEntity->GetPosition();
 	float radian = m_pEntity->GetRotation().y() * M_PI / 180;

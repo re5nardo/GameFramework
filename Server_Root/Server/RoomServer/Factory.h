@@ -18,6 +18,6 @@ public:
 public:
 	ISkill*		CreateSkill(BaeGameRoom* pGameRoom, IEntity* pEntity, int nMasterDataID);
 	IBehavior*	CreateBehavior(BaeGameRoom* pGameRoom, IEntity* pEntity, int nMasterDataID);
-	IState*		CreateState(BaeGameRoom* pGameRoom, IEntity* pEntity, int nMasterDataID, __int64 lStartTime);
+	IState*		CreateState(BaeGameRoom* pGameRoom, IEntity* pEntity, int nMasterDataID, long long lStartTime);
 	Character*	CreateCharacter(BaeGameRoom* pGameRoom, int nID, int nMasterDataID);
 };

@@ -15,6 +15,6 @@ void Idle::Initialize()
 {
 }
 
-void Idle::UpdateBody(__int64 lUpdateTime)
+void Idle::UpdateBody(long long lUpdateTime)
 {
 }

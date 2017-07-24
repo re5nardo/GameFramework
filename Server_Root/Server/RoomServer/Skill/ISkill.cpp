@@ -17,7 +17,7 @@ int ISkill::GetMasterDataID()
 	return m_nMasterDataID;
 }
 
-void ISkill::Start(__int64 lStartTime, ...)
+void ISkill::Start(long long lStartTime, ...)
 {
 	if (m_bActivated)
 		return;
@@ -26,7 +26,7 @@ void ISkill::Start(__int64 lStartTime, ...)
 	m_lStartTime = lStartTime;
 }
 
-void ISkill::Update(__int64 lUpdateTime)
+void ISkill::Update(long long lUpdateTime)
 {
 	if (!m_bActivated || (m_lLastUpdateTime == lUpdateTime))
 		return;
@@ -59,7 +59,7 @@ bool ISkill::IsActivated()
 	return m_bActivated;
 }
 
-void ISkill::Stop(__int64 lTime)
+void ISkill::Stop(long long lTime)
 {
 	m_bActivated = false;
 	m_lEndTime = lTime;

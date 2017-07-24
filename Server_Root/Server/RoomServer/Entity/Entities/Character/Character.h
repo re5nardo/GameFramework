@@ -19,7 +19,7 @@ public:
 	float fMoveSpeedPercent = 100;
 
 public:
-	virtual void Update(__int64 lUpdateTime);
+	virtual void Update(long long lUpdateTime);
 
 public:
 	void Initialize() override;

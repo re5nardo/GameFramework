@@ -34,7 +34,7 @@ public:
 	virtual ~BaeGameRoom();
 
 private:
-	const __int64 TIME_STEP = 50;		//	<-- milliseconds, TickRate is 1000(1sec) / TIME_STEP
+	const long long TIME_STEP = 50;		//	<-- milliseconds, TickRate is 1000(1sec) / TIME_STEP
 
 private:
 	mutex m_LockEntitySequence;
@@ -62,8 +62,8 @@ private:
 private:
 	system_clock::time_point	m_StartTime;
 	int							m_nTick;
-	__int64						m_lDeltaTime;			//	ElapsedTime after previous tick (Milliseconds)
-	__int64						m_lLastUpdateTime;		//	ElapsedTime after game was started (Milliseconds)
+	long long					m_lDeltaTime;			//	ElapsedTime after previous tick (Milliseconds)
+	long long					m_lLastUpdateTime;		//	ElapsedTime after game was started (Milliseconds)
 
 private:
 	CollisionManager m_CollisionManager;
@@ -95,7 +95,7 @@ private:
 	bool IsAllPlayersReady();
 
 private:
-	__int64 GetElapsedTime();	//	Milliseconds
+	long long GetElapsedTime();	//	Milliseconds
 
 private:
 	void LoadMap(int nID);

@@ -17,7 +17,7 @@ FireSkill::~FireSkill()
 {
 }
 
-bool FireSkill::IsCoolTime(__int64 lTime)
+bool FireSkill::IsCoolTime(long long lTime)
 {
 	if (m_lEndTime == -1)
 		return false;
@@ -25,7 +25,7 @@ bool FireSkill::IsCoolTime(__int64 lTime)
 	return (lTime - m_lEndTime) / 1000 <= m_fCooltime;
 }
 
-bool FireSkill::IsValidToStart(__int64 lTime)
+bool FireSkill::IsValidToStart(long long lTime)
 {
 	return !IsCoolTime(lTime) && ((Character*)m_pEntity)->GetCurrentMP() >= m_fMP;
 }
@@ -42,7 +42,7 @@ void FireSkill::Initialize()
 	m_fMP = pMasterSkill->m_fMP;
 }
 
-void FireSkill::UpdateBody(__int64 lUpdateTime)
+void FireSkill::UpdateBody(long long lUpdateTime)
 {
 	for (vector<pair<int, float>>::iterator it = m_vecBehavior.begin(); it != m_vecBehavior.end(); ++it)
 	{
@@ -73,7 +73,7 @@ void FireSkill::UpdateBody(__int64 lUpdateTime)
 	}
 }
 
-void FireSkill::ProcessInput(__int64 lTime, BaeGameRoom* pBaeGameRoom, GameInputSkillToR* pMsg)
+void FireSkill::ProcessInput(long long lTime, BaeGameRoom* pBaeGameRoom, GameInputSkillToR* pMsg)
 {
 	if (m_bActivated || pMsg->m_InputType != GameInputSkillToR::InputType::Click)
 		return;

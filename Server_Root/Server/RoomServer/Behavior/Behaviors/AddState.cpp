@@ -19,7 +19,7 @@ AddState::~AddState()
 {
 }
 
-void AddState::Start(__int64 lStartTime, ...)
+void AddState::Start(long long lStartTime, ...)
 {
 	__super::Start(lStartTime);
 
@@ -39,7 +39,7 @@ void AddState::Initialize()
 	m_fTime = atof(vecText[1].c_str());
 }
 
-void AddState::UpdateBody(__int64 lUpdateTime)
+void AddState::UpdateBody(long long lUpdateTime)
 {
 	if ((m_fCurrentTime == 0 && m_fTime == 0) || (m_fPreviousTime < m_fTime && m_fTime <= m_fCurrentTime))
 	{

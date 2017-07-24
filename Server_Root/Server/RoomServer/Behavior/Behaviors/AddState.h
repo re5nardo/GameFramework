@@ -22,7 +22,7 @@ private:
 	float	m_fTime;
 
 public:
-	void Start(__int64 lStartTime, ...) override;
+	void Start(long long lStartTime, ...) override;
 	void Initialize() override;
-	void UpdateBody(__int64 lUpdateTime) override;
+	void UpdateBody(long long lUpdateTime) override;
 };
