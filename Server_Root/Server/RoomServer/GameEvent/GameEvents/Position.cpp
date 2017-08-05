@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "Position.h"
-#include "Position_generated.h"
+#include "../../../FBSFiles/Position_generated.h"
 
 namespace GameEvent
 {
@@ -19,8 +19,8 @@ namespace GameEvent
 
 	const char* Position::Serialize(int* pLength)
 	{
-		FBSData::Vector3 startPosition(m_vec3StartPosition.x(), m_vec3StartPosition.y(), m_vec3StartPosition.z());
-		FBSData::Vector3 endPosition(m_vec3EndPosition.x(), m_vec3EndPosition.y(), m_vec3EndPosition.z());
+		FBS::Data::Vector3 startPosition(m_vec3StartPosition.x(), m_vec3StartPosition.y(), m_vec3StartPosition.z());
+		FBS::Data::Vector3 endPosition(m_vec3EndPosition.x(), m_vec3EndPosition.y(), m_vec3EndPosition.z());
 
 		FBS::GameEvent::PositionBuilder data_builder(m_Builder);
 		data_builder.add_EntityID(m_nEntityID);

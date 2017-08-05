@@ -6,6 +6,7 @@
 //#include "RoomMessageHeader.h"
 #include <process.h>
 #include "../Entity/Entities/Character/Character.h"
+#include "../Entity/Entities/Character/CharacterAI.h"
 #include "../Messages/ToClient/WorldSnapShotToC.h"
 #include "../Messages/ToClient/WorldInfoToC.h"
 #include "../Behavior/BehaviorIDs.h"
@@ -14,8 +15,11 @@
 #include "../Util.h"
 #include "btBulletCollisionCommon.h"
 #include "../Factory.h"
+#include <cstdlib>
+#include "../Entity/IEntity.h"
+#include "../Entity/Entities/Projectile/Projectile.h"
 
-BaeGameRoom::BaeGameRoom(int nMatchID, vector<string> vecMatchedPlayerKey)
+BaeGameRoom::BaeGameRoom(int nMatchID, vector<string> vecMatchedPlayerKey)	//	Receive Game Info from Lobby
 {
 	m_nMatchID = nMatchID;
 	m_vecMatchedPlayerKey = vecMatchedPlayerKey;
@@ -26,6 +30,8 @@ BaeGameRoom::BaeGameRoom(int nMatchID, vector<string> vecMatchedPlayerKey)
 	}
 
 	m_bPlaying = false;
+
+	LoadMap(2/*temp..*/);
 }
 
 BaeGameRoom::~BaeGameRoom()
@@ -94,13 +100,16 @@ void BaeGameRoom::ProcessInput()
 		{
 			GameEventMoveToR* pMoveToR = (GameEventMoveToR*)pPlayerInputMsg;
 
-			m_mapCharacter[nPlayerIndex]->GetBehavior(BehaviorID::MOVE)->Start(m_lLastUpdateTime, &pMoveToR->m_vec3Dest);
+			int nEntityID = m_mapPlayerEntity[nPlayerIndex];
+			m_mapEntity[nEntityID]->GetBehavior(BehaviorID::MOVE)->Start(m_lLastUpdateTime, &pMoveToR->m_vec3Dest);
 		}
 		else if (pPlayerInputMsg->GetID() == GameInputSkillToR_ID)
 		{
 			GameInputSkillToR* pMsg = (GameInputSkillToR*)pPlayerInputMsg;
 
-			list<ISkill*> listSkill = m_mapCharacter[nPlayerIndex]->GetAllSkills();
+			int nEntityID = m_mapPlayerEntity[nPlayerIndex];
+
+			list<ISkill*> listSkill = ((Character*)m_mapEntity[nEntityID])->GetAllSkills();
 			for (list<ISkill*>::iterator it = listSkill.begin(); it != listSkill.end(); ++it)
 			{
 				if (pMsg->m_nSkillID == (*it)->GetMasterDataID())
@@ -117,23 +126,22 @@ void BaeGameRoom::ProcessInput()
 
 void BaeGameRoom::Update()
 {
-	//	Character
-	for (map<int, Character*>::iterator it = m_mapCharacter.begin(); it != m_mapCharacter.end(); ++it)
+	for (map<int, IEntity*>::iterator it = m_mapEntity.begin(); it != m_mapEntity.end(); ++it)
 	{
-		Character* pCharacter = it->second;
-		pCharacter->Update(m_lLastUpdateTime);
+		IEntity* pEntity = it->second;
+		pEntity->Update(m_lLastUpdateTime);
 	}
 }
 
 void BaeGameRoom::LateUpdate()
 {
-	for (map<int, Character*>::iterator it = m_mapCharacter.begin(); it != m_mapCharacter.end(); ++it)
+	for (map<int, IEntity*>::iterator it = m_mapEntity.begin(); it != m_mapEntity.end(); ++it)
 	{
-		Character* pCharacter = it->second;
+		IEntity* pEntity = it->second;
 
-		if (!pCharacter->IsBehavioring())
+		if (!pEntity->IsBehavioring())
 		{
-			pCharacter->GetBehavior(BehaviorID::IDLE)->Start(m_lLastUpdateTime);
+			pEntity->GetBehavior(BehaviorID::IDLE)->Start(m_lLastUpdateTime);
 		}
 	}
 }
@@ -145,7 +153,7 @@ void BaeGameRoom::SendWorldSnapShot()
 	pWorldSnapShotToC->m_nTick = m_nTick;
 	pWorldSnapShotToC->m_fTime = m_lLastUpdateTime / 1000.0f;
 
-	for (map<int, Character*>::iterator it = m_mapCharacter.begin(); it != m_mapCharacter.end(); ++it)
+	for (map<int, IEntity*>::iterator it = m_mapEntity.begin(); it != m_mapEntity.end(); ++it)
 	{
 		pWorldSnapShotToC->m_mapEntity[it->first] = it->second;
 	}
@@ -180,8 +188,7 @@ void BaeGameRoom::StartGame()
 	m_bPlaying = true;
 	m_nTick = 0;
 
-	LoadMap(2/*temp.. always 1*/);
-	SetPlayerCollision();
+	SetObstacles(2, 0/*temp..*/);
 
 	GameStartToC* gameStartToC = new GameStartToC();
 	SendToAllUsers(gameStartToC);
@@ -209,16 +216,15 @@ void BaeGameRoom::Reset()
 	}
 	m_mapPlayerInput.clear();
 
-	for (map<int, Character*>::iterator it = m_mapCharacter.begin(); it != m_mapCharacter.end(); ++it)
+	for (map<int, IEntity*>::iterator it = m_mapEntity.begin(); it != m_mapEntity.end(); ++it)
 	{
 		delete it->second;
 	}
-	m_mapCharacter.clear();
+	m_mapEntity.clear();
 
 	m_CollisionManager.Reset();
-	m_mapPlayerCollision.clear();
-	//m_mapPlayerEntity.clear();
-	m_mapEntityPlayer.clear();
+	m_mapEntityCollision.clear();
+	m_mapPlayerEntity.clear();
 }
 
 void BaeGameRoom::LoadMap(int nID)
@@ -271,10 +277,29 @@ void BaeGameRoom::LoadMap(int nID)
 	}
 }
 
+void BaeGameRoom::SetObstacles(int nMapID, int nRandomSeed)
+{
+	srand(nRandomSeed);
+
+	//temp..
+	int nDisturberCount = rand() % 10;
+	for (int i = 0; i < nDisturberCount; ++i)
+	{
+		m_LockEntitySequence.lock();
+		int nEntityID = m_nEntitySequence++;
+		m_LockEntitySequence.unlock();
+
+		CharacterAI* pCharacterAI = Factory::Instance()->CreateCharacterAI(this, nEntityID, 0);
+		pCharacterAI->Initialize();
+
+		m_mapDisturber[nEntityID] = pCharacterAI;
+		//m_mapPlayerEntity[nPlayerIndex] = nEntityID;
+	}
+}
+
 bool BaeGameRoom::TryMove(int nEntityID, btVector3& vec3Dest, btTransform& trHit)
 {
-	int nPlayerIndex = m_mapEntityPlayer[nEntityID];
-	int nCollisionObjectID = m_mapPlayerCollision[nPlayerIndex];
+	int nCollisionObjectID = m_mapEntityCollision[nEntityID];
 
 	if (m_CollisionManager.ContinuousCollisionDectection(nCollisionObjectID, vec3Dest, &trHit))
 	{
@@ -284,29 +309,16 @@ bool BaeGameRoom::TryMove(int nEntityID, btVector3& vec3Dest, btTransform& trHit
 	return true;
 }
 
-void BaeGameRoom::SetPlayerCollision()
-{
-	for (map<int, Character*>::iterator it = m_mapCharacter.begin(); it != m_mapCharacter.end(); ++it)
-	{
-		int nPlayerIndex = it->first;
-		int nCollisionObjectID = m_CollisionManager.AddCharacter(it->second->GetPosition(), 1);
-
-		m_mapPlayerCollision[nPlayerIndex] = nCollisionObjectID;
-	}
-}
-
 void BaeGameRoom::SetCollisionObjectPosition(int nEntityID, btVector3& vec3Position)
 {
-	int nPlayerIndex = m_mapEntityPlayer[nEntityID];
-	int nCollisionObjectID = m_mapPlayerCollision[nPlayerIndex];
+	int nCollisionObjectID = m_mapEntityCollision[nEntityID];
 
 	m_CollisionManager.SetPosition(nCollisionObjectID, vec3Position);
 }
 
 void BaeGameRoom::SetCollisionObjectRotation(int nEntityID, btVector3& vec3Rotation)
 {
-	int nPlayerIndex = m_mapEntityPlayer[nEntityID];
-	int nCollisionObjectID = m_mapPlayerCollision[nPlayerIndex];
+	int nCollisionObjectID = m_mapEntityCollision[nEntityID];
 
 	m_CollisionManager.SetRotation(nCollisionObjectID, vec3Rotation);
 }
@@ -314,6 +326,43 @@ void BaeGameRoom::SetCollisionObjectRotation(int nEntityID, btVector3& vec3Rotat
 void BaeGameRoom::AddGameEvent(IGameEvent* pGameEvent)
 {
 	m_listGameEvent.push_back(pGameEvent);
+}
+
+bool BaeGameRoom::CreateEntity(FBS::Data::EntityType type, int nMasterDataID, int* pEntityID, IEntity* pEntity)
+{
+	m_LockEntitySequence.lock();
+	int nEntityID = m_nEntitySequence++;
+	m_LockEntitySequence.unlock();
+
+	IEntity* entity = NULL;
+	if (type == FBS::Data::EntityType::EntityType_Character)
+	{
+		entity = Factory::Instance()->CreateCharacter(this, nEntityID, nMasterDataID);
+	}
+	else if (type == FBS::Data::EntityType::EntityType_Projectile)
+	{
+		entity = Factory::Instance()->CreateProjectile(this, nEntityID, nMasterDataID);
+	}
+	entity->Initialize();
+	m_mapEntity[nEntityID] = entity;
+
+	//	collision
+	int nCollisionObjectID = m_CollisionManager.AddCharacter(entity->GetPosition(), 1);
+	m_mapEntityCollision[nEntityID] = nCollisionObjectID;
+
+	*pEntityID = nEntityID;
+	pEntity = entity;
+
+	return true;
+}
+
+void BaeGameRoom::DestroyEntity(int nEntityID)
+{
+	delete m_mapEntity[nEntityID];
+	m_mapEntity.erase(nEntityID);
+
+	int nCollisionObjectID = m_mapEntityCollision[nEntityID];
+	m_CollisionManager.RemoveCollisionObject(nCollisionObjectID);
 }
 
 void BaeGameRoom::SendToAllUsers(IMessage* pMsg, string strExclusionKey, bool bDelete)
@@ -381,16 +430,11 @@ void BaeGameRoom::OnEnterRoomToR(EnterRoomToR* pMsg, unsigned int socket)
 		m_mapPlayerKeySocket[pMsg->m_strPlayerKey] = socket;
 		m_mapSocketPlayerKey[socket] = pMsg->m_strPlayerKey;
 
-		m_LockEntitySequence.lock();
-		int nEntityID = m_nEntitySequence++;
-		m_LockEntitySequence.unlock();
-
 		//	Temp..0 is MisterBae
-		Character* pCharacter = Factory::Instance()->CreateCharacter(this, nEntityID, 0);
-		pCharacter->Initialize();
-		m_mapCharacter[nPlayerIndex] = pCharacter;
-		//m_mapPlayerEntity[nPlayerIndex] = nEntityID;
-		m_mapEntityPlayer[nEntityID] = nPlayerIndex;
+		int nEntityID = 0;
+		IEntity* pEntity = NULL;
+		CreateEntity(FBS::Data::EntityType::EntityType_Character, 0, &nEntityID, pEntity);
+		m_mapPlayerEntity[nPlayerIndex] = nEntityID;
 
 		enterRoomToC->m_nResult = 0;
 		enterRoomToC->m_nPlayerIndex = nPlayerIndex;

@@ -17,12 +17,14 @@ enum GameEventType {
   GameEventType_Position = 4,
   GameEventType_Rotation = 5,
   GameEventType_Collision = 6,
+  GameEventType_EntityCreate = 7,
+  GameEventType_EntityDestroy = 8,
   GameEventType_MIN = GameEventType_BehaviorStart,
-  GameEventType_MAX = GameEventType_Collision
+  GameEventType_MAX = GameEventType_EntityDestroy
 };
 
 inline const char **EnumNamesGameEventType() {
-  static const char *names[] = { "BehaviorStart", "BehaviorEnd", "StateStart", "StateEnd", "Position", "Rotation", "Collision", nullptr };
+  static const char *names[] = { "BehaviorStart", "BehaviorEnd", "StateStart", "StateEnd", "Position", "Rotation", "Collision", "EntityCreate", "EntityDestroy", nullptr };
   return names;
 }
 

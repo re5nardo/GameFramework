@@ -11,6 +11,7 @@
 #include <chrono>
 #include <mutex>
 #include "CollisionManager.h"
+#include "../../FBSFiles/FBSData_generated.h"
 
 class IMessage;
 class CreateRoomToR;
@@ -21,8 +22,10 @@ class EnterRoomToR;
 class PreparationStateToR;
 class IMessage;
 class Character;
+class CharacterAI;
 class GameInputSkillToR;
 class IGameEvent;
+class IEntity;
 
 using namespace std;
 using namespace chrono;
@@ -48,10 +51,12 @@ private:
 	map<int, float>					m_mapPlayerIndexPreparationState;		//	key : PlayerIndex, value : PreparationState
 
 private:
-	map<int, Character*>	m_mapCharacter;			//	key : PlayerIndex, value : Character
 	map<int, IMessage*>		m_mapPlayerInput;		//	key : PlayerIndex, value : Input Message
-	//map<int, int>			m_mapPlayerEntity;		//	key : PlayerIndex, value : Entity ID
-	map<int, int>			m_mapEntityPlayer;		//	key : Entity ID, value : PlayerIndex
+	map<int, int>			m_mapPlayerEntity;		//	key : PlayerIndex, value : EntityID
+	map<int, IEntity*>		m_mapEntity;			//	key : EntityID, value : Entity
+
+private:
+	map<int, CharacterAI*>	m_mapDisturber;			//	key : DisturberIndex, value : CharacterAI
 
 private:
 	bool m_bPlaying;
@@ -67,7 +72,7 @@ private:
 
 private:
 	CollisionManager m_CollisionManager;
-	map<int, int> m_mapPlayerCollision;		//	key : PlayerIndex, value : CollisionObject ID
+	map<int, int> m_mapEntityCollision;		//	key : EntityID, value : CollisionObject ID
 
 private:
 	list<IGameEvent*> m_listGameEvent;
@@ -98,18 +103,22 @@ private:
 	long long GetElapsedTime();	//	Milliseconds
 
 private:
-	void LoadMap(int nID);
+	void LoadMap(int nMapID);
+	void SetObstacles(int nMapID, int nRandomSeed);
 
 public:
 	bool TryMove(int nEntityID, btVector3& vec3Dest, btTransform& trHit);
 
 public:
-	void SetPlayerCollision();
 	void SetCollisionObjectPosition(int nEntityID, btVector3& vec3Position);
 	void SetCollisionObjectRotation(int nEntityID, btVector3& vec3Rotation);
 
 public:
 	void AddGameEvent(IGameEvent* pGameEvent);
+
+public:
+	bool CreateEntity(FBS::Data::EntityType type, int nMasterDataID, int* nEntityID, IEntity* pEntity);
+	void DestroyEntity(int nEntityID);
 
 private:
 	void Loop();

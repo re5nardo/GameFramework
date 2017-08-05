@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "StateEnd.h"
-#include "StateEnd_generated.h"
+#include "../../../FBSFiles/StateEnd_generated.h"
 
 namespace GameEvent
 {

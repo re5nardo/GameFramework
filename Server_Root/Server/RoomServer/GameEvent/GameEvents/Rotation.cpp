@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "Rotation.h"
-#include "Rotation_generated.h"
+#include "../../../FBSFiles/Rotation_generated.h"
 
 namespace GameEvent
 {
@@ -19,8 +19,8 @@ namespace GameEvent
 
 	const char* Rotation::Serialize(int* pLength)
 	{
-		FBSData::Vector3 startRotation(m_vec3StartRotation.x(), m_vec3StartRotation.y(), m_vec3StartRotation.z());
-		FBSData::Vector3 endRotation(m_vec3EndRotation.x(), m_vec3EndRotation.y(), m_vec3EndRotation.z());
+		FBS::Data::Vector3 startRotation(m_vec3StartRotation.x(), m_vec3StartRotation.y(), m_vec3StartRotation.z());
+		FBS::Data::Vector3 endRotation(m_vec3EndRotation.x(), m_vec3EndRotation.y(), m_vec3EndRotation.z());
 
 		FBS::GameEvent::RotationBuilder data_builder(m_Builder);
 		data_builder.add_EntityID(m_nEntityID);

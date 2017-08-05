@@ -33,6 +33,7 @@ public:
 	int AddSphere2dShapeTerrainObject(btVector3& vec3Position, float fRadius);
 	int AddConvexPolygon2dShapeTerrainObject(btVector3& vec3Position, list<btVector3>& listPoint);
 	int AddCharacter(btVector3& vec3Position, float fRadius);
+	void RemoveCollisionObject(int nID);
 
 public:
 	void SetPosition(int nID, btVector3& vec3Position);

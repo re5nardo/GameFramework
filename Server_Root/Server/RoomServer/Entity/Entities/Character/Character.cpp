@@ -11,6 +11,11 @@ Character::Character(BaeGameRoom* pGameRoom, int nID, int nMasterDataID) : IEnti
 
 Character::~Character()
 {
+	for (list<ISkill*>::iterator it = m_listSkill.begin(); it != m_listSkill.end(); ++it)
+	{
+		delete *it;
+	}
+	m_listSkill.clear();
 }
 
 void Character::Initialize()
@@ -43,6 +48,11 @@ void Character::Initialize()
 	}
 }
 
+float Character::GetMoveSpeed()
+{
+	return m_CurrentStat.m_fMoveSpeed * (fMoveSpeedPercent / 100);
+}
+
 void Character::Update(long long lUpdateTime)
 {
 	list<ISkill*> listSkill = GetActivatedSkills();
@@ -70,9 +80,33 @@ void Character::Update(long long lUpdateTime)
 	}
 }
 
-float Character::GetMoveSpeed()
+list<ISkill*> Character::GetAllSkills()
 {
-	return m_CurrentStat.m_fMoveSpeed * (fMoveSpeedPercent / 100);
+	return m_listSkill;
+}
+
+list<ISkill*> Character::GetActivatedSkills()
+{
+	list<ISkill*> listActivatedSkill;
+
+	for (list<ISkill*>::iterator it = m_listSkill.begin(); it != m_listSkill.end(); ++it)
+	{
+		if ((*it)->IsActivated())
+			listActivatedSkill.push_back(*it);
+	}
+
+	return listActivatedSkill;
+}
+
+bool Character::IsSkilling()
+{
+	for (list<ISkill*>::iterator it = m_listSkill.begin(); it != m_listSkill.end(); ++it)
+	{
+		if ((*it)->IsActivated())
+			return true;
+	}
+
+	return false;
 }
 
 void Character::SetStat(Stat stat)

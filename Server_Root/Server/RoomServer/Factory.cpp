@@ -1,19 +1,20 @@
 #include "stdafx.h"
 #include "Factory.h"
 #include "Entity\Entities\Character\Character.h"
+#include "Entity\Entities\Character\CharacterAI.h"
 #include "MasterData\MasterDataManager.h"
 #include "MasterData\Behavior.h"
 #include "MasterData\Character.h"
 #include "MasterData\Skill.h"
 #include "MasterData\State.h"
-#include "Behavior\Behaviors\Idle.h"
+#include "Behavior\Behaviors\General.h"
 #include "Behavior\Behaviors\Move.h"
 #include "Behavior\Behaviors\Dash.h"
-#include "Behavior\Behaviors\AddState.h"
 #include "Skill\Skills\ContinueSkill.h"
 #include "Skill\Skills\FireSkill.h"
 #include "State\States\Acceleration.h"
 #include "State\States\Shield.h"
+#include "Entity\Entities\Projectile\Projectile.h"
 
 Factory::Factory()
 {
@@ -49,9 +50,9 @@ IBehavior* Factory::CreateBehavior(BaeGameRoom* pGameRoom, IEntity* pEntity, int
 
 	string strClassName = pMasterBehavior->m_strClassName;
 
-	if (Idle::NAME.compare(strClassName) == 0)
+	if (General::NAME.compare(strClassName) == 0)
 	{
-		return new Idle(pGameRoom, pEntity, nMasterDataID);
+		return new General(pGameRoom, pEntity, nMasterDataID);
 	}
 	else if (Move::NAME.compare(strClassName) == 0)
 	{
@@ -60,10 +61,6 @@ IBehavior* Factory::CreateBehavior(BaeGameRoom* pGameRoom, IEntity* pEntity, int
 	else if (Dash::NAME.compare(strClassName) == 0)
 	{
 		return new Dash(pGameRoom, pEntity, nMasterDataID);
-	}
-	else if (AddState::NAME.compare(strClassName) == 0)
-	{
-		return new AddState(pGameRoom, pEntity, nMasterDataID);
 	}
 
 	return NULL;
@@ -91,4 +88,14 @@ IState* Factory::CreateState(BaeGameRoom* pGameRoom, IEntity* pEntity, int nMast
 Character* Factory::CreateCharacter(BaeGameRoom* pGameRoom, int nID, int nMasterDataID)
 {
 	return new Character(pGameRoom, nID, nMasterDataID);
+}
+
+CharacterAI* Factory::CreateCharacterAI(BaeGameRoom* pGameRoom, int nID, int nMasterDataID)
+{
+	return new CharacterAI(pGameRoom, nID, nMasterDataID);
+}
+
+Projectile* Factory::CreateProjectile(BaeGameRoom* pGameRoom, int nID, int nMasterDataID)
+{
+	return new Projectile(pGameRoom, nID, nMasterDataID);
 }

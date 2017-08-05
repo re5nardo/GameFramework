@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "StateStart.h"
-#include "StateStart_generated.h"
+#include "../../../FBSFiles/StateStart_generated.h"
 
 namespace GameEvent
 {

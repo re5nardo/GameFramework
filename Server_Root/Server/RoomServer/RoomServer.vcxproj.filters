@@ -136,6 +136,12 @@
     <Filter Include="헤더 파일\GameEvent\GameEvents">
       <UniqueIdentifier>{2de21456-74f4-410d-8f64-6fa1fd1ef6cf}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\Entity\Entities\Projectile">
+      <UniqueIdentifier>{ef6119ce-bf0c-44ad-ba08-8c971ea943b8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Entity\Entities\Projectile">
+      <UniqueIdentifier>{a461231e-55e7-48d0-8335-f89691622d52}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -204,9 +210,6 @@
     <ClInclude Include="Behavior\BehaviorIDs.h">
       <Filter>헤더 파일\Behavior</Filter>
     </ClInclude>
-    <ClInclude Include="Behavior\Behaviors\Idle.h">
-      <Filter>헤더 파일\Behavior\Behaviors</Filter>
-    </ClInclude>
     <ClInclude Include="Util.h">
       <Filter>헤더 파일\Common</Filter>
     </ClInclude>
@@ -272,9 +275,6 @@
     </ClInclude>
     <ClInclude Include="Skill\Skills\FireSkill.h">
       <Filter>헤더 파일\Skill\Skills</Filter>
-    </ClInclude>
-    <ClInclude Include="Behavior\Behaviors\AddState.h">
-      <Filter>헤더 파일\Behavior\Behaviors</Filter>
     </ClInclude>
     <ClInclude Include="State\States\Shield.h">
       <Filter>헤더 파일\State\States</Filter>
@@ -342,6 +342,24 @@
     <ClInclude Include="..\CommonSources\Messages\ToRoom\CreateRoomToR.h">
       <Filter>헤더 파일\Messages\ToRoom</Filter>
     </ClInclude>
+    <ClInclude Include="Entity\Entities\Character\CharacterAI.h">
+      <Filter>헤더 파일\Entity\Entities\Character</Filter>
+    </ClInclude>
+    <ClInclude Include="Entity\Entities\Projectile\Projectile.h">
+      <Filter>헤더 파일\Entity\Entities\Projectile</Filter>
+    </ClInclude>
+    <ClInclude Include="MasterData\Projectile.h">
+      <Filter>헤더 파일\MasterData</Filter>
+    </ClInclude>
+    <ClInclude Include="Behavior\Behaviors\General.h">
+      <Filter>헤더 파일\Behavior\Behaviors</Filter>
+    </ClInclude>
+    <ClInclude Include="Behavior\Behaviors\StopBehavior.h">
+      <Filter>헤더 파일\Behavior\Behaviors</Filter>
+    </ClInclude>
+    <ClInclude Include="GameEvent\GameEvents\EntityCreate.h">
+      <Filter>헤더 파일\GameEvent\GameEvents</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -373,9 +391,6 @@
     </ClCompile>
     <ClCompile Include="Entity\IEntity.cpp">
       <Filter>소스 파일\Entity</Filter>
-    </ClCompile>
-    <ClCompile Include="Behavior\Behaviors\Idle.cpp">
-      <Filter>소스 파일\Behavior\Behaviors</Filter>
     </ClCompile>
     <ClCompile Include="Behavior\IBehavior.cpp">
       <Filter>소스 파일\Behavior</Filter>
@@ -433,9 +448,6 @@
     </ClCompile>
     <ClCompile Include="Skill\Skills\FireSkill.cpp">
       <Filter>소스 파일\Skill\Skills</Filter>
-    </ClCompile>
-    <ClCompile Include="Behavior\Behaviors\AddState.cpp">
-      <Filter>소스 파일\Behavior\Behaviors</Filter>
     </ClCompile>
     <ClCompile Include="State\States\Shield.cpp">
       <Filter>소스 파일\State\States</Filter>
@@ -502,6 +514,24 @@
     </ClCompile>
     <ClCompile Include="..\CommonSources\Messages\ToRoom\CreateRoomToR.cpp">
       <Filter>소스 파일\Messages\ToRoom</Filter>
+    </ClCompile>
+    <ClCompile Include="Entity\Entities\Character\CharacterAI.cpp">
+      <Filter>소스 파일\Entity\Entities\Character</Filter>
+    </ClCompile>
+    <ClCompile Include="Entity\Entities\Projectile\Projectile.cpp">
+      <Filter>소스 파일\Entity\Entities\Projectile</Filter>
+    </ClCompile>
+    <ClCompile Include="MasterData\Projectile.cpp">
+      <Filter>소스 파일\MasterData</Filter>
+    </ClCompile>
+    <ClCompile Include="Behavior\Behaviors\General.cpp">
+      <Filter>소스 파일\Behavior\Behaviors</Filter>
+    </ClCompile>
+    <ClCompile Include="Behavior\Behaviors\StopBehavior.cpp">
+      <Filter>소스 파일\Behavior\Behaviors</Filter>
+    </ClCompile>
+    <ClCompile Include="GameEvent\GameEvents\EntityCreate.cpp">
+      <Filter>소스 파일\GameEvent\GameEvents</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

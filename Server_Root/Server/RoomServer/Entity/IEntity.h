@@ -30,11 +30,11 @@ private:
 protected:
 	list<IBehavior*> m_listBehavior;
 	list<IState*> m_listState;
-	list<ISkill*> m_listSkill;
 
 public:
 	virtual void Initialize() = 0;
 	virtual float GetMoveSpeed() = 0;
+	virtual void Update(long long lUpdateTime) = 0;
 
 public:
 	int GetID();
@@ -57,10 +57,4 @@ public:
 	list<IState*> GetStates();
 	void AddState(IState* pState);
 	void RemoveState(int nID);
-
-public:
-	ISkill* GetSkill(int nID);
-	list<ISkill*> GetAllSkills();
-	list<ISkill*> GetActivatedSkills();
-	bool IsSkilling();
 };

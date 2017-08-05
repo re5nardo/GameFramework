@@ -73,3 +73,9 @@ flatc --cpp -o SourceFiles\cpp FBSFiles\GameEvent\BehaviorEnd.fbs
 
 flatc --csharp -o SourceFiles\csharp FBSFiles\GameEvent\BehaviorStart.fbs
 flatc --cpp -o SourceFiles\cpp FBSFiles\GameEvent\BehaviorStart.fbs
+
+flatc --csharp -o SourceFiles\csharp FBSFiles\GameEvent\EntityCreate.fbs
+flatc --cpp -o SourceFiles\cpp FBSFiles\GameEvent\EntityCreate.fbs
+
+flatc --csharp -o SourceFiles\csharp FBSFiles\GameEvent\EntityDestroy.fbs
+flatc --cpp -o SourceFiles\cpp FBSFiles\GameEvent\EntityDestroy.fbs

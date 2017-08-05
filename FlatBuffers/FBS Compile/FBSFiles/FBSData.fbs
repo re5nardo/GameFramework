@@ -6,3 +6,9 @@ struct Vector3
 	y:float;
 	z:float;
 }
+
+enum EntityType:byte
+{
+	Character = 0,
+	Projectile,
+}

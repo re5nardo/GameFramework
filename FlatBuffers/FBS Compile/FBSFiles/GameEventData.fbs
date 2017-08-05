@@ -9,6 +9,8 @@ enum GameEventType:byte
 	Position,
 	Rotation,
 	Collision,
+	EntityCreate,
+	EntityDestroy,
 }
 
 table GameEventData

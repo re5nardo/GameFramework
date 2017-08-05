@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "BehaviorEnd.h"
-#include "BehaviorEnd_generated.h"
+#include "../../../FBSFiles/BehaviorEnd_generated.h"
 
 namespace GameEvent
 {

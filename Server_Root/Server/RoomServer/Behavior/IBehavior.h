@@ -1,9 +1,15 @@
 #pragma once
 
 #include <stdarg.h>
+#include <vector>
+#include <utility>
+#include <string>
+#include "../MasterData/Behavior.h"
 
 class IEntity;
 class BaeGameRoom;
+
+using namespace std;
 
 class IBehavior
 {
@@ -13,6 +19,11 @@ public:
 
 protected:
 	int m_nMasterDataID = -1;
+
+protected:
+	float m_fLength;
+	string	m_strStringParams;
+	vector<MasterData::Behavior::Action> m_vecAction;
 
 protected:
 	BaeGameRoom* m_pGameRoom;

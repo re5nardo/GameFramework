@@ -187,3 +187,9 @@ bool CollisionManager::ContinuousCollisionDectection(int nID, btVector3& vec3To,
 
 	return false;
 }
+
+void CollisionManager::RemoveCollisionObject(int nID)
+{
+	delete m_mapCollisionObject[nID];
+	m_mapCollisionObject.erase(nID);
+}

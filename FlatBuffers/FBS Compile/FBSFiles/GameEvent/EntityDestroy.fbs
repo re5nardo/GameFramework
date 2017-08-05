@@ -1,0 +1,6 @@
+namespace FBS.GameEvent;
+
+table EntityDestroy
+{
+	EntityID:int;
+}

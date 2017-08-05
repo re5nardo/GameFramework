@@ -10,6 +10,20 @@ namespace Data {
 
 struct Vector3;
 
+enum EntityType {
+  EntityType_Character = 0,
+  EntityType_Projectile = 1,
+  EntityType_MIN = EntityType_Character,
+  EntityType_MAX = EntityType_Projectile
+};
+
+inline const char **EnumNamesEntityType() {
+  static const char *names[] = { "Character", "Projectile", nullptr };
+  return names;
+}
+
+inline const char *EnumNameEntityType(EntityType e) { return EnumNamesEntityType()[static_cast<int>(e)]; }
+
 MANUALLY_ALIGNED_STRUCT(4) Vector3 FLATBUFFERS_FINAL_CLASS {
  private:
   float x_;

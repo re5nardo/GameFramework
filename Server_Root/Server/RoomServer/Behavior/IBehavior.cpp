@@ -15,6 +15,7 @@ IBehavior::IBehavior(BaeGameRoom* pGameRoom, IEntity* pEntity, int nMasterDataID
 
 IBehavior::~IBehavior()
 {
+	m_vecAction.clear();
 }
 
 int IBehavior::GetMasterDataID()

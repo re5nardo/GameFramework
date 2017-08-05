@@ -1,0 +1,10 @@
+include "../FBSData.fbs";
+namespace FBS.GameEvent;
+
+table EntityCreate
+{
+	EntityID:int;
+	MasterDataID:int;
+	Type:FBS.Data.EntityType;
+	Pos:FBS.Data.Vector3;
+}

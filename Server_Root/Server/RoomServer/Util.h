@@ -186,4 +186,14 @@ public:
 
 		return angle;
 	}
+
+	static btVector3 GetAngledPosition(btVector3& vec3Origin, float fAngle, float fLength)
+	{
+		float fRadian = (90 - fAngle) * M_PI / 180.0f;
+
+		float x = cos(fRadian) * fLength;
+		float z = sin(fRadian) * fLength;
+
+		return btVector3(vec3Origin.x() + x, 0, vec3Origin.z() + z);
+	}
 };

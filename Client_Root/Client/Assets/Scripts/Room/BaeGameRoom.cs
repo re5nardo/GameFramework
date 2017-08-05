@@ -16,7 +16,7 @@ public class BaeGameRoom : IGameRoom
     private string m_strIP = "172.30.1.18";
     private int m_nPort = 9111;
 
-    private Dictionary<int, IEntity>            m_dicEntity = new Dictionary<int, IEntity>();
+    private Dictionary<int, Entity>            m_dicEntity = new Dictionary<int, Entity>();
 
     private int m_nOldFrameRate = 0;
     private int m_nPlayerIndex = -1;
@@ -61,7 +61,7 @@ public class BaeGameRoom : IGameRoom
 
         ProcessWorldInfo();
 
-        foreach (KeyValuePair<int, IEntity> kv in m_dicEntity)
+        foreach (KeyValuePair<int, Entity> kv in m_dicEntity)
         {
             kv.Value.Sample();
         }
@@ -78,11 +78,11 @@ public class BaeGameRoom : IGameRoom
                 float fPlaySpeed = 1;
                 if (m_fLastWorldInfoTime - m_fElapsedTime > 0.5f)
                 {
-                    fPlaySpeed = 3;
+                    fPlaySpeed = 1.5f;
                 }
                 else if (m_fLastWorldInfoTime - m_fElapsedTime > 0.1f)
                 {
-                    fPlaySpeed = 2;
+                    fPlaySpeed = 1.2f;
                 }
 
                 deltaTime = Time.deltaTime * fPlaySpeed;
@@ -154,6 +154,14 @@ public class BaeGameRoom : IGameRoom
             GameEvent.Rotation gameEvent = (GameEvent.Rotation)iGameEvent;
 
             m_dicEntity[gameEvent.m_nEntityID].ProcessGameEvent(gameEvent);
+        }
+        else if (iGameEvent.GetEventType() == FBS.GameEventType.EntityCreate)
+        {
+            GameEvent.EntityCreate gameEvent = (GameEvent.EntityCreate)iGameEvent;
+
+            Entity entity = Factory.Instance.CreateEntity(gameEvent.m_EntityType, gameEvent.m_nEntityID, gameEvent.m_nMasterDataID);
+
+            m_dicEntity[gameEvent.m_nEntityID] = entity;
         }
 
         m_ProcessedGameEvent.Add(iGameEvent);
@@ -238,16 +246,14 @@ public class BaeGameRoom : IGameRoom
 
             foreach(KeyValuePair<int, string> kv in msg.m_dicPlayers)
             {
-                GameObject goCharacter = new GameObject("Player_" + kv.Key.ToString());
-                MisterBae misterBae = goCharacter.AddComponent<MisterBae>();
-
-                m_dicEntity[kv.Key] = misterBae;
-
-                misterBae.Initialize();
+                //  temp.. MisterBae
+                Entity entity = Factory.Instance.CreateEntity(FBS.Data.EntityType.Character, 0, 0);
+                m_dicEntity[kv.Key] = entity;
+                //entity.Initialize();
 
                 if (kv.Key == m_nPlayerIndex)
                 {
-                    m_CameraController.SetTarget(misterBae.GetUITransform());
+                    m_CameraController.SetTarget(entity.GetUITransform());
                     m_CameraController.StartFollowTarget();
 
                     m_SkillController.SetSkills(new List<int>(){0, 1, 2});

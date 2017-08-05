@@ -12,6 +12,8 @@ public enum GameEventType : sbyte
  Position = 4,
  Rotation = 5,
  Collision = 6,
+ EntityCreate = 7,
+ EntityDestroy = 8,
 };
 
 

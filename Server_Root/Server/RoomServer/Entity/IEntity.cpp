@@ -21,12 +21,6 @@ IEntity::~IEntity()
 		delete *it;
 	}
 	m_listState.clear();
-
-	for (list<ISkill*>::iterator it = m_listSkill.begin(); it != m_listSkill.end(); ++it)
-	{
-		delete *it;
-	}
-	m_listSkill.clear();
 }
 
 int IEntity::GetID()
@@ -134,33 +128,4 @@ void IEntity::RemoveState(int nID)
 			++it;
 		}
 	}
-}
-
-list<ISkill*> IEntity::GetAllSkills()
-{
-	return m_listSkill;
-}
-
-list<ISkill*> IEntity::GetActivatedSkills()
-{
-	list<ISkill*> listActivatedSkill;
-
-	for (list<ISkill*>::iterator it = m_listSkill.begin(); it != m_listSkill.end(); ++it)
-	{
-		if ((*it)->IsActivated())
-			listActivatedSkill.push_back(*it);
-	}
-
-	return listActivatedSkill;
-}
-
-bool IEntity::IsSkilling()
-{
-	for (list<ISkill*>::iterator it = m_listSkill.begin(); it != m_listSkill.end(); ++it)
-	{
-		if ((*it)->IsActivated())
-			return true;
-	}
-
-	return false;
 }

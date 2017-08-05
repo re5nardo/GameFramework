@@ -12,6 +12,7 @@ namespace MasterData
         public float m_fMP;
         public float m_fMoveSpeed;
         public float m_fSize;
+        public string m_strModelResName;
 
         public override void SetData(List<string> data)
         {
@@ -24,6 +25,7 @@ namespace MasterData
             Util.Convert(data[6], ref m_fMP);
             Util.Convert(data[7], ref m_fMoveSpeed);
             Util.Convert(data[8], ref m_fSize);
+            m_strModelResName = data[9];
         }
     }
 }

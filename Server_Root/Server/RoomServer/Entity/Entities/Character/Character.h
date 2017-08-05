@@ -12,6 +12,9 @@ public:
 	virtual ~Character();
 
 protected:
+	list<ISkill*> m_listSkill;
+
+protected:
 	Stat m_DefaultStat;
 	Stat m_CurrentStat;
 
@@ -19,11 +22,15 @@ public:
 	float fMoveSpeedPercent = 100;
 
 public:
-	virtual void Update(long long lUpdateTime);
-
-public:
 	void Initialize() override;
 	float GetMoveSpeed() override;
+	void Update(long long lUpdateTime) override;
+
+public:
+	ISkill* GetSkill(int nID);
+	list<ISkill*> GetAllSkills();
+	list<ISkill*> GetActivatedSkills();
+	bool IsSkilling();
 
 public:
 	void SetStat(Stat stat);

@@ -28,6 +28,9 @@ public class Util
 
     public static void Parse(string text, char delim, List<int> output)
     {
+        if (string.IsNullOrEmpty(text))
+            return;
+
         List<string> temp = new List<string>();
         Parse(text, delim, temp);
 
@@ -44,6 +47,9 @@ public class Util
 
     public static void Parse(string text, char delim, List<float> output)
     {
+        if (string.IsNullOrEmpty(text))
+            return;
+
         List<string> temp = new List<string>();
         Parse(text, delim, temp);
 
@@ -60,6 +66,9 @@ public class Util
 
     public static void Parse(string text, char delim, List<double> output)
     {
+        if (string.IsNullOrEmpty(text))
+            return;
+
         List<string> temp = new List<string>();
         Parse(text, delim, temp);
 
@@ -167,6 +176,9 @@ public class Util
 
     public static bool Convert(string strText, ref int output)
     {
+        if (string.IsNullOrEmpty(strText))
+            return false;
+
         int result = 0;
         if (int.TryParse(strText.Replace(" ", ""), out result))
         {
@@ -182,6 +194,9 @@ public class Util
 
     public static bool Convert(string strText, ref float output)
     {
+        if (string.IsNullOrEmpty(strText))
+            return false;
+        
         float result = 0;
         if (float.TryParse(strText.Replace(" ", ""), out result))
         {
@@ -197,6 +212,9 @@ public class Util
 
     public static bool Convert(string strText, ref double output)
     {
+        if (string.IsNullOrEmpty(strText))
+            return false;
+        
         double result = 0;
         if (double.TryParse(strText.Replace(" ", ""), out result))
         {

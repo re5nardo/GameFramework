@@ -18,6 +18,7 @@ public class MasterDataManager : MonoSingleton<MasterDataManager>
         SetSkill();
         SetBehavior();
         SetState();
+        SetProjectile();
     }
 
     private void SetCharacter()
@@ -77,6 +78,21 @@ public class MasterDataManager : MonoSingleton<MasterDataManager>
             state.SetData(listData[row]);
 
             m_dicData[strTypeName][state.m_nID] = state;
+        }
+    }
+
+    private void SetProjectile()
+    {
+        string strTypeName = typeof(MasterData.Projectile).Name;
+        m_dicData[strTypeName] = new Dictionary<int, IMasterData>();
+
+        List<List<string>> listData = Util.ReadCSV("MasterData/Projectile");
+        for (int row = 1; row < listData.Count; ++row)
+        {
+            MasterData.Projectile projectile = new MasterData.Projectile();
+            projectile.SetData(listData[row]);
+
+            m_dicData[strTypeName][projectile.m_nID] = projectile;
         }
     }
 

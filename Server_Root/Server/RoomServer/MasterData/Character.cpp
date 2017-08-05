@@ -17,8 +17,14 @@ namespace MasterData
 		m_nID = pSheet->readNum(nRow, 0);
 		m_strName = pSheet->readStr(nRow, 1);
 		m_strClassName = pSheet->readStr(nRow, 2);
-		Util::Parse(pSheet->readStr(nRow, 3), ',', &m_vecSkillID);
-		Util::Parse(pSheet->readStr(nRow, 4), ',', &m_vecBehaviorID);
+		if (pSheet->cellType(nRow, 3) == CellType::CELLTYPE_STRING)
+		{
+			Util::Parse(pSheet->readStr(nRow, 3), ',', &m_vecSkillID);
+		}
+		if (pSheet->cellType(nRow, 4) == CellType::CELLTYPE_STRING)
+		{
+			Util::Parse(pSheet->readStr(nRow, 4), ',', &m_vecBehaviorID);
+		}
 		m_fHP = pSheet->readNum(nRow, 5);
 		m_fMP = pSheet->readNum(nRow, 6);
 		m_fMoveSpeed = pSheet->readNum(nRow, 7);

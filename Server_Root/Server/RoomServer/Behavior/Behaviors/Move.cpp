@@ -8,6 +8,7 @@
 #include "../../GameEvent/GameEvents/BehaviorEnd.h"
 #include "../../GameEvent/GameEvents/Position.h"
 #include "../../GameEvent/GameEvents/Rotation.h"
+#include "../BehaviorIDs.h"
 
 const string Move::NAME = "Move";
 

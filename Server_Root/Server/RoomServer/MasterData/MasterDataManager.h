@@ -29,6 +29,7 @@ private:
 	void SetSkill();
 	void SetBehavior();
 	void SetState();
+	void SetProjectile();
 
 public:
 	template <typename T>

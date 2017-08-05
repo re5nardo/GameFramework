@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "BehaviorStart.h"
-#include "BehaviorStart_generated.h"
+#include "../../../FBSFiles/BehaviorStart_generated.h"
 
 namespace GameEvent
 {
