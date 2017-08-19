@@ -14,6 +14,7 @@
 #include "Skill\Skills\FireSkill.h"
 #include "State\States\Acceleration.h"
 #include "State\States\Shield.h"
+#include "State\States\FireBehavior.h"
 #include "Entity\Entities\Projectile\Projectile.h"
 
 Factory::Factory()
@@ -75,11 +76,15 @@ IState* Factory::CreateState(BaeGameRoom* pGameRoom, IEntity* pEntity, int nMast
 
 	if (Acceleration::NAME.compare(strClassName) == 0)
 	{
-		return new Acceleration(pEntity, nMasterDataID, lStartTime);
+		return new Acceleration(pGameRoom, pEntity, nMasterDataID, lStartTime);
 	}
 	else if (Shield::NAME.compare(strClassName) == 0)
 	{
-		return new Shield(pEntity, nMasterDataID, lStartTime);
+		return new Shield(pGameRoom, pEntity, nMasterDataID, lStartTime);
+	}
+	else if (FireBehavior::NAME.compare(strClassName) == 0)
+	{
+		return new FireBehavior(pGameRoom, pEntity, nMasterDataID, lStartTime);
 	}
 
 	return NULL;

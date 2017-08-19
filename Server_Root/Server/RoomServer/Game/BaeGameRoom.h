@@ -53,6 +53,7 @@ private:
 private:
 	map<int, IMessage*>		m_mapPlayerInput;		//	key : PlayerIndex, value : Input Message
 	map<int, int>			m_mapPlayerEntity;		//	key : PlayerIndex, value : EntityID
+	map<int, int>			m_mapEntityPlayer;		//	key : EntityID, value : PlayerIndex
 	map<int, IEntity*>		m_mapEntity;			//	key : EntityID, value : Entity
 
 private:
@@ -76,6 +77,9 @@ private:
 
 private:
 	list<IGameEvent*> m_listGameEvent;
+
+private:
+	list<int> m_listDestroyReserved;
 
 public:
 	void OnRecvMessage(unsigned int socket, IMessage* pMsg);
@@ -107,7 +111,13 @@ private:
 	void SetObstacles(int nMapID, int nRandomSeed);
 
 public:
-	bool TryMove(int nEntityID, btVector3& vec3Dest, btTransform& trHit);
+	bool CheckDiscreteCollisionDectection(int nEntityID, int nTypes, list<pair<int, btVector3>>* listHit);
+	bool CheckContinuousCollisionDectectionFirst(int nEntityID, btVector3& vec3Dest, int nTypes, pair<int, btVector3>* hit);
+	bool CheckContinuousCollisionDectection(int nEntityID, btVector3& vec3Dest, int nTypes, list<pair<int, btVector3>>* listHit);
+
+public:
+	bool IsChallenger(int nEntityID);
+	bool IsDisturber(int nEntityID);
 
 public:
 	void SetCollisionObjectPosition(int nEntityID, btVector3& vec3Position);
@@ -117,8 +127,9 @@ public:
 	void AddGameEvent(IGameEvent* pGameEvent);
 
 public:
-	bool CreateEntity(FBS::Data::EntityType type, int nMasterDataID, int* nEntityID, IEntity* pEntity);
+	bool CreateEntity(FBS::Data::EntityType type, int nMasterDataID, int* nEntityID, IEntity** pEntity);
 	void DestroyEntity(int nEntityID);
+	void TrimEntity();
 
 private:
 	void Loop();

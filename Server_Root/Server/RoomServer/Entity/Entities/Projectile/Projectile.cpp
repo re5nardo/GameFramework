@@ -2,7 +2,11 @@
 #include "Projectile.h"
 #include "../../../MasterData/MasterDataManager.h"
 #include "../../../MasterData/Projectile.h"
+#include "../../../MasterData/Behavior.h"
 #include "../../../Factory.h"
+#include "../../../Util.h"
+#include "../../../GameEvent/GameEvents/BehaviorEnd.h"
+#include "../../../Game/BaeGameRoom.h"
 
 Projectile::Projectile(BaeGameRoom* pGameRoom, int nID, int nMasterDataID) : IEntity(pGameRoom, nID, nMasterDataID)
 {
@@ -29,6 +33,7 @@ void Projectile::Initialize()
 			m_listBehavior.push_back(pBehavior);
 		}
 	}
+	Util::Parse(pMasterProjectile->m_strLifeInfo, ':', &m_vecLifeInfo);
 }
 
 float Projectile::GetMoveSpeed()
@@ -36,21 +41,28 @@ float Projectile::GetMoveSpeed()
 	return 1;
 }
 
-void Projectile::Update(long long lUpdateTime)
+FBS::Data::EntityType Projectile::GetEntityType()
 {
-	list<IState*> listState = GetStates();
-	for (list<IState*>::iterator it = listState.begin(); it != listState.end(); ++it)
-	{
-		IState* pState = *it;
-		if (pState != NULL)
-			pState->Update(lUpdateTime);
-	}
+	return FBS::Data::EntityType::EntityType_Projectile;
+}
 
-	list<IBehavior*> listBehavior = GetActivatedBehaviors();
-	for (list<IBehavior*>::iterator it = listBehavior.begin(); it != listBehavior.end(); ++it)
+void Projectile::NotifyGameEvent(IGameEvent* pGameEvent)
+{
+	if (m_vecLifeInfo[0] == "Arrival" && pGameEvent->GetType() == FBS::GameEventType::GameEventType_BehaviorEnd)
 	{
-		IBehavior* pBehavior = *it;
-		if (pBehavior != NULL)
-			pBehavior->Update(lUpdateTime);
+		GameEvent::BehaviorEnd* pBehaviorEnd = (GameEvent::BehaviorEnd*)pGameEvent;
+
+		MasterData::Behavior* pMasterBehavior = NULL;
+		MasterDataManager::Instance()->GetData<MasterData::Behavior>(pBehaviorEnd->m_nBehaviorID, pMasterBehavior);
+
+		if (pMasterBehavior->m_strClassName == "Move")
+		{
+			m_pGameRoom->DestroyEntity(m_nID);
+		}
 	}
+}
+
+int Projectile::GetCasterID()
+{
+	return m_nCasterID;
 }

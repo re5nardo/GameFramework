@@ -7,7 +7,7 @@
 
 const string Acceleration::NAME = "Acceleration";
 
-Acceleration::Acceleration(IEntity* pEntity, int nMasterDataID, long long lStartTime) : IState(pEntity, nMasterDataID, lStartTime)
+Acceleration::Acceleration(BaeGameRoom* pGameRoom, IEntity* pEntity, int nMasterDataID, long long lStartTime) : IState(pGameRoom, pEntity, nMasterDataID, lStartTime)
 {
 }
 

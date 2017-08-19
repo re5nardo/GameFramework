@@ -43,39 +43,37 @@ public class WorldInfoToC : IMessage
             {
                 listByte.Add((byte)gameEventData.GetData(j));
             }
-                
+
+            IGameEvent gameEvent = null;
             if (gameEventData.Type == FBS.GameEventType.BehaviorStart)
             {
-                GameEvent.BehaviorStart gameEvent = new GameEvent.BehaviorStart();
-                gameEvent.m_fEventTime = gameEventData.EventTime;
-                gameEvent.Deserialize(listByte.ToArray());
-
-                m_listGameEvent.Add(gameEvent);
+                gameEvent = new GameEvent.BehaviorStart();
             }
             else if (gameEventData.Type == FBS.GameEventType.BehaviorEnd)
             {
-                GameEvent.BehaviorEnd gameEvent = new GameEvent.BehaviorEnd();
-                gameEvent.m_fEventTime = gameEventData.EventTime;
-                gameEvent.Deserialize(listByte.ToArray());
-
-                m_listGameEvent.Add(gameEvent);
+                gameEvent = new GameEvent.BehaviorEnd();
             }
             else if (gameEventData.Type == FBS.GameEventType.Position)
             {
-                GameEvent.Position gameEvent = new GameEvent.Position();
-                gameEvent.m_fEventTime = gameEventData.EventTime;
-                gameEvent.Deserialize(listByte.ToArray());
-
-                m_listGameEvent.Add(gameEvent);
+                gameEvent = new GameEvent.Position();
             }
             else if (gameEventData.Type == FBS.GameEventType.Rotation)
             {
-                GameEvent.Rotation gameEvent = new GameEvent.Rotation();
-                gameEvent.m_fEventTime = gameEventData.EventTime;
-                gameEvent.Deserialize(listByte.ToArray());
-
-                m_listGameEvent.Add(gameEvent);
+                gameEvent = new GameEvent.Rotation();
             }
+            else if (gameEventData.Type == FBS.GameEventType.EntityCreate)
+            {
+                gameEvent = new GameEvent.EntityCreate();
+            }
+            else if (gameEventData.Type == FBS.GameEventType.EntityDestroy)
+            {
+                gameEvent = new GameEvent.EntityDestroy();
+            }
+
+            gameEvent.m_fEventTime = gameEventData.EventTime;
+            gameEvent.Deserialize(listByte.ToArray());
+
+            m_listGameEvent.Add(gameEvent);
         }
 
         return true;

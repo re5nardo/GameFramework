@@ -7,6 +7,7 @@
 #include "../../Factory.h"
 #include "../../Game/BaeGameRoom.h"
 #include "../../GameEvent/GameEvents/EntityCreate.h"
+#include "../../GameEvent/GameEvents/EntityDestroy.h"
 #include "../../Util.h"
 
 const string General::NAME = "General";
@@ -57,20 +58,22 @@ void General::UpdateBody(long long lUpdateTime)
 				for (vector<float>::iterator itDirection = vecDirection.begin(); itDirection != vecDirection.end(); ++itDirection)
 				{
 					int nEntityID = 0;
+					int nProjectileMasterDataID = atoi(it->m_vecParams[0].c_str());
 					IEntity* pEntity = NULL;
-					m_pGameRoom->CreateEntity(FBS::Data::EntityType_Projectile, m_nMasterDataID, &nEntityID, pEntity);
+					m_pGameRoom->CreateEntity(FBS::Data::EntityType_Projectile, nProjectileMasterDataID, &nEntityID, &pEntity);
 
 					GameEvent::EntityCreate* pEntityCreate = new GameEvent::EntityCreate();
+					pEntityCreate->m_fEventTime = lUpdateTime / 1000.0f;
 					pEntityCreate->m_nEntityID = nEntityID;
-					pEntityCreate->m_nMasterDataID = atoi(it->m_vecParams[1].c_str());
+					pEntityCreate->m_nMasterDataID = nProjectileMasterDataID;
 					pEntityCreate->m_EntityType = FBS::Data::EntityType_Projectile;
 					pEntityCreate->m_vec3Position = pEntity->GetPosition();
 
 					m_pGameRoom->AddGameEvent(pEntityCreate);
 
 					btVector3 vec3Dest = Util::GetAngledPosition(m_pEntity->GetPosition(), *itDirection, 10/*temp..*/);
-					pEntity->GetBehavior(BehaviorID::MOVE)->Start(m_lLastUpdateTime, &vec3Dest);
-					pEntity->GetBehavior(BehaviorID::MOVE)->Update(m_lLastUpdateTime);
+					pEntity->GetBehavior(BehaviorID::MOVE)->Start(lUpdateTime, &vec3Dest);
+					pEntity->GetBehavior(BehaviorID::MOVE)->Update(lUpdateTime);
 				}
 			}
 			else if (it->m_strID == "AddState")
@@ -81,6 +84,15 @@ void General::UpdateBody(long long lUpdateTime)
 				pState->Initialize();
 				m_pEntity->AddState(pState);
 				pState->Update(lUpdateTime);
+			}
+			else if (it->m_strID == "Destroy")
+			{
+				GameEvent::EntityDestroy* pEntityDestroy = new GameEvent::EntityDestroy();
+				pEntityDestroy->m_nEntityID = m_pEntity->GetID();
+
+				m_pGameRoom->AddGameEvent(pEntityDestroy);
+
+				return;
 			}
 		}
 	}

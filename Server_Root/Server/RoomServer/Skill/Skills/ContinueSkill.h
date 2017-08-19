@@ -19,7 +19,6 @@ public:
 private:
 	bool m_bContinue = false;
 	IBehavior* m_pTargetBehavior = NULL;
-	BaeGameRoom* m_pBaeGameRoom = NULL;
 
 private:
 	int		m_nTargetBehaviorID;

@@ -8,19 +8,19 @@
 class GameInputSkillToR : public IMessage
 {
 public:
-	GameInputSkillToR();
-	virtual ~GameInputSkillToR();
-
-public:
-	static const unsigned short MESSAGE_ID = GameInputSkillToR_ID;
-
-public:
 	enum InputType
 	{
 		Click = 0,
 		Press,
 		Release,
 	};
+
+public:
+	GameInputSkillToR();
+	virtual ~GameInputSkillToR();
+
+public:
+	static const unsigned short MESSAGE_ID = GameInputSkillToR_ID;
 
 public:
 	int m_nPlayerIndex;

@@ -1,17 +1,22 @@
 #pragma once
 
+class BaeGameRoom;
 class IEntity;
 
 class IState
 {
 public:
-	IState(IEntity* pEntity, int nMasterDataID, long long lStartTime);
+	IState(BaeGameRoom* pGameRoom, IEntity* pEntity, int nMasterDataID, long long lStartTime);
 	virtual ~IState();
 
 protected:
 	int m_nMasterDataID = -1;
 
 protected:
+	float m_fLength;
+
+protected:
+	BaeGameRoom* m_pGameRoom;
 	IEntity* m_pEntity;
 
 protected:

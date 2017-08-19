@@ -24,7 +24,11 @@ public:
 public:
 	void Initialize() override;
 	float GetMoveSpeed() override;
-	void Update(long long lUpdateTime) override;
+	FBS::Data::EntityType GetEntityType() override;
+	void NotifyGameEvent(IGameEvent* pGameEvent) override;
+
+public:
+	void UpdateSkills(long long lUpdateTime);
 
 public:
 	ISkill* GetSkill(int nID);

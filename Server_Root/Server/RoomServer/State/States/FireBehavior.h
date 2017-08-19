@@ -6,17 +6,20 @@
 
 using namespace std;
 
-class Shield : public IState
+class FireBehavior : public IState
 {
 public:
-	Shield(BaeGameRoom* pGameRoom, IEntity* pEntity, int nMasterDataID, long long lStartTime);
-	virtual ~Shield();
+	FireBehavior(BaeGameRoom* pGameRoom, IEntity* pEntity, int nMasterDataID, long long lStartTime);
+	virtual ~FireBehavior();
 
 public:
 	static const string NAME;
 
 public:
-	static const unsigned short STATE_ID = StateID::Shield;
+	static const unsigned short STATE_ID = StateID::FireBehavior;
+
+private:
+	int m_nTargetBehaviorID;
 
 public:
 	int GetID() override;

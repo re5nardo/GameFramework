@@ -6,7 +6,7 @@
 
 const string Shield::NAME = "Shield";
 
-Shield::Shield(IEntity* pEntity, int nMasterDataID, long long lStartTime) : IState(pEntity, nMasterDataID, lStartTime)
+Shield::Shield(BaeGameRoom* pGameRoom, IEntity* pEntity, int nMasterDataID, long long lStartTime) : IState(pGameRoom, pEntity, nMasterDataID, lStartTime)
 {
 }
 

@@ -5,7 +5,6 @@
 #include "../../Util.h"
 #include "../../Game/BaeGameRoom.h"
 #include "btBulletCollisionCommon.h"
-#include "../../GameEvent/GameEvents/BehaviorEnd.h"
 #include "../../GameEvent/GameEvents/Position.h"
 #include "../../GameEvent/GameEvents/Rotation.h"
 #include "../BehaviorIDs.h"
@@ -30,7 +29,7 @@ void Move::Start(long long lStartTime, ...)
 	m_vec3Dest = *pVec3Dest;
 	va_end(ap);
 
-	if (m_pEntity->GetBehavior(BehaviorID::IDLE)->IsActivated())
+	if (m_pEntity->GetBehavior(BehaviorID::IDLE) != NULL && m_pEntity->GetBehavior(BehaviorID::IDLE)->IsActivated())
 		m_pEntity->GetBehavior(BehaviorID::IDLE)->Stop(lStartTime);
 }
 
@@ -68,7 +67,7 @@ void Move::UpdateBody(long long lUpdateTime)
 			vec3Rotation.setY(vec3Rotation.y() + 360);
 	}
 
-	float RotationTime = 0.1f;
+	float RotationTime = 0.05f;
 	float fCurrent_Y = Util::Lerp(vec3Rotation.y(), fTargetRotation_Y, m_fDeltaTime / RotationTime);
 	if (fCurrent_Y >= 360) fCurrent_Y -= 360;
 	m_pEntity->SetRotation(btVector3(vec3Rotation.x(), fCurrent_Y, vec3Rotation.z()));
@@ -88,43 +87,101 @@ void Move::UpdateBody(long long lUpdateTime)
 	float fExpectedTime = sqrt(powf(m_vec3Dest.x() - vec3Pos.x(), 2.0f) /*+ powf(m_vec3Dest.y - vec3Pos.y, 2.0f)*/ + powf(m_vec3Dest.z() - vec3Pos.z(), 2.0f)) / m_pEntity->GetMoveSpeed();
 
 	btVector3 current = Util::Lerp(vec3Pos, m_vec3Dest, m_fDeltaTime / fExpectedTime);
-	btTransform trHit;
 
-	if (m_pGameRoom->TryMove(m_pEntity->GetID(), current, trHit))
+	bool bChallenger = m_pEntity->GetEntityType() == FBS::Data::EntityType::EntityType_Character && m_pGameRoom->IsChallenger(m_pEntity->GetID());
+	int nTerrainTypes = bChallenger ? CollisionObject::Type::CollisionObjectType_Terrain : CollisionObject::Type::CollisionObjectType_None;
+
+	//	Check terrain first
+	pair<int, btVector3> hitTerrain;
+	if (m_pGameRoom->CheckContinuousCollisionDectectionFirst(m_pEntity->GetID(), current, nTerrainTypes, &hitTerrain))
 	{
-		m_pEntity->SetPosition(current);
-		m_pGameRoom->SetCollisionObjectPosition(m_pEntity->GetID(), current);
-
-		GameEvent::Position* pPosition = new GameEvent::Position();
-		pPosition->m_fEventTime = m_lLastUpdateTime / 1000.0f;
-		pPosition->m_nEntityID = m_pEntity->GetID();
-		pPosition->m_fStartTime = m_lLastUpdateTime / 1000.0f;
-		pPosition->m_fEndTime = lUpdateTime / 1000.0f;
-		pPosition->m_vec3StartPosition = vec3Pos;
-		pPosition->m_vec3EndPosition = current;
-
-		m_pGameRoom->AddGameEvent(pPosition);
-
-		if (m_fDeltaTime >= fExpectedTime)
+		//	Check collision second
+		int nCollistionTypes = bChallenger ? CollisionObject::Type::CollisionObjectType_Projectile : CollisionObject::Type::CollisionObjectType_None;
+		pair<int, btVector3> hitCollision;
+		if (m_pGameRoom->CheckContinuousCollisionDectectionFirst(m_pEntity->GetID(), hitTerrain.second, nCollistionTypes, &hitCollision))
 		{
-			Stop(lUpdateTime - (m_fDeltaTime - fExpectedTime) * 1000);
+			m_pEntity->SetPosition(hitCollision.second);
+			m_pGameRoom->SetCollisionObjectPosition(m_pEntity->GetID(), hitCollision.second);
+
+			GameEvent::Position* pPosition = new GameEvent::Position();
+			pPosition->m_fEventTime = m_lLastUpdateTime / 1000.0f;
+			pPosition->m_nEntityID = m_pEntity->GetID();
+			pPosition->m_fStartTime = m_lLastUpdateTime / 1000.0f;
+			pPosition->m_fEndTime = lUpdateTime / 1000.0f;
+			pPosition->m_vec3StartPosition = vec3Pos;
+			pPosition->m_vec3EndPosition = hitCollision.second;
+
+			m_pGameRoom->AddGameEvent(pPosition);
+
+			Stop(lUpdateTime);
+
+			//	Add Collision Event
+			//	...
+			//	...
+		}
+		else
+		{
+			m_pEntity->SetPosition(hitTerrain.second);
+			m_pGameRoom->SetCollisionObjectPosition(m_pEntity->GetID(), hitTerrain.second);
+
+			GameEvent::Position* pPosition = new GameEvent::Position();
+			pPosition->m_fEventTime = m_lLastUpdateTime / 1000.0f;
+			pPosition->m_nEntityID = m_pEntity->GetID();
+			pPosition->m_fStartTime = m_lLastUpdateTime / 1000.0f;
+			pPosition->m_fEndTime = lUpdateTime / 1000.0f;
+			pPosition->m_vec3StartPosition = vec3Pos;
+			pPosition->m_vec3EndPosition = hitTerrain.second;
+
+			m_pGameRoom->AddGameEvent(pPosition);
+
+			Stop(lUpdateTime);
 		}
 	}
 	else
 	{
-		m_pEntity->SetPosition(trHit.getOrigin());
-		m_pGameRoom->SetCollisionObjectPosition(m_pEntity->GetID(), trHit.getOrigin());
+		//	Check collision second
+		int nCollistionTypes = bChallenger ? CollisionObject::Type::CollisionObjectType_Projectile : CollisionObject::Type::CollisionObjectType_None;
+		pair<int, btVector3> hitCollision;
+		if (m_pGameRoom->CheckContinuousCollisionDectectionFirst(m_pEntity->GetID(), hitTerrain.second, nCollistionTypes, &hitCollision))
+		{
+			m_pEntity->SetPosition(hitCollision.second);
+			m_pGameRoom->SetCollisionObjectPosition(m_pEntity->GetID(), hitCollision.second);
 
-		GameEvent::Position* pPosition = new GameEvent::Position();
-		pPosition->m_fEventTime = m_lLastUpdateTime / 1000.0f;
-		pPosition->m_nEntityID = m_pEntity->GetID();
-		pPosition->m_fStartTime = m_lLastUpdateTime / 1000.0f;
-		pPosition->m_fEndTime = lUpdateTime / 1000.0f;
-		pPosition->m_vec3StartPosition = vec3Pos;
-		pPosition->m_vec3EndPosition = trHit.getOrigin();
+			GameEvent::Position* pPosition = new GameEvent::Position();
+			pPosition->m_fEventTime = m_lLastUpdateTime / 1000.0f;
+			pPosition->m_nEntityID = m_pEntity->GetID();
+			pPosition->m_fStartTime = m_lLastUpdateTime / 1000.0f;
+			pPosition->m_fEndTime = lUpdateTime / 1000.0f;
+			pPosition->m_vec3StartPosition = vec3Pos;
+			pPosition->m_vec3EndPosition = hitCollision.second;
 
-		m_pGameRoom->AddGameEvent(pPosition);
+			m_pGameRoom->AddGameEvent(pPosition);
 
-		Stop(lUpdateTime);
+			Stop(lUpdateTime);
+
+			//	Add Collision Event
+			//	...
+			//	...
+		}
+		else
+		{
+			m_pEntity->SetPosition(current);
+			m_pGameRoom->SetCollisionObjectPosition(m_pEntity->GetID(), current);
+
+			GameEvent::Position* pPosition = new GameEvent::Position();
+			pPosition->m_fEventTime = m_lLastUpdateTime / 1000.0f;
+			pPosition->m_nEntityID = m_pEntity->GetID();
+			pPosition->m_fStartTime = m_lLastUpdateTime / 1000.0f;
+			pPosition->m_fEndTime = lUpdateTime / 1000.0f;
+			pPosition->m_vec3StartPosition = vec3Pos;
+			pPosition->m_vec3EndPosition = current;
+
+			m_pGameRoom->AddGameEvent(pPosition);
+
+			if (m_fDeltaTime >= fExpectedTime)
+			{
+				Stop(lUpdateTime - (m_fDeltaTime - fExpectedTime) * 1000);
+			}
+		}
 	}
 }

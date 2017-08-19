@@ -26,5 +26,6 @@ namespace MasterData
 			Util::Parse(pSheet->readStr(nRow, 3), ',', &m_vecBehaviorID);
 		}
 		m_fSize = pSheet->readNum(nRow, 4);
+		m_strLifeInfo = pSheet->cellType(nRow, 6) == CellType::CELLTYPE_STRING ? pSheet->readStr(nRow, 6) : "";
 	}
 }

@@ -23,6 +23,34 @@ IEntity::~IEntity()
 	m_listState.clear();
 }
 
+void IEntity::UpdateBehaviors(long long lUpdateTime)
+{
+	list<IBehavior*> listBehavior = GetActivatedBehaviors();
+	for (list<IBehavior*>::iterator it = listBehavior.begin(); it != listBehavior.end(); ++it)
+	{
+		IBehavior* pBehavior = *it;
+		if (pBehavior != NULL)
+			pBehavior->Update(lUpdateTime);
+
+		if (m_bDestroyReserved)
+			break;
+	}
+}
+
+void IEntity::UpdateStates(long long lUpdateTime)
+{
+	list<IState*> listState = GetStates();
+	for (list<IState*>::iterator it = listState.begin(); it != listState.end(); ++it)
+	{
+		IState* pState = *it;
+		if (pState != NULL)
+			pState->Update(lUpdateTime);
+
+		if (m_bDestroyReserved)
+			break;
+	}
+}
+
 int IEntity::GetID()
 {
 	return m_nID;

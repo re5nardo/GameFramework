@@ -35,7 +35,7 @@ void ContinueSkill::Start(long long lStartTime, ...)
 
 	va_list ap;
 	va_start(ap, lStartTime);
-	m_pBaeGameRoom = va_arg(ap, BaeGameRoom*);
+	m_pGameRoom = va_arg(ap, BaeGameRoom*);
 	va_end(ap);
 
 	m_bContinue = true;
@@ -57,7 +57,7 @@ void ContinueSkill::UpdateBody(long long lUpdateTime)
 	if (m_fCurrentTime == 0)
 	{
 		m_pTargetBehavior = m_pEntity->GetBehavior(m_nTargetBehaviorID);
-		m_pTargetBehavior->Start(lUpdateTime, m_pBaeGameRoom);
+		m_pTargetBehavior->Start(lUpdateTime, m_pGameRoom);
 		m_pTargetBehavior->Update(lUpdateTime);
 	}
 	else

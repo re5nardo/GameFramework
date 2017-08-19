@@ -11,7 +11,7 @@ using namespace std;
 class Acceleration : public IState
 {
 public:
-	Acceleration(IEntity* pEntity, int nMasterDataID, long long lStartTime);
+	Acceleration(BaeGameRoom* pGameRoom, IEntity* pEntity, int nMasterDataID, long long lStartTime);
 	virtual ~Acceleration();
 
 public:
@@ -21,7 +21,6 @@ public:
 	static const unsigned short STATE_ID = StateID::Acceleration;
 
 private:
-	float m_fLength;
 	vector<pair<float, float>> m_vecEvent;
 
 public:

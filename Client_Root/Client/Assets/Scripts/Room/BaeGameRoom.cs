@@ -114,7 +114,7 @@ public class BaeGameRoom : IGameRoom
                     }
                     else if (m_fElapsedTime < iGameEvent.m_fEventTime)
                     {
-                        return;
+                        continue;
                     }
                     else if (m_ProcessedGameEvent.Contains(iGameEvent))
                     {
@@ -162,6 +162,14 @@ public class BaeGameRoom : IGameRoom
             Entity entity = Factory.Instance.CreateEntity(gameEvent.m_EntityType, gameEvent.m_nEntityID, gameEvent.m_nMasterDataID);
 
             m_dicEntity[gameEvent.m_nEntityID] = entity;
+        }
+        else if (iGameEvent.GetEventType() == FBS.GameEventType.EntityDestroy)
+        {
+            GameEvent.EntityDestroy gameEvent = (GameEvent.EntityDestroy)iGameEvent;
+
+            m_dicEntity[gameEvent.m_nEntityID].Destroy();
+
+            m_dicEntity.Remove(gameEvent.m_nEntityID);
         }
 
         m_ProcessedGameEvent.Add(iGameEvent);
@@ -304,6 +312,23 @@ public class BaeGameRoom : IGameRoom
             
             m_dicGameEvent[nSec].Add(iGameEvent);
         }
+
+//        foreach(KeyValuePair<int, List<IGameEvent>> kv in m_dicGameEvent)
+//        {
+//            float prevMax = 0;
+//            foreach(IGameEvent iGameEvent in kv.Value)
+//            {
+//                if (prevMax > iGameEvent.m_fEventTime)
+//                {
+//                    Debug.LogError("Order of GameEvents is wrong! It must be ascending!");
+//                    return;
+//                }
+//                else
+//                {
+//                    prevMax = iGameEvent.m_fEventTime;
+//                }
+//            }
+//        }
     }
 #endregion
 

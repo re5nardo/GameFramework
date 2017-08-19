@@ -18,6 +18,9 @@
 #include <cstdlib>
 #include "../Entity/IEntity.h"
 #include "../Entity/Entities/Projectile/Projectile.h"
+#include "../GameEvent/GameEvents/EntityCreate.h"
+#include "../GameEvent/GameEvents/EntityDestroy.h"
+#include "../../FBSFiles/FBSData_generated.h"
 
 BaeGameRoom::BaeGameRoom(int nMatchID, vector<string> vecMatchedPlayerKey)	//	Receive Game Info from Lobby
 {
@@ -126,20 +129,40 @@ void BaeGameRoom::ProcessInput()
 
 void BaeGameRoom::Update()
 {
+	//	Skills
+	TrimEntity();
 	for (map<int, IEntity*>::iterator it = m_mapEntity.begin(); it != m_mapEntity.end(); ++it)
 	{
-		IEntity* pEntity = it->second;
-		pEntity->Update(m_lLastUpdateTime);
+		if (it->second->GetEntityType() == FBS::Data::EntityType::EntityType_Character)
+		{
+			((Character*)it->second)->UpdateSkills(m_lLastUpdateTime);
+		}
+	}
+
+	//	States
+	TrimEntity();
+	for (map<int, IEntity*>::iterator it = m_mapEntity.begin(); it != m_mapEntity.end(); ++it)
+	{
+		it->second->UpdateStates(m_lLastUpdateTime);
+	}
+
+	//	Behaviors
+	TrimEntity();
+	for (map<int, IEntity*>::iterator it = m_mapEntity.begin(); it != m_mapEntity.end(); ++it)
+	{
+		it->second->UpdateBehaviors(m_lLastUpdateTime);
 	}
 }
 
 void BaeGameRoom::LateUpdate()
 {
+	TrimEntity();
+
 	for (map<int, IEntity*>::iterator it = m_mapEntity.begin(); it != m_mapEntity.end(); ++it)
 	{
 		IEntity* pEntity = it->second;
 
-		if (!pEntity->IsBehavioring())
+		if (!pEntity->IsBehavioring() && pEntity->GetBehavior(BehaviorID::IDLE) != NULL)
 		{
 			pEntity->GetBehavior(BehaviorID::IDLE)->Start(m_lLastUpdateTime);
 		}
@@ -225,6 +248,7 @@ void BaeGameRoom::Reset()
 	m_CollisionManager.Reset();
 	m_mapEntityCollision.clear();
 	m_mapPlayerEntity.clear();
+	m_mapEntityPlayer.clear();
 }
 
 void BaeGameRoom::LoadMap(int nID)
@@ -297,16 +321,35 @@ void BaeGameRoom::SetObstacles(int nMapID, int nRandomSeed)
 	}
 }
 
-bool BaeGameRoom::TryMove(int nEntityID, btVector3& vec3Dest, btTransform& trHit)
+bool BaeGameRoom::CheckDiscreteCollisionDectection(int nEntityID, int nTypes, list<pair<int, btVector3>>* listHit)
 {
 	int nCollisionObjectID = m_mapEntityCollision[nEntityID];
 
-	if (m_CollisionManager.ContinuousCollisionDectection(nCollisionObjectID, vec3Dest, &trHit))
-	{
-		return false;
-	}
+	return m_CollisionManager.DiscreteCollisionDectection(nCollisionObjectID, nTypes, listHit);
+}
 
-	return true;
+bool BaeGameRoom::CheckContinuousCollisionDectectionFirst(int nEntityID, btVector3& vec3Dest, int nTypes, pair<int, btVector3>* hit)
+{
+	int nCollisionObjectID = m_mapEntityCollision[nEntityID];
+
+	return m_CollisionManager.ContinuousCollisionDectectionFirst(nCollisionObjectID, vec3Dest, nTypes, hit);
+}
+
+bool BaeGameRoom::CheckContinuousCollisionDectection(int nEntityID, btVector3& vec3Dest, int nTypes, list<pair<int, btVector3>>* listHit)
+{
+	int nCollisionObjectID = m_mapEntityCollision[nEntityID];
+
+	return m_CollisionManager.ContinuousCollisionDectection(nCollisionObjectID, vec3Dest, nTypes, listHit);
+}
+
+bool BaeGameRoom::IsChallenger(int nEntityID)
+{
+	return m_mapEntityPlayer.count(nEntityID) > 0;
+}
+
+bool BaeGameRoom::IsDisturber(int nEntityID)
+{
+	return false;
 }
 
 void BaeGameRoom::SetCollisionObjectPosition(int nEntityID, btVector3& vec3Position)
@@ -328,7 +371,7 @@ void BaeGameRoom::AddGameEvent(IGameEvent* pGameEvent)
 	m_listGameEvent.push_back(pGameEvent);
 }
 
-bool BaeGameRoom::CreateEntity(FBS::Data::EntityType type, int nMasterDataID, int* pEntityID, IEntity* pEntity)
+bool BaeGameRoom::CreateEntity(FBS::Data::EntityType type, int nMasterDataID, int* pEntityID, IEntity** pEntity)
 {
 	m_LockEntitySequence.lock();
 	int nEntityID = m_nEntitySequence++;
@@ -347,22 +390,51 @@ bool BaeGameRoom::CreateEntity(FBS::Data::EntityType type, int nMasterDataID, in
 	m_mapEntity[nEntityID] = entity;
 
 	//	collision
-	int nCollisionObjectID = m_CollisionManager.AddCharacter(entity->GetPosition(), 1);
+	int nCollisionObjectID = 0;
+	if (type == FBS::Data::EntityType::EntityType_Character)
+	{
+		nCollisionObjectID = m_CollisionManager.AddCharacter(entity->GetPosition(), 0.5f);
+	}
+	else if (type == FBS::Data::EntityType::EntityType_Projectile)
+	{
+		nCollisionObjectID = m_CollisionManager.AddProjectile(entity->GetPosition(), 0.5f);
+	}
 	m_mapEntityCollision[nEntityID] = nCollisionObjectID;
 
-	*pEntityID = nEntityID;
-	pEntity = entity;
+	if (pEntityID != NULL)
+		*pEntityID = nEntityID;
+
+	if (pEntity != NULL)
+		*pEntity = entity;
 
 	return true;
 }
 
 void BaeGameRoom::DestroyEntity(int nEntityID)
 {
-	delete m_mapEntity[nEntityID];
-	m_mapEntity.erase(nEntityID);
+	GameEvent::EntityDestroy* pEntityDestroy = new GameEvent::EntityDestroy();
+	pEntityDestroy->m_fEventTime = m_lLastUpdateTime / 1000.0f;
+	pEntityDestroy->m_nEntityID = nEntityID;
 
-	int nCollisionObjectID = m_mapEntityCollision[nEntityID];
-	m_CollisionManager.RemoveCollisionObject(nCollisionObjectID);
+	AddGameEvent(pEntityDestroy);
+
+	m_mapEntity[nEntityID]->m_bDestroyReserved = true;
+	m_listDestroyReserved.push_back(nEntityID);
+}
+
+void BaeGameRoom::TrimEntity()
+{
+	for (list<int>::iterator it = m_listDestroyReserved.begin(); it != m_listDestroyReserved.end(); ++it)
+	{
+		int nEntityID = *it;
+
+		delete m_mapEntity[nEntityID];
+		m_mapEntity.erase(nEntityID);
+
+		int nCollisionObjectID = m_mapEntityCollision[nEntityID];
+		m_CollisionManager.RemoveCollisionObject(nCollisionObjectID);
+	}
+	m_listDestroyReserved.clear();
 }
 
 void BaeGameRoom::SendToAllUsers(IMessage* pMsg, string strExclusionKey, bool bDelete)
@@ -432,9 +504,9 @@ void BaeGameRoom::OnEnterRoomToR(EnterRoomToR* pMsg, unsigned int socket)
 
 		//	Temp..0 is MisterBae
 		int nEntityID = 0;
-		IEntity* pEntity = NULL;
-		CreateEntity(FBS::Data::EntityType::EntityType_Character, 0, &nEntityID, pEntity);
+		CreateEntity(FBS::Data::EntityType::EntityType_Character, 0, &nEntityID, NULL);
 		m_mapPlayerEntity[nPlayerIndex] = nEntityID;
+		m_mapEntityPlayer[nEntityID] = nPlayerIndex;
 
 		enterRoomToC->m_nResult = 0;
 		enterRoomToC->m_nPlayerIndex = nPlayerIndex;

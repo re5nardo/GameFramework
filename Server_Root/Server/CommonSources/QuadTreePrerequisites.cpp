@@ -3,7 +3,7 @@
 
 bool AABB::ContainsPoint(XY point)
 {
-	if (center.x - halfDimension > point.x || center.x + halfDimension < point.x || center.y - halfDimension > point.y || center.y + halfDimension < point.y)
+	if (center.x - halfDimension_x > point.x || center.x + halfDimension_x < point.x || center.y - halfDimension_y > point.y || center.y + halfDimension_y < point.y)
 	{
 		return false;
 	}
@@ -14,8 +14,8 @@ bool AABB::ContainsPoint(XY point)
 
 bool AABB::IntersectsAABB(AABB other)
 {
-	if (center.x - halfDimension > other.center.x + other.halfDimension || center.x + halfDimension < other.center.x - other.halfDimension
-		|| center.y - halfDimension > other.center.y + other.halfDimension || center.y + halfDimension < other.center.y - other.halfDimension)
+	if (center.x - halfDimension_x > other.center.x + other.halfDimension_x || center.x + halfDimension_x < other.center.x - other.halfDimension_x
+		|| center.y - halfDimension_y > other.center.y + other.halfDimension_y || center.y + halfDimension_y < other.center.y - other.halfDimension_y)
 	{
 		return false;
 	}

@@ -146,33 +146,6 @@ public:
 		return btVector3(atof(output[0].c_str()), atof(output[1].c_str()), atof(output[2].c_str()));
 	}
 
-	static bool IsIntersect(AABB aabb, btCollisionObject* collisionObject)
-	{
-		btTransform t;
-		btVector3 min, max;
-		collisionObject->getRootCollisionShape()->getAabb(t, min, max);
-		btVector3 origin = t.getOrigin();
-
-		if (aabb.center.x - aabb.halfDimension < origin.x() + min.x())
-		{
-			return false;
-		}
-		else if (aabb.center.x + aabb.halfDimension > origin.x() + max.x())
-		{
-			return false;
-		}
-		else if (aabb.center.y - aabb.halfDimension < origin.z() + min.z())
-		{
-			return false;
-		}
-		else if (aabb.center.y + aabb.halfDimension > origin.z() + max.z())
-		{
-			return false;
-		}
-
-		return true;
-	}
-
 	static float GetAngle_Y(btVector3& vec3Target)
 	{
 		btVector3 criteria(0, 0, 1);
@@ -195,5 +168,15 @@ public:
 		float z = sin(fRadian) * fLength;
 
 		return btVector3(vec3Origin.x() + x, 0, vec3Origin.z() + z);
+	}
+
+	static btScalar GetDistance(btVector3& vec3One, btVector3& vec3Two)
+	{
+		return vec3One.distance(vec3Two);
+	}
+
+	static btScalar GetDistance2(btVector3& vec3One, btVector3& vec3Two)
+	{
+		return vec3One.distance2(vec3Two);
 	}
 };

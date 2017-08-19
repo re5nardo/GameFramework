@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../../CommonSources/QuadTreePrerequisites.h"
-#include "btBulletCollisionCommon.h"
+#include "CollisionObject.h"
 
 using namespace std;
 
@@ -12,6 +12,6 @@ public:
 	virtual ~TerrainObjectInsertChecker();
 
 public:
-	bool IsValidate(AABB boundary, btCollisionObject* collisionObject);
-	bool IsMine(AABB boundary, btCollisionObject* collisionObject);
+	bool IsValidate(AABB boundary, CollisionObject* pCollisionObject);
+	bool IsMine(AABB boundary, CollisionObject* pCollisionObject);
 };

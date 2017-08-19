@@ -213,4 +213,10 @@ public class Entity : MonoBehaviour
     {
         m_EntityUI.Sample(dicBehavior);
     }
+
+    public void Destroy()
+    {
+        Destroy(gameObject);
+        Destroy(m_EntityUI.gameObject);
+    }
 }

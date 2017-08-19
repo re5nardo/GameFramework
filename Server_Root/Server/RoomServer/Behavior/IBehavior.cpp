@@ -84,4 +84,6 @@ void IBehavior::Stop(long long lTime)
 	pBehaviorEnd->m_nBehaviorID = m_nMasterDataID;
 
 	m_pGameRoom->AddGameEvent(pBehaviorEnd);
+
+	m_pEntity->NotifyGameEvent(pBehaviorEnd);
 }

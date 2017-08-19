@@ -5,8 +5,10 @@
 #include "../State/IState.h"
 #include "../Skill/ISkill.h"
 #include "btBulletCollisionCommon.h"
+#include "../../FBSFiles/FBSData_generated.h"
 
 class BaeGameRoom;
+class IGameEvent;
 
 using namespace std;
 
@@ -32,9 +34,16 @@ protected:
 	list<IState*> m_listState;
 
 public:
+	bool m_bDestroyReserved = false;
+
+public:
 	virtual void Initialize() = 0;
 	virtual float GetMoveSpeed() = 0;
-	virtual void Update(long long lUpdateTime) = 0;
+	virtual FBS::Data::EntityType GetEntityType() = 0;
+
+public:
+	void UpdateBehaviors(long long lUpdateTime);
+	void UpdateStates(long long lUpdateTime);
 
 public:
 	int GetID();
@@ -57,4 +66,7 @@ public:
 	list<IState*> GetStates();
 	void AddState(IState* pState);
 	void RemoveState(int nID);
+
+public:
+	virtual void NotifyGameEvent(IGameEvent* pGameEvent) = 0;
 };

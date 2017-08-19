@@ -114,6 +114,7 @@
     <ClInclude Include="GameEvent\GameEvents\BehaviorEnd.h" />
     <ClInclude Include="GameEvent\GameEvents\BehaviorStart.h" />
     <ClInclude Include="GameEvent\GameEvents\EntityCreate.h" />
+    <ClInclude Include="GameEvent\GameEvents\EntityDestroy.h" />
     <ClInclude Include="GameEvent\GameEvents\Position.h" />
     <ClInclude Include="GameEvent\GameEvents\Rotation.h" />
     <ClInclude Include="GameEvent\GameEvents\StateEnd.h" />
@@ -121,6 +122,7 @@
     <ClInclude Include="GameEvent\IGameEvent.h" />
     <ClInclude Include="Game\BaeGameRoom.h" />
     <ClInclude Include="Game\CollisionManager.h" />
+    <ClInclude Include="Game\CollisionObject.h" />
     <ClInclude Include="Game\TerrainObjectInsertChecker.h" />
     <ClInclude Include="MasterData\Behavior.h" />
     <ClInclude Include="MasterData\Character.h" />
@@ -150,6 +152,7 @@
     <ClInclude Include="State\IState.h" />
     <ClInclude Include="State\StateIDs.h" />
     <ClInclude Include="State\States\Acceleration.h" />
+    <ClInclude Include="State\States\FireBehavior.h" />
     <ClInclude Include="State\States\Shield.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
@@ -176,6 +179,7 @@
     <ClCompile Include="GameEvent\GameEvents\BehaviorEnd.cpp" />
     <ClCompile Include="GameEvent\GameEvents\BehaviorStart.cpp" />
     <ClCompile Include="GameEvent\GameEvents\EntityCreate.cpp" />
+    <ClCompile Include="GameEvent\GameEvents\EntityDestroy.cpp" />
     <ClCompile Include="GameEvent\GameEvents\Position.cpp" />
     <ClCompile Include="GameEvent\GameEvents\Rotation.cpp" />
     <ClCompile Include="GameEvent\GameEvents\StateEnd.cpp" />
@@ -183,6 +187,7 @@
     <ClCompile Include="GameEvent\IGameEvent.cpp" />
     <ClCompile Include="Game\BaeGameRoom.cpp" />
     <ClCompile Include="Game\CollisionManager.cpp" />
+    <ClCompile Include="Game\CollisionObject.cpp" />
     <ClCompile Include="Game\TerrainObjectInsertChecker.cpp" />
     <ClCompile Include="MasterData\Behavior.cpp" />
     <ClCompile Include="MasterData\Character.cpp" />
@@ -211,6 +216,7 @@
     <ClCompile Include="Skill\Skills\FireSkill.cpp" />
     <ClCompile Include="State\IState.cpp" />
     <ClCompile Include="State\States\Acceleration.cpp" />
+    <ClCompile Include="State\States\FireBehavior.cpp" />
     <ClCompile Include="State\States\Shield.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

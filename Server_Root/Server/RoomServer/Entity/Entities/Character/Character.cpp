@@ -53,7 +53,16 @@ float Character::GetMoveSpeed()
 	return m_CurrentStat.m_fMoveSpeed * (fMoveSpeedPercent / 100);
 }
 
-void Character::Update(long long lUpdateTime)
+FBS::Data::EntityType Character::GetEntityType()
+{
+	return FBS::Data::EntityType::EntityType_Character;
+}
+
+void Character::NotifyGameEvent(IGameEvent* pGameEvent)
+{
+}
+
+void Character::UpdateSkills(long long lUpdateTime)
 {
 	list<ISkill*> listSkill = GetActivatedSkills();
 	for (list<ISkill*>::iterator it = listSkill.begin(); it != listSkill.end(); ++it)
@@ -61,22 +70,9 @@ void Character::Update(long long lUpdateTime)
 		ISkill* pSkill = *it;
 		if (pSkill != NULL)
 			pSkill->Update(lUpdateTime);
-	}
 
-	list<IState*> listState = GetStates();
-	for (list<IState*>::iterator it = listState.begin(); it != listState.end(); ++it)
-	{
-		IState* pState = *it;
-		if (pState != NULL)
-			pState->Update(lUpdateTime);
-	}
-
-	list<IBehavior*> listBehavior = GetActivatedBehaviors();
-	for (list<IBehavior*>::iterator it = listBehavior.begin(); it != listBehavior.end(); ++it)
-	{
-		IBehavior* pBehavior = *it;
-		if (pBehavior != NULL)
-			pBehavior->Update(lUpdateTime);
+		if (m_bDestroyReserved)
+			break;
 	}
 }
 

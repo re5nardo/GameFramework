@@ -2,8 +2,9 @@
 #include "IState.h"
 #include "../Entity/IEntity.h"
 
-IState::IState(IEntity* pEntity, int nMasterDataID, long long lStartTime)
+IState::IState(BaeGameRoom* pGameRoom, IEntity* pEntity, int nMasterDataID, long long lStartTime)
 {
+	m_pGameRoom = pGameRoom;
 	m_pEntity = pEntity;
 	m_nMasterDataID = nMasterDataID;
 	m_lStartTime = lStartTime;

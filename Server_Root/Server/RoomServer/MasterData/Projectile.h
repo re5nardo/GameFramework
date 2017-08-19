@@ -19,6 +19,7 @@ namespace MasterData
 		string m_strClassName;
 		vector<int> m_vecBehaviorID;
 		float m_fSize;
+		string m_strLifeInfo;
 
 	public:
 		void SetData(Sheet* pSheet, int nRow) override;
