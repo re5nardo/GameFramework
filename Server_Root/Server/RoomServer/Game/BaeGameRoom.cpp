@@ -6,7 +6,7 @@
 //#include "RoomMessageHeader.h"
 #include <process.h>
 #include "../Entity/Entities/Character/Character.h"
-#include "../Entity/Entities/Character/CharacterAI.h"
+#include "../AI/CharacterAI/CharacterAIs/Flower1AI.h"
 #include "../Messages/ToClient/WorldSnapShotToC.h"
 #include "../Messages/ToClient/WorldInfoToC.h"
 #include "../Behavior/BehaviorIDs.h"
@@ -18,7 +18,6 @@
 #include <cstdlib>
 #include "../Entity/IEntity.h"
 #include "../Entity/Entities/Projectile/Projectile.h"
-#include "../GameEvent/GameEvents/EntityCreate.h"
 #include "../GameEvent/GameEvents/EntityDestroy.h"
 #include "../../FBSFiles/FBSData_generated.h"
 
@@ -91,20 +90,35 @@ void BaeGameRoom::ProcessInput()
 {
 	m_LockPlayerInput.lock();
 
-	for (map<int, IMessage*>::iterator it = m_mapPlayerInput.begin(); it != m_mapPlayerInput.end(); ++it)
+	vector<pair<int, pair<long long, IMessage*>>> vecPlayerInput;
+	for (map<int, pair<long long, IMessage*>>::iterator it = m_mapPlayerInput.begin(); it != m_mapPlayerInput.end(); ++it)
+	{
+		vecPlayerInput.push_back(make_pair(it->first, make_pair(it->second.first, it->second.second)));
+	}
+	m_mapPlayerInput.clear();
+
+	auto cmp = [](pair<int, pair<long long, IMessage*>> a, pair<int, pair<long long, IMessage*>> b)
+	{
+		return a.second.first < b.second.first;
+	};
+	sort(vecPlayerInput.begin(), vecPlayerInput.end(), cmp);
+
+	for (vector<pair<int, pair<long long, IMessage*>>>::iterator it = vecPlayerInput.begin(); it != vecPlayerInput.end(); ++it)
 	{
 		int nPlayerIndex = it->first;
-		IMessage* pPlayerInputMsg = it->second;
-
-		if (pPlayerInputMsg == NULL)
-			continue;
+		long long lTime = it->second.first;
+		IMessage* pPlayerInputMsg = it->second.second;
 
 		if (pPlayerInputMsg->GetID() == GameEventMoveToR_ID)
 		{
 			GameEventMoveToR* pMoveToR = (GameEventMoveToR*)pPlayerInputMsg;
 
 			int nEntityID = m_mapPlayerEntity[nPlayerIndex];
-			m_mapEntity[nEntityID]->GetBehavior(BehaviorID::MOVE)->Start(m_lLastUpdateTime, &pMoveToR->m_vec3Dest);
+
+			if (pMoveToR->m_vec3Dest != m_mapEntity[nEntityID]->GetPosition())
+			{
+				m_mapEntity[nEntityID]->GetBehavior(BehaviorID::MOVE)->Start(lTime, &pMoveToR->m_vec3Dest);
+			}
 		}
 		else if (pPlayerInputMsg->GetID() == GameInputSkillToR_ID)
 		{
@@ -116,19 +130,25 @@ void BaeGameRoom::ProcessInput()
 			for (list<ISkill*>::iterator it = listSkill.begin(); it != listSkill.end(); ++it)
 			{
 				if (pMsg->m_nSkillID == (*it)->GetMasterDataID())
-					(*it)->ProcessInput(m_lLastUpdateTime, this, pMsg);
+					(*it)->ProcessInput(lTime, this, pMsg);
 			}
 		}
 
 		delete pPlayerInputMsg;
-		it->second = NULL;
 	}
+	vecPlayerInput.clear();
 
 	m_LockPlayerInput.unlock();
 }
 
 void BaeGameRoom::Update()
 {
+	//	AI
+	for (list<ICharacterAI*>::iterator it = m_listDisturber.begin(); it != m_listDisturber.end(); ++it)
+	{
+		(*it)->Update(m_lLastUpdateTime);
+	}
+
 	//	Skills
 	TrimEntity();
 	for (map<int, IEntity*>::iterator it = m_mapEntity.begin(); it != m_mapEntity.end(); ++it)
@@ -233,9 +253,9 @@ void BaeGameRoom::Reset()
 
 	m_bPlaying = false;
 
-	for (map<int, IMessage*>::iterator it = m_mapPlayerInput.begin(); it != m_mapPlayerInput.end(); ++it)
+	for (map<int, pair<long long, IMessage*>>::iterator it = m_mapPlayerInput.begin(); it != m_mapPlayerInput.end(); ++it)
 	{
-		delete it->second;
+		delete it->second.second;
 	}
 	m_mapPlayerInput.clear();
 
@@ -244,6 +264,12 @@ void BaeGameRoom::Reset()
 		delete it->second;
 	}
 	m_mapEntity.clear();
+
+	for (list<ICharacterAI*>::iterator it = m_listDisturber.begin(); it != m_listDisturber.end(); ++it)
+	{
+		delete *it;
+	}
+	m_listDisturber.clear();
 
 	m_CollisionManager.Reset();
 	m_mapEntityCollision.clear();
@@ -307,17 +333,32 @@ void BaeGameRoom::SetObstacles(int nMapID, int nRandomSeed)
 
 	//temp..
 	int nDisturberCount = rand() % 10;
-	for (int i = 0; i < nDisturberCount; ++i)
+	nDisturberCount = 2;
+	for (int i = 0; i < 1; ++i)
 	{
-		m_LockEntitySequence.lock();
-		int nEntityID = m_nEntitySequence++;
-		m_LockEntitySequence.unlock();
+		Flower1AI* ai = new Flower1AI(this, 1, 0);
+		ai->SetData(btVector3(5, 0, 5), btVector3(0, 0, 0));
+		m_listDisturber.push_back(ai);
 
-		CharacterAI* pCharacterAI = Factory::Instance()->CreateCharacterAI(this, nEntityID, 0);
-		pCharacterAI->Initialize();
+		Flower1AI* ai2 = new Flower1AI(this, 1, 0);
+		ai2->SetData(btVector3(-5, 0, 5), btVector3(0, 0, 0));
+		m_listDisturber.push_back(ai2);
 
-		m_mapDisturber[nEntityID] = pCharacterAI;
-		//m_mapPlayerEntity[nPlayerIndex] = nEntityID;
+		Flower1AI* ai3 = new Flower1AI(this, 1, 0);
+		ai3->SetData(btVector3(5, 0, 10), btVector3(0, 0, 0));
+		m_listDisturber.push_back(ai3);
+
+		Flower1AI* ai4 = new Flower1AI(this, 1, 0);
+		ai4->SetData(btVector3(-5, 0, 10), btVector3(0, 0, 0));
+		m_listDisturber.push_back(ai4);
+
+		Flower1AI* ai5 = new Flower1AI(this, 1, 0);
+		ai5->SetData(btVector3(5, 0, 15), btVector3(0, 0, 0));
+		m_listDisturber.push_back(ai5);
+
+		Flower1AI* ai6 = new Flower1AI(this, 1, 0);
+		ai6->SetData(btVector3(-5, 0, 15), btVector3(0, 0, 0));
+		m_listDisturber.push_back(ai6);
 	}
 }
 
@@ -477,7 +518,7 @@ void BaeGameRoom::OnGameEventMoveToR(GameEventMoveToR* pMsg, unsigned int socket
 {
 	m_LockPlayerInput.lock();
 
-	m_mapPlayerInput[pMsg->m_nPlayerIndex] = pMsg->Clone();
+	m_mapPlayerInput[pMsg->m_nPlayerIndex] = make_pair(GetElapsedTime(), pMsg->Clone());
 
 	m_LockPlayerInput.unlock();
 }
@@ -486,7 +527,12 @@ void BaeGameRoom::OnGameEventStopToR(GameEventStopToR* pMsg, unsigned int socket
 {
 	m_LockPlayerInput.lock();
 
-	m_mapPlayerInput[pMsg->m_nPlayerIndex] = pMsg->Clone();
+	if (m_mapPlayerInput.count(pMsg->m_nPlayerIndex) > 0 && m_mapPlayerInput[pMsg->m_nPlayerIndex].second != NULL)
+	{
+		delete m_mapPlayerInput[pMsg->m_nPlayerIndex].second;
+	}
+
+	m_mapPlayerInput[pMsg->m_nPlayerIndex] = make_pair(GetElapsedTime(), pMsg->Clone());
 
 	m_LockPlayerInput.unlock();
 }
@@ -555,7 +601,12 @@ void BaeGameRoom::OnGameInputSkillToR(GameInputSkillToR* pMsg, unsigned int sock
 {
 	m_LockPlayerInput.lock();
 
-	m_mapPlayerInput[pMsg->m_nPlayerIndex] = pMsg->Clone();
+	if (m_mapPlayerInput.count(pMsg->m_nPlayerIndex) > 0 && m_mapPlayerInput[pMsg->m_nPlayerIndex].second != NULL)
+	{
+		delete m_mapPlayerInput[pMsg->m_nPlayerIndex].second;
+	}
+
+	m_mapPlayerInput[pMsg->m_nPlayerIndex] = make_pair(GetElapsedTime(), pMsg->Clone());
 
 	m_LockPlayerInput.unlock();
 }

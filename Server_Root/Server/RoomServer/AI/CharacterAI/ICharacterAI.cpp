@@ -1,26 +1,29 @@
 #include "stdafx.h"
-#include "IState.h"
-#include "../Entity/IEntity.h"
+#include "ICharacterAI.h"
 
-IState::IState(BaeGameRoom* pGameRoom, IEntity* pEntity, int nMasterDataID, long long lStartTime)
+ICharacterAI::ICharacterAI(BaeGameRoom* pGameRoom, int nMasterDataID, long long lStartTime)
 {
 	m_pGameRoom = pGameRoom;
-	m_pEntity = pEntity;
 	m_nMasterDataID = nMasterDataID;
 	m_lStartTime = lStartTime;
 	m_lLastUpdateTime = -1;
 }
 
-IState::~IState()
+ICharacterAI::~ICharacterAI()
 {
 }
 
-int IState::GetMasterDataID()
+int ICharacterAI::GetMasterDataID()
 {
 	return m_nMasterDataID;
 }
 
-void IState::Update(long long lUpdateTime)
+Character* ICharacterAI::GetCharacter()
+{
+	return m_pCharacter;
+}
+
+void ICharacterAI::Update(long long lUpdateTime)
 {
 	if (m_lLastUpdateTime == lUpdateTime)
 		return;
@@ -37,11 +40,4 @@ void IState::Update(long long lUpdateTime)
 	UpdateBody(lUpdateTime);
 
 	m_lLastUpdateTime = lUpdateTime;
-}
-
-void IState::Remove(long long lTime)
-{
-	//	State End GameEvent..
-
-	m_pEntity->RemoveState(GetID());
 }

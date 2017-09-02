@@ -142,6 +142,24 @@
     <Filter Include="헤더 파일\Entity\Entities\Projectile">
       <UniqueIdentifier>{a461231e-55e7-48d0-8335-f89691622d52}</UniqueIdentifier>
     </Filter>
+    <Filter Include="헤더 파일\AI">
+      <UniqueIdentifier>{afdb2066-dc05-433c-9100-7d6c5d1e9638}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\AI">
+      <UniqueIdentifier>{b1aa7a4f-fdb6-43c8-8e9c-dc50219856ed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\AI\CharacterAI">
+      <UniqueIdentifier>{b84a37f1-c36c-4ea6-b94a-a38877e36449}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\AI\CharacterAI">
+      <UniqueIdentifier>{6f935de2-0f7d-4e5d-a91c-fe8fc053ea69}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\AI\CharacterAI\CharacterAIs">
+      <UniqueIdentifier>{8682bb52-e8d6-433a-b9fc-0b776176f606}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\AI\CharacterAI\CharacterAIs">
+      <UniqueIdentifier>{a33bfdb0-50a4-4fff-b4cb-30817f516fdd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -342,9 +360,6 @@
     <ClInclude Include="..\CommonSources\Messages\ToRoom\CreateRoomToR.h">
       <Filter>헤더 파일\Messages\ToRoom</Filter>
     </ClInclude>
-    <ClInclude Include="Entity\Entities\Character\CharacterAI.h">
-      <Filter>헤더 파일\Entity\Entities\Character</Filter>
-    </ClInclude>
     <ClInclude Include="Entity\Entities\Projectile\Projectile.h">
       <Filter>헤더 파일\Entity\Entities\Projectile</Filter>
     </ClInclude>
@@ -368,6 +383,12 @@
     </ClInclude>
     <ClInclude Include="Game\CollisionObject.h">
       <Filter>헤더 파일\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="AI\CharacterAI\ICharacterAI.h">
+      <Filter>헤더 파일\AI\CharacterAI</Filter>
+    </ClInclude>
+    <ClInclude Include="AI\CharacterAI\CharacterAIs\Flower1AI.h">
+      <Filter>헤더 파일\AI\CharacterAI\CharacterAIs</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -524,9 +545,6 @@
     <ClCompile Include="..\CommonSources\Messages\ToRoom\CreateRoomToR.cpp">
       <Filter>소스 파일\Messages\ToRoom</Filter>
     </ClCompile>
-    <ClCompile Include="Entity\Entities\Character\CharacterAI.cpp">
-      <Filter>소스 파일\Entity\Entities\Character</Filter>
-    </ClCompile>
     <ClCompile Include="Entity\Entities\Projectile\Projectile.cpp">
       <Filter>소스 파일\Entity\Entities\Projectile</Filter>
     </ClCompile>
@@ -550,6 +568,12 @@
     </ClCompile>
     <ClCompile Include="Game\CollisionObject.cpp">
       <Filter>소스 파일\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="AI\CharacterAI\ICharacterAI.cpp">
+      <Filter>소스 파일\AI\CharacterAI</Filter>
+    </ClCompile>
+    <ClCompile Include="AI\CharacterAI\CharacterAIs\Flower1AI.cpp">
+      <Filter>소스 파일\AI\CharacterAI\CharacterAIs</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

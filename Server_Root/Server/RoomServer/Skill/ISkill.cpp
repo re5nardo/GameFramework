@@ -24,6 +24,7 @@ void ISkill::Start(long long lStartTime, ...)
 
 	m_bActivated = true;
 	m_lStartTime = lStartTime;
+	m_lLastUpdateTime = -1;
 }
 
 void ISkill::Update(long long lUpdateTime)
@@ -31,18 +32,14 @@ void ISkill::Update(long long lUpdateTime)
 	if (!m_bActivated || (m_lLastUpdateTime == lUpdateTime))
 		return;
 
-	if (m_lStartTime == lUpdateTime)
+	if (m_lLastUpdateTime == -1)
 	{
-		m_fPreviousTime = 0;
-		m_fCurrentTime = 0;
-		m_fDeltaTime = 0;
+		m_lLastUpdateTime = m_lStartTime;
 	}
-	else
-	{
-		m_fPreviousTime = (m_lLastUpdateTime - m_lStartTime) / 1000.0f;
-		m_fCurrentTime = (lUpdateTime - m_lStartTime) / 1000.0f;
-		m_fDeltaTime = m_fCurrentTime - m_fPreviousTime;
-	}
+
+	m_fPreviousTime = (m_lLastUpdateTime - m_lStartTime) / 1000.0f;
+	m_fCurrentTime = (lUpdateTime - m_lStartTime) / 1000.0f;
+	m_fDeltaTime = m_fCurrentTime - m_fPreviousTime;
 
 	UpdateBody(lUpdateTime);
 

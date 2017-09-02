@@ -59,21 +59,22 @@ void General::UpdateBody(long long lUpdateTime)
 				{
 					int nEntityID = 0;
 					int nProjectileMasterDataID = atoi(it->m_vecParams[0].c_str());
-					IEntity* pEntity = NULL;
-					m_pGameRoom->CreateEntity(FBS::Data::EntityType_Projectile, nProjectileMasterDataID, &nEntityID, &pEntity);
+					IEntity* pProjectile = NULL;
+					m_pGameRoom->CreateEntity(FBS::Data::EntityType_Projectile, nProjectileMasterDataID, &nEntityID, &pProjectile);
+					pProjectile->SetPosition(m_pEntity->GetPosition());
 
 					GameEvent::EntityCreate* pEntityCreate = new GameEvent::EntityCreate();
 					pEntityCreate->m_fEventTime = lUpdateTime / 1000.0f;
 					pEntityCreate->m_nEntityID = nEntityID;
 					pEntityCreate->m_nMasterDataID = nProjectileMasterDataID;
 					pEntityCreate->m_EntityType = FBS::Data::EntityType_Projectile;
-					pEntityCreate->m_vec3Position = pEntity->GetPosition();
+					pEntityCreate->m_vec3Position = pProjectile->GetPosition();
 
 					m_pGameRoom->AddGameEvent(pEntityCreate);
 
 					btVector3 vec3Dest = Util::GetAngledPosition(m_pEntity->GetPosition(), *itDirection, 10/*temp..*/);
-					pEntity->GetBehavior(BehaviorID::MOVE)->Start(lUpdateTime, &vec3Dest);
-					pEntity->GetBehavior(BehaviorID::MOVE)->Update(lUpdateTime);
+					pProjectile->GetBehavior(BehaviorID::MOVE)->Start(lUpdateTime, &vec3Dest);
+					pProjectile->GetBehavior(BehaviorID::MOVE)->Update(lUpdateTime);
 				}
 			}
 			else if (it->m_strID == "AddState")

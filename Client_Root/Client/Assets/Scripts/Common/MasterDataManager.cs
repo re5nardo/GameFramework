@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class MasterDataManager : MonoSingleton<MasterDataManager>
 {
-    private Dictionary<string, Dictionary<int, IMasterData>> m_dicData = new Dictionary<string, Dictionary<int, IMasterData>>();
+    private Dictionary<System.Type, Dictionary<int, IMasterData>> m_dicData = new Dictionary<System.Type, Dictionary<int, IMasterData>>();
 
     private void Start()
     {
@@ -23,8 +23,7 @@ public class MasterDataManager : MonoSingleton<MasterDataManager>
 
     private void SetCharacter()
     {
-        string strTypeName = typeof(MasterData.Character).Name;
-        m_dicData[strTypeName] = new Dictionary<int, IMasterData>();
+        m_dicData[typeof(MasterData.Character)] = new Dictionary<int, IMasterData>();
 
         List<List<string>> listData = Util.ReadCSV("MasterData/Character");
         for (int row = 1; row < listData.Count; ++row)
@@ -32,14 +31,13 @@ public class MasterDataManager : MonoSingleton<MasterDataManager>
             MasterData.Character character = new MasterData.Character();
             character.SetData(listData[row]);
 
-            m_dicData[strTypeName][character.m_nID] = character;
+            m_dicData[typeof(MasterData.Character)][character.m_nID] = character;
         }
     }
 
     private void SetSkill()
     {
-        string strTypeName = typeof(MasterData.Skill).Name;
-        m_dicData[strTypeName] = new Dictionary<int, IMasterData>();
+        m_dicData[typeof(MasterData.Skill)] = new Dictionary<int, IMasterData>();
 
         List<List<string>> listData = Util.ReadCSV("MasterData/Skill");
         for (int row = 1; row < listData.Count; ++row)
@@ -47,14 +45,13 @@ public class MasterDataManager : MonoSingleton<MasterDataManager>
             MasterData.Skill skill = new MasterData.Skill();
             skill.SetData(listData[row]);
 
-            m_dicData[strTypeName][skill.m_nID] = skill;
+            m_dicData[typeof(MasterData.Skill)][skill.m_nID] = skill;
         }
     }
 
     private void SetBehavior()
     {
-        string strTypeName = typeof(MasterData.Behavior).Name;
-        m_dicData[strTypeName] = new Dictionary<int, IMasterData>();
+        m_dicData[typeof(MasterData.Behavior)] = new Dictionary<int, IMasterData>();
 
         List<List<string>> listData = Util.ReadCSV("MasterData/Behavior");
         for (int row = 1; row < listData.Count; ++row)
@@ -62,14 +59,13 @@ public class MasterDataManager : MonoSingleton<MasterDataManager>
             MasterData.Behavior behavior = new MasterData.Behavior();
             behavior.SetData(listData[row]);
 
-            m_dicData[strTypeName][behavior.m_nID] = behavior;
+            m_dicData[typeof(MasterData.Behavior)][behavior.m_nID] = behavior;
         }
     }
 
     private void SetState()
     {
-        string strTypeName = typeof(MasterData.State).Name;
-        m_dicData[strTypeName] = new Dictionary<int, IMasterData>();
+        m_dicData[typeof(MasterData.State)] = new Dictionary<int, IMasterData>();
 
         List<List<string>> listData = Util.ReadCSV("MasterData/State");
         for (int row = 1; row < listData.Count; ++row)
@@ -77,14 +73,13 @@ public class MasterDataManager : MonoSingleton<MasterDataManager>
             MasterData.State state = new MasterData.State();
             state.SetData(listData[row]);
 
-            m_dicData[strTypeName][state.m_nID] = state;
+            m_dicData[typeof(MasterData.State)][state.m_nID] = state;
         }
     }
 
     private void SetProjectile()
     {
-        string strTypeName = typeof(MasterData.Projectile).Name;
-        m_dicData[strTypeName] = new Dictionary<int, IMasterData>();
+        m_dicData[typeof(MasterData.Projectile)] = new Dictionary<int, IMasterData>();
 
         List<List<string>> listData = Util.ReadCSV("MasterData/Projectile");
         for (int row = 1; row < listData.Count; ++row)
@@ -92,19 +87,22 @@ public class MasterDataManager : MonoSingleton<MasterDataManager>
             MasterData.Projectile projectile = new MasterData.Projectile();
             projectile.SetData(listData[row]);
 
-            m_dicData[strTypeName][projectile.m_nID] = projectile;
+            m_dicData[typeof(MasterData.Projectile)][projectile.m_nID] = projectile;
         }
     }
 
     public bool GetData<T>(int nID, ref T data) where T : IMasterData
     {
-        string strTypeName = typeof(T).Name;
+        System.Type type = data == null ? typeof(T) : data.GetType();
 
-        if (m_dicData.ContainsKey(strTypeName))
+        Dictionary<int, IMasterData> dicvalue = null;
+
+        if (m_dicData.TryGetValue(type, out dicvalue))
         {
-            if (m_dicData[strTypeName].ContainsKey(nID))
+            IMasterData value = null;
+            if (dicvalue.TryGetValue(nID, out value))
             {
-                data = (T)m_dicData[strTypeName][nID];
+                data = (T)value;
 
                 return true;
             }

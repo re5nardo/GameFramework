@@ -2,22 +2,51 @@
 using System.Collections.Generic;
 using System.Collections;
 
-public class Entity : MonoBehaviour
+public class Entity : PooledComponent
 {
     private EntityUI      m_EntityUI = null;
     private Vector3       m_vec3Position = Vector3.zero;
     private Vector3       m_vec3Rotation = Vector3.zero;
 
-    private Dictionary<int, float> dicBehavior = new Dictionary<int, float>();
-    private Dictionary<int, Coroutine> dicCoroutine = new Dictionary<int, Coroutine>();
+    private Dictionary<int, float> m_dicBehavior = new Dictionary<int, float>();
+    private LinkedList<IBehavior> m_listBehavior = new LinkedList<IBehavior>();
+
+    private IEnumerator BehaviorLoop()
+    {
+        LinkedList<IBehavior> toRemove = new LinkedList<IBehavior>();
+
+        while (true)
+        {
+            foreach (IBehavior behavior in m_listBehavior)
+            {
+                if (!behavior.Update())
+                {
+                    toRemove.AddLast(behavior);
+                }
+            }
+
+            foreach (IBehavior behavior in toRemove)
+            {
+                m_listBehavior.Remove(behavior);
+
+                ObjectPool.Instance.ReturnObject(behavior);
+            }
+            toRemove.Clear();
+
+            yield return null;
+        }
+    }
+
 
     public void Initialize(FBS.Data.EntityType entityType, int nID, int nMasterDataID)
     {
-        GameObject goEntityUI = new GameObject("EntityUI_" + nID.ToString());
-        EntityUI entityUI = goEntityUI.AddComponent<EntityUI>();
+        GameObject goEntityUI = ObjectPool.Instance.GetGameObject("CharacterModel/EntityUI");
+        EntityUI entityUI = goEntityUI.GetComponent<EntityUI>();
         entityUI.Initialize(entityType, nID, nMasterDataID);
 
         m_EntityUI = entityUI;
+
+        StartCoroutine("BehaviorLoop");
     }
 
     public void SampleBehaviors(Dictionary<string, KeyValuePair<float, float>> dicBehaviors, float fInterpolationValue, float fTickInterval, float fEmptyValue)
@@ -78,16 +107,6 @@ public class Entity : MonoBehaviour
         return m_EntityUI.transform;
     }
 
-    private void OnDestroy()
-    {
-        StopAllCoroutines();
-
-        if (m_EntityUI != null)
-        {
-            Destroy(m_EntityUI.gameObject);
-        }
-    }
-
     public void ProcessGameEvent(IGameEvent iGameEvent)
     {
         if (iGameEvent.GetEventType() == FBS.GameEventType.BehaviorStart)
@@ -120,103 +139,130 @@ public class Entity : MonoBehaviour
     {
         float fTime = BaeGameRoom.Instance.GetElapsedTime() - gameEvent.m_fStartTime;
 
-        dicCoroutine[gameEvent.m_nBehaviorID] = StartCoroutine(BehaviorStart(gameEvent, fTime));
+        Behavior.BehaviorProgress behavior = ObjectPool.Instance.GetObject<Behavior.BehaviorProgress>();
+        behavior.Initialize(this, gameEvent.m_nBehaviorID, fTime);
+
+        m_listBehavior.AddLast(behavior);
     }
 
     private IEnumerator BehaviorStart(GameEvent.BehaviorStart gameEvent, float fTime)
     {
-        dicBehavior[gameEvent.m_nBehaviorID] = fTime;
+        m_dicBehavior[gameEvent.m_nBehaviorID] = fTime;
 
         while (true)
         {
             yield return null;
 
-            dicBehavior[gameEvent.m_nBehaviorID] += BaeGameRoom.deltaTime;
+            m_dicBehavior[gameEvent.m_nBehaviorID] += BaeGameRoom.deltaTime;
         }
     }
 
     private void ProcessBehaviorEnd(GameEvent.BehaviorEnd gameEvent)
     {
-        StopCoroutine(dicCoroutine[gameEvent.m_nBehaviorID]);
-        dicCoroutine.Remove(gameEvent.m_nBehaviorID);
-        dicBehavior.Remove(gameEvent.m_nBehaviorID);
+        m_dicBehavior.Remove(gameEvent.m_nBehaviorID);
+
+        IBehavior target = null;
+        foreach(IBehavior behavior in m_listBehavior)
+        {
+            if (behavior is Behavior.BehaviorProgress && ((Behavior.BehaviorProgress)behavior).GetBehaviorID() == gameEvent.m_nBehaviorID)
+            {
+                target = behavior;
+            }
+        }
+
+        m_listBehavior.Remove(target);
+
+        ObjectPool.Instance.ReturnObject(target);
     }
 
     private void ProcessPosition(GameEvent.Position gameEvent)
     {
-        StopCoroutine("Position");
-        StartCoroutine("Position", gameEvent);
-    }
-
-    private IEnumerator Position(GameEvent.Position gameEvent)
-    {
-        while (gameEvent.m_fEndTime > BaeGameRoom.Instance.GetElapsedTime())
+        IBehavior target = null;
+        foreach(IBehavior behavior in m_listBehavior)
         {
-            float t = 1 - (gameEvent.m_fEndTime - BaeGameRoom.Instance.GetElapsedTime()) / (gameEvent.m_fEndTime - gameEvent.m_fStartTime);
-
-            SetPosition(Vector3.Lerp(gameEvent.m_vec3StartPosition, gameEvent.m_vec3EndPosition, t));
-
-            yield return null;
+            if (behavior is Behavior.Position)
+            {
+                target = behavior;
+            }
         }
 
-        SetPosition(gameEvent.m_vec3EndPosition);
+        if (target == null)
+        {
+            Behavior.Position behavior = ObjectPool.Instance.GetObject<Behavior.Position>();
+            behavior.Initialize(this, gameEvent);
+
+            m_listBehavior.AddLast(behavior);
+        }
+        else
+        {
+            ((Behavior.Position)target).Initialize(this, gameEvent);
+        }
+
+        // 기존 Behavior를 재사용하면 순서가 꼬이는데... 수정하자..
     }
 
     private void ProcessRotation(GameEvent.Rotation gameEvent)
     {
-        StopCoroutine("Rotation");
-        StartCoroutine("Rotation", gameEvent);
-    }
-
-    private IEnumerator Rotation(GameEvent.Rotation gameEvent)
-    {
-        while (gameEvent.m_fEndTime > BaeGameRoom.Instance.GetElapsedTime())
+        IBehavior target = null;
+        foreach(IBehavior behavior in m_listBehavior)
         {
-            float t = 1 - (gameEvent.m_fEndTime - BaeGameRoom.Instance.GetElapsedTime()) / (gameEvent.m_fEndTime - gameEvent.m_fStartTime);
-
-            Vector3 vec3PrevRotation = gameEvent.m_vec3StartRotation;
-            Vector3 vec3NextRotation = gameEvent.m_vec3EndRotation;
-
-            if (vec3NextRotation.y < vec3PrevRotation.y)
+            if (behavior is Behavior.Rotation)
             {
-                vec3NextRotation.y += 360;
+                target = behavior;
             }
-
-            //  For lerp calculation
-            //  Clockwise rotation
-            if (vec3NextRotation.y - vec3PrevRotation.y <= 180)
-            {
-                if (vec3PrevRotation.y > vec3NextRotation.y)
-                    vec3NextRotation.y += 360;
-            }
-            //  CounterClockwise rotation
-            else
-            {
-                if (vec3PrevRotation.y < vec3NextRotation.y)
-                    vec3PrevRotation.y += 360;
-            }
-
-            Vector3 vecRotation;
-            vecRotation.x = Mathf.Lerp(vec3PrevRotation.x, vec3NextRotation.x, t);
-            vecRotation.y = Mathf.Lerp(vec3PrevRotation.y, vec3NextRotation.y, t);
-            vecRotation.z = Mathf.Lerp(vec3PrevRotation.z, vec3NextRotation.z, t);
-
-            SetRotation(vecRotation);
-
-            yield return null;
         }
 
-        SetRotation(gameEvent.m_vec3EndRotation);
+        if (target == null)
+        {
+            Behavior.Rotation behavior = ObjectPool.Instance.GetObject<Behavior.Rotation>();
+            behavior.Initialize(this, gameEvent);
+
+            m_listBehavior.AddLast(behavior);
+        }
+        else
+        {
+            ((Behavior.Rotation)target).Initialize(this, gameEvent);
+        }
     }
 
     public void Sample()
     {
-        m_EntityUI.Sample(dicBehavior);
+        m_EntityUI.Sample(m_dicBehavior);
     }
 
-    public void Destroy()
+    public void Clear()
     {
-        Destroy(gameObject);
-        Destroy(m_EntityUI.gameObject);
+        if (m_EntityUI != null)
+        {
+            ObjectPool.Instance.ReturnGameObject(m_EntityUI.gameObject);
+            m_EntityUI = null;
+        }
+
+        m_vec3Position = Vector3.zero;
+        m_vec3Rotation = Vector3.zero;
+
+        m_dicBehavior.Clear();
+
+        StopCoroutine("BehaviorLoop");
+        foreach (IBehavior behavior in m_listBehavior)
+        {
+            ObjectPool.Instance.ReturnObject(behavior);
+        }
+        m_listBehavior.Clear();
+    }
+
+    public void SetBehaviorTime(int nBehaviorID, float fTime)
+    {
+        m_dicBehavior[nBehaviorID] = fTime;
+    }
+
+    public void IncreaseBehaviorTime(int nBehaviorID, float fTime)
+    {
+        m_dicBehavior[nBehaviorID] += fTime;
+    }
+
+    public override void OnReturned()
+    {
+        Clear();
     }
 }

@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "Factory.h"
 #include "Entity\Entities\Character\Character.h"
-#include "Entity\Entities\Character\CharacterAI.h"
+//#include "Entity\Entities\Character\CharacterAI.h"
 #include "MasterData\MasterDataManager.h"
 #include "MasterData\Behavior.h"
 #include "MasterData\Character.h"
@@ -95,10 +95,10 @@ Character* Factory::CreateCharacter(BaeGameRoom* pGameRoom, int nID, int nMaster
 	return new Character(pGameRoom, nID, nMasterDataID);
 }
 
-CharacterAI* Factory::CreateCharacterAI(BaeGameRoom* pGameRoom, int nID, int nMasterDataID)
-{
-	return new CharacterAI(pGameRoom, nID, nMasterDataID);
-}
+//CharacterAI* Factory::CreateCharacterAI(BaeGameRoom* pGameRoom, int nID, int nMasterDataID)
+//{
+//	return new CharacterAI(pGameRoom, nID, nMasterDataID);
+//}
 
 Projectile* Factory::CreateProjectile(BaeGameRoom* pGameRoom, int nID, int nMasterDataID)
 {

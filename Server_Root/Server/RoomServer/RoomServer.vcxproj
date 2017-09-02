@@ -98,6 +98,8 @@
     <ClInclude Include="..\CommonSources\QuadTreePrerequisites.h" />
     <ClInclude Include="..\CommonSources\Singleton.h" />
     <ClInclude Include="..\CommonSources\tinyxml2.h" />
+    <ClInclude Include="AI\CharacterAI\CharacterAIs\Flower1AI.h" />
+    <ClInclude Include="AI\CharacterAI\ICharacterAI.h" />
     <ClInclude Include="Behavior\BehaviorIDs.h" />
     <ClInclude Include="Behavior\Behaviors\Dash.h" />
     <ClInclude Include="Behavior\Behaviors\General.h" />
@@ -107,7 +109,6 @@
     <ClInclude Include="Data.h" />
     <ClInclude Include="Defines.h" />
     <ClInclude Include="Entity\Entities\Character\Character.h" />
-    <ClInclude Include="Entity\Entities\Character\CharacterAI.h" />
     <ClInclude Include="Entity\Entities\Projectile\Projectile.h" />
     <ClInclude Include="Entity\IEntity.h" />
     <ClInclude Include="Factory.h" />
@@ -166,13 +167,14 @@
     <ClCompile Include="..\CommonSources\Network\NetworkCore.cpp" />
     <ClCompile Include="..\CommonSources\QuadTreePrerequisites.cpp" />
     <ClCompile Include="..\CommonSources\tinyxml2.cpp" />
+    <ClCompile Include="AI\CharacterAI\CharacterAIs\Flower1AI.cpp" />
+    <ClCompile Include="AI\CharacterAI\ICharacterAI.cpp" />
     <ClCompile Include="Behavior\Behaviors\Dash.cpp" />
     <ClCompile Include="Behavior\Behaviors\General.cpp" />
     <ClCompile Include="Behavior\Behaviors\Move.cpp" />
     <ClCompile Include="Behavior\Behaviors\StopBehavior.cpp" />
     <ClCompile Include="Behavior\IBehavior.cpp" />
     <ClCompile Include="Entity\Entities\Character\Character.cpp" />
-    <ClCompile Include="Entity\Entities\Character\CharacterAI.cpp" />
     <ClCompile Include="Entity\Entities\Projectile\Projectile.cpp" />
     <ClCompile Include="Entity\IEntity.cpp" />
     <ClCompile Include="Factory.cpp" />

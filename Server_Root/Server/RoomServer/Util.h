@@ -179,4 +179,16 @@ public:
 	{
 		return vec3One.distance2(vec3Two);
 	}
+
+	static bool IsEqual(float a, float b)
+	{
+		float diff = a > b ? a - b : b - a;
+
+		return diff <= 0.000001f;
+	}
+
+	static bool IsEqual(btVector3& a, btVector3& b)
+	{
+		return IsEqual(a.x(), b.x()) && IsEqual(a.y(), b.y()) && IsEqual(a.z(), b.z());
+	}
 };

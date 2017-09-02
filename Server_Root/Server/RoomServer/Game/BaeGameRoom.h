@@ -10,6 +10,7 @@
 #include <vector>
 #include <chrono>
 #include <mutex>
+#include <utility>
 #include "CollisionManager.h"
 #include "../../FBSFiles/FBSData_generated.h"
 
@@ -22,7 +23,7 @@ class EnterRoomToR;
 class PreparationStateToR;
 class IMessage;
 class Character;
-class CharacterAI;
+class ICharacterAI;
 class GameInputSkillToR;
 class IGameEvent;
 class IEntity;
@@ -37,7 +38,7 @@ public:
 	virtual ~BaeGameRoom();
 
 private:
-	const long long TIME_STEP = 50;		//	<-- milliseconds, TickRate is 1000(1sec) / TIME_STEP
+	const long long TIME_STEP = 200;		//	<-- milliseconds, TickRate is 1000(1sec) / TIME_STEP
 
 private:
 	mutex m_LockEntitySequence;
@@ -51,13 +52,13 @@ private:
 	map<int, float>					m_mapPlayerIndexPreparationState;		//	key : PlayerIndex, value : PreparationState
 
 private:
-	map<int, IMessage*>		m_mapPlayerInput;		//	key : PlayerIndex, value : Input Message
-	map<int, int>			m_mapPlayerEntity;		//	key : PlayerIndex, value : EntityID
-	map<int, int>			m_mapEntityPlayer;		//	key : EntityID, value : PlayerIndex
-	map<int, IEntity*>		m_mapEntity;			//	key : EntityID, value : Entity
+	map<int, pair<long long, IMessage*>>	m_mapPlayerInput;		//	key : PlayerIndex, value : <Time, Input Message>
+	map<int, int>							m_mapPlayerEntity;		//	key : PlayerIndex, value : EntityID
+	map<int, int>							m_mapEntityPlayer;		//	key : EntityID, value : PlayerIndex
+	map<int, IEntity*>						m_mapEntity;			//	key : EntityID, value : Entity
 
 private:
-	map<int, CharacterAI*>	m_mapDisturber;			//	key : DisturberIndex, value : CharacterAI
+	list<ICharacterAI*> m_listDisturber;
 
 private:
 	bool m_bPlaying;

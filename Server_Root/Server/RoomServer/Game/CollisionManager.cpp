@@ -210,16 +210,8 @@ void CollisionManager::SetRotation(int nID, btVector3& vec3Rotation)
 	m_mapCollisionObject[nID]->m_pbtCollisionObject->getWorldTransform().setRotation(Util::DegreesToQuaternion(vec3Rotation));
 }
 
-btVector3 vec3Target;
-bool CompareDistance(CollisionObject* a, CollisionObject* b)
-{
-	float distance_a = Util::GetDistance2(vec3Target, a->m_pbtCollisionObject->getWorldTransform().getOrigin());
-	float distance_b = Util::GetDistance2(vec3Target, b->m_pbtCollisionObject->getWorldTransform().getOrigin());
-
-	return distance_a < distance_b;
-}
-
 //	This shows poor performance where the distance between start to dest is long
+btVector3 vec3Target;
 bool CollisionManager::ContinuousCollisionDectectionFirst(int nID, btVector3& vec3To, int nTypes, pair<int, btVector3>* hit)
 {
 	btConvexCast::CastResult rayResult;
@@ -240,7 +232,14 @@ bool CollisionManager::ContinuousCollisionDectectionFirst(int nID, btVector3& ve
 
 	//	Sort distance
 	vec3Target = pTarget->getWorldTransform().getOrigin();
-	listCollisionObject.sort(CompareDistance);
+	auto cmp = [](CollisionObject* a, CollisionObject* b)
+	{
+		float distance_a = Util::GetDistance2(vec3Target, a->m_pbtCollisionObject->getWorldTransform().getOrigin());
+		float distance_b = Util::GetDistance2(vec3Target, b->m_pbtCollisionObject->getWorldTransform().getOrigin());
+
+		return distance_a < distance_b;
+	};
+	listCollisionObject.sort(cmp);
 
 	for (list<CollisionObject*>::iterator it = listCollisionObject.begin(); it != listCollisionObject.end(); ++it)
 	{

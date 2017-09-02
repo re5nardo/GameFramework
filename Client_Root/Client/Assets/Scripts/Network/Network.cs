@@ -186,9 +186,10 @@ public class Network : MonoSingleton<Network>
 					{
 						state.CurMessage[state.CurPos - NetworkDefines.MESSAGE_HEADER_SIZE] = state.Buffer[i];
 
+                        IMessage msg = GetIMessage(state.CurMessageID, state.CurMessage);
 						lock (m_MessagesReceived)
 						{
-							m_MessagesReceived.Enqueue(GetIMessage(state.CurMessageID, state.CurMessage));
+                            m_MessagesReceived.Enqueue(msg);
 						}
 
 						state.CurMessage = null;

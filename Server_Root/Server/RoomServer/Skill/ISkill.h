@@ -24,12 +24,12 @@ protected:
 	bool	m_bActivated = false;
 
 protected:
-	long long m_lStartTime;			//	ElapsedTime after game was started (Milliseconds)
-	long long m_lLastUpdateTime;	//	ElapsedTime after game was started (Milliseconds)
-	long long m_lEndTime = -1;		//	ElapsedTime after game was started (Milliseconds)
-	float m_fDeltaTime;				//	CurrentTime - PreviousTime (seconds)
-	float m_fCurrentTime;			//	ElapsedTime after behavior was started (seconds)
-	float m_fPreviousTime;			//	ElapsedTime after behavior was started (seconds)
+	long long m_lStartTime;				//	ElapsedTime after game was started (Milliseconds)
+	long long m_lLastUpdateTime = -1;	//	ElapsedTime after game was started (Milliseconds)
+	long long m_lEndTime = -1;			//	ElapsedTime after game was started (Milliseconds)
+	float m_fDeltaTime;					//	CurrentTime - PreviousTime (seconds)
+	float m_fCurrentTime;				//	ElapsedTime after behavior was started (seconds)
+	float m_fPreviousTime;				//	ElapsedTime after behavior was started (seconds)
 
 public:
 	int GetMasterDataID();

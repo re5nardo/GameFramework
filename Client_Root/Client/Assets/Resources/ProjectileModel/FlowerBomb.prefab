@@ -20,6 +20,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4742806466442802}
   - component: {fileID: 111412355463971848}
+  - component: {fileID: 114224150793688554}
   m_Layer: 0
   m_Name: FlowerBomb
   m_TagString: Untagged
@@ -126,6 +127,18 @@ Animation:
   m_PlayAutomatically: 0
   m_AnimatePhysics: 0
   m_CullingType: 0
+--- !u!114 &114224150793688554
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1263798645654794}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5a5cef2503425af409e4e1a82e4843c2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_strKey: 
 --- !u!135 &135479478260633840
 SphereCollider:
   m_ObjectHideFlags: 1

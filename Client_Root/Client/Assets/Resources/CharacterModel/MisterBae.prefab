@@ -177,6 +177,7 @@ GameObject:
   m_Component:
   - component: {fileID: 455672}
   - component: {fileID: 11171684}
+  - component: {fileID: 114340382768611978}
   m_Layer: 0
   m_Name: MisterBae
   m_TagString: Untagged
@@ -6421,3 +6422,15 @@ Prefab:
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 106336}
   m_IsPrefabParent: 1
+--- !u!114 &114340382768611978
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 106336}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5a5cef2503425af409e4e1a82e4843c2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_strKey: 

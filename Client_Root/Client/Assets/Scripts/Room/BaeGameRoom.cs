@@ -16,7 +16,7 @@ public class BaeGameRoom : IGameRoom
     private string m_strIP = "172.30.1.18";
     private int m_nPort = 9111;
 
-    private Dictionary<int, Entity>            m_dicEntity = new Dictionary<int, Entity>();
+    private Dictionary<int, Entity> m_dicEntity = new Dictionary<int, Entity>();
 
     private int m_nOldFrameRate = 0;
     private int m_nPlayerIndex = -1;
@@ -29,7 +29,7 @@ public class BaeGameRoom : IGameRoom
     private float m_fElapsedTime = 0;           //  include
     private float m_fLastWorldInfoTime = -1;
     private Dictionary<int, List<IGameEvent>> m_dicGameEvent = new Dictionary<int, List<IGameEvent>>();
-    private HashSet<IGameEvent> m_ProcessedGameEvent = new HashSet<IGameEvent>();
+    private Dictionary<int, HashSet<IGameEvent>> m_dicProcessedGameEvent = new Dictionary<int, HashSet<IGameEvent>>();
 
     private void Start()
     {
@@ -71,25 +71,33 @@ public class BaeGameRoom : IGameRoom
 
     private void UpdateTime()
     {
+        if (m_fLastWorldInfoTime > m_fElapsedTime + Time.deltaTime)
+        {
+            deltaTime = Time.deltaTime;
+
+            m_fElapsedTime += deltaTime;
+            return;
+        }
+
         if (m_fLastWorldInfoTime > m_fElapsedTime)
         {
             if (m_fLastWorldInfoTime > m_fElapsedTime + Time.deltaTime)
             {
                 float fPlaySpeed = 1;
-                if (m_fLastWorldInfoTime - m_fElapsedTime > 0.5f)
+
+                float fDiff = m_fLastWorldInfoTime - (m_fElapsedTime + Time.deltaTime);
+                if (fDiff > 0.25f)   //  must be bigger than server tick interval
                 {
-                    fPlaySpeed = 1.5f;
+                    float fTarget = Mathf.Lerp(0.25f, fDiff, 0.5f);
+
+                    fPlaySpeed = (Time.deltaTime + fTarget) / Time.deltaTime;
                 }
-                else if (m_fLastWorldInfoTime - m_fElapsedTime > 0.1f)
+                else
                 {
-                    fPlaySpeed = 1.2f;
+                    fPlaySpeed = 1;
                 }
 
                 deltaTime = Time.deltaTime * fPlaySpeed;
-                if (m_fLastWorldInfoTime < m_fElapsedTime + deltaTime)
-                {
-                    deltaTime = m_fLastWorldInfoTime - m_fElapsedTime;
-                }
             }
             else
             {
@@ -116,7 +124,7 @@ public class BaeGameRoom : IGameRoom
                     {
                         continue;
                     }
-                    else if (m_ProcessedGameEvent.Contains(iGameEvent))
+                    else if (m_dicProcessedGameEvent.ContainsKey(sec) && m_dicProcessedGameEvent[sec].Contains(iGameEvent))
                     {
                         continue;
                     }
@@ -159,7 +167,10 @@ public class BaeGameRoom : IGameRoom
         {
             GameEvent.EntityCreate gameEvent = (GameEvent.EntityCreate)iGameEvent;
 
-            Entity entity = Factory.Instance.CreateEntity(gameEvent.m_EntityType, gameEvent.m_nEntityID, gameEvent.m_nMasterDataID);
+            GameObject goEntity = ObjectPool.Instance.GetGameObject("CharacterModel/Entity");
+            Entity entity = goEntity.GetComponent<Entity>();
+            entity.Initialize(gameEvent.m_EntityType, gameEvent.m_nEntityID, gameEvent.m_nMasterDataID);
+            entity.SetPosition(gameEvent.m_vec3Position);
 
             m_dicEntity[gameEvent.m_nEntityID] = entity;
         }
@@ -167,12 +178,17 @@ public class BaeGameRoom : IGameRoom
         {
             GameEvent.EntityDestroy gameEvent = (GameEvent.EntityDestroy)iGameEvent;
 
-            m_dicEntity[gameEvent.m_nEntityID].Destroy();
+            ObjectPool.Instance.ReturnGameObject(m_dicEntity[gameEvent.m_nEntityID].gameObject);
 
             m_dicEntity.Remove(gameEvent.m_nEntityID);
         }
 
-        m_ProcessedGameEvent.Add(iGameEvent);
+        if (!m_dicProcessedGameEvent.ContainsKey((int)iGameEvent.m_fEventTime))
+        {
+            m_dicProcessedGameEvent[(int)iGameEvent.m_fEventTime] = new HashSet<IGameEvent>();
+        }
+
+        m_dicProcessedGameEvent[(int)iGameEvent.m_fEventTime].Add(iGameEvent);
     }
 
     private void OnConnected(bool bResult)
@@ -203,7 +219,7 @@ public class BaeGameRoom : IGameRoom
         m_fLastUpdateTime = -0.001f;
         m_fLastWorldInfoTime = -1;
         m_dicGameEvent.Clear();
-        m_ProcessedGameEvent.Clear();
+        m_dicProcessedGameEvent.Clear();
 
         m_InputManager.Work(100, 500/*temp.. always 200, 200*/, m_CameraMain, OnClicked);
 
@@ -255,9 +271,10 @@ public class BaeGameRoom : IGameRoom
             foreach(KeyValuePair<int, string> kv in msg.m_dicPlayers)
             {
                 //  temp.. MisterBae
-                Entity entity = Factory.Instance.CreateEntity(FBS.Data.EntityType.Character, 0, 0);
+                GameObject goEntity = ObjectPool.Instance.GetGameObject("CharacterModel/Entity");
+                Entity entity = goEntity.GetComponent<Entity>();
+                entity.Initialize(FBS.Data.EntityType.Character, 0, 0);
                 m_dicEntity[kv.Key] = entity;
-                //entity.Initialize();
 
                 if (kv.Key == m_nPlayerIndex)
                 {
@@ -313,22 +330,6 @@ public class BaeGameRoom : IGameRoom
             m_dicGameEvent[nSec].Add(iGameEvent);
         }
 
-//        foreach(KeyValuePair<int, List<IGameEvent>> kv in m_dicGameEvent)
-//        {
-//            float prevMax = 0;
-//            foreach(IGameEvent iGameEvent in kv.Value)
-//            {
-//                if (prevMax > iGameEvent.m_fEventTime)
-//                {
-//                    Debug.LogError("Order of GameEvents is wrong! It must be ascending!");
-//                    return;
-//                }
-//                else
-//                {
-//                    prevMax = iGameEvent.m_fEventTime;
-//                }
-//            }
-//        }
     }
 #endregion
 

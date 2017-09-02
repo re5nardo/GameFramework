@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class EntityUI : MonoBehaviour
+public class EntityUI : PooledComponent
 {
     private GameObject m_goModel = null;
     private Animation m_animModel = null;
@@ -16,24 +16,24 @@ public class EntityUI : MonoBehaviour
 
     public void Initialize(FBS.Data.EntityType entityType, int nID, int nMasterDataID)
     {
-        string strResPath = "";
+        string strModelPath = "";
 
         if (entityType == FBS.Data.EntityType.Character)
         {
             MasterData.Character character = null;
             MasterDataManager.Instance.GetData<MasterData.Character>(nMasterDataID, ref character);
 
-            strResPath = string.Format("CharacterModel/{0}", character.m_strModelResName);
+            strModelPath = string.Format("CharacterModel/{0}", character.m_strModelResName);
         }
         else if (entityType == FBS.Data.EntityType.Projectile)
         {
             MasterData.Projectile projectile = null;
             MasterDataManager.Instance.GetData<MasterData.Projectile>(nMasterDataID, ref projectile);
 
-            strResPath = string.Format("ProjectileModel/{0}", projectile.m_strModelResName);
+            strModelPath = string.Format("ProjectileModel/{0}", projectile.m_strModelResName);
         }
 
-        m_goModel = Instantiate(Resources.Load(strResPath)) as GameObject;
+        m_goModel = ObjectPool.Instance.GetGameObject(strModelPath);
         m_animModel = m_goModel.GetComponent<Animation>();
 
         m_goModel.transform.parent = m_trEntityUI;
@@ -111,5 +111,19 @@ public class EntityUI : MonoBehaviour
 
             m_animModel[behavior.m_strAnimationName].enabled = false;
         }
+    }
+
+    public void Clear()
+    {
+        if (m_goModel != null)
+        {
+            ObjectPool.Instance.ReturnGameObject(m_goModel);
+            m_goModel = null;
+        }
+    }
+
+    public override void OnReturned()
+    {
+        Clear();
     }
 }

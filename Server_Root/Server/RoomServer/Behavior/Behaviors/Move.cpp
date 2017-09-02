@@ -84,9 +84,10 @@ void Move::UpdateBody(long long lUpdateTime)
 	//	Rotation end
 
 	btVector3 vec3Pos = m_pEntity->GetPosition();
-	float fExpectedTime = sqrt(powf(m_vec3Dest.x() - vec3Pos.x(), 2.0f) /*+ powf(m_vec3Dest.y - vec3Pos.y, 2.0f)*/ + powf(m_vec3Dest.z() - vec3Pos.z(), 2.0f)) / m_pEntity->GetMoveSpeed();
-
-	btVector3 current = Util::Lerp(vec3Pos, m_vec3Dest, m_fDeltaTime / fExpectedTime);
+	btVector3 vec3ToMove = m_vec3Dest - vec3Pos;
+	vec3ToMove.setY(0);
+	btVector3 vec3Moved = vec3ToMove.normalized() * m_pEntity->GetMoveSpeed() * m_fDeltaTime;
+	btVector3 current = vec3Pos + vec3Moved;
 
 	bool bChallenger = m_pEntity->GetEntityType() == FBS::Data::EntityType::EntityType_Character && m_pGameRoom->IsChallenger(m_pEntity->GetID());
 	int nTerrainTypes = bChallenger ? CollisionObject::Type::CollisionObjectType_Terrain : CollisionObject::Type::CollisionObjectType_None;
@@ -165,6 +166,15 @@ void Move::UpdateBody(long long lUpdateTime)
 		}
 		else
 		{
+			bool bEnd = Util::IsEqual(vec3Moved, vec3ToMove) ||  vec3Moved.length2() > vec3ToMove.length2();
+			float fEndTime = lUpdateTime / 1000.0f;
+			if (bEnd)
+			{
+				current = m_vec3Dest;
+				float elapsed = (current - vec3Pos).length() / m_pEntity->GetMoveSpeed();
+				fEndTime = m_lLastUpdateTime / 1000.0f + elapsed;
+			}
+
 			m_pEntity->SetPosition(current);
 			m_pGameRoom->SetCollisionObjectPosition(m_pEntity->GetID(), current);
 
@@ -172,15 +182,15 @@ void Move::UpdateBody(long long lUpdateTime)
 			pPosition->m_fEventTime = m_lLastUpdateTime / 1000.0f;
 			pPosition->m_nEntityID = m_pEntity->GetID();
 			pPosition->m_fStartTime = m_lLastUpdateTime / 1000.0f;
-			pPosition->m_fEndTime = lUpdateTime / 1000.0f;
+			pPosition->m_fEndTime = fEndTime;
 			pPosition->m_vec3StartPosition = vec3Pos;
 			pPosition->m_vec3EndPosition = current;
 
 			m_pGameRoom->AddGameEvent(pPosition);
 
-			if (m_fDeltaTime >= fExpectedTime)
+			if (bEnd)
 			{
-				Stop(lUpdateTime - (m_fDeltaTime - fExpectedTime) * 1000);
+				Stop(fEndTime * 1000.0f);
 			}
 		}
 	}
