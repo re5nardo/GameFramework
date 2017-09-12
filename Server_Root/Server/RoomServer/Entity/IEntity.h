@@ -25,7 +25,12 @@ protected:
 	int m_nID = -1;
 	int m_nMasterDataID = -1;
 
-private:
+protected:
+	float m_fSize;
+	float m_fHeight;
+	float m_fDefault_Y;
+
+protected:
 	btVector3 m_vec3Position = btVector3(0, 0, 0);
 	btVector3 m_vec3Rotation = btVector3(0, 0, 0);
 
@@ -54,6 +59,10 @@ public:
 
 	btVector3 GetRotation();
 	void SetRotation(btVector3& vec3Rotation);
+
+	float GetSize();
+	float GetHeight();
+	float GetDefault_Y();
 
 public:
 	IBehavior* GetBehavior(int nMasterDataID);

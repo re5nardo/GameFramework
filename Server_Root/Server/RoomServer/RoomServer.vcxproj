@@ -114,6 +114,7 @@
     <ClInclude Include="Factory.h" />
     <ClInclude Include="GameEvent\GameEvents\BehaviorEnd.h" />
     <ClInclude Include="GameEvent\GameEvents\BehaviorStart.h" />
+    <ClInclude Include="GameEvent\GameEvents\Collision.h" />
     <ClInclude Include="GameEvent\GameEvents\EntityCreate.h" />
     <ClInclude Include="GameEvent\GameEvents\EntityDestroy.h" />
     <ClInclude Include="GameEvent\GameEvents\Position.h" />
@@ -180,6 +181,7 @@
     <ClCompile Include="Factory.cpp" />
     <ClCompile Include="GameEvent\GameEvents\BehaviorEnd.cpp" />
     <ClCompile Include="GameEvent\GameEvents\BehaviorStart.cpp" />
+    <ClCompile Include="GameEvent\GameEvents\Collision.cpp" />
     <ClCompile Include="GameEvent\GameEvents\EntityCreate.cpp" />
     <ClCompile Include="GameEvent\GameEvents\EntityDestroy.cpp" />
     <ClCompile Include="GameEvent\GameEvents\Position.cpp" />

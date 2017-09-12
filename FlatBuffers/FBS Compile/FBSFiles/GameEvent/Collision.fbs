@@ -1,0 +1,8 @@
+include "../FBSData.fbs";
+namespace FBS.GameEvent;
+
+table Collision
+{
+	EntityID:int;
+	Pos:FBS.Data.Vector3;
+}

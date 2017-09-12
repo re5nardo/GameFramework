@@ -21,8 +21,9 @@ void Projectile::Initialize()
 	MasterData::Projectile* pMasterProjectile = NULL;
 	MasterDataManager::Instance()->GetData<MasterData::Projectile>(m_nMasterDataID, pMasterProjectile);
 
-	SetPosition(btVector3(0, 0, 0));
-	SetRotation(btVector3(0, 0, 0));
+	m_fSize = pMasterProjectile->m_fSize;
+	m_fHeight = pMasterProjectile->m_fHeight;
+	m_fDefault_Y = pMasterProjectile->m_fDefault_Y;
 
 	for (vector<int>::iterator it = pMasterProjectile->m_vecBehaviorID.begin(); it != pMasterProjectile->m_vecBehaviorID.end(); ++it)
 	{

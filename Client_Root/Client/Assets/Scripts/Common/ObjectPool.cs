@@ -12,9 +12,9 @@ public class ObjectPool : MonoSingleton<ObjectPool>
 
     private Transform m_Transform = null;
 
-    protected override void Awake()
+    private void Start()
     {
-        base.Awake();
+        DontDestroyOnLoad(this);
 
         m_Transform = transform;
     }

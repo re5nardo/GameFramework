@@ -133,6 +133,12 @@ public class Entity : PooledComponent
 
             ProcessRotation(gameEvent);
         }
+        else if (iGameEvent.GetEventType() == FBS.GameEventType.Collision)
+        {
+            GameEvent.Collision gameEvent = (GameEvent.Collision)iGameEvent;
+
+            ProcessCollision(gameEvent);
+        }
     }
 
     private void ProcessBehaviorStart(GameEvent.BehaviorStart gameEvent)
@@ -223,6 +229,11 @@ public class Entity : PooledComponent
         {
             ((Behavior.Rotation)target).Initialize(this, gameEvent);
         }
+    }
+
+    private void ProcessCollision(GameEvent.Collision gameEvent)
+    {
+        Debug.LogError("Collision!! Pos : " + gameEvent.m_vec3Position);
     }
 
     public void Sample()

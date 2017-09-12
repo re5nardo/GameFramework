@@ -71,13 +71,13 @@ public class BaeGameRoom : IGameRoom
 
     private void UpdateTime()
     {
-        if (m_fLastWorldInfoTime > m_fElapsedTime + Time.deltaTime)
-        {
-            deltaTime = Time.deltaTime;
-
-            m_fElapsedTime += deltaTime;
-            return;
-        }
+//        if (m_fLastWorldInfoTime > m_fElapsedTime + Time.deltaTime)
+//        {
+//            deltaTime = Time.deltaTime;
+//
+//            m_fElapsedTime += deltaTime;
+//            return;
+//        }
 
         if (m_fLastWorldInfoTime > m_fElapsedTime)
         {
@@ -182,6 +182,12 @@ public class BaeGameRoom : IGameRoom
 
             m_dicEntity.Remove(gameEvent.m_nEntityID);
         }
+        else if (iGameEvent.GetEventType() == FBS.GameEventType.Collision)
+        {
+            GameEvent.Collision gameEvent = (GameEvent.Collision)iGameEvent;
+
+            m_dicEntity[gameEvent.m_nEntityID].ProcessGameEvent(gameEvent);
+        }
 
         if (!m_dicProcessedGameEvent.ContainsKey((int)iGameEvent.m_fEventTime))
         {
@@ -260,6 +266,8 @@ public class BaeGameRoom : IGameRoom
         {
             OnWorldInfoToC((WorldInfoToC)iMsg);
         }
+
+        ObjectPool.Instance.ReturnObject(iMsg);
     }
 
     private void OnEnterRoomToC(EnterRoomToC msg)
@@ -329,7 +337,6 @@ public class BaeGameRoom : IGameRoom
             
             m_dicGameEvent[nSec].Add(iGameEvent);
         }
-
     }
 #endregion
 

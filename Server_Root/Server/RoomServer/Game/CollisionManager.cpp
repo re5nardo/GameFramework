@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "CollisionManager.h"
 #include "BulletCollision/CollisionShapes/btBox2dShape.h"
+#include "BulletCollision/CollisionShapes/btCapsuleShape.h"
 #include "BulletCollision/NarrowPhaseCollision/btContinuousConvexCollision.h"
 #include "../Util.h"
 #include <limits>
@@ -152,13 +153,17 @@ int CollisionManager::AddConvexPolygon2dShapeTerrainObject(btVector3& vec3Positi
 	return m_nSequence++;
 }
 
-int CollisionManager::AddCharacter(btVector3& vec3Position, float fRadius)
+int CollisionManager::AddCharacter(btVector3& vec3Position, float fSize, float fHeight)
 {
 	btCollisionObject* pbtCollisionObject = new btCollisionObject();
 
 	//	shape
-	btSphereShape* pSphereShape = new btSphereShape(fRadius);
-	pbtCollisionObject->setCollisionShape(pSphereShape);
+	btCompoundShape* pCompoundShape = new btCompoundShape();
+	btTransform trLocal;
+	trLocal.setIdentity();
+	trLocal.setOrigin(btVector3(0, fHeight * 0.5f, 0));
+	pCompoundShape->addChildShape(trLocal, new btCapsuleShape(fSize * 0.5f, fHeight - fSize));
+	pbtCollisionObject->setCollisionShape(pCompoundShape);
 
 	//	set position
 	pbtCollisionObject->getWorldTransform().setOrigin(vec3Position);
@@ -176,13 +181,13 @@ int CollisionManager::AddCharacter(btVector3& vec3Position, float fRadius)
 	return m_nSequence++;
 }
 
-int CollisionManager::AddProjectile(btVector3& vec3Position, float fRadius)
+int CollisionManager::AddProjectile(btVector3& vec3Position, float fSize, float fHeight)
 {
 	btCollisionObject* pbtCollisionObject = new btCollisionObject();
 
 	//	shape
-	btSphereShape* pSphereShape = new btSphereShape(fRadius);
-	pbtCollisionObject->setCollisionShape(pSphereShape);
+	btCapsuleShape* pCapsuleShape = new btCapsuleShape(fSize * 0.5f, fHeight - fSize);
+	pbtCollisionObject->setCollisionShape(pCapsuleShape);
 
 	//	set position
 	pbtCollisionObject->getWorldTransform().setOrigin(vec3Position);
@@ -222,7 +227,7 @@ bool CollisionManager::ContinuousCollisionDectectionFirst(int nID, btVector3& ve
 
 	btTransform t = pTarget->getWorldTransform();
 	btVector3 min, max;
-	pTarget->getRootCollisionShape()->getAabb(t, min, max);
+	GetConvexShape(pTarget)->getAabb(t, min, max);
 
 	XY center((t.getOrigin().x() + vec3To.x()) * 0.5f, (t.getOrigin().z() + vec3To.z()) * 0.5f);
 	float halfDimension_x = (abs(t.getOrigin().x() - vec3To.x()) + (max.x() - min.x())) * 0.5f;
@@ -245,7 +250,7 @@ bool CollisionManager::ContinuousCollisionDectectionFirst(int nID, btVector3& ve
 	{
 		btCollisionObject* pCollisionObject = (*it)->m_pbtCollisionObject;
 
-		btContinuousConvexCollision convexCaster((btConvexShape*)pTarget->getRootCollisionShape(), (btConvexShape*)pCollisionObject->getRootCollisionShape(), &gGjkSimplexSolver, penetrationDepthSolver);
+		btContinuousConvexCollision convexCaster(GetConvexShape(pTarget), GetConvexShape(pCollisionObject), &gGjkSimplexSolver, penetrationDepthSolver);
 		gGjkSimplexSolver.reset();
 
 		btTransform trTargetFrom = pTarget->getWorldTransform();
@@ -285,7 +290,7 @@ bool CollisionManager::ContinuousCollisionDectection(int nID, btVector3& vec3To,
 
 	btTransform t = pTarget->getWorldTransform();
 	btVector3 min, max;
-	pTarget->getRootCollisionShape()->getAabb(t, min, max);
+	GetConvexShape(pTarget)->getAabb(t, min, max);
 
 	XY center((t.getOrigin().x() + vec3To.x()) * 0.5f, (t.getOrigin().z() + vec3To.z()) * 0.5f);
 	float halfDimension_x = (abs(t.getOrigin().x() - vec3To.x()) + (max.x() - min.x())) * 0.5f;
@@ -297,7 +302,7 @@ bool CollisionManager::ContinuousCollisionDectection(int nID, btVector3& vec3To,
 	{
 		btCollisionObject* pCollisionObject = (*it)->m_pbtCollisionObject;
 
-		btContinuousConvexCollision convexCaster((btConvexShape*)pTarget->getRootCollisionShape(), (btConvexShape*)pCollisionObject->getRootCollisionShape(), &gGjkSimplexSolver, penetrationDepthSolver);
+		btContinuousConvexCollision convexCaster(GetConvexShape(pTarget), GetConvexShape(pCollisionObject), &gGjkSimplexSolver, penetrationDepthSolver);
 		gGjkSimplexSolver.reset();
 
 		btTransform trTargetFrom = pTarget->getWorldTransform();
@@ -430,4 +435,20 @@ list<CollisionObject*> CollisionManager::GetCollisionObjects(int nTypes, AABB ra
 	}
 
 	return listCollisionObject;
+}
+
+btConvexShape* CollisionManager::GetConvexShape(btCollisionObject* pbtCollisionObject)
+{
+	btCollisionShape* pCollisionShape = pbtCollisionObject->getRootCollisionShape();
+
+	if (pCollisionShape->getShapeType() == COMPOUND_SHAPE_PROXYTYPE)
+	{
+		btCompoundShape* pCompoundShape = (btCompoundShape*)pCollisionShape;
+
+		return (btConvexShape*)pCompoundShape->getChildShape(0);
+	}
+	else
+	{
+		return (btConvexShape*)pCollisionShape;
+	}
 }

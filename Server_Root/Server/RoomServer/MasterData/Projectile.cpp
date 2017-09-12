@@ -27,5 +27,8 @@ namespace MasterData
 		}
 		m_fSize = pSheet->readNum(nRow, 4);
 		m_strLifeInfo = pSheet->cellType(nRow, 6) == CellType::CELLTYPE_STRING ? pSheet->readStr(nRow, 6) : "";
+
+		m_fHeight = pSheet->readNum(nRow, 7);
+		m_fDefault_Y = pSheet->readNum(nRow, 8);
 	}
 }

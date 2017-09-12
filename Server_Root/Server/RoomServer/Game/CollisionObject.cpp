@@ -11,7 +11,24 @@ CollisionObject::~CollisionObject()
 {
 	if (m_pbtCollisionObject != NULL)
 	{
-		delete m_pbtCollisionObject->getRootCollisionShape();
+		btCollisionShape* pCollisionShape = m_pbtCollisionObject->getRootCollisionShape();
+
+		if (pCollisionShape->getShapeType() == COMPOUND_SHAPE_PROXYTYPE)
+		{
+			btCompoundShape* pCompoundShape = (btCompoundShape*)pCollisionShape;
+
+			int nNumChildShapes = pCompoundShape->getNumChildShapes();
+			if (nNumChildShapes > 0)
+			{
+				for (int i = nNumChildShapes - 1; i >= 0; --i)
+				{
+					delete pCompoundShape->getChildShape(i);
+					pCompoundShape->removeChildShapeByIndex(i);
+				}
+			}
+		}
+
+		delete pCollisionShape;
 		delete m_pbtCollisionObject;
 	}
 }

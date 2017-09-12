@@ -24,8 +24,10 @@ void Character::Initialize()
 	MasterDataManager::Instance()->GetData<MasterData::Character>(m_nMasterDataID, pMasterCharacter);
 
 	SetStat(Stat(pMasterCharacter->m_fMoveSpeed, pMasterCharacter->m_fHP, pMasterCharacter->m_fMP));
-	SetPosition(btVector3(0, 0, 0));
-	SetRotation(btVector3(0, 0, 0));
+
+	m_fSize = pMasterCharacter->m_fSize;
+	m_fHeight = pMasterCharacter->m_fHeight;
+	m_fDefault_Y = pMasterCharacter->m_fDefault_Y;
 
 	for (vector<int>::iterator it = pMasterCharacter->m_vecSkillID.begin(); it != pMasterCharacter->m_vecSkillID.end(); ++it)
 	{

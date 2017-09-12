@@ -69,6 +69,10 @@ public class WorldInfoToC : IMessage
             {
                 gameEvent = new GameEvent.EntityDestroy();
             }
+            else if (gameEventData.Type == FBS.GameEventType.Collision)
+            {
+                gameEvent = new GameEvent.Collision();
+            }
 
             gameEvent.m_fEventTime = gameEventData.EventTime;
             gameEvent.Deserialize(listByte.ToArray());

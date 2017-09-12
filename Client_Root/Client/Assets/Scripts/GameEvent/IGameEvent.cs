@@ -8,7 +8,7 @@ public abstract class IGameEvent : IDeserializable
     public abstract FBS.GameEventType GetEventType();
     public abstract bool Deserialize(byte[] bytes);
 
-    public virtual string ToString()
+    public override string ToString()
     {
         return string.Format("EventType : {0}, EventTime : {1}", GetEventType().ToString(), m_fEventTime);
     }

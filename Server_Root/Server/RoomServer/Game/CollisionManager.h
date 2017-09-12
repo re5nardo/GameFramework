@@ -43,8 +43,8 @@ public:
 	int AddBox2dShapeTerrainObject(btVector3& vec3Position, btVector3& vec3Rotation, btVector3& vec3HalfExtents);
 	int AddSphere2dShapeTerrainObject(btVector3& vec3Position, float fRadius);
 	int AddConvexPolygon2dShapeTerrainObject(btVector3& vec3Position, list<btVector3>& listPoint);
-	int AddCharacter(btVector3& vec3Position, float fRadius);
-	int AddProjectile(btVector3& vec3Position, float fRadius);
+	int AddCharacter(btVector3& vec3Position, float fSize, float fHeight);
+	int AddProjectile(btVector3& vec3Position, float fSize, float fHeight);
 	void RemoveCollisionObject(int nID);
 
 public:
@@ -58,4 +58,5 @@ public:
 
 private:
 	list<CollisionObject*> GetCollisionObjects(int nTypes, AABB range);
+	btConvexShape* GetConvexShape(btCollisionObject* pbtCollisionObject);
 };

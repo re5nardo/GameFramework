@@ -74,7 +74,8 @@ private:
 
 private:
 	CollisionManager m_CollisionManager;
-	map<int, int> m_mapEntityCollision;		//	key : EntityID, value : CollisionObject ID
+	map<int, int> m_mapEntityCollision;		//	key : EntityID,				value : CollisionObject ID
+	map<int, int> m_mapCollisionEntity;		//	key : CollisionObject ID,	value : EntityID
 
 private:
 	list<IGameEvent*> m_listGameEvent;
@@ -103,6 +104,10 @@ private:
 	int GetPlayerIndexBySocket(unsigned int socket);
 	bool IsValidPlayer(string strPlayerKey);
 	bool IsAllPlayersReady();
+
+public:
+	int GetEntityIDByCollisionObjectID(int nCollisionObjectID);
+	int GetCollisionObjectIDByEntityID(int nEntityID);
 
 private:
 	long long GetElapsedTime();	//	Milliseconds

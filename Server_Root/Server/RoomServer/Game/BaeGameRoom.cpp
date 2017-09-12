@@ -273,6 +273,7 @@ void BaeGameRoom::Reset()
 
 	m_CollisionManager.Reset();
 	m_mapEntityCollision.clear();
+	m_mapCollisionEntity.clear();
 	m_mapPlayerEntity.clear();
 	m_mapEntityPlayer.clear();
 }
@@ -364,23 +365,17 @@ void BaeGameRoom::SetObstacles(int nMapID, int nRandomSeed)
 
 bool BaeGameRoom::CheckDiscreteCollisionDectection(int nEntityID, int nTypes, list<pair<int, btVector3>>* listHit)
 {
-	int nCollisionObjectID = m_mapEntityCollision[nEntityID];
-
-	return m_CollisionManager.DiscreteCollisionDectection(nCollisionObjectID, nTypes, listHit);
+	return m_CollisionManager.DiscreteCollisionDectection(GetCollisionObjectIDByEntityID(nEntityID), nTypes, listHit);
 }
 
 bool BaeGameRoom::CheckContinuousCollisionDectectionFirst(int nEntityID, btVector3& vec3Dest, int nTypes, pair<int, btVector3>* hit)
 {
-	int nCollisionObjectID = m_mapEntityCollision[nEntityID];
-
-	return m_CollisionManager.ContinuousCollisionDectectionFirst(nCollisionObjectID, vec3Dest, nTypes, hit);
+	return m_CollisionManager.ContinuousCollisionDectectionFirst(GetCollisionObjectIDByEntityID(nEntityID), vec3Dest, nTypes, hit);
 }
 
 bool BaeGameRoom::CheckContinuousCollisionDectection(int nEntityID, btVector3& vec3Dest, int nTypes, list<pair<int, btVector3>>* listHit)
 {
-	int nCollisionObjectID = m_mapEntityCollision[nEntityID];
-
-	return m_CollisionManager.ContinuousCollisionDectection(nCollisionObjectID, vec3Dest, nTypes, listHit);
+	return m_CollisionManager.ContinuousCollisionDectection(GetCollisionObjectIDByEntityID(nEntityID), vec3Dest, nTypes, listHit);
 }
 
 bool BaeGameRoom::IsChallenger(int nEntityID)
@@ -393,17 +388,13 @@ bool BaeGameRoom::IsDisturber(int nEntityID)
 	return false;
 }
 
-void BaeGameRoom::SetCollisionObjectPosition(int nEntityID, btVector3& vec3Position)
+void BaeGameRoom::SetCollisionObjectPosition(int nCollisionObjectID, btVector3& vec3Position)
 {
-	int nCollisionObjectID = m_mapEntityCollision[nEntityID];
-
 	m_CollisionManager.SetPosition(nCollisionObjectID, vec3Position);
 }
 
-void BaeGameRoom::SetCollisionObjectRotation(int nEntityID, btVector3& vec3Rotation)
+void BaeGameRoom::SetCollisionObjectRotation(int nCollisionObjectID, btVector3& vec3Rotation)
 {
-	int nCollisionObjectID = m_mapEntityCollision[nEntityID];
-
 	m_CollisionManager.SetRotation(nCollisionObjectID, vec3Rotation);
 }
 
@@ -434,13 +425,14 @@ bool BaeGameRoom::CreateEntity(FBS::Data::EntityType type, int nMasterDataID, in
 	int nCollisionObjectID = 0;
 	if (type == FBS::Data::EntityType::EntityType_Character)
 	{
-		nCollisionObjectID = m_CollisionManager.AddCharacter(entity->GetPosition(), 0.5f);
+		nCollisionObjectID = m_CollisionManager.AddCharacter(entity->GetPosition(), entity->GetSize(), entity->GetHeight());
 	}
 	else if (type == FBS::Data::EntityType::EntityType_Projectile)
 	{
-		nCollisionObjectID = m_CollisionManager.AddProjectile(entity->GetPosition(), 0.5f);
+		nCollisionObjectID = m_CollisionManager.AddProjectile(entity->GetPosition(), entity->GetSize(), entity->GetHeight());
 	}
 	m_mapEntityCollision[nEntityID] = nCollisionObjectID;
+	m_mapCollisionEntity[nCollisionObjectID] = nEntityID;
 
 	if (pEntityID != NULL)
 		*pEntityID = nEntityID;
@@ -472,8 +464,11 @@ void BaeGameRoom::TrimEntity()
 		delete m_mapEntity[nEntityID];
 		m_mapEntity.erase(nEntityID);
 
-		int nCollisionObjectID = m_mapEntityCollision[nEntityID];
+		int nCollisionObjectID = GetCollisionObjectIDByEntityID(nEntityID);
 		m_CollisionManager.RemoveCollisionObject(nCollisionObjectID);
+
+		m_mapEntityCollision.erase(nEntityID);
+		m_mapCollisionEntity.erase(nCollisionObjectID);
 	}
 	m_listDestroyReserved.clear();
 }
@@ -625,6 +620,16 @@ int BaeGameRoom::GetPlayerIndexByPlayerKey(string strPlayerKey)
 int BaeGameRoom::GetPlayerIndexBySocket(unsigned int socket)
 {
 	return GetPlayerIndexByPlayerKey(m_mapSocketPlayerKey[socket]);
+}
+
+int BaeGameRoom::GetEntityIDByCollisionObjectID(int nCollisionObjectID)
+{
+	return m_mapCollisionEntity[nCollisionObjectID];
+}
+
+int BaeGameRoom::GetCollisionObjectIDByEntityID(int nEntityID)
+{
+	return m_mapEntityCollision[nEntityID];
 }
 
 bool BaeGameRoom::IsValidPlayer(string strPlayerKey)

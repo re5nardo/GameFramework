@@ -212,27 +212,27 @@ public class RoomNetwork : MonoSingleton<RoomNetwork>
 
         if (nMessageID == EnterRoomToC.MESSAGE_ID)
         {
-            msg = new EnterRoomToC();
+            msg = ObjectPool.Instance.GetObject<EnterRoomToC>();
         }
         else if (nMessageID == PreparationStateToC.MESSAGE_ID)
         {
-            msg = new PreparationStateToC();
+            msg = ObjectPool.Instance.GetObject<PreparationStateToC>();
         }
         else if (nMessageID == GameStartToC.MESSAGE_ID)
         {
-            msg = new GameStartToC();
+            msg = ObjectPool.Instance.GetObject<GameStartToC>();
         }
         else if (nMessageID == PlayerEnterRoomToC.MESSAGE_ID)
         {
-            msg = new PlayerEnterRoomToC();
+            msg = ObjectPool.Instance.GetObject<PlayerEnterRoomToC>();
         }
         else if (nMessageID == WorldSnapShotToC.MESSAGE_ID)
         {
-            msg = new WorldSnapShotToC();
+            msg = ObjectPool.Instance.GetObject<WorldSnapShotToC>();
         }
         else if (nMessageID == WorldInfoToC.MESSAGE_ID)
         {
-            msg = new WorldInfoToC();
+            msg = ObjectPool.Instance.GetObject<WorldInfoToC>();
         }
 
         if (msg != null)

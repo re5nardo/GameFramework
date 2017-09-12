@@ -23,6 +23,8 @@ namespace MasterData
 		float m_fMP;
 		float m_fMoveSpeed;
 		float m_fSize;
+		float m_fHeight;
+		float m_fDefault_Y;
 
 	public:
 		void SetData(Sheet* pSheet, int nRow) override;

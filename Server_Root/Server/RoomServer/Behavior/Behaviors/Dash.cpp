@@ -57,7 +57,6 @@ void Dash::UpdateBody(long long lUpdateTime)
 		if (m_pGameRoom->CheckContinuousCollisionDectectionFirst(m_pEntity->GetID(), hitTerrain.second, nCollistionTypes, &hitCollision))
 		{
 			m_pEntity->SetPosition(hitCollision.second);
-			m_pGameRoom->SetCollisionObjectPosition(m_pEntity->GetID(), hitCollision.second);
 
 			GameEvent::Position* pPosition = new GameEvent::Position();
 			pPosition->m_fEventTime = m_lLastUpdateTime / 1000.0f;
@@ -78,7 +77,6 @@ void Dash::UpdateBody(long long lUpdateTime)
 		else
 		{
 			m_pEntity->SetPosition(hitTerrain.second);
-			m_pGameRoom->SetCollisionObjectPosition(m_pEntity->GetID(), hitTerrain.second);
 
 			GameEvent::Position* pPosition = new GameEvent::Position();
 			pPosition->m_fEventTime = m_lLastUpdateTime / 1000.0f;
@@ -101,7 +99,6 @@ void Dash::UpdateBody(long long lUpdateTime)
 		if (m_pGameRoom->CheckContinuousCollisionDectectionFirst(m_pEntity->GetID(), hitTerrain.second, nCollistionTypes, &hitCollision))
 		{
 			m_pEntity->SetPosition(hitCollision.second);
-			m_pGameRoom->SetCollisionObjectPosition(m_pEntity->GetID(), hitCollision.second);
 
 			GameEvent::Position* pPosition = new GameEvent::Position();
 			pPosition->m_fEventTime = m_lLastUpdateTime / 1000.0f;
@@ -122,7 +119,6 @@ void Dash::UpdateBody(long long lUpdateTime)
 		else
 		{
 			m_pEntity->SetPosition(vec3Target);
-			m_pGameRoom->SetCollisionObjectPosition(m_pEntity->GetID(), vec3Target);
 
 			GameEvent::Position* pPosition = new GameEvent::Position();
 			pPosition->m_fEventTime = m_lLastUpdateTime / 1000.0f;

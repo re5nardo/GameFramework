@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "IEntity.h"
+#include "../Game/BaeGameRoom.h"
 
 IEntity::IEntity(BaeGameRoom* pGameRoom, int nID, int nMasterDataID)
 {
@@ -69,6 +70,8 @@ btVector3 IEntity::GetPosition()
 void IEntity::SetPosition(btVector3& vec3Position)
 {
 	m_vec3Position = vec3Position;
+
+	m_pGameRoom->SetCollisionObjectPosition(m_pGameRoom->GetCollisionObjectIDByEntityID(m_nID), vec3Position);
 }
 
 btVector3 IEntity::GetRotation()
@@ -79,6 +82,23 @@ btVector3 IEntity::GetRotation()
 void IEntity::SetRotation(btVector3& vec3Rotation)
 {
 	m_vec3Rotation = vec3Rotation;
+
+	m_pGameRoom->SetCollisionObjectRotation(m_pGameRoom->GetCollisionObjectIDByEntityID(m_nID), m_vec3Rotation);
+}
+
+float IEntity::GetSize()
+{
+	return m_fSize;
+}
+
+float IEntity::GetHeight()
+{
+	return m_fHeight;
+}
+
+float IEntity::GetDefault_Y()
+{
+	return m_fDefault_Y;
 }
 
 IBehavior* IEntity::GetBehavior(int nMasterDataID)

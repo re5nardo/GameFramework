@@ -7,6 +7,7 @@
 #include "btBulletCollisionCommon.h"
 #include "../../GameEvent/GameEvents/Position.h"
 #include "../../GameEvent/GameEvents/Rotation.h"
+#include "../../GameEvent/GameEvents/Collision.h"
 #include "../BehaviorIDs.h"
 
 const string Move::NAME = "Move";
@@ -85,9 +86,12 @@ void Move::UpdateBody(long long lUpdateTime)
 
 	btVector3 vec3Pos = m_pEntity->GetPosition();
 	btVector3 vec3ToMove = m_vec3Dest - vec3Pos;
-	vec3ToMove.setY(0);
 	btVector3 vec3Moved = vec3ToMove.normalized() * m_pEntity->GetMoveSpeed() * m_fDeltaTime;
 	btVector3 current = vec3Pos + vec3Moved;
+	if (Util::IsEqual(vec3Moved, vec3ToMove) || vec3Moved.length2() > vec3ToMove.length2())
+	{
+		current = m_vec3Dest;
+	}
 
 	bool bChallenger = m_pEntity->GetEntityType() == FBS::Data::EntityType::EntityType_Character && m_pGameRoom->IsChallenger(m_pEntity->GetID());
 	int nTerrainTypes = bChallenger ? CollisionObject::Type::CollisionObjectType_Terrain : CollisionObject::Type::CollisionObjectType_None;
@@ -102,7 +106,6 @@ void Move::UpdateBody(long long lUpdateTime)
 		if (m_pGameRoom->CheckContinuousCollisionDectectionFirst(m_pEntity->GetID(), hitTerrain.second, nCollistionTypes, &hitCollision))
 		{
 			m_pEntity->SetPosition(hitCollision.second);
-			m_pGameRoom->SetCollisionObjectPosition(m_pEntity->GetID(), hitCollision.second);
 
 			GameEvent::Position* pPosition = new GameEvent::Position();
 			pPosition->m_fEventTime = m_lLastUpdateTime / 1000.0f;
@@ -116,14 +119,16 @@ void Move::UpdateBody(long long lUpdateTime)
 
 			Stop(lUpdateTime);
 
-			//	Add Collision Event
-			//	...
-			//	...
+			GameEvent::Collision* pCollision = new GameEvent::Collision();
+			pCollision->m_fEventTime = lUpdateTime / 1000.0f;
+			pCollision->m_nEntityID = bChallenger ? m_pEntity->GetID() : m_pGameRoom->GetEntityIDByCollisionObjectID(hitCollision.first);
+			pCollision->m_vec3Position = hitCollision.second;
+
+			m_pGameRoom->AddGameEvent(pCollision);
 		}
 		else
 		{
 			m_pEntity->SetPosition(hitTerrain.second);
-			m_pGameRoom->SetCollisionObjectPosition(m_pEntity->GetID(), hitTerrain.second);
 
 			GameEvent::Position* pPosition = new GameEvent::Position();
 			pPosition->m_fEventTime = m_lLastUpdateTime / 1000.0f;
@@ -143,10 +148,9 @@ void Move::UpdateBody(long long lUpdateTime)
 		//	Check collision second
 		int nCollistionTypes = bChallenger ? CollisionObject::Type::CollisionObjectType_Projectile : CollisionObject::Type::CollisionObjectType_None;
 		pair<int, btVector3> hitCollision;
-		if (m_pGameRoom->CheckContinuousCollisionDectectionFirst(m_pEntity->GetID(), hitTerrain.second, nCollistionTypes, &hitCollision))
+		if (m_pGameRoom->CheckContinuousCollisionDectectionFirst(m_pEntity->GetID(), current, nCollistionTypes, &hitCollision))
 		{
 			m_pEntity->SetPosition(hitCollision.second);
-			m_pGameRoom->SetCollisionObjectPosition(m_pEntity->GetID(), hitCollision.second);
 
 			GameEvent::Position* pPosition = new GameEvent::Position();
 			pPosition->m_fEventTime = m_lLastUpdateTime / 1000.0f;
@@ -160,13 +164,16 @@ void Move::UpdateBody(long long lUpdateTime)
 
 			Stop(lUpdateTime);
 
-			//	Add Collision Event
-			//	...
-			//	...
+			GameEvent::Collision* pCollision = new GameEvent::Collision();
+			pCollision->m_fEventTime = lUpdateTime / 1000.0f;
+			pCollision->m_nEntityID = bChallenger ? m_pEntity->GetID() : m_pGameRoom->GetEntityIDByCollisionObjectID(hitCollision.first);
+			pCollision->m_vec3Position = hitCollision.second;
+
+			m_pGameRoom->AddGameEvent(pCollision);
 		}
 		else
 		{
-			bool bEnd = Util::IsEqual(vec3Moved, vec3ToMove) ||  vec3Moved.length2() > vec3ToMove.length2();
+			bool bEnd = Util::IsEqual(vec3Moved, vec3ToMove) || vec3Moved.length2() > vec3ToMove.length2();
 			float fEndTime = lUpdateTime / 1000.0f;
 			if (bEnd)
 			{
@@ -176,7 +183,6 @@ void Move::UpdateBody(long long lUpdateTime)
 			}
 
 			m_pEntity->SetPosition(current);
-			m_pGameRoom->SetCollisionObjectPosition(m_pEntity->GetID(), current);
 
 			GameEvent::Position* pPosition = new GameEvent::Position();
 			pPosition->m_fEventTime = m_lLastUpdateTime / 1000.0f;
