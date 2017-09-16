@@ -60,15 +60,16 @@ public class ObjectPool : MonoSingleton<ObjectPool>
             return false;
         }
 
+        System.Type type = target.GetType();
         LinkedList<IPooledObject> listObject = null;
-        if(!m_dicObject.TryGetValue(target.GetType(), out listObject))
+        if(!m_dicObject.TryGetValue(type, out listObject))
         {
-            Debug.LogWarning("Invalid type! Type : " + target.GetType());
+            Debug.LogWarning("Invalid type! Type : " + type);
             return false;
         }
 
         listObject.AddLast(target);
-        m_dicObjectUsed[target.GetType()].Remove(target);
+        m_dicObjectUsed[type].Remove(target);
 
         target.OnReturned();
 

@@ -61,4 +61,9 @@ public class EnterRoomToC : IMessage
 
         return true;
     }
+
+    public override void OnReturned()
+    {
+        m_dicPlayers.Clear();
+    }
 }

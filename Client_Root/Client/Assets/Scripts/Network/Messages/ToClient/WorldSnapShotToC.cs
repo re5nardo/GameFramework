@@ -80,4 +80,9 @@ public class WorldSnapShotToC : IMessage
 
         return true;
     }
+
+    public override void OnReturned()
+    {
+        m_listEntityState.Clear();
+    }
 }

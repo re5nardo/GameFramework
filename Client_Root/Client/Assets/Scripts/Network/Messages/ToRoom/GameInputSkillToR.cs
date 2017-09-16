@@ -80,4 +80,11 @@ public class GameInputSkillToR : IMessage
 
         return true;
     }
+
+    public override void OnReturned()
+    {
+        m_listVector3.Clear();
+        m_listInt.Clear();
+        m_listFloat.Clear();
+    }
 }

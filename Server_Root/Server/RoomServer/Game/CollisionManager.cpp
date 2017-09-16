@@ -70,9 +70,9 @@ void CollisionManager::Init(btVector3& vec3WorldBounds)
 
 	m_pCollisionWorld = new btCollisionWorld(m_pDispatcher, m_pBroadPhase, m_pCollisionConfiguration);
 
-	m_qtTerrainObject.Init(AABB(XY(0, 0), vec3WorldBounds.x() * 0.5f, vec3WorldBounds.z() * 0.5f));
-	m_qtCharacter.Init(AABB(XY(0, 0), vec3WorldBounds.x() * 0.5f, vec3WorldBounds.z() * 0.5f));
-	m_qtProjectile.Init(AABB(XY(0, 0), vec3WorldBounds.x() * 0.5f, vec3WorldBounds.z() * 0.5f));
+	m_qtTerrainObject.SetBoundary(AABB(XY(0, 0), vec3WorldBounds.x() * 0.5f, vec3WorldBounds.z() * 0.5f));
+	m_qtCharacter.SetBoundary(AABB(XY(0, 0), vec3WorldBounds.x() * 0.5f, vec3WorldBounds.z() * 0.5f));
+	m_qtProjectile.SetBoundary(AABB(XY(0, 0), vec3WorldBounds.x() * 0.5f, vec3WorldBounds.z() * 0.5f));
 
 	m_vec3WorldBounds = vec3WorldBounds;
 }
@@ -207,12 +207,20 @@ int CollisionManager::AddProjectile(btVector3& vec3Position, float fSize, float 
 
 void CollisionManager::SetPosition(int nID, btVector3& vec3Position)
 {
-	m_mapCollisionObject[nID]->m_pbtCollisionObject->getWorldTransform().setOrigin(vec3Position);
+	CollisionObject* pCollisionObject = m_mapCollisionObject[nID];
+
+	pCollisionObject->m_pbtCollisionObject->getWorldTransform().setOrigin(vec3Position);
+
+	pCollisionObject->m_pQuadTree->Transform(pCollisionObject);
 }
 
 void CollisionManager::SetRotation(int nID, btVector3& vec3Rotation)
 {
-	m_mapCollisionObject[nID]->m_pbtCollisionObject->getWorldTransform().setRotation(Util::DegreesToQuaternion(vec3Rotation));
+	CollisionObject* pCollisionObject = m_mapCollisionObject[nID];
+
+	pCollisionObject->m_pbtCollisionObject->getWorldTransform().setRotation(Util::DegreesToQuaternion(vec3Rotation));
+
+	pCollisionObject->m_pQuadTree->Transform(pCollisionObject);
 }
 
 //	This shows poor performance where the distance between start to dest is long
@@ -266,8 +274,9 @@ bool CollisionManager::ContinuousCollisionDectectionFirst(int nID, btVector3& ve
 			btVector3 worldBoundsMax(m_vec3WorldBounds.x() * 0.5f, m_vec3WorldBounds.y() * 0.5f, m_vec3WorldBounds.z() * 0.5f);
 			btTransform hitTrans;
 
-			btVector3 linVel = trTargetTo.getOrigin() - trTargetFrom.getOrigin();
-			btTransformUtil::integrateTransform(trTargetFrom, linVel, btVector3(0, 0, 0), rayResult.m_fraction, hitTrans);
+			btVector3 linVel, angVel;
+			btTransformUtil::calculateVelocity(trTargetFrom, trTargetTo, 1.0, linVel, angVel);
+			btTransformUtil::integrateTransform(trTargetFrom, linVel, angVel, rayResult.m_fraction, hitTrans);
 
 			hit->first = (*it)->m_nID;
 			hit->second = hitTrans.getOrigin();
@@ -318,8 +327,9 @@ bool CollisionManager::ContinuousCollisionDectection(int nID, btVector3& vec3To,
 			btVector3 worldBoundsMax(m_vec3WorldBounds.x() * 0.5f, m_vec3WorldBounds.y() * 0.5f, m_vec3WorldBounds.z() * 0.5f);
 			btTransform hitTrans;
 
-			btVector3 linVel = trTargetTo.getOrigin() - trTargetFrom.getOrigin();
-			btTransformUtil::integrateTransform(trTargetFrom, linVel, btVector3(0, 0, 0), rayResult.m_fraction, hitTrans);
+			btVector3 linVel, angVel;
+			btTransformUtil::calculateVelocity(trTargetFrom, trTargetTo, 1.0, linVel, angVel);
+			btTransformUtil::integrateTransform(trTargetFrom, linVel, angVel, rayResult.m_fraction, hitTrans);
 
 			listHit->push_back(make_pair((*it)->m_nID, btVector3(hitTrans.getOrigin())));
 		}
@@ -389,24 +399,25 @@ bool CollisionManager::DiscreteCollisionDectection(int nID, int nTypes, list<pai
 
 void CollisionManager::RemoveCollisionObject(int nID)
 {
+	CollisionObject* pCollisionObject = m_mapCollisionObject[nID];
+
+	pCollisionObject->m_pQuadTree->Remove(pCollisionObject);
+
+	delete pCollisionObject;
+	m_mapCollisionObject.erase(nID);
+
 	if (m_mapTerrainObject.count(nID) > 0)
 	{
-		m_qtTerrainObject.Remove(m_mapTerrainObject[nID]);
 		m_mapTerrainObject.erase(nID);
 	}
 	else if (m_mapCharacter.count(nID) > 0)
 	{
-		m_qtCharacter.Remove(m_mapCharacter[nID]);
 		m_mapCharacter.erase(nID);
 	}
 	else if (m_mapProjectile.count(nID) > 0)
 	{
-		m_qtProjectile.Remove(m_mapProjectile[nID]);
 		m_mapProjectile.erase(nID);
 	}
-
-	delete m_mapCollisionObject[nID];
-	m_mapCollisionObject.erase(nID);
 }
 
 list<CollisionObject*> CollisionManager::GetCollisionObjects(int nTypes, AABB range)

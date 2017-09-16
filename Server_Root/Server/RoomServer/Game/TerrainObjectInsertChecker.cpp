@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "TerrainObjectInsertChecker.h"
+#include "CollisionObject.h"
 
 TerrainObjectInsertChecker::TerrainObjectInsertChecker()
 {

@@ -1,7 +1,8 @@
 #pragma once
 
 #include "../../CommonSources/QuadTreePrerequisites.h"
-#include "CollisionObject.h"
+
+class CollisionObject;
 
 using namespace std;
 

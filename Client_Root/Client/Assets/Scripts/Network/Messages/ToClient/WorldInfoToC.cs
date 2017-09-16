@@ -82,4 +82,9 @@ public class WorldInfoToC : IMessage
 
         return true;
     }
+
+    public override void OnReturned()
+    {
+        m_listGameEvent.Clear();
+    }
 }

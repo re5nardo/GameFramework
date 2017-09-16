@@ -12,8 +12,13 @@ public:
 	QuadTree()
 	{
 	}
-	QuadTree(AABB boundary)
+	QuadTree(QuadTree* parent)
 	{
+		this->parent = parent;
+	}
+	QuadTree(QuadTree* parent, AABB boundary)
+	{
+		this->parent = parent;
 		this->boundary = boundary;
 	}
 	virtual ~QuadTree()
@@ -40,8 +45,11 @@ private:
 	QuadTree* southWest;
 	QuadTree* southEast;
 
+	//	Parent
+	QuadTree* parent = NULL;
+
 public:
-	void Init(AABB boundary)
+	void SetBoundary(AABB boundary)
 	{
 		this->boundary = boundary;
 	}
@@ -56,7 +64,14 @@ public:
 			delete northEast;
 			delete southWest;
 			delete southEast;
+
+			northWest = NULL;
+			northEast = NULL;
+			southWest = NULL;
+			southEast = NULL;
 		}
+
+		parent = NULL;
 	}
 
 	bool Insert(T p)
@@ -67,6 +82,9 @@ public:
 		if (InsertChecker.IsMine(boundary, p) || points.size() < QT_NODE_CAPACITY)
 		{
 			points.push_back(p);
+
+			p.m_pQuadTree = this;
+
 			return true;
 		}
 
@@ -85,10 +103,10 @@ public:
 
 	void Subdivide()
 	{
-		northWest = new QuadTree(AABB(XY(boundary.center.x - boundary.halfDimension_x * 0.5f, boundary.center.y + boundary.halfDimension_y * 0.5f), boundary.halfDimension_x * 0.5f, boundary.halfDimension_y * 0.5f));
-		northEast = new QuadTree(AABB(XY(boundary.center.x + boundary.halfDimension_x * 0.5f, boundary.center.y + boundary.halfDimension_y * 0.5f), boundary.halfDimension_x * 0.5f, boundary.halfDimension_y * 0.5f));
-		southWest = new QuadTree(AABB(XY(boundary.center.x - boundary.halfDimension_x * 0.5f, boundary.center.y - boundary.halfDimension_y * 0.5f), boundary.halfDimension_x * 0.5f, boundary.halfDimension_y * 0.5f));
-		southEast = new QuadTree(AABB(XY(boundary.center.x + boundary.halfDimension_x * 0.5f, boundary.center.y - boundary.halfDimension_y * 0.5f), boundary.halfDimension_x * 0.5f, boundary.halfDimension_y * 0.5f));
+		northWest = new QuadTree(this, AABB(XY(boundary.center.x - boundary.halfDimension_x * 0.5f, boundary.center.y + boundary.halfDimension_y * 0.5f), boundary.halfDimension_x * 0.5f, boundary.halfDimension_y * 0.5f));
+		northEast = new QuadTree(this, AABB(XY(boundary.center.x + boundary.halfDimension_x * 0.5f, boundary.center.y + boundary.halfDimension_y * 0.5f), boundary.halfDimension_x * 0.5f, boundary.halfDimension_y * 0.5f));
+		southWest = new QuadTree(this, AABB(XY(boundary.center.x - boundary.halfDimension_x * 0.5f, boundary.center.y - boundary.halfDimension_y * 0.5f), boundary.halfDimension_x * 0.5f, boundary.halfDimension_y * 0.5f));
+		southEast = new QuadTree(this, AABB(XY(boundary.center.x + boundary.halfDimension_x * 0.5f, boundary.center.y - boundary.halfDimension_y * 0.5f), boundary.halfDimension_x * 0.5f, boundary.halfDimension_y * 0.5f));
 	}
 
 	list<T> QueryRange(AABB range)
@@ -138,12 +156,45 @@ public:
 			}
 		}
 
-		if (northWest->Remove(p)) return true;
-		if (northEast->Remove(p)) return true;
-		if (southWest->Remove(p)) return true;
-		if (southEast->Remove(p)) return true;
-
 		return false;
+	}
+
+	void Transform(T p)
+	{
+		points.remove(p);
+
+		if (InsertChecker.IsValidate(boundary, p))
+		{
+			if (InsertChecker.IsMine(boundary, p) || points.size() < QT_NODE_CAPACITY)
+			{
+				points.push_back(p);
+
+				p.m_pQuadTree = this;
+			}
+			else
+			{
+				if (northWest == NULL)
+					Subdivide();
+
+				if (northWest->Insert(p)) return;
+				if (northEast->Insert(p)) return;
+				if (southWest->Insert(p)) return;
+				if (southEast->Insert(p)) return;
+			}
+		}
+		else
+		{
+			if (parent != NULL)
+				parent->TryMoveToParent(p);
+		}
+	}
+
+	void TryMoveToParent(T p)
+	{
+		if (Insert(p) == false && parent != NULL)
+		{
+			parent->TryMoveToParent(p);
+		}
 	}
 };
 
@@ -154,8 +205,13 @@ public:
 	QuadTree()
 	{
 	}
-	QuadTree(AABB boundary)
+	QuadTree(QuadTree* parent)
 	{
+		this->parent = parent;
+	}
+	QuadTree(QuadTree* parent, AABB boundary)
+	{
+		this->parent = parent;
 		this->boundary = boundary;
 	}
 	virtual ~QuadTree()
@@ -182,8 +238,11 @@ private:
 	QuadTree* southWest;
 	QuadTree* southEast;
 
+	//	Parent
+	QuadTree* parent = NULL;
+
 public:
-	void Init(AABB boundary)
+	void SetBoundary(AABB boundary)
 	{
 		this->boundary = boundary;
 	}
@@ -198,7 +257,14 @@ public:
 			delete northEast;
 			delete southWest;
 			delete southEast;
+
+			northWest = NULL;
+			northEast = NULL;
+			southWest = NULL;
+			southEast = NULL;
 		}
+
+		parent = NULL;
 	}
 
 	bool Insert(T* p)
@@ -209,6 +275,9 @@ public:
 		if (InsertChecker.IsMine(boundary, p) || points.size() < QT_NODE_CAPACITY)
 		{
 			points.push_back(p);
+
+			p->m_pQuadTree = this;
+
 			return true;
 		}
 
@@ -227,10 +296,10 @@ public:
 
 	void Subdivide()
 	{
-		northWest = new QuadTree(AABB(XY(boundary.center.x - boundary.halfDimension_x * 0.5f, boundary.center.y + boundary.halfDimension_y * 0.5f), boundary.halfDimension_x * 0.5f, boundary.halfDimension_y * 0.5f));
-		northEast = new QuadTree(AABB(XY(boundary.center.x + boundary.halfDimension_x * 0.5f, boundary.center.y + boundary.halfDimension_y * 0.5f), boundary.halfDimension_x * 0.5f, boundary.halfDimension_y * 0.5f));
-		southWest = new QuadTree(AABB(XY(boundary.center.x - boundary.halfDimension_x * 0.5f, boundary.center.y - boundary.halfDimension_y * 0.5f), boundary.halfDimension_x * 0.5f, boundary.halfDimension_y * 0.5f));
-		southEast = new QuadTree(AABB(XY(boundary.center.x + boundary.halfDimension_x * 0.5f, boundary.center.y - boundary.halfDimension_y * 0.5f), boundary.halfDimension_x * 0.5f, boundary.halfDimension_y * 0.5f));
+		northWest = new QuadTree(this, AABB(XY(boundary.center.x - boundary.halfDimension_x * 0.5f, boundary.center.y + boundary.halfDimension_y * 0.5f), boundary.halfDimension_x * 0.5f, boundary.halfDimension_y * 0.5f));
+		northEast = new QuadTree(this, AABB(XY(boundary.center.x + boundary.halfDimension_x * 0.5f, boundary.center.y + boundary.halfDimension_y * 0.5f), boundary.halfDimension_x * 0.5f, boundary.halfDimension_y * 0.5f));
+		southWest = new QuadTree(this, AABB(XY(boundary.center.x - boundary.halfDimension_x * 0.5f, boundary.center.y - boundary.halfDimension_y * 0.5f), boundary.halfDimension_x * 0.5f, boundary.halfDimension_y * 0.5f));
+		southEast = new QuadTree(this, AABB(XY(boundary.center.x + boundary.halfDimension_x * 0.5f, boundary.center.y - boundary.halfDimension_y * 0.5f), boundary.halfDimension_x * 0.5f, boundary.halfDimension_y * 0.5f));
 	}
 
 	list<T*> QueryRange(AABB range)
@@ -280,11 +349,44 @@ public:
 			}
 		}
 
-		if (northWest->Remove(p)) return true;
-		if (northEast->Remove(p)) return true;
-		if (southWest->Remove(p)) return true;
-		if (southEast->Remove(p)) return true;
-
 		return false;
+	}
+
+	void Transform(T* p)
+	{
+		points.remove(p);
+
+		if (InsertChecker.IsValidate(boundary, p))
+		{
+			if (InsertChecker.IsMine(boundary, p) || points.size() < QT_NODE_CAPACITY)
+			{
+				points.push_back(p);
+
+				p->m_pQuadTree = this;
+			}
+			else
+			{
+				if (northWest == NULL)
+					Subdivide();
+
+				if (northWest->Insert(p)) return;
+				if (northEast->Insert(p)) return;
+				if (southWest->Insert(p)) return;
+				if (southEast->Insert(p)) return;
+			}
+		}
+		else
+		{
+			if (parent != NULL)
+				parent->TryMoveToParent(p);
+		}
+	}
+
+	void TryMoveToParent(T* p)
+	{
+		if (Insert(p) == false && parent != NULL)
+		{
+			parent->TryMoveToParent(p);
+		}
 	}
 };
