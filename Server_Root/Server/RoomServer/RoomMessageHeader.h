@@ -12,3 +12,4 @@
 #include "Messages/ToRoom/PreparationStateToR.h"
 #include "Messages/ToRoom/GameEventStopToR.h"
 #include "Messages/ToRoom/GameInputSkillToR.h"
+#include "Messages/ToRoom/GameEventDashToR.h"

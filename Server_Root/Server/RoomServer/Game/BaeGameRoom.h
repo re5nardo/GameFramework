@@ -27,6 +27,7 @@ class ICharacterAI;
 class GameInputSkillToR;
 class IGameEvent;
 class IEntity;
+class GameEventDashToR;
 
 using namespace std;
 using namespace chrono;
@@ -98,6 +99,7 @@ private:
 	void OnEnterRoomToR(EnterRoomToR* pMsg, unsigned int socket);
 	void OnPreparationStateToR(PreparationStateToR* pMsg, unsigned int socket);
 	void OnGameInputSkillToR(GameInputSkillToR* pMsg, unsigned int socket);
+	void OnGameEventDashToR(GameEventDashToR* pMsg, unsigned int socket);
 
 private:
 	int GetPlayerIndexByPlayerKey(string strPlayerKey);

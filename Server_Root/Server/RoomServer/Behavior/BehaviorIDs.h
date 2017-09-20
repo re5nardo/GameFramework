@@ -2,11 +2,12 @@
 
 class BehaviorID
 {
-//	Common Behaviors (0 ~ 9999)
+//	Common Behaviors (MasterDataID)	
 public:
 	static const int IDLE = 0;
 	static const int MOVE = 1;
 	static const int FIRE = 2;
+	static const int DASH = 8;
 
 //	MisterBae Behaviors (10000 ~ 10999)
 public:

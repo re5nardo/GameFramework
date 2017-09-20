@@ -32,6 +32,16 @@ void Move::Start(long long lStartTime, ...)
 
 	if (m_pEntity->GetBehavior(BehaviorID::IDLE) != NULL && m_pEntity->GetBehavior(BehaviorID::IDLE)->IsActivated())
 		m_pEntity->GetBehavior(BehaviorID::IDLE)->Stop(lStartTime);
+
+	IBehavior* pDash = m_pEntity->GetBehavior(BehaviorID::DASH);
+	if (pDash != NULL)
+	{
+		pDash->Update(lStartTime);
+		if (pDash->IsActivated())
+		{
+			pDash->Stop(lStartTime);
+		}
+	}
 }
 
 void Move::Initialize()

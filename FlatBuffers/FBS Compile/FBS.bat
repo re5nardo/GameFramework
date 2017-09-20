@@ -82,3 +82,6 @@ flatc --cpp -o SourceFiles\cpp FBSFiles\GameEvent\EntityDestroy.fbs
 
 flatc --csharp -o SourceFiles\csharp FBSFiles\GameEvent\Collision.fbs
 flatc --cpp -o SourceFiles\cpp FBSFiles\GameEvent\Collision.fbs
+
+flatc --csharp -o SourceFiles\csharp FBSFiles\GameEventDashToR.fbs
+flatc --cpp -o SourceFiles\cpp FBSFiles\GameEventDashToR.fbs

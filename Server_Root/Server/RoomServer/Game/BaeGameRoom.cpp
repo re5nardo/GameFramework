@@ -20,6 +20,7 @@
 #include "../Entity/Entities/Projectile/Projectile.h"
 #include "../GameEvent/GameEvents/EntityDestroy.h"
 #include "../../FBSFiles/FBSData_generated.h"
+#include "../Behavior/Behaviors/Dash.h"
 
 BaeGameRoom::BaeGameRoom(int nMatchID, vector<string> vecMatchedPlayerKey)	//	Receive Game Info from Lobby
 {
@@ -118,6 +119,23 @@ void BaeGameRoom::ProcessInput()
 			if (pMoveToR->m_vec3Dest != m_mapEntity[nEntityID]->GetPosition())
 			{
 				m_mapEntity[nEntityID]->GetBehavior(BehaviorID::MOVE)->Start(lTime, &pMoveToR->m_vec3Dest);
+			}
+		}
+		else if (pPlayerInputMsg->GetID() == GameEventDashToR_ID)
+		{
+			GameEventDashToR* pMsg = (GameEventDashToR*)pPlayerInputMsg;
+
+			int nEntityID = m_mapPlayerEntity[nPlayerIndex];
+
+			Dash* pDash = (Dash*)m_mapEntity[nEntityID]->GetBehavior(BehaviorID::DASH);
+
+			if (pDash->IsActivated())
+			{
+				pDash->Prolong();
+			}
+			else
+			{
+				pDash->Start(lTime);
 			}
 		}
 		else if (pPlayerInputMsg->GetID() == GameInputSkillToR_ID)
@@ -507,6 +525,10 @@ void BaeGameRoom::OnRecvMessage(unsigned int socket, IMessage* pMsg)
 	{
 		OnGameInputSkillToR((GameInputSkillToR*)pMsg, socket);
 	}
+	else if (pMsg->GetID() == GameEventDashToR::MESSAGE_ID)
+	{
+		OnGameEventDashToR((GameEventDashToR*)pMsg, socket);
+	}
 }
 
 void BaeGameRoom::OnGameEventMoveToR(GameEventMoveToR* pMsg, unsigned int socket)
@@ -600,6 +622,15 @@ void BaeGameRoom::OnGameInputSkillToR(GameInputSkillToR* pMsg, unsigned int sock
 	{
 		delete m_mapPlayerInput[pMsg->m_nPlayerIndex].second;
 	}
+
+	m_mapPlayerInput[pMsg->m_nPlayerIndex] = make_pair(GetElapsedTime(), pMsg->Clone());
+
+	m_LockPlayerInput.unlock();
+}
+
+void BaeGameRoom::OnGameEventDashToR(GameEventDashToR* pMsg, unsigned int socket)
+{
+	m_LockPlayerInput.lock();
 
 	m_mapPlayerInput[pMsg->m_nPlayerIndex] = make_pair(GetElapsedTime(), pMsg->Clone());
 

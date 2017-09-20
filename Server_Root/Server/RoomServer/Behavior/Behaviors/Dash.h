@@ -11,8 +11,14 @@ public:
 public:
 	static const string NAME;
 
+private:
+	bool m_bProlonged = false;
+
 public:
 	void Start(long long lStartTime, ...) override;
 	void Initialize() override;
 	void UpdateBody(long long lUpdateTime) override;
+
+public:
+	void Prolong();
 };

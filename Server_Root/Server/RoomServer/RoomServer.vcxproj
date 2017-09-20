@@ -140,6 +140,7 @@
     <ClInclude Include="Messages\ToClient\WorldInfoToC.h" />
     <ClInclude Include="Messages\ToClient\WorldSnapShotToC.h" />
     <ClInclude Include="Messages\ToRoom\EnterRoomToR.h" />
+    <ClInclude Include="Messages\ToRoom\GameEventDashToR.h" />
     <ClInclude Include="Messages\ToRoom\GameEventMoveToR.h" />
     <ClInclude Include="Messages\ToRoom\GameEventStopToR.h" />
     <ClInclude Include="Messages\ToRoom\GameInputSkillToR.h" />
@@ -207,6 +208,7 @@
     <ClCompile Include="Messages\ToClient\WorldInfoToC.cpp" />
     <ClCompile Include="Messages\ToClient\WorldSnapShotToC.cpp" />
     <ClCompile Include="Messages\ToRoom\EnterRoomToR.cpp" />
+    <ClCompile Include="Messages\ToRoom\GameEventDashToR.cpp" />
     <ClCompile Include="Messages\ToRoom\GameEventMoveToR.cpp" />
     <ClCompile Include="Messages\ToRoom\GameEventStopToR.cpp" />
     <ClCompile Include="Messages\ToRoom\GameInputSkillToR.cpp" />

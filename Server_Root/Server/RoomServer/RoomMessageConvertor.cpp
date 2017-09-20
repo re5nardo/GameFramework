@@ -39,6 +39,10 @@ IMessage* RoomMessageConvertor::GetMessage(const unsigned short nMessageID, cons
 	{
 		pMsg = new GameInputSkillToR();
 	}
+	else if (nMessageID == GameEventDashToR::MESSAGE_ID)
+	{
+		pMsg = new GameEventDashToR();
+	}
 
 	if (pMsg != NULL)
 	{

@@ -289,7 +289,7 @@ public class BaeGameRoom : IGameRoom
                     m_CameraController.SetTarget(entity.GetUITransform());
                     m_CameraController.StartFollowTarget();
 
-                    m_SkillController.SetSkills(new List<int>(){0, 1, 2});
+                    //m_SkillController.SetSkills(new List<int>(){0, 1, 2});
                 }
             }
 
@@ -348,6 +348,14 @@ public class BaeGameRoom : IGameRoom
         moveToR.m_vec3Dest = vec3Pos;
 
         RoomNetwork.Instance.Send(moveToR);
+    }
+        
+    public void OnDashButtonClicked()
+    {
+        GameEventDashToR dashToR = new GameEventDashToR();
+        dashToR.m_nPlayerIndex = 0;
+
+        RoomNetwork.Instance.Send(dashToR);
     }
 #endregion
 
