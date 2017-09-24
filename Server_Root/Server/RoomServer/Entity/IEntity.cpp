@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "IEntity.h"
 #include "../Game/BaeGameRoom.h"
+#include "../Behavior/BehaviorIDs.h"
 
 IEntity::IEntity(BaeGameRoom* pGameRoom, int nID, int nMasterDataID)
 {
@@ -49,6 +50,14 @@ void IEntity::UpdateStates(long long lUpdateTime)
 
 		if (m_bDestroyReserved)
 			break;
+	}
+}
+
+void IEntity::LateUpdate(long long lUpdateTime)
+{
+	if (m_nDefaultBehaviorID != -1 && !IsBehavioring() && GetBehavior(m_nDefaultBehaviorID) != NULL)
+	{
+		GetBehavior(m_nDefaultBehaviorID)->Start(lUpdateTime);
 	}
 }
 

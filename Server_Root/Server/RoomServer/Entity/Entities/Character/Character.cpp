@@ -28,6 +28,7 @@ void Character::Initialize()
 	m_fSize = pMasterCharacter->m_fSize;
 	m_fHeight = pMasterCharacter->m_fHeight;
 	m_fDefault_Y = pMasterCharacter->m_fDefault_Y;
+	m_nDefaultBehaviorID = pMasterCharacter->m_nDefaultBehaviorID;
 
 	for (vector<int>::iterator it = pMasterCharacter->m_vecSkillID.begin(); it != pMasterCharacter->m_vecSkillID.end(); ++it)
 	{

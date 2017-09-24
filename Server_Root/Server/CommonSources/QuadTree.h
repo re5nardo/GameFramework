@@ -40,10 +40,10 @@ private:
 	list<T> points;
 
 	// Children
-	QuadTree* northWest;
-	QuadTree* northEast;
-	QuadTree* southWest;
-	QuadTree* southEast;
+	QuadTree* northWest = NULL;
+	QuadTree* northEast = NULL;
+	QuadTree* southWest = NULL;
+	QuadTree* southEast = NULL;
 
 	//	Parent
 	QuadTree* parent = NULL;
@@ -233,10 +233,10 @@ private:
 	list<T*> points;
 
 	// Children
-	QuadTree* northWest;
-	QuadTree* northEast;
-	QuadTree* southWest;
-	QuadTree* southEast;
+	QuadTree* northWest = NULL;
+	QuadTree* northEast = NULL;
+	QuadTree* southWest = NULL;
+	QuadTree* southEast = NULL;
 
 	//	Parent
 	QuadTree* parent = NULL;

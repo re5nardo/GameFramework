@@ -122,6 +122,8 @@ public:
 	bool CheckDiscreteCollisionDectection(int nEntityID, int nTypes, list<pair<int, btVector3>>* listHit);
 	bool CheckContinuousCollisionDectectionFirst(int nEntityID, btVector3& vec3Dest, int nTypes, pair<int, btVector3>* hit);
 	bool CheckContinuousCollisionDectection(int nEntityID, btVector3& vec3Dest, int nTypes, list<pair<int, btVector3>>* listHit);
+	bool CehckExistInRange(btVector3& vec3Center, float fRadius, int nTypes, list<pair<int, btVector3>>* listItem);	//	Ignore Y-axis
+	bool CehckExistInRange(int nEntityID, float fRadius, int nTypes, list<pair<int, btVector3>>* listItem);	//	Ignore Y-axis
 
 public:
 	bool IsChallenger(int nEntityID);

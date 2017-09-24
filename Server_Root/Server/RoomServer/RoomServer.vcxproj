@@ -98,6 +98,8 @@
     <ClInclude Include="..\CommonSources\QuadTreePrerequisites.h" />
     <ClInclude Include="..\CommonSources\Singleton.h" />
     <ClInclude Include="..\CommonSources\tinyxml2.h" />
+    <ClInclude Include="AI\CharacterAI\CharacterAIs\DummyCharacter1AI.h" />
+    <ClInclude Include="AI\CharacterAI\CharacterAIs\DummyCharacter2AI.h" />
     <ClInclude Include="AI\CharacterAI\CharacterAIs\Flower1AI.h" />
     <ClInclude Include="AI\CharacterAI\ICharacterAI.h" />
     <ClInclude Include="Behavior\BehaviorIDs.h" />
@@ -169,6 +171,8 @@
     <ClCompile Include="..\CommonSources\Network\NetworkCore.cpp" />
     <ClCompile Include="..\CommonSources\QuadTreePrerequisites.cpp" />
     <ClCompile Include="..\CommonSources\tinyxml2.cpp" />
+    <ClCompile Include="AI\CharacterAI\CharacterAIs\DummyCharacter1AI.cpp" />
+    <ClCompile Include="AI\CharacterAI\CharacterAIs\DummyCharacter2AI.cpp" />
     <ClCompile Include="AI\CharacterAI\CharacterAIs\Flower1AI.cpp" />
     <ClCompile Include="AI\CharacterAI\ICharacterAI.cpp" />
     <ClCompile Include="Behavior\Behaviors\Dash.cpp" />

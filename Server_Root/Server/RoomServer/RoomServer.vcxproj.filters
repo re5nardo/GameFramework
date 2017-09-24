@@ -396,6 +396,12 @@
     <ClInclude Include="Messages\ToRoom\GameEventDashToR.h">
       <Filter>헤더 파일\Messages\ToRoom</Filter>
     </ClInclude>
+    <ClInclude Include="AI\CharacterAI\CharacterAIs\DummyCharacter1AI.h">
+      <Filter>헤더 파일\AI\CharacterAI\CharacterAIs</Filter>
+    </ClInclude>
+    <ClInclude Include="AI\CharacterAI\CharacterAIs\DummyCharacter2AI.h">
+      <Filter>헤더 파일\AI\CharacterAI\CharacterAIs</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -586,6 +592,12 @@
     </ClCompile>
     <ClCompile Include="Messages\ToRoom\GameEventDashToR.cpp">
       <Filter>소스 파일\Messages\ToRoom</Filter>
+    </ClCompile>
+    <ClCompile Include="AI\CharacterAI\CharacterAIs\DummyCharacter1AI.cpp">
+      <Filter>소스 파일\AI\CharacterAI\CharacterAIs</Filter>
+    </ClCompile>
+    <ClCompile Include="AI\CharacterAI\CharacterAIs\DummyCharacter2AI.cpp">
+      <Filter>소스 파일\AI\CharacterAI\CharacterAIs</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

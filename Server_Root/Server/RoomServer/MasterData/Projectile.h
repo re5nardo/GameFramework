@@ -22,6 +22,7 @@ namespace MasterData
 		string m_strLifeInfo;
 		float m_fHeight;
 		float m_fDefault_Y;
+		int m_nDefaultBehaviorID = -1;
 
 	public:
 		void SetData(Sheet* pSheet, int nRow) override;

@@ -24,6 +24,7 @@ void Projectile::Initialize()
 	m_fSize = pMasterProjectile->m_fSize;
 	m_fHeight = pMasterProjectile->m_fHeight;
 	m_fDefault_Y = pMasterProjectile->m_fDefault_Y;
+	m_nDefaultBehaviorID = pMasterProjectile->m_nDefaultBehaviorID;
 
 	for (vector<int>::iterator it = pMasterProjectile->m_vecBehaviorID.begin(); it != pMasterProjectile->m_vecBehaviorID.end(); ++it)
 	{

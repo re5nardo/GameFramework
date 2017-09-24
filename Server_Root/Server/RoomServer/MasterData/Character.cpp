@@ -31,5 +31,9 @@ namespace MasterData
 		m_fSize = pSheet->readNum(nRow, 8);
 		m_fHeight = pSheet->readNum(nRow, 10);
 		m_fDefault_Y = pSheet->readNum(nRow, 11);
+		if (pSheet->cellType(nRow, 12) == CellType::CELLTYPE_NUMBER)
+		{
+			m_nDefaultBehaviorID = pSheet->readNum(nRow, 12);
+		}
 	}
 }

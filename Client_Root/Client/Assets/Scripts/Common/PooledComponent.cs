@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PooledComponent : MonoBehaviour, IPooledObject
 {
-    public string m_strKey = "";
+    [HideInInspector] public string m_strKey = "";
 
     protected DestroyType m_DestroyType_ = DestroyType.Normal;
     public DestroyType m_DestroyType

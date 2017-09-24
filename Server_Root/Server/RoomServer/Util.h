@@ -191,4 +191,21 @@ public:
 	{
 		return IsEqual(a.x(), b.x()) && IsEqual(a.y(), b.y()) && IsEqual(a.z(), b.z());
 	}
+
+	//	https://stackoverflow.com/questions/401847/circle-rectangle-collision-detection-intersection
+	static bool CircleRectangleCollisionDectection(btVector3& vec3Center, float fRadius, AABB rect)
+	{
+		float circleDistance_x = abs(vec3Center.x() - rect.halfDimension_x);
+		float circleDistance_z = abs(vec3Center.z() - rect.halfDimension_y);
+
+		if (circleDistance_x > (rect.halfDimension_x + fRadius)) { return false; }
+		if (circleDistance_z > (rect.halfDimension_y + fRadius)) { return false; }
+
+		if (circleDistance_x <= (rect.halfDimension_x)) { return true; }
+		if (circleDistance_z <= (rect.halfDimension_y)) { return true; }
+
+		float cornerDistance_sq = powf(circleDistance_x - rect.halfDimension_x, 2) + powf(circleDistance_z - rect.halfDimension_y, 2);
+
+		return (cornerDistance_sq <= powf(fRadius, 2));
+	}
 };

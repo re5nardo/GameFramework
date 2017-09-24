@@ -25,15 +25,11 @@ private:
 	btCollisionWorld* m_pCollisionWorld = NULL;
 
 private:
-	map<int, CollisionObject*>		m_mapCollisionObject;
-	map<int, CollisionObject*>		m_mapTerrainObject;
-	map<int, CollisionObject*>		m_mapCharacter;
-	map<int, CollisionObject*>		m_mapProjectile;
+	map<int, CollisionObject*>								m_mapCollisionObject;		//	All Collision Objects
+	map<CollisionObject::Type, map<int, CollisionObject*>>	m_mapTypeCollisionObject;	//	Typed Collision Objects
 
 private:
-	QuadTree<CollisionObject*, TerrainObjectInsertChecker>	m_qtTerrainObject;
-	QuadTree<CollisionObject*, TerrainObjectInsertChecker>	m_qtCharacter;
-	QuadTree<CollisionObject*, TerrainObjectInsertChecker>	m_qtProjectile;
+	map<CollisionObject::Type, QuadTree<CollisionObject*, TerrainObjectInsertChecker>> m_mapQuadTree;
 
 public:
 	void Init(btVector3& vec3WorldBounds);
@@ -55,6 +51,8 @@ public:
 	bool ContinuousCollisionDectectionFirst(int nID, btVector3& vec3To, int nTypes, pair<int, btVector3>* hit);
 	bool ContinuousCollisionDectection(int nID, btVector3& vec3To, int nTypes, list<pair<int, btVector3>>* listHit);
 	bool DiscreteCollisionDectection(int nID, int nTypes, list<pair<int, btVector3>>* listHit);
+	bool CehckExistInRange(btVector3& vec3Center, float fRadius, int nTypes, list<pair<int, btVector3>>* listItem);	//	Ignore Y-axis
+	bool CehckExistInRange(int nID, float fRadius, int nTypes, list<pair<int, btVector3>>* listItem);	//	Ignore Y-axis
 
 private:
 	list<CollisionObject*> GetCollisionObjects(int nTypes, AABB range);

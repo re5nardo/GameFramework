@@ -45,13 +45,9 @@ void CollisionManager::Reset()
 		delete it->second;
 	}
 	m_mapCollisionObject.clear();
-	m_mapTerrainObject.clear();
-	m_mapCharacter.clear();
-	m_mapProjectile.clear();
+	m_mapTypeCollisionObject.clear();
 
-	m_qtTerrainObject.Clear();
-	m_qtCharacter.Clear();
-	m_qtProjectile.Clear();
+	m_mapQuadTree.clear();
 
 	m_nSequence = 0;
 	m_vec3WorldBounds.setValue(0, 0, 0);
@@ -69,10 +65,6 @@ void CollisionManager::Init(btVector3& vec3WorldBounds)
 	m_pBroadPhase = new btAxisSweep3(worldAabbMin, worldAabbMax);
 
 	m_pCollisionWorld = new btCollisionWorld(m_pDispatcher, m_pBroadPhase, m_pCollisionConfiguration);
-
-	m_qtTerrainObject.SetBoundary(AABB(XY(0, 0), vec3WorldBounds.x() * 0.5f, vec3WorldBounds.z() * 0.5f));
-	m_qtCharacter.SetBoundary(AABB(XY(0, 0), vec3WorldBounds.x() * 0.5f, vec3WorldBounds.z() * 0.5f));
-	m_qtProjectile.SetBoundary(AABB(XY(0, 0), vec3WorldBounds.x() * 0.5f, vec3WorldBounds.z() * 0.5f));
 
 	m_vec3WorldBounds = vec3WorldBounds;
 }
@@ -94,9 +86,13 @@ int CollisionManager::AddBox2dShapeTerrainObject(btVector3& vec3Position, btVect
 	CollisionObject* pCollisionObject = new CollisionObject(m_nSequence, pbtCollisionObject);
 
 	m_mapCollisionObject[m_nSequence] = pCollisionObject;
-	m_mapTerrainObject[m_nSequence] = pCollisionObject;
+	m_mapTypeCollisionObject[CollisionObject::Type::CollisionObjectType_Terrain][m_nSequence] = pCollisionObject;
 
-	m_qtTerrainObject.Insert(pCollisionObject);
+	if (m_mapQuadTree.count(CollisionObject::Type::CollisionObjectType_Terrain) == 0)
+	{
+		m_mapQuadTree[CollisionObject::Type::CollisionObjectType_Terrain].SetBoundary(AABB(XY(0, 0), m_vec3WorldBounds.x() * 0.5f, m_vec3WorldBounds.z() * 0.5f));
+	}
+	m_mapQuadTree[CollisionObject::Type::CollisionObjectType_Terrain].Insert(pCollisionObject);
 
 	return m_nSequence++;
 }
@@ -118,9 +114,13 @@ int CollisionManager::AddSphere2dShapeTerrainObject(btVector3& vec3Position, flo
 	CollisionObject* pCollisionObject = new CollisionObject(m_nSequence, pbtCollisionObject);
 
 	m_mapCollisionObject[m_nSequence] = pCollisionObject;
-	m_mapTerrainObject[m_nSequence] = pCollisionObject;
+	m_mapTypeCollisionObject[CollisionObject::Type::CollisionObjectType_Terrain][m_nSequence] = pCollisionObject;
 
-	m_qtTerrainObject.Insert(pCollisionObject);
+	if (m_mapQuadTree.count(CollisionObject::Type::CollisionObjectType_Terrain) == 0)
+	{
+		m_mapQuadTree[CollisionObject::Type::CollisionObjectType_Terrain].SetBoundary(AABB(XY(0, 0), m_vec3WorldBounds.x() * 0.5f, m_vec3WorldBounds.z() * 0.5f));
+	}
+	m_mapQuadTree[CollisionObject::Type::CollisionObjectType_Terrain].Insert(pCollisionObject);
 
 	return m_nSequence++;
 }
@@ -146,9 +146,13 @@ int CollisionManager::AddConvexPolygon2dShapeTerrainObject(btVector3& vec3Positi
 	CollisionObject* pCollisionObject = new CollisionObject(m_nSequence, pbtCollisionObject);
 
 	m_mapCollisionObject[m_nSequence] = pCollisionObject;
-	m_mapTerrainObject[m_nSequence] = pCollisionObject;
+	m_mapTypeCollisionObject[CollisionObject::Type::CollisionObjectType_Terrain][m_nSequence] = pCollisionObject;
 
-	m_qtTerrainObject.Insert(pCollisionObject);
+	if (m_mapQuadTree.count(CollisionObject::Type::CollisionObjectType_Terrain) == 0)
+	{
+		m_mapQuadTree[CollisionObject::Type::CollisionObjectType_Terrain].SetBoundary(AABB(XY(0, 0), m_vec3WorldBounds.x() * 0.5f, m_vec3WorldBounds.z() * 0.5f));
+	}
+	m_mapQuadTree[CollisionObject::Type::CollisionObjectType_Terrain].Insert(pCollisionObject);
 
 	return m_nSequence++;
 }
@@ -174,9 +178,13 @@ int CollisionManager::AddCharacter(btVector3& vec3Position, float fSize, float f
 	CollisionObject* pCollisionObject = new CollisionObject(m_nSequence, pbtCollisionObject);
 
 	m_mapCollisionObject[m_nSequence] = pCollisionObject;
-	m_mapCharacter[m_nSequence] = pCollisionObject;
+	m_mapTypeCollisionObject[CollisionObject::Type::CollisionObjectType_Character][m_nSequence] = pCollisionObject;
 
-	m_qtCharacter.Insert(pCollisionObject);
+	if (m_mapQuadTree.count(CollisionObject::Type::CollisionObjectType_Character) == 0)
+	{
+		m_mapQuadTree[CollisionObject::Type::CollisionObjectType_Character].SetBoundary(AABB(XY(0, 0), m_vec3WorldBounds.x() * 0.5f, m_vec3WorldBounds.z() * 0.5f));
+	}
+	m_mapQuadTree[CollisionObject::Type::CollisionObjectType_Character].Insert(pCollisionObject);
 
 	return m_nSequence++;
 }
@@ -198,9 +206,13 @@ int CollisionManager::AddProjectile(btVector3& vec3Position, float fSize, float 
 	CollisionObject* pCollisionObject = new CollisionObject(m_nSequence, pbtCollisionObject);
 
 	m_mapCollisionObject[m_nSequence] = pCollisionObject;
-	m_mapProjectile[m_nSequence] = pCollisionObject;
+	m_mapTypeCollisionObject[CollisionObject::Type::CollisionObjectType_Projectile][m_nSequence] = pCollisionObject;
 
-	m_qtProjectile.Insert(pCollisionObject);
+	if (m_mapQuadTree.count(CollisionObject::Type::CollisionObjectType_Projectile) == 0)
+	{
+		m_mapQuadTree[CollisionObject::Type::CollisionObjectType_Projectile].SetBoundary(AABB(XY(0, 0), m_vec3WorldBounds.x() * 0.5f, m_vec3WorldBounds.z() * 0.5f));
+	}
+	m_mapQuadTree[CollisionObject::Type::CollisionObjectType_Projectile].Insert(pCollisionObject);
 
 	return m_nSequence++;
 }
@@ -431,6 +443,67 @@ bool CollisionManager::DiscreteCollisionDectection(int nID, int nTypes, list<pai
 	return false;
 }
 
+bool CollisionManager::CehckExistInRange(btVector3& vec3Center, float fRadius, int nTypes, list<pair<int, btVector3>>* listItem)
+{
+	listItem->clear();
+
+	list<CollisionObject*> listCollisionObject = GetCollisionObjects(nTypes, AABB(XY(vec3Center.x(), vec3Center.z()), fRadius, fRadius));
+
+	btCollisionObject* pOther = NULL;
+	for (list<CollisionObject*>::iterator it = listCollisionObject.begin(); it != listCollisionObject.end(); ++it)
+	{
+		pOther = (*it)->m_pbtCollisionObject;
+
+		btTransform t = pOther->getWorldTransform();
+		btVector3 min, max;
+		pOther->getRootCollisionShape()->getAabb(t, min, max);
+
+		XY center(t.getOrigin().x(), t.getOrigin().z());
+		float halfDimension_x = (max.x() - min.x()) * 0.5f;
+		float halfDimension_z = (max.z() - min.z()) * 0.5f;
+
+		if (Util::CircleRectangleCollisionDectection(vec3Center, fRadius, AABB(center, halfDimension_x, halfDimension_z)))
+		{
+			listItem->push_back(make_pair((*it)->m_nID, pOther->getWorldTransform().getOrigin()));
+		}
+	}
+
+	return listItem->size() > 0;
+}
+
+bool CollisionManager::CehckExistInRange(int nID, float fRadius, int nTypes, list<pair<int, btVector3>>* listItem)
+{
+	listItem->clear();
+
+	btVector3& vec3Center = m_mapCollisionObject[nID]->m_pbtCollisionObject->getWorldTransform().getOrigin();
+
+	list<CollisionObject*> listCollisionObject = GetCollisionObjects(nTypes, AABB(XY(vec3Center.x(), vec3Center.z()), fRadius, fRadius));
+
+	btCollisionObject* pOther = NULL;
+	for (list<CollisionObject*>::iterator it = listCollisionObject.begin(); it != listCollisionObject.end(); ++it)
+	{
+		if ((*it)->m_nID == nID)
+			continue;
+
+		pOther = (*it)->m_pbtCollisionObject;
+
+		btTransform t = pOther->getWorldTransform();
+		btVector3 min, max;
+		pOther->getRootCollisionShape()->getAabb(t, min, max);
+
+		XY center(t.getOrigin().x(), t.getOrigin().z());
+		float halfDimension_x = (max.x() - min.x()) * 0.5f;
+		float halfDimension_z = (max.z() - min.z()) * 0.5f;
+
+		if (Util::CircleRectangleCollisionDectection(vec3Center, fRadius, AABB(center, halfDimension_x, halfDimension_z)))
+		{
+			listItem->push_back(make_pair((*it)->m_nID, pOther->getWorldTransform().getOrigin()));
+		}
+	}
+
+	return listItem->size() > 0;
+}
+
 void CollisionManager::RemoveCollisionObject(int nID)
 {
 	CollisionObject* pCollisionObject = m_mapCollisionObject[nID];
@@ -440,43 +513,28 @@ void CollisionManager::RemoveCollisionObject(int nID)
 	delete pCollisionObject;
 	m_mapCollisionObject.erase(nID);
 
-	if (m_mapTerrainObject.count(nID) > 0)
+	for (map<CollisionObject::Type, map<int, CollisionObject*>>::iterator it = m_mapTypeCollisionObject.begin(); it != m_mapTypeCollisionObject.end(); ++it)
 	{
-		m_mapTerrainObject.erase(nID);
-	}
-	else if (m_mapCharacter.count(nID) > 0)
-	{
-		m_mapCharacter.erase(nID);
-	}
-	else if (m_mapProjectile.count(nID) > 0)
-	{
-		m_mapProjectile.erase(nID);
+		if (it->second.count(nID) > 0)
+		{
+			it->second.erase(nID);
+			break;
+		}
 	}
 }
 
 list<CollisionObject*> CollisionManager::GetCollisionObjects(int nTypes, AABB range)
 {
 	list<CollisionObject*> listCollisionObject;
-
-	if ((nTypes & CollisionObject::Type::CollisionObjectType_Terrain) == CollisionObject::Type::CollisionObjectType_Terrain)
+	list<CollisionObject*> listQueried;
+	for (map<CollisionObject::Type, QuadTree<CollisionObject*, TerrainObjectInsertChecker>>::iterator it = m_mapQuadTree.begin(); it != m_mapQuadTree.end(); ++it)
 	{
-		list<CollisionObject*> listQueried = m_qtTerrainObject.QueryRange(range);
+		if ((it->first & nTypes) == it->first)
+		{
+			listQueried = it->second.QueryRange(range);
 
-		listCollisionObject.insert(listCollisionObject.end(), listQueried.begin(), listQueried.end());
-	}
-
-	if ((nTypes & CollisionObject::Type::CollisionObjectType_Character) == CollisionObject::Type::CollisionObjectType_Character)
-	{
-		list<CollisionObject*> listQueried = m_qtCharacter.QueryRange(range);
-
-		listCollisionObject.insert(listCollisionObject.end(), listQueried.begin(), listQueried.end());
-	}
-
-	if ((nTypes & CollisionObject::Type::CollisionObjectType_Projectile) == CollisionObject::Type::CollisionObjectType_Projectile)
-	{
-		list<CollisionObject*> listQueried = m_qtProjectile.QueryRange(range);
-
-		listCollisionObject.insert(listCollisionObject.end(), listQueried.begin(), listQueried.end());
+			listCollisionObject.insert(listCollisionObject.end(), listQueried.begin(), listQueried.end());
+		}
 	}
 
 	return listCollisionObject;

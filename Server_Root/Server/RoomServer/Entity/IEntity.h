@@ -29,6 +29,7 @@ protected:
 	float m_fSize;
 	float m_fHeight;
 	float m_fDefault_Y;
+	int m_nDefaultBehaviorID;
 
 protected:
 	btVector3 m_vec3Position = btVector3(0, 0, 0);
@@ -49,6 +50,7 @@ public:
 public:
 	void UpdateBehaviors(long long lUpdateTime);
 	void UpdateStates(long long lUpdateTime);
+	void LateUpdate(long long lUpdateTime);
 
 public:
 	int GetID();

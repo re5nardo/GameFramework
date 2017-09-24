@@ -7,6 +7,8 @@
 #include <process.h>
 #include "../Entity/Entities/Character/Character.h"
 #include "../AI/CharacterAI/CharacterAIs/Flower1AI.h"
+#include "../AI/CharacterAI/CharacterAIs/DummyCharacter1AI.h"
+#include "../AI/CharacterAI/CharacterAIs/DummyCharacter2AI.h"
 #include "../Messages/ToClient/WorldSnapShotToC.h"
 #include "../Messages/ToClient/WorldInfoToC.h"
 #include "../Behavior/BehaviorIDs.h"
@@ -198,12 +200,7 @@ void BaeGameRoom::LateUpdate()
 
 	for (map<int, IEntity*>::iterator it = m_mapEntity.begin(); it != m_mapEntity.end(); ++it)
 	{
-		IEntity* pEntity = it->second;
-
-		if (!pEntity->IsBehavioring() && pEntity->GetBehavior(BehaviorID::IDLE) != NULL)
-		{
-			pEntity->GetBehavior(BehaviorID::IDLE)->Start(m_lLastUpdateTime);
-		}
+		it->second->LateUpdate(m_lLastUpdateTime);
 	}
 }
 
@@ -351,7 +348,12 @@ void BaeGameRoom::SetObstacles(int nMapID, int nRandomSeed)
 	srand(nRandomSeed);
 
 	//temp..
-	int nDisturberCount = rand() % 10;
+	DummyCharacter1AI* dummy1 = new DummyCharacter1AI(this, 2, 0);
+	dummy1->SetData(btVector3(5, 0, 5), btVector3(0, 0, 0), btVector3(-5, 0, 5));
+	m_listDisturber.push_back(dummy1);
+
+	
+	/*int nDisturberCount = rand() % 10;
 	nDisturberCount = 2;
 	for (int i = 0; i < 1; ++i)
 	{
@@ -378,7 +380,7 @@ void BaeGameRoom::SetObstacles(int nMapID, int nRandomSeed)
 		Flower1AI* ai6 = new Flower1AI(this, 1, 0);
 		ai6->SetData(btVector3(-5, 0, 15), btVector3(0, 0, 0));
 		m_listDisturber.push_back(ai6);
-	}
+	}*/
 }
 
 bool BaeGameRoom::CheckDiscreteCollisionDectection(int nEntityID, int nTypes, list<pair<int, btVector3>>* listHit)
@@ -394,6 +396,16 @@ bool BaeGameRoom::CheckContinuousCollisionDectectionFirst(int nEntityID, btVecto
 bool BaeGameRoom::CheckContinuousCollisionDectection(int nEntityID, btVector3& vec3Dest, int nTypes, list<pair<int, btVector3>>* listHit)
 {
 	return m_CollisionManager.ContinuousCollisionDectection(GetCollisionObjectIDByEntityID(nEntityID), vec3Dest, nTypes, listHit);
+}
+
+bool BaeGameRoom::CehckExistInRange(btVector3& vec3Center, float fRadius, int nTypes, list<pair<int, btVector3>>* listItem)
+{
+	return m_CollisionManager.CehckExistInRange(vec3Center, fRadius, nTypes, listItem);
+}
+
+bool BaeGameRoom::CehckExistInRange(int nEntityID, float fRadius, int nTypes, list<pair<int, btVector3>>* listItem)
+{
+	return m_CollisionManager.CehckExistInRange(GetCollisionObjectIDByEntityID(nEntityID), fRadius, nTypes, listItem);
 }
 
 bool BaeGameRoom::IsChallenger(int nEntityID)
