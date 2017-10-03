@@ -83,7 +83,7 @@ int CollisionManager::AddBox2dShapeTerrainObject(btVector3& vec3Position, btVect
 	//	set rotation
 	pbtCollisionObject->getWorldTransform().setRotation(Util::DegreesToQuaternion(vec3Rotation));
 
-	CollisionObject* pCollisionObject = new CollisionObject(m_nSequence, pbtCollisionObject);
+	CollisionObject* pCollisionObject = new CollisionObject(m_nSequence, CollisionObject::Type::CollisionObjectType_Terrain, pbtCollisionObject);
 
 	m_mapCollisionObject[m_nSequence] = pCollisionObject;
 	m_mapTypeCollisionObject[CollisionObject::Type::CollisionObjectType_Terrain][m_nSequence] = pCollisionObject;
@@ -111,7 +111,7 @@ int CollisionManager::AddSphere2dShapeTerrainObject(btVector3& vec3Position, flo
 	//	set rotation
 	pbtCollisionObject->getWorldTransform().setRotation(Util::DegreesToQuaternion(btVector3(0, 0, 0)));
 
-	CollisionObject* pCollisionObject = new CollisionObject(m_nSequence, pbtCollisionObject);
+	CollisionObject* pCollisionObject = new CollisionObject(m_nSequence, CollisionObject::Type::CollisionObjectType_Terrain, pbtCollisionObject);
 
 	m_mapCollisionObject[m_nSequence] = pCollisionObject;
 	m_mapTypeCollisionObject[CollisionObject::Type::CollisionObjectType_Terrain][m_nSequence] = pCollisionObject;
@@ -143,7 +143,7 @@ int CollisionManager::AddConvexPolygon2dShapeTerrainObject(btVector3& vec3Positi
 	//	set rotation
 	pbtCollisionObject->getWorldTransform().setRotation(Util::DegreesToQuaternion(btVector3(0, 0, 0)));
 
-	CollisionObject* pCollisionObject = new CollisionObject(m_nSequence, pbtCollisionObject);
+	CollisionObject* pCollisionObject = new CollisionObject(m_nSequence, CollisionObject::Type::CollisionObjectType_Terrain, pbtCollisionObject);
 
 	m_mapCollisionObject[m_nSequence] = pCollisionObject;
 	m_mapTypeCollisionObject[CollisionObject::Type::CollisionObjectType_Terrain][m_nSequence] = pCollisionObject;
@@ -157,9 +157,10 @@ int CollisionManager::AddConvexPolygon2dShapeTerrainObject(btVector3& vec3Positi
 	return m_nSequence++;
 }
 
-int CollisionManager::AddCharacter(btVector3& vec3Position, float fSize, float fHeight)
+int CollisionManager::AddCharacter(btVector3& vec3Position, float fSize, float fHeight, Character* pCharacter)
 {
 	btCollisionObject* pbtCollisionObject = new btCollisionObject();
+	pbtCollisionObject->setUserPointer(pCharacter);
 
 	//	shape
 	btCompoundShape* pCompoundShape = new btCompoundShape();
@@ -175,7 +176,7 @@ int CollisionManager::AddCharacter(btVector3& vec3Position, float fSize, float f
 	//	set rotation
 	pbtCollisionObject->getWorldTransform().setRotation(Util::DegreesToQuaternion(btVector3(0, 0, 0)));
 
-	CollisionObject* pCollisionObject = new CollisionObject(m_nSequence, pbtCollisionObject);
+	CollisionObject* pCollisionObject = new CollisionObject(m_nSequence, CollisionObject::Type::CollisionObjectType_Character, pbtCollisionObject);
 
 	m_mapCollisionObject[m_nSequence] = pCollisionObject;
 	m_mapTypeCollisionObject[CollisionObject::Type::CollisionObjectType_Character][m_nSequence] = pCollisionObject;
@@ -189,9 +190,10 @@ int CollisionManager::AddCharacter(btVector3& vec3Position, float fSize, float f
 	return m_nSequence++;
 }
 
-int CollisionManager::AddProjectile(btVector3& vec3Position, float fSize, float fHeight)
+int CollisionManager::AddProjectile(btVector3& vec3Position, float fSize, float fHeight, Projectile* pProjectile)
 {
 	btCollisionObject* pbtCollisionObject = new btCollisionObject();
+	pbtCollisionObject->setUserPointer(pProjectile);
 
 	//	shape
 	btCylinderShape* pCapsuleShape = new btCylinderShape(btVector3(fSize * 0.5f, fHeight * 0.5f, fSize * 0.5f));
@@ -203,7 +205,7 @@ int CollisionManager::AddProjectile(btVector3& vec3Position, float fSize, float 
 	//	set rotation
 	pbtCollisionObject->getWorldTransform().setRotation(Util::DegreesToQuaternion(btVector3(0, 0, 0)));
 
-	CollisionObject* pCollisionObject = new CollisionObject(m_nSequence, pbtCollisionObject);
+	CollisionObject* pCollisionObject = new CollisionObject(m_nSequence, CollisionObject::Type::CollisionObjectType_Projectile, pbtCollisionObject);
 
 	m_mapCollisionObject[m_nSequence] = pCollisionObject;
 	m_mapTypeCollisionObject[CollisionObject::Type::CollisionObjectType_Projectile][m_nSequence] = pCollisionObject;
@@ -235,8 +237,152 @@ void CollisionManager::SetRotation(int nID, btVector3& vec3Rotation)
 	pCollisionObject->m_pQuadTree->Transform(pCollisionObject);
 }
 
-//	This shows poor performance where the distance between start to dest is long
+bool CollisionManager::ContinuousCollisionDectection(int nTargetID, int nOtherID, btVector3& vec3To, btVector3& vec3Hit)
+{
+	btConvexCast::CastResult rayResult;
+	btConvexPenetrationDepthSolver* penetrationDepthSolver = 0;
+	btVoronoiSimplexSolver gGjkSimplexSolver;
+
+	btCollisionObject* pTarget = m_mapCollisionObject[nTargetID]->m_pbtCollisionObject;
+	btCollisionObject* pOther = m_mapCollisionObject[nOtherID]->m_pbtCollisionObject;
+
+	btTransform trTargetOffset;
+	trTargetOffset.setIdentity();
+	if (pTarget->getRootCollisionShape()->getShapeType() == COMPOUND_SHAPE_PROXYTYPE)
+	{
+		btCompoundShape* pCompoundShape = (btCompoundShape*)pTarget->getRootCollisionShape();
+		trTargetOffset = pCompoundShape->getChildTransform(0);
+	}
+
+	btTransform trOtherOffset;
+	trOtherOffset.setIdentity();
+	if (pOther->getRootCollisionShape()->getShapeType() == COMPOUND_SHAPE_PROXYTYPE)
+	{
+		btCompoundShape* pCompoundShape = (btCompoundShape*)pOther->getRootCollisionShape();
+		trOtherOffset = pCompoundShape->getChildTransform(0);
+	}
+
+	btContinuousConvexCollision convexCaster(GetConvexShape(pTarget), GetConvexShape(pOther), &gGjkSimplexSolver, penetrationDepthSolver);
+
+	btTransform trTargetFrom = pTarget->getWorldTransform();
+	btTransform trTargetTo = pTarget->getWorldTransform();
+	trTargetTo.setOrigin(vec3To);
+
+	trTargetFrom *= trTargetOffset;
+	trTargetTo *= trTargetOffset;
+
+	btTransform trOtherFrom = pOther->getWorldTransform();
+	btTransform trOtherTo = pOther->getWorldTransform();
+
+	trOtherFrom *= trOtherOffset;
+	trOtherTo *= trOtherOffset;
+
+	if (convexCaster.calcTimeOfImpact(trTargetFrom, trTargetTo, trOtherFrom, trOtherTo, rayResult))
+	{
+		btVector3 worldBoundsMin(-m_vec3WorldBounds.x() * 0.5f, -m_vec3WorldBounds.y() * 0.5f, -m_vec3WorldBounds.z() * 0.5f);
+		btVector3 worldBoundsMax(m_vec3WorldBounds.x() * 0.5f, m_vec3WorldBounds.y() * 0.5f, m_vec3WorldBounds.z() * 0.5f);
+		btTransform hitTrans;
+
+		btVector3 linVel, angVel;
+		btTransformUtil::calculateVelocity(trTargetFrom, trTargetTo, 1.0, linVel, angVel);
+		btTransformUtil::integrateTransform(trTargetFrom, linVel, angVel, rayResult.m_fraction, hitTrans);
+
+		hitTrans *= trTargetOffset.inverse();
+
+		vec3Hit = hitTrans.getOrigin();
+
+		return true;
+	}
+
+	return false;
+}
+
+bool CollisionManager::DiscreteCollisionDectection(int nTargetID, int nOtherID, btVector3& vec3Hit)
+{
+	btCollisionObject* pTarget = m_mapCollisionObject[nTargetID]->m_pbtCollisionObject;
+	btCollisionObject* pOther = m_mapCollisionObject[nOtherID]->m_pbtCollisionObject;
+
+	btCollisionAlgorithm* pCollisionAlgorithm = m_pCollisionWorld->getDispatcher()->findAlgorithm(pTarget, pOther);
+	btManifoldResult contactPointResult(pTarget, pOther);
+
+	pCollisionAlgorithm->processCollision(pTarget, pOther, m_pCollisionWorld->getDispatchInfo(), &contactPointResult);
+
+	btManifoldArray manifoldArray;
+	pCollisionAlgorithm->getAllContactManifolds(manifoldArray);	//	All contact possible cases? (NarrowPhase)
+
+	int numManifolds = manifoldArray.size();
+	for (int i = 0; i < numManifolds; ++i)
+	{
+		btPersistentManifold* contactManifold = manifoldArray[i];
+		btCollisionObject* body0 = static_cast<btCollisionObject*>(contactManifold->getBody0());
+
+		int numContacts = contactManifold->getNumContacts();
+		bool swap = body0 == pTarget;
+
+		for (int j = 0; j < numContacts; ++j)
+		{
+			btManifoldPoint& pt = contactManifold->getContactPoint(j);
+
+			btVector3 ptA = swap ? pt.getPositionWorldOnA() : pt.getPositionWorldOnB();
+			btVector3 ptB = swap ? pt.getPositionWorldOnB() : pt.getPositionWorldOnA();
+
+			vec3Hit = ptA;
+
+			return true;	//	Take just one
+		}
+	}
+
+	return false;
+}
+
 btVector3 vec3Target;
+bool CollisionManager::GetCollisionObjectsInRange(int nTargetID, btVector3& vec3To, int nTypes, list<CollisionObject*>* pObjects)
+{
+	btCollisionObject* pTarget = m_mapCollisionObject[nTargetID]->m_pbtCollisionObject;
+
+	btTransform trOffset;
+	trOffset.setIdentity();
+	if (pTarget->getRootCollisionShape()->getShapeType() == COMPOUND_SHAPE_PROXYTYPE)
+	{
+		btCompoundShape* pCompoundShape = (btCompoundShape*)pTarget->getRootCollisionShape();
+		trOffset = pCompoundShape->getChildTransform(0);
+	}
+
+	btTransform t = pTarget->getWorldTransform() * trOffset;
+	btVector3 min, max;
+	GetConvexShape(pTarget)->getAabb(t, min, max);
+
+	XY center((t.getOrigin().x() + vec3To.x()) * 0.5f, (t.getOrigin().z() + vec3To.z()) * 0.5f);
+	float halfDimension_x = (abs(t.getOrigin().x() - vec3To.x()) + (max.x() - min.x())) * 0.5f;
+	float halfDimension_z = (abs(t.getOrigin().z() - vec3To.z()) + (max.z() - min.z())) * 0.5f;
+
+	*pObjects = GetCollisionObjects(nTypes, AABB(center, halfDimension_x, halfDimension_z));
+
+	CollisionObject* remove = NULL;
+	for (list<CollisionObject*>::iterator it = pObjects->begin(); it != pObjects->end(); ++it)
+	{
+		if ((*it)->m_nID == nTargetID)
+		{
+			remove = *it;
+		}
+	}
+	pObjects->remove(remove);
+
+	//	Sort distance
+	vec3Target = pTarget->getWorldTransform().getOrigin();
+	auto cmp = [](CollisionObject* a, CollisionObject* b)
+	{
+		float distance_a = Util::GetDistance2(vec3Target, a->m_pbtCollisionObject->getWorldTransform().getOrigin());
+		float distance_b = Util::GetDistance2(vec3Target, b->m_pbtCollisionObject->getWorldTransform().getOrigin());
+
+		return distance_a < distance_b;
+	};
+	pObjects->sort(cmp);
+
+	return pObjects->size() > 0;
+}
+
+//	This shows poor performance where the distance between start to dest is long
 bool CollisionManager::ContinuousCollisionDectectionFirst(int nID, btVector3& vec3To, int nTypes, pair<int, btVector3>* hit)
 {
 	btConvexCast::CastResult rayResult;
@@ -276,6 +422,9 @@ bool CollisionManager::ContinuousCollisionDectectionFirst(int nID, btVector3& ve
 
 	for (list<CollisionObject*>::iterator it = listCollisionObject.begin(); it != listCollisionObject.end(); ++it)
 	{
+		if ((*it)->m_nID == nID)
+			continue;
+
 		btCollisionObject* pCollisionObject = (*it)->m_pbtCollisionObject;
 
 		btContinuousConvexCollision convexCaster(GetConvexShape(pTarget), GetConvexShape(pCollisionObject), &gGjkSimplexSolver, penetrationDepthSolver);
@@ -342,6 +491,9 @@ bool CollisionManager::ContinuousCollisionDectection(int nID, btVector3& vec3To,
 
 	for (list<CollisionObject*>::iterator it = listCollisionObject.begin(); it != listCollisionObject.end(); ++it)
 	{
+		if ((*it)->m_nID == nID)
+			continue;
+
 		btCollisionObject* pCollisionObject = (*it)->m_pbtCollisionObject;
 
 		btContinuousConvexCollision convexCaster(GetConvexShape(pTarget), GetConvexShape(pCollisionObject), &gGjkSimplexSolver, penetrationDepthSolver);
@@ -554,4 +706,9 @@ btConvexShape* CollisionManager::GetConvexShape(btCollisionObject* pbtCollisionO
 	{
 		return (btConvexShape*)pCollisionShape;
 	}
+}
+
+CollisionObject* CollisionManager::GetCollisionObject(int nID)
+{
+	return m_mapCollisionObject[nID];
 }

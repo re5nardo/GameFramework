@@ -80,4 +80,9 @@ public:
 
 public:
 	virtual void NotifyGameEvent(IGameEvent* pGameEvent) = 0;
+	virtual bool IsMovableOnCollision(IEntity* pOther) = 0;
+	virtual void OnCollision(IEntity* pOther, long long lTime) = 0;
+
+public:
+	virtual bool IsTerrainPassable() = 0;
 };

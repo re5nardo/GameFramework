@@ -8,8 +8,18 @@ class BaeGameRoom;
 class Character : public IEntity
 {
 public:
-	Character(BaeGameRoom* pGameRoom, int nID, int nMasterDataID);
+	enum Role
+	{
+		Challenger = 0,
+		Disturber,
+	};
+
+public:
+	Character(BaeGameRoom* pGameRoom, int nID, int nMasterDataID, Role role);
 	virtual ~Character();
+
+private:
+	Role m_Role = Role::Challenger;
 
 protected:
 	list<ISkill*> m_listSkill;
@@ -22,10 +32,17 @@ public:
 	float fMoveSpeedPercent = 100;
 
 public:
+	void SetRole(Role role);
+	Role GetRole();
+
+public:
 	void Initialize() override;
 	float GetMoveSpeed() override;
 	FBS::Data::EntityType GetEntityType() override;
 	void NotifyGameEvent(IGameEvent* pGameEvent) override;
+	bool IsMovableOnCollision(IEntity* pOther) override;
+	void OnCollision(IEntity* pOther, long long lTime) override;
+	bool IsTerrainPassable() override;
 
 public:
 	void UpdateSkills(long long lUpdateTime);

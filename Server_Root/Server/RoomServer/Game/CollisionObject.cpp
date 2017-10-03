@@ -1,9 +1,10 @@
 #include "stdafx.h"
 #include "CollisionObject.h"
 
-CollisionObject::CollisionObject(int nID, btCollisionObject* pbtCollisionObject)
+CollisionObject::CollisionObject(int nID, Type type, btCollisionObject* pbtCollisionObject)
 {
 	m_nID = nID;
+	m_Type = type;
 	m_pbtCollisionObject = pbtCollisionObject;
 }
 

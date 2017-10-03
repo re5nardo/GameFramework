@@ -6,6 +6,9 @@
 #include "CollisionObject.h"
 #include <map>
 
+class Character;
+class Projectile;
+
 using namespace std;
 
 class CollisionManager
@@ -39,8 +42,8 @@ public:
 	int AddBox2dShapeTerrainObject(btVector3& vec3Position, btVector3& vec3Rotation, btVector3& vec3HalfExtents);
 	int AddSphere2dShapeTerrainObject(btVector3& vec3Position, float fRadius);
 	int AddConvexPolygon2dShapeTerrainObject(btVector3& vec3Position, list<btVector3>& listPoint);
-	int AddCharacter(btVector3& vec3Position, float fSize, float fHeight);
-	int AddProjectile(btVector3& vec3Position, float fSize, float fHeight);
+	int AddCharacter(btVector3& vec3Position, float fSize, float fHeight, Character* pCharacter);
+	int AddProjectile(btVector3& vec3Position, float fSize, float fHeight, Projectile* pProjectile);
 	void RemoveCollisionObject(int nID);
 
 public:
@@ -48,6 +51,9 @@ public:
 	void SetRotation(int nID, btVector3& vec3Rotation);
 
 public:
+	bool ContinuousCollisionDectection(int nTargetID, int nOtherID, btVector3& vec3To, btVector3& vec3Hit);
+	bool DiscreteCollisionDectection(int nTargetID, int nOtherID, btVector3& vec3Hit);
+	bool GetCollisionObjectsInRange(int nTargetID, btVector3& vec3To, int nTypes, list<CollisionObject*>* pObjects);
 	bool ContinuousCollisionDectectionFirst(int nID, btVector3& vec3To, int nTypes, pair<int, btVector3>* hit);
 	bool ContinuousCollisionDectection(int nID, btVector3& vec3To, int nTypes, list<pair<int, btVector3>>* listHit);
 	bool DiscreteCollisionDectection(int nID, int nTypes, list<pair<int, btVector3>>* listHit);
@@ -57,4 +63,7 @@ public:
 private:
 	list<CollisionObject*> GetCollisionObjects(int nTypes, AABB range);
 	btConvexShape* GetConvexShape(btCollisionObject* pbtCollisionObject);
+
+public:
+	CollisionObject* GetCollisionObject(int nID);
 };

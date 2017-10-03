@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "General.h"
-#include "../../Entity/IEntity.h"
+#include "../../Entity/Entities/Projectile/Projectile.h"
 #include "../BehaviorIDs.h"
 #include "../../MasterData/MasterDataManager.h"
 #include "../../MasterData/Behavior.h"
@@ -59,8 +59,8 @@ void General::UpdateBody(long long lUpdateTime)
 				{
 					int nEntityID = 0;
 					int nProjectileMasterDataID = atoi(it->m_vecParams[0].c_str());
-					IEntity* pProjectile = NULL;
-					m_pGameRoom->CreateEntity(FBS::Data::EntityType_Projectile, nProjectileMasterDataID, &nEntityID, &pProjectile);
+					Projectile* pProjectile = NULL;
+					m_pGameRoom->CreateProjectile(nProjectileMasterDataID, &nEntityID, &pProjectile, m_pEntity->GetID());
 					pProjectile->SetPosition(m_pEntity->GetPosition());
 
 					GameEvent::EntityCreate* pEntityCreate = new GameEvent::EntityCreate();

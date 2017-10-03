@@ -72,6 +72,9 @@ bool IBehavior::IsActivated()
 
 void IBehavior::Stop(long long lTime)
 {
+	if (!m_bActivated)
+		return;
+
 	m_bActivated = false;
 
 	GameEvent::BehaviorEnd* pBehaviorEnd = new GameEvent::BehaviorEnd();

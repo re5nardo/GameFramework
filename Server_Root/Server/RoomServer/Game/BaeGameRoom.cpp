@@ -23,6 +23,8 @@
 #include "../GameEvent/GameEvents/EntityDestroy.h"
 #include "../../FBSFiles/FBSData_generated.h"
 #include "../Behavior/Behaviors/Dash.h"
+#include "../GameEvent/GameEvents/Collision.h"
+#include "../GameEvent/GameEvents/Position.h"
 
 BaeGameRoom::BaeGameRoom(int nMatchID, vector<string> vecMatchedPlayerKey)	//	Receive Game Info from Lobby
 {
@@ -383,6 +385,103 @@ void BaeGameRoom::SetObstacles(int nMapID, int nRandomSeed)
 	}*/
 }
 
+//	Target	(Other부터 처리하도록 순서 수정할까..? (이동하려는 Entity가 공격권을 가지도록 -> 먼저 공격처리가 이뤄지도록)
+void BaeGameRoom::EntityMove(int nEntityID, IBehavior* pBehavior, btVector3& vec3To, int nTypes, long long lStartTime, long long lEndTime)
+{
+	IEntity* pTarget = GetEntity(nEntityID);
+	btVector3 vec3Start = pTarget->GetPosition();
+
+	list<CollisionObject*> listCollisionObject;
+	if (GetCollisionObjectsInRange(nEntityID, vec3To, nTypes, &listCollisionObject))
+	{
+		btVector3 vec3Hit;
+		for (list<CollisionObject*>::iterator it = listCollisionObject.begin(); it != listCollisionObject.end(); ++it)
+		{
+			CollisionObject* pOtherCollisionObject = *it;
+
+			if (ContinuousCollisionDectection(nEntityID, pOtherCollisionObject, vec3To, vec3Hit))
+			{
+				if (pOtherCollisionObject->m_Type == CollisionObject::Type::CollisionObjectType_Terrain)
+				{
+					if (pTarget->IsTerrainPassable())
+					{
+						continue;
+					}
+
+					pTarget->SetPosition(vec3Hit);
+
+					AddPositionGameEvent(lStartTime / 1000.0f, pTarget->GetID(), lStartTime / 1000.0f, lEndTime / 1000.0f, vec3Start, vec3Hit);
+
+					pBehavior->Stop(lEndTime);
+
+					return;
+				}
+				else if (pOtherCollisionObject->m_Type == CollisionObject::Type::CollisionObjectType_Character)
+				{
+					Character* pOtherCharacter = (Character*)pOtherCollisionObject->m_pbtCollisionObject->getUserPointer();
+
+					if (!pTarget->IsMovableOnCollision(pOtherCharacter))
+					{
+						pTarget->SetPosition(vec3Hit);
+
+						AddPositionGameEvent(lStartTime / 1000.0f, pTarget->GetID(), lStartTime / 1000.0f, lEndTime / 1000.0f, vec3Start, vec3Hit);
+
+						pTarget->OnCollision(pOtherCharacter, lEndTime);
+						pOtherCharacter->OnCollision(pTarget, lEndTime);
+
+						return;
+					}
+					else
+					{
+						pTarget->OnCollision(pOtherCharacter, lEndTime);
+						pOtherCharacter->OnCollision(pTarget, lEndTime);
+					}
+				}
+				else if (pOtherCollisionObject->m_Type == CollisionObject::Type::CollisionObjectType_Projectile)
+				{
+					Projectile* pOtherProjectile = (Projectile*)pOtherCollisionObject->m_pbtCollisionObject->getUserPointer();
+
+					if (!pTarget->IsMovableOnCollision(pOtherProjectile))
+					{
+						pTarget->SetPosition(vec3Hit);
+
+						AddPositionGameEvent(lStartTime / 1000.0f, pTarget->GetID(), lStartTime / 1000.0f, lEndTime / 1000.0f, vec3Start, vec3Hit);
+
+						pTarget->OnCollision(pOtherProjectile, lEndTime);
+						pOtherProjectile->OnCollision(pTarget, lEndTime);
+
+						return;
+					}
+					else
+					{
+						pTarget->OnCollision(pOtherProjectile, lEndTime);
+						pOtherProjectile->OnCollision(pTarget, lEndTime);
+					}
+				}
+			}
+		}
+	}
+	
+	pTarget->SetPosition(vec3To);
+
+	AddPositionGameEvent(lStartTime / 1000.0f, pTarget->GetID(), lStartTime / 1000.0f, lEndTime / 1000.0f, vec3Start, vec3To);
+}
+
+bool BaeGameRoom::ContinuousCollisionDectection(int nTargetID, CollisionObject* pOther, btVector3& vec3To, btVector3& vec3Hit)
+{
+	return m_CollisionManager.ContinuousCollisionDectection(GetCollisionObjectIDByEntityID(nTargetID), pOther->m_nID, vec3To, vec3Hit);
+}
+
+bool BaeGameRoom::DiscreteCollisionDectection(int nTargetID, int nOtherID, btVector3& vec3Hit)
+{
+	return m_CollisionManager.DiscreteCollisionDectection(GetCollisionObjectIDByEntityID(nTargetID), GetCollisionObjectIDByEntityID(nOtherID), vec3Hit);
+}
+
+bool BaeGameRoom::GetCollisionObjectsInRange(int nTargetID, btVector3& vec3To, int nTypes, list<CollisionObject*>* pObjects)
+{
+	return m_CollisionManager.GetCollisionObjectsInRange(GetCollisionObjectIDByEntityID(nTargetID), vec3To, nTypes, pObjects);
+}
+
 bool BaeGameRoom::CheckDiscreteCollisionDectection(int nEntityID, int nTypes, list<pair<int, btVector3>>* listHit)
 {
 	return m_CollisionManager.DiscreteCollisionDectection(GetCollisionObjectIDByEntityID(nEntityID), nTypes, listHit);
@@ -433,42 +532,63 @@ void BaeGameRoom::AddGameEvent(IGameEvent* pGameEvent)
 	m_listGameEvent.push_back(pGameEvent);
 }
 
-bool BaeGameRoom::CreateEntity(FBS::Data::EntityType type, int nMasterDataID, int* pEntityID, IEntity** pEntity)
+void BaeGameRoom::AddPositionGameEvent(float fEventTime, int nEntityID, float fStartTime, float fEndTime, btVector3& vec3StartPosition, btVector3& vec3EndPosition)
+{
+	GameEvent::Position* pPosition = new GameEvent::Position();
+	pPosition->m_fEventTime = fEventTime;
+	pPosition->m_nEntityID = nEntityID;
+	pPosition->m_fStartTime = fStartTime;
+	pPosition->m_fEndTime = fEndTime;
+	pPosition->m_vec3StartPosition = vec3StartPosition;
+	pPosition->m_vec3EndPosition = vec3EndPosition;
+
+	AddGameEvent(pPosition);
+}
+
+bool BaeGameRoom::CreateCharacter(int nMasterDataID, int* pEntityID, Character** pCharacter, Character::Role role)
 {
 	m_LockEntitySequence.lock();
 	int nEntityID = m_nEntitySequence++;
 	m_LockEntitySequence.unlock();
 
-	IEntity* entity = NULL;
-	if (type == FBS::Data::EntityType::EntityType_Character)
-	{
-		entity = Factory::Instance()->CreateCharacter(this, nEntityID, nMasterDataID);
-	}
-	else if (type == FBS::Data::EntityType::EntityType_Projectile)
-	{
-		entity = Factory::Instance()->CreateProjectile(this, nEntityID, nMasterDataID);
-	}
-	entity->Initialize();
-	m_mapEntity[nEntityID] = entity;
+	Character* pNewCharacter = Factory::Instance()->CreateCharacter(this, nEntityID, nMasterDataID, role);
+	pNewCharacter->Initialize();
+	m_mapEntity[nEntityID] = pNewCharacter;
 
 	//	collision
-	int nCollisionObjectID = 0;
-	if (type == FBS::Data::EntityType::EntityType_Character)
-	{
-		nCollisionObjectID = m_CollisionManager.AddCharacter(entity->GetPosition(), entity->GetSize(), entity->GetHeight());
-	}
-	else if (type == FBS::Data::EntityType::EntityType_Projectile)
-	{
-		nCollisionObjectID = m_CollisionManager.AddProjectile(entity->GetPosition(), entity->GetSize(), entity->GetHeight());
-	}
+	int nCollisionObjectID = m_CollisionManager.AddCharacter(pNewCharacter->GetPosition(), pNewCharacter->GetSize(), pNewCharacter->GetHeight(), pNewCharacter);
 	m_mapEntityCollision[nEntityID] = nCollisionObjectID;
 	m_mapCollisionEntity[nCollisionObjectID] = nEntityID;
 
 	if (pEntityID != NULL)
 		*pEntityID = nEntityID;
 
-	if (pEntity != NULL)
-		*pEntity = entity;
+	if (pCharacter != NULL)
+		*pCharacter = pNewCharacter;
+
+	return true;
+}
+
+bool BaeGameRoom::CreateProjectile(int nMasterDataID, int* pEntityID, Projectile** pProjectile, int nCreatorID)
+{
+	m_LockEntitySequence.lock();
+	int nEntityID = m_nEntitySequence++;
+	m_LockEntitySequence.unlock();
+
+	Projectile* pNewProjectile = Factory::Instance()->CreateProjectile(this, nCreatorID, nEntityID, nMasterDataID);
+	pNewProjectile->Initialize();
+	m_mapEntity[nEntityID] = pNewProjectile;
+
+	//	collision
+	int nCollisionObjectID = m_CollisionManager.AddProjectile(pNewProjectile->GetPosition(), pNewProjectile->GetSize(), pNewProjectile->GetHeight(), pNewProjectile);
+	m_mapEntityCollision[nEntityID] = nCollisionObjectID;
+	m_mapCollisionEntity[nCollisionObjectID] = nEntityID;
+
+	if (pEntityID != NULL)
+		*pEntityID = nEntityID;
+
+	if (pProjectile != NULL)
+		*pProjectile = pNewProjectile;
 
 	return true;
 }
@@ -579,7 +699,8 @@ void BaeGameRoom::OnEnterRoomToR(EnterRoomToR* pMsg, unsigned int socket)
 
 		//	Temp..0 is MisterBae
 		int nEntityID = 0;
-		CreateEntity(FBS::Data::EntityType::EntityType_Character, 0, &nEntityID, NULL);
+		CreateCharacter(0, &nEntityID, NULL, Character::Role::Challenger);
+
 		m_mapPlayerEntity[nPlayerIndex] = nEntityID;
 		m_mapEntityPlayer[nEntityID] = nPlayerIndex;
 
@@ -673,6 +794,11 @@ int BaeGameRoom::GetEntityIDByCollisionObjectID(int nCollisionObjectID)
 int BaeGameRoom::GetCollisionObjectIDByEntityID(int nEntityID)
 {
 	return m_mapEntityCollision[nEntityID];
+}
+
+IEntity* BaeGameRoom::GetEntity(int nEntityID)
+{
+	return m_mapEntity[nEntityID];
 }
 
 bool BaeGameRoom::IsValidPlayer(string strPlayerKey)

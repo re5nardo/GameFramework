@@ -20,7 +20,7 @@ void DummyCharacter1AI::UpdateBody(long long lUpdateTime)
 
 	if (m_fPreviousTime < spawntime && spawntime <= m_fCurrentTime)
 	{
-		m_pGameRoom->CreateEntity(FBS::Data::EntityType_Character, m_nMasterDataID, NULL, (IEntity**)&m_pCharacter);
+		m_pGameRoom->CreateCharacter(m_nMasterDataID, NULL, &m_pCharacter, Character::Role::Disturber);
 		m_pCharacter->SetPosition(m_vec3StartPosition);
 		m_pCharacter->SetRotation(m_vec3StartRotation);
 

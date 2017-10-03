@@ -13,6 +13,7 @@
 #include <utility>
 #include "CollisionManager.h"
 #include "../../FBSFiles/FBSData_generated.h"
+#include "../Entity/Entities/Character/Character.h"
 
 class IMessage;
 class CreateRoomToR;
@@ -22,12 +23,12 @@ class GameEventStopToR;
 class EnterRoomToR;
 class PreparationStateToR;
 class IMessage;
-class Character;
 class ICharacterAI;
 class GameInputSkillToR;
 class IGameEvent;
 class IEntity;
 class GameEventDashToR;
+class IBehavior;
 
 using namespace std;
 using namespace chrono;
@@ -111,6 +112,9 @@ public:
 	int GetEntityIDByCollisionObjectID(int nCollisionObjectID);
 	int GetCollisionObjectIDByEntityID(int nEntityID);
 
+public:
+	IEntity* GetEntity(int nEntityID);
+
 private:
 	long long GetElapsedTime();	//	Milliseconds
 
@@ -119,6 +123,13 @@ private:
 	void SetObstacles(int nMapID, int nRandomSeed);
 
 public:
+	void EntityMove(int nEntityID, IBehavior* pBehavior, btVector3& vec3To, int nTypes, long long lStartTime, long long lEndTime);
+
+public:
+	bool ContinuousCollisionDectection(int nTargetID, CollisionObject* pOther, btVector3& vec3To, btVector3& vec3Hit);
+	bool DiscreteCollisionDectection(int nTargetID, int nOtherID, btVector3& vec3Hit);
+	bool GetCollisionObjectsInRange(int nTargetID, btVector3& vec3To, int nTypes, list<CollisionObject*>* pObjects);
+
 	bool CheckDiscreteCollisionDectection(int nEntityID, int nTypes, list<pair<int, btVector3>>* listHit);
 	bool CheckContinuousCollisionDectectionFirst(int nEntityID, btVector3& vec3Dest, int nTypes, pair<int, btVector3>* hit);
 	bool CheckContinuousCollisionDectection(int nEntityID, btVector3& vec3Dest, int nTypes, list<pair<int, btVector3>>* listHit);
@@ -135,9 +146,11 @@ public:
 
 public:
 	void AddGameEvent(IGameEvent* pGameEvent);
+	void AddPositionGameEvent(float fEventTime, int nEntityID, float fStartTime, float fEndTime, btVector3& vec3StartPosition, btVector3& vec3EndPosition);
 
 public:
-	bool CreateEntity(FBS::Data::EntityType type, int nMasterDataID, int* nEntityID, IEntity** pEntity);
+	bool CreateCharacter(int nMasterDataID, int* pEntityID, Character** pCharacter, Character::Role role);
+	bool CreateProjectile(int nMasterDataID, int* pEntityID, Projectile** pProjectile, int nCreatorID);
 	void DestroyEntity(int nEntityID);
 	void TrimEntity();
 

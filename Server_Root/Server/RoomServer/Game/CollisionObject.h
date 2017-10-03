@@ -7,10 +7,6 @@
 class CollisionObject
 {
 public:
-	CollisionObject(int nID, btCollisionObject* pbtCollisionObject);
-	virtual ~CollisionObject();
-
-public:
 	enum Type
 	{
 		CollisionObjectType_None = 0,
@@ -20,7 +16,12 @@ public:
 	};
 
 public:
+	CollisionObject(int nID, Type type, btCollisionObject* pbtCollisionObject);
+	virtual ~CollisionObject();
+
+public:
 	int m_nID;
+	Type m_Type = Type::CollisionObjectType_None;
 	btCollisionObject* m_pbtCollisionObject = NULL;
 
 public:

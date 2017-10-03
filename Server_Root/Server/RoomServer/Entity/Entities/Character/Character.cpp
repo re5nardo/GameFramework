@@ -4,9 +4,13 @@
 #include "../../../MasterData/Behavior.h"
 #include "../../../MasterData/Character.h"
 #include "../../../Factory.h"
+#include "../Projectile/Projectile.h"
+#include "../../../GameEvent/GameEvents/Collision.h"
+#include "../../../Game/BaeGameRoom.h"
 
-Character::Character(BaeGameRoom* pGameRoom, int nID, int nMasterDataID) : IEntity(pGameRoom, nID, nMasterDataID)
+Character::Character(BaeGameRoom* pGameRoom, int nID, int nMasterDataID, Role role) : IEntity(pGameRoom, nID, nMasterDataID)
 {
+	m_Role = role;
 }
 
 Character::~Character()
@@ -16,6 +20,16 @@ Character::~Character()
 		delete *it;
 	}
 	m_listSkill.clear();
+}
+
+void Character::SetRole(Role role)
+{
+	m_Role = role;
+}
+
+Character::Role Character::GetRole()
+{
+	return m_Role;
 }
 
 void Character::Initialize()
@@ -63,6 +77,89 @@ FBS::Data::EntityType Character::GetEntityType()
 
 void Character::NotifyGameEvent(IGameEvent* pGameEvent)
 {
+}
+
+bool Character::IsMovableOnCollision(IEntity* pOther)
+{
+	//	if has an almighty state,
+	//	return true;
+
+	if (m_Role == Character::Role::Challenger)
+	{
+		if (pOther->GetEntityType() == FBS::Data::EntityType::EntityType_Character)
+		{
+			Character* pCharacter = (Character*)pOther;
+			if (pCharacter->GetRole() == Character::Role::Challenger)
+			{
+				//	if pCharacter has an destroyer state,
+				//	return false;
+			}
+			else if (pCharacter->GetRole() == Character::Role::Disturber)
+			{
+				return false;
+			}
+		}
+		else if (pOther->GetEntityType() == FBS::Data::EntityType::EntityType_Projectile)
+		{
+			Projectile* pProjectile = (Projectile*)pOther;
+			//	if pProjectile has an destroyer state,
+			//	return false;
+		}
+	}
+
+	return true;
+}
+
+void Character::OnCollision(IEntity* pOther, long long lTime)
+{
+	//	if has an almighty state,
+	//	return "Ignore";
+
+	if (m_Role == Character::Role::Challenger)
+	{
+		if (pOther->GetEntityType() == FBS::Data::EntityType::EntityType_Character)
+		{
+			Character* pCharacter = (Character*)pOther;
+			if (pCharacter->GetRole() == Character::Role::Challenger)
+			{
+				//	if pCharacter has an destroyer state,
+				//	Stop All Behavior
+				//	...
+				//	GameEvent::Collision* pCollision = new GameEvent::Collision();
+				//	...
+			}
+			else if (pCharacter->GetRole() == Character::Role::Disturber)
+			{
+				//	Stop All Behavior
+				//	...
+
+				GameEvent::Collision* pCollision = new GameEvent::Collision();
+				pCollision->m_fEventTime = lTime / 1000.0f;
+				pCollision->m_nEntityID = m_nID;
+				pCollision->m_vec3Position = m_vec3Position;
+
+				m_pGameRoom->AddGameEvent(pCollision);
+			}
+		}
+		else if (pOther->GetEntityType() == FBS::Data::EntityType::EntityType_Projectile)
+		{
+			Projectile* pProjectile = (Projectile*)pOther;
+			//	if pProjectile has an destroyer state,
+			//	Stop All Behavior
+			//	...
+			//	GameEvent::Collision* pCollision = new GameEvent::Collision();
+			//	...
+		}
+	}
+	else if (m_Role == Character::Role::Disturber)
+	{
+		//return "Ignore";
+	}
+}
+
+bool Character::IsTerrainPassable()
+{
+	return false;
 }
 
 void Character::UpdateSkills(long long lUpdateTime)

@@ -7,9 +7,11 @@
 #include "../../../Util.h"
 #include "../../../GameEvent/GameEvents/BehaviorEnd.h"
 #include "../../../Game/BaeGameRoom.h"
+#include "../Character/Character.h"
 
-Projectile::Projectile(BaeGameRoom* pGameRoom, int nID, int nMasterDataID) : IEntity(pGameRoom, nID, nMasterDataID)
+Projectile::Projectile(BaeGameRoom* pGameRoom, int nProjectorID, int nID, int nMasterDataID) : IEntity(pGameRoom, nID, nMasterDataID)
 {
+	m_nProjectorID = nProjectorID;
 }
 
 Projectile::~Projectile()
@@ -64,7 +66,55 @@ void Projectile::NotifyGameEvent(IGameEvent* pGameEvent)
 	}
 }
 
-int Projectile::GetCasterID()
+bool Projectile::IsMovableOnCollision(IEntity* pOther)
 {
-	return m_nCasterID;
+	Character* pProjector = GetProjector();
+	Character::Role projectorRole = pProjector->GetRole();
+
+	//	if has an almighty state,
+	//	return false;
+
+	if (projectorRole == Character::Role::Challenger)
+	{
+
+	}
+	else if (projectorRole == Character::Role::Disturber)
+	{
+
+	}
+
+	return true;
+}
+
+void Projectile::OnCollision(IEntity* pOther, long long lTime)
+{
+	Character* pProjector = GetProjector();
+	Character::Role projectorRole = pProjector->GetRole();
+
+	//	if has an almighty state,
+	//	return "Ignore";
+
+	if (projectorRole == Character::Role::Challenger)
+	{
+
+	}
+	else if (projectorRole == Character::Role::Disturber)
+	{
+	
+	}
+}
+
+bool Projectile::IsTerrainPassable()
+{
+	return false;
+}
+
+int Projectile::GetProjectorID()
+{
+	return m_nProjectorID;
+}
+
+Character* Projectile::GetProjector()
+{
+	return (Character*)m_pGameRoom->GetEntity(m_nProjectorID);
 }

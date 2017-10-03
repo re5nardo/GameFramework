@@ -90,9 +90,9 @@ IState* Factory::CreateState(BaeGameRoom* pGameRoom, IEntity* pEntity, int nMast
 	return NULL;
 }
 
-Character* Factory::CreateCharacter(BaeGameRoom* pGameRoom, int nID, int nMasterDataID)
+Character* Factory::CreateCharacter(BaeGameRoom* pGameRoom, int nID, int nMasterDataID, Character::Role role)
 {
-	return new Character(pGameRoom, nID, nMasterDataID);
+	return new Character(pGameRoom, nID, nMasterDataID, role);
 }
 
 //CharacterAI* Factory::CreateCharacterAI(BaeGameRoom* pGameRoom, int nID, int nMasterDataID)
@@ -100,7 +100,7 @@ Character* Factory::CreateCharacter(BaeGameRoom* pGameRoom, int nID, int nMaster
 //	return new CharacterAI(pGameRoom, nID, nMasterDataID);
 //}
 
-Projectile* Factory::CreateProjectile(BaeGameRoom* pGameRoom, int nID, int nMasterDataID)
+Projectile* Factory::CreateProjectile(BaeGameRoom* pGameRoom, int nProjectorID, int nID, int nMasterDataID)
 {
-	return new Projectile(pGameRoom, nID, nMasterDataID);
+	return new Projectile(pGameRoom, nProjectorID, nID, nMasterDataID);
 }
