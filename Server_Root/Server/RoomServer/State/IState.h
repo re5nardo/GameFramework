@@ -1,7 +1,12 @@
 #pragma once
 
+#include "CoreState.h"
+#include <vector>
+
 class BaeGameRoom;
 class IEntity;
+
+using namespace std;
 
 class IState
 {
@@ -14,6 +19,7 @@ protected:
 
 protected:
 	float m_fLength;
+	vector<CoreState> m_vecCoreState;
 
 protected:
 	BaeGameRoom* m_pGameRoom;
@@ -27,14 +33,23 @@ protected:
 	float m_fPreviousTime;					//	ElapsedTime after behavior was started (seconds)
 
 public:
+	bool m_bDestroyReserved = false;
+
+public:
 	int GetMasterDataID();
+	long long GetStartTime();
 
 public:
 	void Update(long long lUpdateTime);
-	void Remove(long long lTime);
+
+public:
+	bool HasCoreState(CoreState coreState);
 
 public:
 	virtual int GetID() = 0;
 	virtual void Initialize() = 0;
 	virtual void UpdateBody(long long lUpdateTime) = 0;
+
+public:
+	virtual void OnCollision(IEntity* pOther, long long lTime);
 };

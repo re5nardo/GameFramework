@@ -6,21 +6,21 @@ namespace FBS.GameEvent
 using System;
 using FlatBuffers;
 
-public sealed class Collision : Table {
-  public static Collision GetRootAsCollision(ByteBuffer _bb) { return GetRootAsCollision(_bb, new Collision()); }
-  public static Collision GetRootAsCollision(ByteBuffer _bb, Collision obj) { return (obj.__init(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
-  public Collision __init(int _i, ByteBuffer _bb) { bb_pos = _i; bb = _bb; return this; }
+public sealed class CharacterRespawn : Table {
+  public static CharacterRespawn GetRootAsCharacterRespawn(ByteBuffer _bb) { return GetRootAsCharacterRespawn(_bb, new CharacterRespawn()); }
+  public static CharacterRespawn GetRootAsCharacterRespawn(ByteBuffer _bb, CharacterRespawn obj) { return (obj.__init(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
+  public CharacterRespawn __init(int _i, ByteBuffer _bb) { bb_pos = _i; bb = _bb; return this; }
 
   public int EntityID { get { int o = __offset(4); return o != 0 ? bb.GetInt(o + bb_pos) : (int)0; } }
   public FBS.Data.Vector3 Pos { get { return GetPos(new FBS.Data.Vector3()); } }
   public FBS.Data.Vector3 GetPos(FBS.Data.Vector3 obj) { int o = __offset(6); return o != 0 ? obj.__init(o + bb_pos, bb) : null; }
 
-  public static void StartCollision(FlatBufferBuilder builder) { builder.StartObject(2); }
+  public static void StartCharacterRespawn(FlatBufferBuilder builder) { builder.StartObject(2); }
   public static void AddEntityID(FlatBufferBuilder builder, int EntityID) { builder.AddInt(0, EntityID, 0); }
   public static void AddPos(FlatBufferBuilder builder, Offset<FBS.Data.Vector3> PosOffset) { builder.AddStruct(1, PosOffset.Value, 0); }
-  public static Offset<Collision> EndCollision(FlatBufferBuilder builder) {
+  public static Offset<CharacterRespawn> EndCharacterRespawn(FlatBufferBuilder builder) {
     int o = builder.EndObject();
-    return new Offset<Collision>(o);
+    return new Offset<CharacterRespawn>(o);
   }
 };
 

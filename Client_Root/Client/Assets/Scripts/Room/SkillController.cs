@@ -79,6 +79,9 @@ public class SkillController : MonoBehaviour
 #region Event Handler
     private void OnSkillButtonClicked(int nSkillID)
     {
+        if (!BaeGameRoom.Instance.GetUserCharacter().IsAlive())
+            return;
+        
         GameInputSkillToR skillToR = new GameInputSkillToR();
         skillToR.m_nPlayerIndex = 0;
         skillToR.m_nSkillID = nSkillID;
@@ -89,6 +92,9 @@ public class SkillController : MonoBehaviour
 
     private void OnSkillButtonPressed(int nSkillID)
     {
+        if (!BaeGameRoom.Instance.GetUserCharacter().IsAlive())
+            return;
+        
         GameInputSkillToR skillToR = new GameInputSkillToR();
         skillToR.m_nPlayerIndex = 0;
         skillToR.m_nSkillID = nSkillID;
@@ -99,6 +105,9 @@ public class SkillController : MonoBehaviour
 
     private void OnSkillButtonReleased(int nSkillID)
     {
+        if (!BaeGameRoom.Instance.GetUserCharacter().IsAlive())
+            return;
+        
         GameInputSkillToR skillToR = new GameInputSkillToR();
         skillToR.m_nPlayerIndex = 0;
         skillToR.m_nSkillID = nSkillID;

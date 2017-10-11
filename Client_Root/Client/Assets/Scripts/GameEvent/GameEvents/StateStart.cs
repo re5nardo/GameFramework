@@ -1,31 +1,34 @@
 ﻿using FlatBuffers;
 
-public class StateStart : IGameEvent
+namespace GameEvent
 {
-    public int      m_nEntityID;
-    public float    m_fStartTime;
-    public int      m_nStateID;
-
-    public override FBS.GameEventType GetEventType()
+    public class StateStart : IGameEvent
     {
-        return FBS.GameEventType.StateStart;
-    }
+        public int      m_nEntityID;
+        public float    m_fStartTime;
+        public int      m_nStateID;
 
-    public override bool Deserialize(byte[] bytes)
-    {
-        var buf = new ByteBuffer(bytes);
+        public override FBS.GameEventType GetEventType()
+        {
+            return FBS.GameEventType.StateStart;
+        }
 
-        var data = FBS.GameEvent.StateStart.GetRootAsStateStart(buf);
+        public override bool Deserialize(byte[] bytes)
+        {
+            var buf = new ByteBuffer(bytes);
 
-        m_nEntityID = data.EntityID;
-        m_fStartTime = data.StartTime;
-        m_nStateID = data.StateID;
+            var data = FBS.GameEvent.StateStart.GetRootAsStateStart(buf);
 
-        return true;
-    }
+            m_nEntityID = data.EntityID;
+            m_fStartTime = data.StartTime;
+            m_nStateID = data.StateID;
 
-    public override string ToString()
-    {
-        return string.Format("{0}, EntityID : {1}, StartTime : {2}, StateID : {3}", base.ToString(), m_nEntityID, m_fStartTime, m_nStateID);
+            return true;
+        }
+
+        public override string ToString()
+        {
+            return string.Format("{0}, EntityID : {1}, StartTime : {2}, StateID : {3}", base.ToString(), m_nEntityID, m_fStartTime, m_nStateID);
+        }
     }
 }

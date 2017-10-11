@@ -390,9 +390,6 @@
     <ClInclude Include="AI\CharacterAI\CharacterAIs\Flower1AI.h">
       <Filter>헤더 파일\AI\CharacterAI\CharacterAIs</Filter>
     </ClInclude>
-    <ClInclude Include="GameEvent\GameEvents\Collision.h">
-      <Filter>헤더 파일\GameEvent\GameEvents</Filter>
-    </ClInclude>
     <ClInclude Include="Messages\ToRoom\GameEventDashToR.h">
       <Filter>헤더 파일\Messages\ToRoom</Filter>
     </ClInclude>
@@ -401,6 +398,24 @@
     </ClInclude>
     <ClInclude Include="AI\CharacterAI\CharacterAIs\DummyCharacter2AI.h">
       <Filter>헤더 파일\AI\CharacterAI\CharacterAIs</Filter>
+    </ClInclude>
+    <ClInclude Include="Behavior\Behaviors\Die.h">
+      <Filter>헤더 파일\Behavior\Behaviors</Filter>
+    </ClInclude>
+    <ClInclude Include="GameEvent\GameEvents\CharacterRespawn.h">
+      <Filter>헤더 파일\GameEvent\GameEvents</Filter>
+    </ClInclude>
+    <ClInclude Include="GameEvent\GameEvents\CharacterAttack.h">
+      <Filter>헤더 파일\GameEvent\GameEvents</Filter>
+    </ClInclude>
+    <ClInclude Include="State\CoreState.h">
+      <Filter>헤더 파일\State</Filter>
+    </ClInclude>
+    <ClInclude Include="State\States\GeneralState.h">
+      <Filter>헤더 파일\State\States</Filter>
+    </ClInclude>
+    <ClInclude Include="State\States\ChallengerDisturbing.h">
+      <Filter>헤더 파일\State\States</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -587,9 +602,6 @@
     <ClCompile Include="AI\CharacterAI\CharacterAIs\Flower1AI.cpp">
       <Filter>소스 파일\AI\CharacterAI\CharacterAIs</Filter>
     </ClCompile>
-    <ClCompile Include="GameEvent\GameEvents\Collision.cpp">
-      <Filter>소스 파일\GameEvent\GameEvents</Filter>
-    </ClCompile>
     <ClCompile Include="Messages\ToRoom\GameEventDashToR.cpp">
       <Filter>소스 파일\Messages\ToRoom</Filter>
     </ClCompile>
@@ -598,6 +610,21 @@
     </ClCompile>
     <ClCompile Include="AI\CharacterAI\CharacterAIs\DummyCharacter2AI.cpp">
       <Filter>소스 파일\AI\CharacterAI\CharacterAIs</Filter>
+    </ClCompile>
+    <ClCompile Include="Behavior\Behaviors\Die.cpp">
+      <Filter>소스 파일\Behavior\Behaviors</Filter>
+    </ClCompile>
+    <ClCompile Include="GameEvent\GameEvents\CharacterRespawn.cpp">
+      <Filter>소스 파일\GameEvent\GameEvents</Filter>
+    </ClCompile>
+    <ClCompile Include="GameEvent\GameEvents\CharacterAttack.cpp">
+      <Filter>소스 파일\GameEvent\GameEvents</Filter>
+    </ClCompile>
+    <ClCompile Include="State\States\GeneralState.cpp">
+      <Filter>소스 파일\State\States</Filter>
+    </ClCompile>
+    <ClCompile Include="State\States\ChallengerDisturbing.cpp">
+      <Filter>소스 파일\State\States</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

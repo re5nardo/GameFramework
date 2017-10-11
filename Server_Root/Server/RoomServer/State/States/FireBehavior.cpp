@@ -36,6 +36,6 @@ void FireBehavior::UpdateBody(long long lUpdateTime)
 		pTargetBehavior->Start(lUpdateTime, m_pGameRoom);
 		pTargetBehavior->Update(lUpdateTime);
 
-		Remove(lUpdateTime - (m_fCurrentTime - m_fLength) * 1000);
+		m_pEntity->RemoveState(m_nMasterDataID, lUpdateTime - (m_fCurrentTime - m_fLength) * 1000);
 	}
 }

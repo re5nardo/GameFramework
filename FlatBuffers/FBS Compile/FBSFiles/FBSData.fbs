@@ -12,3 +12,13 @@ enum EntityType:byte
 	Character = 0,
 	Projectile,
 }
+
+struct CharacterStat
+{
+	HP:int;
+	MP:int;
+	MPChargeRate:float;
+	RunSpeed:float;
+	DashSpeed:float;
+	Strength:float;
+}

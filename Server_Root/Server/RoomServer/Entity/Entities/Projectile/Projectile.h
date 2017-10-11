@@ -21,8 +21,6 @@ public:
 	float GetMoveSpeed() override;
 	FBS::Data::EntityType GetEntityType() override;
 	void NotifyGameEvent(IGameEvent* pGameEvent) override;
-	bool IsMovableOnCollision(IEntity* pOther) override;
-	void OnCollision(IEntity* pOther, long long lTime) override;
 	bool IsTerrainPassable() override;
 
 public:

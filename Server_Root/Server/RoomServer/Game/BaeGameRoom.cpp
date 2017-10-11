@@ -23,7 +23,6 @@
 #include "../GameEvent/GameEvents/EntityDestroy.h"
 #include "../../FBSFiles/FBSData_generated.h"
 #include "../Behavior/Behaviors/Dash.h"
-#include "../GameEvent/GameEvents/Collision.h"
 #include "../GameEvent/GameEvents/Position.h"
 
 BaeGameRoom::BaeGameRoom(int nMatchID, vector<string> vecMatchedPlayerKey)	//	Receive Game Info from Lobby
@@ -113,25 +112,28 @@ void BaeGameRoom::ProcessInput()
 		int nPlayerIndex = it->first;
 		long long lTime = it->second.first;
 		IMessage* pPlayerInputMsg = it->second.second;
+		Character* pCharacter = (Character*)m_mapEntity[m_mapPlayerEntity[nPlayerIndex]];
 
 		if (pPlayerInputMsg->GetID() == GameEventMoveToR_ID)
 		{
+			if (!pCharacter->IsAlive())
+				continue;
+
 			GameEventMoveToR* pMoveToR = (GameEventMoveToR*)pPlayerInputMsg;
 
-			int nEntityID = m_mapPlayerEntity[nPlayerIndex];
-
-			if (pMoveToR->m_vec3Dest != m_mapEntity[nEntityID]->GetPosition())
+			if (pMoveToR->m_vec3Dest != pCharacter->GetPosition())
 			{
-				m_mapEntity[nEntityID]->GetBehavior(BehaviorID::MOVE)->Start(lTime, &pMoveToR->m_vec3Dest);
+				pCharacter->GetBehavior(BehaviorID::MOVE)->Start(lTime, &pMoveToR->m_vec3Dest);
 			}
 		}
 		else if (pPlayerInputMsg->GetID() == GameEventDashToR_ID)
 		{
+			if (!pCharacter->IsAlive())
+				continue;
+
 			GameEventDashToR* pMsg = (GameEventDashToR*)pPlayerInputMsg;
 
-			int nEntityID = m_mapPlayerEntity[nPlayerIndex];
-
-			Dash* pDash = (Dash*)m_mapEntity[nEntityID]->GetBehavior(BehaviorID::DASH);
+			Dash* pDash = (Dash*)pCharacter->GetBehavior(BehaviorID::DASH);
 
 			if (pDash->IsActivated())
 			{
@@ -144,11 +146,12 @@ void BaeGameRoom::ProcessInput()
 		}
 		else if (pPlayerInputMsg->GetID() == GameInputSkillToR_ID)
 		{
+			if (!pCharacter->IsAlive())
+				continue;
+
 			GameInputSkillToR* pMsg = (GameInputSkillToR*)pPlayerInputMsg;
 
-			int nEntityID = m_mapPlayerEntity[nPlayerIndex];
-
-			list<ISkill*> listSkill = ((Character*)m_mapEntity[nEntityID])->GetAllSkills();
+			list<ISkill*> listSkill = pCharacter->GetAllSkills();
 			for (list<ISkill*>::iterator it = listSkill.begin(); it != listSkill.end(); ++it)
 			{
 				if (pMsg->m_nSkillID == (*it)->GetMasterDataID())
@@ -408,55 +411,30 @@ void BaeGameRoom::EntityMove(int nEntityID, IBehavior* pBehavior, btVector3& vec
 						continue;
 					}
 
-					pTarget->SetPosition(vec3Hit);
-
-					AddPositionGameEvent(lStartTime / 1000.0f, pTarget->GetID(), lStartTime / 1000.0f, lEndTime / 1000.0f, vec3Start, vec3Hit);
-
 					pBehavior->Stop(lEndTime);
-
-					return;
 				}
 				else if (pOtherCollisionObject->m_Type == CollisionObject::Type::CollisionObjectType_Character)
 				{
 					Character* pOtherCharacter = (Character*)pOtherCollisionObject->m_pbtCollisionObject->getUserPointer();
 
-					if (!pTarget->IsMovableOnCollision(pOtherCharacter))
-					{
-						pTarget->SetPosition(vec3Hit);
-
-						AddPositionGameEvent(lStartTime / 1000.0f, pTarget->GetID(), lStartTime / 1000.0f, lEndTime / 1000.0f, vec3Start, vec3Hit);
-
-						pTarget->OnCollision(pOtherCharacter, lEndTime);
-						pOtherCharacter->OnCollision(pTarget, lEndTime);
-
-						return;
-					}
-					else
-					{
-						pTarget->OnCollision(pOtherCharacter, lEndTime);
-						pOtherCharacter->OnCollision(pTarget, lEndTime);
-					}
+					pTarget->OnCollision(pOtherCharacter, lEndTime);
+					pOtherCharacter->OnCollision(pTarget, lEndTime);
 				}
 				else if (pOtherCollisionObject->m_Type == CollisionObject::Type::CollisionObjectType_Projectile)
 				{
 					Projectile* pOtherProjectile = (Projectile*)pOtherCollisionObject->m_pbtCollisionObject->getUserPointer();
 
-					if (!pTarget->IsMovableOnCollision(pOtherProjectile))
-					{
-						pTarget->SetPosition(vec3Hit);
+					pTarget->OnCollision(pOtherProjectile, lEndTime);
+					pOtherProjectile->OnCollision(pTarget, lEndTime);
+				}
+				
+				if (!pBehavior->IsActivated())
+				{
+					pTarget->SetPosition(vec3Hit);
 
-						AddPositionGameEvent(lStartTime / 1000.0f, pTarget->GetID(), lStartTime / 1000.0f, lEndTime / 1000.0f, vec3Start, vec3Hit);
+					AddPositionGameEvent(lStartTime / 1000.0f, pTarget->GetID(), lStartTime / 1000.0f, lEndTime / 1000.0f, vec3Start, vec3Hit);
 
-						pTarget->OnCollision(pOtherProjectile, lEndTime);
-						pOtherProjectile->OnCollision(pTarget, lEndTime);
-
-						return;
-					}
-					else
-					{
-						pTarget->OnCollision(pOtherProjectile, lEndTime);
-						pOtherProjectile->OnCollision(pTarget, lEndTime);
-					}
+					return;
 				}
 			}
 		}
@@ -465,6 +443,20 @@ void BaeGameRoom::EntityMove(int nEntityID, IBehavior* pBehavior, btVector3& vec
 	pTarget->SetPosition(vec3To);
 
 	AddPositionGameEvent(lStartTime / 1000.0f, pTarget->GetID(), lStartTime / 1000.0f, lEndTime / 1000.0f, vec3Start, vec3To);
+}
+
+void BaeGameRoom::EntityAttack(int nAttackingEntityID, int nAttackedEntityID, int nDamage, long long lTime)
+{
+	Character* pAttackedCharacter = (Character*)m_mapEntity[nAttackedEntityID];
+
+	pAttackedCharacter->OnAttacked(nAttackingEntityID, nDamage, lTime);
+}
+
+void BaeGameRoom::CharacterDieEnd(int nCharacterID, long long lTime)
+{
+	Character* pCharacter = (Character*)m_mapEntity[nCharacterID];
+
+	pCharacter->OnRespawn(lTime);
 }
 
 bool BaeGameRoom::ContinuousCollisionDectection(int nTargetID, CollisionObject* pOther, btVector3& vec3To, btVector3& vec3Hit)
@@ -602,6 +594,13 @@ void BaeGameRoom::DestroyEntity(int nEntityID)
 	AddGameEvent(pEntityDestroy);
 
 	m_mapEntity[nEntityID]->m_bDestroyReserved = true;
+	m_mapEntity.erase(nEntityID);
+	int nCollisionObjectID = GetCollisionObjectIDByEntityID(nEntityID);
+	m_CollisionManager.RemoveCollisionObject(nCollisionObjectID);
+
+	m_mapEntityCollision.erase(nEntityID);
+	m_mapCollisionEntity.erase(nCollisionObjectID);
+
 	m_listDestroyReserved.push_back(nEntityID);
 }
 
@@ -612,13 +611,6 @@ void BaeGameRoom::TrimEntity()
 		int nEntityID = *it;
 
 		delete m_mapEntity[nEntityID];
-		m_mapEntity.erase(nEntityID);
-
-		int nCollisionObjectID = GetCollisionObjectIDByEntityID(nEntityID);
-		m_CollisionManager.RemoveCollisionObject(nCollisionObjectID);
-
-		m_mapEntityCollision.erase(nEntityID);
-		m_mapCollisionEntity.erase(nCollisionObjectID);
 	}
 	m_listDestroyReserved.clear();
 }
@@ -706,6 +698,7 @@ void BaeGameRoom::OnEnterRoomToR(EnterRoomToR* pMsg, unsigned int socket)
 
 		enterRoomToC->m_nResult = 0;
 		enterRoomToC->m_nPlayerIndex = nPlayerIndex;
+		enterRoomToC->m_nPlayerEntityID = nEntityID;
 		for (int i = 0; i < m_vecMatchedPlayerKey.size(); ++i)
 		{
 			enterRoomToC->m_mapPlayers[i] = m_vecMatchedPlayerKey[i];

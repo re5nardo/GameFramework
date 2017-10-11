@@ -2,6 +2,8 @@
 #include "IEntity.h"
 #include "../Game/BaeGameRoom.h"
 #include "../Behavior/BehaviorIDs.h"
+#include "../GameEvent/GameEvents/StateStart.h"
+#include "../GameEvent/GameEvents/StateEnd.h"
 
 IEntity::IEntity(BaeGameRoom* pGameRoom, int nID, int nMasterDataID)
 {
@@ -23,6 +25,8 @@ IEntity::~IEntity()
 		delete *it;
 	}
 	m_listState.clear();
+
+	TrimState();
 }
 
 void IEntity::UpdateBehaviors(long long lUpdateTime)
@@ -55,6 +59,8 @@ void IEntity::UpdateStates(long long lUpdateTime)
 
 void IEntity::LateUpdate(long long lUpdateTime)
 {
+	TrimState();
+
 	if (m_nDefaultBehaviorID != -1 && !IsBehavioring() && GetBehavior(m_nDefaultBehaviorID) != NULL)
 	{
 		GetBehavior(m_nDefaultBehaviorID)->Start(lUpdateTime);
@@ -166,23 +172,78 @@ list<IState*> IEntity::GetStates()
 	return m_listState;
 }
 
-void IEntity::AddState(IState* pState)
+void IEntity::AddState(IState* pState, long long lTime)
 {
+	GameEvent::StateStart* pStateStart = new GameEvent::StateStart();
+	pStateStart->m_fEventTime = lTime / 1000.0f;
+	pStateStart->m_nEntityID = m_nID;
+	pStateStart->m_fStartTime = pState->GetStartTime() / 1000.0f;
+	pStateStart->m_nStateID = pState->GetMasterDataID();
+
+	m_pGameRoom->AddGameEvent(pStateStart);
+
 	m_listState.push_back(pState);
 }
 
-void IEntity::RemoveState(int nID)
+void IEntity::RemoveState(int nMasterDataID, long long lTime)
 {
 	for (list<IState*>::iterator it = m_listState.begin(); it != m_listState.end();)
 	{
-		if ((*it)->GetID() == nID)
+		IState* pTarget = *it;
+
+		if (pTarget->GetMasterDataID() == nMasterDataID)
 		{
-			delete *it;
-			it = m_listState.erase(it);
+			GameEvent::StateEnd* pStateEnd = new GameEvent::StateEnd();
+			pStateEnd->m_fEventTime = lTime / 1000.0f;
+			pStateEnd->m_nEntityID = m_nID;
+			pStateEnd->m_fEndTime = lTime / 1000.0f;
+			pStateEnd->m_nStateID = pTarget->GetMasterDataID();
+
+			m_pGameRoom->AddGameEvent(pStateEnd);
+
+			pTarget->m_bDestroyReserved = true;
+			m_listDestroyReserved.push_back(pTarget);
+
+			m_listState.erase(it);
+
+			return;
 		}
 		else
 		{
 			++it;
 		}
 	}
+}
+
+bool IEntity::HasCoreState(CoreState coreState)
+{
+	for (list<IState*>::iterator it = m_listState.begin(); it != m_listState.end(); ++it)
+	{
+		if ((*it)->HasCoreState(coreState))
+			return true;
+	}
+
+	return false;
+}
+
+void IEntity::OnCollision(IEntity* pOther, long long lTime)
+{
+	for (list<IBehavior*>::iterator it = m_listBehavior.begin(); it != m_listBehavior.end(); ++it)
+	{
+		(*it)->OnCollision(pOther, lTime);
+	}
+
+	for (list<IState*>::iterator it = m_listState.begin(); it != m_listState.end(); ++it)
+	{
+		(*it)->OnCollision(pOther, lTime);
+	}
+}
+
+void IEntity::TrimState()
+{
+	for (list<IState*>::iterator it = m_listDestroyReserved.begin(); it != m_listDestroyReserved.end(); ++it)
+	{
+		delete *it;
+	}
+	m_listDestroyReserved.clear();
 }

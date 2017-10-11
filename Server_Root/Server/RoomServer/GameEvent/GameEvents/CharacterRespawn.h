@@ -5,15 +5,15 @@
 
 namespace GameEvent
 {
-	class Collision : public IGameEvent
+	class CharacterRespawn : public IGameEvent
 	{
 	public:
-		Collision();
-		virtual ~Collision();
+		CharacterRespawn();
+		virtual ~CharacterRespawn();
 
 	public:
-		int			m_nEntityID;
-		btVector3	m_vec3Position;
+		int m_nEntityID;
+		btVector3 m_vec3Position;
 
 	public:
 		FBS::GameEventType GetType() override;

@@ -62,7 +62,7 @@ void FireSkill::UpdateBody(long long lUpdateTime)
 		{
 			IState* pState = Factory::Instance()->CreateState(m_pGameRoom, m_pEntity, m_nMasterDataID, lUpdateTime);
 			pState->Initialize();
-			m_pEntity->AddState(pState);
+			m_pEntity->AddState(pState, lUpdateTime);
 			pState->Update(lUpdateTime);
 		}
 	}

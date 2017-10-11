@@ -10,6 +10,14 @@ public class BaeGameRoom : IGameRoom
     [SerializeField] private CameraController       m_CameraController = null;
     [SerializeField] private SkillController        m_SkillController = null;
 
+    public static new BaeGameRoom Instance
+    {
+        get
+        {
+            return (BaeGameRoom)instance;
+        }
+    }
+
     public static float deltaTime = 0;
 
     //  Temp
@@ -19,7 +27,8 @@ public class BaeGameRoom : IGameRoom
     private Dictionary<int, Entity> m_dicEntity = new Dictionary<int, Entity>();
 
     private int m_nOldFrameRate = 0;
-    private int m_nPlayerIndex = -1;
+    private int m_nUserPlayerIndex = -1;
+    private int m_nUserEntityID = -1;
 
     //  Snapshot logic is legacy..
     private float m_fLastSnapshotTime = 0f;
@@ -151,6 +160,18 @@ public class BaeGameRoom : IGameRoom
 
             m_dicEntity[gameEvent.m_nEntityID].ProcessGameEvent(gameEvent);
         }
+        else if (iGameEvent.GetEventType() == FBS.GameEventType.StateStart)
+        {
+            GameEvent.StateStart gameEvent = (GameEvent.StateStart)iGameEvent;
+
+            m_dicEntity[gameEvent.m_nEntityID].ProcessGameEvent(gameEvent);
+        }
+        else if (iGameEvent.GetEventType() == FBS.GameEventType.StateEnd)
+        {
+            GameEvent.StateEnd gameEvent = (GameEvent.StateEnd)iGameEvent;
+
+            m_dicEntity[gameEvent.m_nEntityID].ProcessGameEvent(gameEvent);
+        }
         else if (iGameEvent.GetEventType() == FBS.GameEventType.Position)
         {
             GameEvent.Position gameEvent = (GameEvent.Position)iGameEvent;
@@ -182,9 +203,20 @@ public class BaeGameRoom : IGameRoom
 
             m_dicEntity.Remove(gameEvent.m_nEntityID);
         }
-        else if (iGameEvent.GetEventType() == FBS.GameEventType.Collision)
+        else if (iGameEvent.GetEventType() == FBS.GameEventType.CharacterAttack)
         {
-            GameEvent.Collision gameEvent = (GameEvent.Collision)iGameEvent;
+            GameEvent.CharacterAttack gameEvent = (GameEvent.CharacterAttack)iGameEvent;
+
+            m_dicEntity[gameEvent.m_nAttackedEntityID].ProcessGameEvent(gameEvent);
+        }
+        else if (iGameEvent.GetEventType() == FBS.GameEventType.CharacterRespawn)
+        {
+            GameEvent.CharacterRespawn gameEvent = (GameEvent.CharacterRespawn)iGameEvent;
+
+            if (gameEvent.m_nEntityID == m_nUserEntityID)
+            {
+                //  Dim effect off
+            }
 
             m_dicEntity[gameEvent.m_nEntityID].ProcessGameEvent(gameEvent);
         }
@@ -274,19 +306,20 @@ public class BaeGameRoom : IGameRoom
     {
         if (msg.m_nResult == 0)
         {
-            m_nPlayerIndex = msg.m_nPlayerIndex;
+            m_nUserPlayerIndex = msg.m_nPlayerIndex;
+            m_nUserEntityID = msg.m_nPlayerEntityID;
 
             foreach(KeyValuePair<int, string> kv in msg.m_dicPlayers)
             {
                 //  temp.. MisterBae
-                GameObject goEntity = ObjectPool.Instance.GetGameObject("CharacterModel/Entity");
-                Entity entity = goEntity.GetComponent<Entity>();
-                entity.Initialize(FBS.Data.EntityType.Character, 0, 0);
-                m_dicEntity[kv.Key] = entity;
+                GameObject goCharacter = ObjectPool.Instance.GetGameObject("CharacterModel/Character");
+                Character character = goCharacter.GetComponent<Character>();
+                character.Initialize(FBS.Data.EntityType.Character, 0, 0);
+                m_dicEntity[kv.Key] = character;
 
-                if (kv.Key == m_nPlayerIndex)
+                if (kv.Key == m_nUserPlayerIndex)
                 {
-                    m_CameraController.SetTarget(entity.GetUITransform());
+                    m_CameraController.SetTarget(character.GetUITransform());
                     m_CameraController.StartFollowTarget();
 
                     //m_SkillController.SetSkills(new List<int>(){0, 1, 2});
@@ -343,8 +376,11 @@ public class BaeGameRoom : IGameRoom
 #region Event Handler
     private void OnClicked(Vector3 vec3Pos)
     {
+        if (!GetUserCharacter().IsAlive())
+            return;
+
         GameEventMoveToR moveToR = new GameEventMoveToR();
-        moveToR.m_nPlayerIndex = m_nPlayerIndex;
+        moveToR.m_nPlayerIndex = m_nUserPlayerIndex;
         moveToR.m_vec3Dest = vec3Pos;
 
         RoomNetwork.Instance.Send(moveToR);
@@ -352,10 +388,25 @@ public class BaeGameRoom : IGameRoom
         
     public void OnDashButtonClicked()
     {
+        if (!GetUserCharacter().IsAlive())
+            return;
+
         GameEventDashToR dashToR = new GameEventDashToR();
         dashToR.m_nPlayerIndex = 0;
 
         RoomNetwork.Instance.Send(dashToR);
+    }
+#endregion
+
+#region Game Event Handler
+    public void OnPlayerDie(int nKilledEntityID, int nKillerEntityID)
+    {
+        Debug.Log(string.Format("{0}이 {1}을 처치했습니다.", nKillerEntityID, nKilledEntityID));
+
+        if (nKilledEntityID == m_nUserEntityID)
+        {
+            //  Dim Effect On
+        }
     }
 #endregion
 
@@ -375,9 +426,14 @@ public class BaeGameRoom : IGameRoom
         return m_fElapsedTime;
     }
 
-    public override int GetPlayerIndex()
+    public override int GetUserPlayerIndex()
     {
-        return m_nPlayerIndex;
+        return m_nUserPlayerIndex;
+    }
+
+    public Character GetUserCharacter()
+    {
+        return (Character)m_dicEntity[m_nUserEntityID];
     }
 
     private void WorldSnapshotInterpolation()

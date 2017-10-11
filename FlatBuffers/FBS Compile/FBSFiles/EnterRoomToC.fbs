@@ -4,6 +4,7 @@ table EnterRoomToC
 {
 	Result:int;
 	PlayerIndex:int;
+	PlayerEntityID:int;
 	PlayersMapKey:[int];
 	PlayersMapValue:[string];
 }

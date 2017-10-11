@@ -45,6 +45,6 @@ void Acceleration::UpdateBody(long long lUpdateTime)
 
 	if (m_fCurrentTime >= m_fLength)
 	{
-		Remove(lUpdateTime - (m_fCurrentTime - m_fLength) * 1000);
+		m_pEntity->RemoveState(m_nMasterDataID, lUpdateTime - (m_fCurrentTime - m_fLength) * 1000);
 	}
 }

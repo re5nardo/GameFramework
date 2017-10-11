@@ -124,6 +124,8 @@ private:
 
 public:
 	void EntityMove(int nEntityID, IBehavior* pBehavior, btVector3& vec3To, int nTypes, long long lStartTime, long long lEndTime);
+	void EntityAttack(int nAttackingEntityID, int nAttackedEntityID, int nDamage, long long lTime);
+	void CharacterDieEnd(int nCharacterID, long long lTime);
 
 public:
 	bool ContinuousCollisionDectection(int nTargetID, CollisionObject* pOther, btVector3& vec3To, btVector3& vec3Hit);

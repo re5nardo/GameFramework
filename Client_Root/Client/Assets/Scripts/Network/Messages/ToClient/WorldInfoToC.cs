@@ -53,6 +53,14 @@ public class WorldInfoToC : IMessage
             {
                 gameEvent = new GameEvent.BehaviorEnd();
             }
+            else if (gameEventData.Type == FBS.GameEventType.StateStart)
+            {
+                gameEvent = new GameEvent.StateStart();
+            }
+            else if (gameEventData.Type == FBS.GameEventType.StateEnd)
+            {
+                gameEvent = new GameEvent.StateEnd();
+            }
             else if (gameEventData.Type == FBS.GameEventType.Position)
             {
                 gameEvent = new GameEvent.Position();
@@ -69,9 +77,17 @@ public class WorldInfoToC : IMessage
             {
                 gameEvent = new GameEvent.EntityDestroy();
             }
-            else if (gameEventData.Type == FBS.GameEventType.Collision)
+            else if (gameEventData.Type == FBS.GameEventType.CharacterAttack)
             {
-                gameEvent = new GameEvent.Collision();
+                gameEvent = new GameEvent.CharacterAttack();
+            }
+            else if (gameEventData.Type == FBS.GameEventType.CharacterRespawn)
+            {
+                gameEvent = new GameEvent.CharacterRespawn();
+            }
+            else
+            {
+                UnityEngine.Debug.LogError("Invalid type!, GameEventType : " + gameEventData.Type.ToString());
             }
 
             gameEvent.m_fEventTime = gameEventData.EventTime;

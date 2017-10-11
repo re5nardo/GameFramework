@@ -4,11 +4,12 @@ using System.Collections;
 
 public class Entity : PooledComponent
 {
-    private EntityUI      m_EntityUI = null;
+    protected EntityUI    m_EntityUI = null;
     private Vector3       m_vec3Position = Vector3.zero;
     private Vector3       m_vec3Rotation = Vector3.zero;
 
     private Dictionary<int, float> m_dicBehavior = new Dictionary<int, float>();
+    private Dictionary<int, float> m_dicState = new Dictionary<int, float>();
     private LinkedList<IBehavior> m_listBehavior = new LinkedList<IBehavior>();
 
     private IEnumerator BehaviorLoop()
@@ -38,7 +39,7 @@ public class Entity : PooledComponent
     }
 
 
-    public void Initialize(FBS.Data.EntityType entityType, int nID, int nMasterDataID)
+    public virtual void Initialize(FBS.Data.EntityType entityType, int nID, int nMasterDataID)
     {
         GameObject goEntityUI = ObjectPool.Instance.GetGameObject("CharacterModel/EntityUI");
         EntityUI entityUI = goEntityUI.GetComponent<EntityUI>();
@@ -107,7 +108,7 @@ public class Entity : PooledComponent
         return m_EntityUI.transform;
     }
 
-    public void ProcessGameEvent(IGameEvent iGameEvent)
+    public virtual void ProcessGameEvent(IGameEvent iGameEvent)
     {
         if (iGameEvent.GetEventType() == FBS.GameEventType.BehaviorStart)
         {
@@ -121,6 +122,18 @@ public class Entity : PooledComponent
 
             ProcessBehaviorEnd(gameEvent);
         }
+        else if (iGameEvent.GetEventType() == FBS.GameEventType.StateStart)
+        {
+            GameEvent.StateStart gameEvent = (GameEvent.StateStart)iGameEvent;
+
+            ProcessStateStart(gameEvent);
+        }
+        else if (iGameEvent.GetEventType() == FBS.GameEventType.StateEnd)
+        {
+            GameEvent.StateEnd gameEvent = (GameEvent.StateEnd)iGameEvent;
+
+            ProcessStateEnd(gameEvent);
+        }
         else if (iGameEvent.GetEventType() == FBS.GameEventType.Position)
         {
             GameEvent.Position gameEvent = (GameEvent.Position)iGameEvent;
@@ -132,12 +145,6 @@ public class Entity : PooledComponent
             GameEvent.Rotation gameEvent = (GameEvent.Rotation)iGameEvent;
 
             ProcessRotation(gameEvent);
-        }
-        else if (iGameEvent.GetEventType() == FBS.GameEventType.Collision)
-        {
-            GameEvent.Collision gameEvent = (GameEvent.Collision)iGameEvent;
-
-            ProcessCollision(gameEvent);
         }
     }
 
@@ -151,18 +158,6 @@ public class Entity : PooledComponent
         m_listBehavior.AddLast(behavior);
     }
 
-    private IEnumerator BehaviorStart(GameEvent.BehaviorStart gameEvent, float fTime)
-    {
-        m_dicBehavior[gameEvent.m_nBehaviorID] = fTime;
-
-        while (true)
-        {
-            yield return null;
-
-            m_dicBehavior[gameEvent.m_nBehaviorID] += BaeGameRoom.deltaTime;
-        }
-    }
-
     private void ProcessBehaviorEnd(GameEvent.BehaviorEnd gameEvent)
     {
         m_dicBehavior.Remove(gameEvent.m_nBehaviorID);
@@ -171,6 +166,34 @@ public class Entity : PooledComponent
         foreach(IBehavior behavior in m_listBehavior)
         {
             if (behavior is Behavior.BehaviorProgress && ((Behavior.BehaviorProgress)behavior).GetBehaviorID() == gameEvent.m_nBehaviorID)
+            {
+                target = behavior;
+            }
+        }
+
+        m_listBehavior.Remove(target);
+
+        ObjectPool.Instance.ReturnObject(target);
+    }
+
+    private void ProcessStateStart(GameEvent.StateStart gameEvent)
+    {
+        float fTime = BaeGameRoom.Instance.GetElapsedTime() - gameEvent.m_fStartTime;
+
+        Behavior.StateProgress behavior = ObjectPool.Instance.GetObject<Behavior.StateProgress>();
+        behavior.Initialize(this, gameEvent.m_nStateID, fTime);
+
+        m_listBehavior.AddLast(behavior);
+    }
+
+    private void ProcessStateEnd(GameEvent.StateEnd gameEvent)
+    {
+        m_dicState.Remove(gameEvent.m_nStateID);
+
+        IBehavior target = null;
+        foreach(IBehavior behavior in m_listBehavior)
+        {
+            if (behavior is Behavior.StateProgress && ((Behavior.StateProgress)behavior).GetStateID() == gameEvent.m_nStateID)
             {
                 target = behavior;
             }
@@ -231,11 +254,6 @@ public class Entity : PooledComponent
         }
     }
 
-    private void ProcessCollision(GameEvent.Collision gameEvent)
-    {
-        Debug.LogError("Collision!! Pos : " + gameEvent.m_vec3Position);
-    }
-
     public void Sample()
     {
         m_EntityUI.Sample(m_dicBehavior);
@@ -270,6 +288,16 @@ public class Entity : PooledComponent
     public void IncreaseBehaviorTime(int nBehaviorID, float fTime)
     {
         m_dicBehavior[nBehaviorID] += fTime;
+    }
+
+    public void SetStateTime(int nStateID, float fTime)
+    {
+        m_dicState[nStateID] = fTime;
+    }
+
+    public void IncreaseStateTime(int nStateID, float fTime)
+    {
+        m_dicState[nStateID] += fTime;
     }
 
     public override void OnReturned()

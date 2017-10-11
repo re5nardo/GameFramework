@@ -5,6 +5,8 @@
 #include "../../../Game/BaeGameRoom.h"
 #include "../../../Behavior/BehaviorIDs.h"
 #include "../../../Util.h"
+#include "../../../Factory.h"
+#include "../../../State/StateIDs.h"
 
 DummyCharacter1AI::DummyCharacter1AI(BaeGameRoom* pGameRoom, int nMasterDataID, long long lStartTime) : ICharacterAI(pGameRoom, nMasterDataID, lStartTime)
 {
@@ -32,6 +34,11 @@ void DummyCharacter1AI::UpdateBody(long long lUpdateTime)
 		pEntityCreate->m_vec3Position = m_pCharacter->GetPosition();
 
 		m_pGameRoom->AddGameEvent(pEntityCreate);
+
+		IState* pState = Factory::Instance()->CreateState(m_pGameRoom, m_pCharacter, StateID::ChallengerDisturbing, lUpdateTime);
+		pState->Initialize();
+		m_pCharacter->AddState(pState, lUpdateTime);
+		pState->Update(lUpdateTime);
 	}
 	
 	if (m_pCharacter != NULL)

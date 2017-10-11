@@ -48,6 +48,8 @@ public:
 
 public:
 	virtual void Initialize() = 0;
+
+private:
 	virtual void UpdateBody(long long lUpdateTime) = 0;
 
 public:
@@ -56,4 +58,7 @@ public:
 public:
 	float GetTime();
 	bool IsActivated();
+
+public:
+	void OnCollision(IEntity* pOther, long long lTime);
 };

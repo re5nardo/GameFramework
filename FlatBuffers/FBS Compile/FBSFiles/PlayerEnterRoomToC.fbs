@@ -3,5 +3,6 @@ namespace FBS;
 table PlayerEnterRoomToC
 {
 	PlayerIndex:int;
+	PlayerEntityID:int;
 	CharacterID:string;
 }

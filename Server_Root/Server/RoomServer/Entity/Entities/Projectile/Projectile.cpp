@@ -66,44 +66,6 @@ void Projectile::NotifyGameEvent(IGameEvent* pGameEvent)
 	}
 }
 
-bool Projectile::IsMovableOnCollision(IEntity* pOther)
-{
-	Character* pProjector = GetProjector();
-	Character::Role projectorRole = pProjector->GetRole();
-
-	//	if has an almighty state,
-	//	return false;
-
-	if (projectorRole == Character::Role::Challenger)
-	{
-
-	}
-	else if (projectorRole == Character::Role::Disturber)
-	{
-
-	}
-
-	return true;
-}
-
-void Projectile::OnCollision(IEntity* pOther, long long lTime)
-{
-	Character* pProjector = GetProjector();
-	Character::Role projectorRole = pProjector->GetRole();
-
-	//	if has an almighty state,
-	//	return "Ignore";
-
-	if (projectorRole == Character::Role::Challenger)
-	{
-
-	}
-	else if (projectorRole == Character::Role::Disturber)
-	{
-	
-	}
-}
-
 bool Projectile::IsTerrainPassable()
 {
 	return false;

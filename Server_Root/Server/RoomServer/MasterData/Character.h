@@ -19,8 +19,8 @@ namespace MasterData
 		string m_strClassName;
 		vector<int> m_vecSkillID;
 		vector<int> m_vecBehaviorID;
-		float m_fHP;
-		float m_fMP;
+		int m_nHP;
+		int m_nMP;
 		float m_fMoveSpeed;
 		float m_fSize;
 		float m_fHeight;

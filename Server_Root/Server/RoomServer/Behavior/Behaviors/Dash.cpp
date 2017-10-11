@@ -6,7 +6,6 @@
 #include <math.h>
 #include "../../Game/BaeGameRoom.h"
 #include "../../GameEvent/GameEvents/Position.h"
-#include "../../GameEvent/GameEvents/Collision.h"
 
 const string Dash::NAME = "Dash";
 

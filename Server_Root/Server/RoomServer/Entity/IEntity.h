@@ -6,6 +6,7 @@
 #include "../Skill/ISkill.h"
 #include "btBulletCollisionCommon.h"
 #include "../../FBSFiles/FBSData_generated.h"
+#include "../State/CoreState.h"
 
 class BaeGameRoom;
 class IGameEvent;
@@ -39,6 +40,9 @@ protected:
 	list<IBehavior*> m_listBehavior;
 	list<IState*> m_listState;
 
+protected:
+	list<IState*> m_listDestroyReserved;
+
 public:
 	bool m_bDestroyReserved = false;
 
@@ -50,7 +54,7 @@ public:
 public:
 	void UpdateBehaviors(long long lUpdateTime);
 	void UpdateStates(long long lUpdateTime);
-	void LateUpdate(long long lUpdateTime);
+	void virtual LateUpdate(long long lUpdateTime);
 
 public:
 	int GetID();
@@ -75,14 +79,19 @@ public:
 public:
 	IState* GetState(int nID);
 	list<IState*> GetStates();
-	void AddState(IState* pState);
-	void RemoveState(int nID);
+	void AddState(IState* pState, long long lTime);
+	void RemoveState(int nMasterDataID, long long lTime);
+	bool HasCoreState(CoreState coreState);
 
 public:
 	virtual void NotifyGameEvent(IGameEvent* pGameEvent) = 0;
-	virtual bool IsMovableOnCollision(IEntity* pOther) = 0;
-	virtual void OnCollision(IEntity* pOther, long long lTime) = 0;
 
 public:
 	virtual bool IsTerrainPassable() = 0;
+
+public:
+	void OnCollision(IEntity* pOther, long long lTime);
+
+protected:
+	void TrimState();
 };

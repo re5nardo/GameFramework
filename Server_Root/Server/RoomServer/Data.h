@@ -14,19 +14,25 @@ public:
 	vector<btCollisionShape> vecTerrainObjectShape;
 };
 
-struct Stat
+struct CharacterStat
 {
 public:
-	Stat() {};
-	Stat(float fMoveSpeed, int nHP, int nMP)
+	CharacterStat() {};
+	CharacterStat(int nHP, int nMP, float fMPChargeRate, float fRunSpeed, float fDashSpeed, float fStrength)
 	{
-		m_fMoveSpeed = fMoveSpeed;
 		m_nHP = nHP;
 		m_nMP = nMP;
+		m_fMPChargeRate = fMPChargeRate;
+		m_fRunSpeed = fRunSpeed;
+		m_fDashSpeed = fDashSpeed;
+		m_fStrength = fStrength;
 	};
 
 public:
-	float m_fMoveSpeed = 0.0f;
-	int m_nHP = 0;					//	Health Point
-	int m_nMP = 0;					//	Mana Point
+	int m_nHP;
+	int m_nMP;
+	float m_fMPChargeRate;
+	float m_fRunSpeed;
+	float m_fDashSpeed;
+	float m_fStrength;
 };

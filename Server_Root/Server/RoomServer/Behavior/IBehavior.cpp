@@ -87,3 +87,8 @@ void IBehavior::Stop(long long lTime)
 
 	m_pEntity->NotifyGameEvent(pBehaviorEnd);
 }
+
+void IBehavior::OnCollision(IEntity* pOther, long long lTime)
+{
+
+}

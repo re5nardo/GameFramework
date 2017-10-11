@@ -16,6 +16,7 @@ public:
 public:
 	int m_nResult;
 	int m_nPlayerIndex;
+	int m_nPlayerEntityID;
 	map<int, string> m_mapPlayers;
 
 public:

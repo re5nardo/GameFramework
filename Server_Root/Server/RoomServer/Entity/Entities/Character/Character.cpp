@@ -5,8 +5,12 @@
 #include "../../../MasterData/Character.h"
 #include "../../../Factory.h"
 #include "../Projectile/Projectile.h"
-#include "../../../GameEvent/GameEvents/Collision.h"
 #include "../../../Game/BaeGameRoom.h"
+#include "../../../Behavior/BehaviorIDs.h"
+#include "../../../Behavior/Behaviors/Die.h"
+#include "../../../State/StateIDs.h"
+#include "../../../GameEvent/GameEvents/CharacterAttack.h"
+#include "../../../GameEvent/GameEvents/CharacterRespawn.h"
 
 Character::Character(BaeGameRoom* pGameRoom, int nID, int nMasterDataID, Role role) : IEntity(pGameRoom, nID, nMasterDataID)
 {
@@ -37,7 +41,7 @@ void Character::Initialize()
 	MasterData::Character* pMasterCharacter = NULL;
 	MasterDataManager::Instance()->GetData<MasterData::Character>(m_nMasterDataID, pMasterCharacter);
 
-	SetStat(Stat(pMasterCharacter->m_fMoveSpeed, pMasterCharacter->m_fHP, pMasterCharacter->m_fMP));
+	InitStat(CharacterStat(pMasterCharacter->m_nHP, pMasterCharacter->m_nMP, 3, pMasterCharacter->m_fMoveSpeed, pMasterCharacter->m_fMoveSpeed * 2, 5));
 
 	m_fSize = pMasterCharacter->m_fSize;
 	m_fHeight = pMasterCharacter->m_fHeight;
@@ -67,7 +71,7 @@ void Character::Initialize()
 
 float Character::GetMoveSpeed()
 {
-	return m_CurrentStat.m_fMoveSpeed * (fMoveSpeedPercent / 100);
+	return m_CurrentStat.m_fRunSpeed * (fMoveSpeedPercent / 100);
 }
 
 FBS::Data::EntityType Character::GetEntityType()
@@ -77,84 +81,6 @@ FBS::Data::EntityType Character::GetEntityType()
 
 void Character::NotifyGameEvent(IGameEvent* pGameEvent)
 {
-}
-
-bool Character::IsMovableOnCollision(IEntity* pOther)
-{
-	//	if has an almighty state,
-	//	return true;
-
-	if (m_Role == Character::Role::Challenger)
-	{
-		if (pOther->GetEntityType() == FBS::Data::EntityType::EntityType_Character)
-		{
-			Character* pCharacter = (Character*)pOther;
-			if (pCharacter->GetRole() == Character::Role::Challenger)
-			{
-				//	if pCharacter has an destroyer state,
-				//	return false;
-			}
-			else if (pCharacter->GetRole() == Character::Role::Disturber)
-			{
-				return false;
-			}
-		}
-		else if (pOther->GetEntityType() == FBS::Data::EntityType::EntityType_Projectile)
-		{
-			Projectile* pProjectile = (Projectile*)pOther;
-			//	if pProjectile has an destroyer state,
-			//	return false;
-		}
-	}
-
-	return true;
-}
-
-void Character::OnCollision(IEntity* pOther, long long lTime)
-{
-	//	if has an almighty state,
-	//	return "Ignore";
-
-	if (m_Role == Character::Role::Challenger)
-	{
-		if (pOther->GetEntityType() == FBS::Data::EntityType::EntityType_Character)
-		{
-			Character* pCharacter = (Character*)pOther;
-			if (pCharacter->GetRole() == Character::Role::Challenger)
-			{
-				//	if pCharacter has an destroyer state,
-				//	Stop All Behavior
-				//	...
-				//	GameEvent::Collision* pCollision = new GameEvent::Collision();
-				//	...
-			}
-			else if (pCharacter->GetRole() == Character::Role::Disturber)
-			{
-				//	Stop All Behavior
-				//	...
-
-				GameEvent::Collision* pCollision = new GameEvent::Collision();
-				pCollision->m_fEventTime = lTime / 1000.0f;
-				pCollision->m_nEntityID = m_nID;
-				pCollision->m_vec3Position = m_vec3Position;
-
-				m_pGameRoom->AddGameEvent(pCollision);
-			}
-		}
-		else if (pOther->GetEntityType() == FBS::Data::EntityType::EntityType_Projectile)
-		{
-			Projectile* pProjectile = (Projectile*)pOther;
-			//	if pProjectile has an destroyer state,
-			//	Stop All Behavior
-			//	...
-			//	GameEvent::Collision* pCollision = new GameEvent::Collision();
-			//	...
-		}
-	}
-	else if (m_Role == Character::Role::Disturber)
-	{
-		//return "Ignore";
-	}
 }
 
 bool Character::IsTerrainPassable()
@@ -173,6 +99,16 @@ void Character::UpdateSkills(long long lUpdateTime)
 
 		if (m_bDestroyReserved)
 			break;
+	}
+}
+
+void Character::LateUpdate(long long lUpdateTime)
+{
+	TrimState();
+
+	if (m_nDefaultBehaviorID != -1 && !IsBehavioring() && GetBehavior(m_nDefaultBehaviorID) != NULL && IsAlive())
+	{
+		GetBehavior(m_nDefaultBehaviorID)->Start(lUpdateTime);
 	}
 }
 
@@ -205,7 +141,7 @@ bool Character::IsSkilling()
 	return false;
 }
 
-void Character::SetStat(Stat stat)
+void Character::InitStat(CharacterStat stat)
 {
 	m_DefaultStat = stat;
 	m_CurrentStat = stat;
@@ -223,9 +159,55 @@ void Character::SetCurrentMP(float fMP)
 
 void Character::PlusMoveSpeed(float fValue)
 {
-	m_CurrentStat.m_fMoveSpeed += fValue;
+	m_CurrentStat.m_fRunSpeed += fValue;
 }
 void Character::MinusMoveSpeed(float fValue)
 {
-	m_CurrentStat.m_fMoveSpeed -= fValue;
+	m_CurrentStat.m_fRunSpeed -= fValue;
+}
+
+bool Character::IsAlive()
+{
+	return m_CurrentStat.m_nHP > 0;
+}
+
+void Character::OnAttacked(int nAttackingEntityID, int nDamage, long long lTime)
+{
+	if (HasCoreState(CoreState::CoreState_Invincible) || !IsAlive())
+		return;
+
+	m_CurrentStat.m_nHP -= nDamage;
+
+	GameEvent::CharacterAttack* pCharacterAttack = new GameEvent::CharacterAttack();
+	pCharacterAttack->m_fEventTime = lTime / 1000.0f;
+	pCharacterAttack->m_nAttackingEntityID = nAttackingEntityID;
+	pCharacterAttack->m_nAttackedEntityID = m_nID;
+	pCharacterAttack->m_nDamage = nDamage;
+
+	m_pGameRoom->AddGameEvent(pCharacterAttack);
+
+	if (m_CurrentStat.m_nHP <= 0)
+	{
+		IBehavior* pDieBehavior = GetBehavior(BehaviorID::DIE);
+
+		pDieBehavior->Start(lTime);
+		pDieBehavior->Update(lTime);
+	}
+}
+
+void Character::OnRespawn(long long lTime)	//	last position?
+{
+	m_CurrentStat.m_nHP = m_DefaultStat.m_nHP;
+
+	GameEvent::CharacterRespawn* pCharacterRespawn = new GameEvent::CharacterRespawn();
+	pCharacterRespawn->m_fEventTime = lTime / 1000.0f;
+	pCharacterRespawn->m_nEntityID = m_nID;
+	pCharacterRespawn->m_vec3Position = GetPosition();
+
+	m_pGameRoom->AddGameEvent(pCharacterRespawn);
+
+	IState* pState = Factory::Instance()->CreateState(m_pGameRoom, this, StateID::RespawnInvincible, lTime);
+	pState->Initialize();
+	AddState(pState, lTime);
+	pState->Update(lTime);
 }

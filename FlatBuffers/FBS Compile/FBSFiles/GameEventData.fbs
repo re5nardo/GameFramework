@@ -8,7 +8,8 @@ enum GameEventType:byte
 	StateEnd,
 	Position,
 	Rotation,
-	Collision,
+	CharacterAttack,
+	CharacterRespawn,
 	EntityCreate,
 	EntityDestroy,
 }

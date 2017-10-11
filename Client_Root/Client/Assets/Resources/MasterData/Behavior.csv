@@ -8,3 +8,4 @@ ID,Name,ClassName,Length,StringParams,AnimationName,Actions
 6,FlowerFire,General,0.5,"0,45,90,135,180,225,270,315",Fire,Fire:0.2:0
 7,Spawn,General,0.2,,Spawn,
 8,Dash,Dash,-1,,Dash,
+9,Die,Die,10,,Die,

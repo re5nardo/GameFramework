@@ -83,7 +83,7 @@ void General::UpdateBody(long long lUpdateTime)
 				
 				IState* pState = Factory::Instance()->CreateState(m_pGameRoom, m_pEntity, nStateID, lUpdateTime);
 				pState->Initialize();
-				m_pEntity->AddState(pState);
+				m_pEntity->AddState(pState, lUpdateTime);
 				pState->Update(lUpdateTime);
 			}
 			else if (it->m_strID == "Destroy")

@@ -7,6 +7,7 @@ public class EnterRoomToC : IMessage
 
     public int m_nResult;
     public int m_nPlayerIndex;
+    public int m_nPlayerEntityID;
     public Dictionary<int, string> m_dicPlayers = new Dictionary<int, string>();
 
     public override ushort GetID()
@@ -37,6 +38,7 @@ public class EnterRoomToC : IMessage
         FBS.EnterRoomToC.StartEnterRoomToC(m_Builder);
         FBS.EnterRoomToC.AddResult(m_Builder, m_nResult);
         FBS.EnterRoomToC.AddPlayerIndex(m_Builder, m_nPlayerIndex);
+        FBS.EnterRoomToC.AddPlayerEntityID(m_Builder, m_nPlayerEntityID);
         FBS.EnterRoomToC.AddPlayersMapKey(m_Builder, playersMapKey);
         FBS.EnterRoomToC.AddPlayersMapValue(m_Builder, playersMapValue);
         var data = FBS.EnterRoomToC.EndEnterRoomToC(m_Builder);
@@ -54,6 +56,7 @@ public class EnterRoomToC : IMessage
 
         m_nResult = data.Result;
         m_nPlayerIndex = data.PlayerIndex;
+        m_nPlayerEntityID = data.PlayerEntityID;
         for (int i = 0; i < data.PlayersMapKeyLength; ++i)
         {
             m_dicPlayers.Add(data.GetPlayersMapKey(i), data.GetPlayersMapValue(i));

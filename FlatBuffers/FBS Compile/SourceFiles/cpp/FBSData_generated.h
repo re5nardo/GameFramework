@@ -10,6 +10,8 @@ namespace Data {
 
 struct Vector3;
 
+struct CharacterStat;
+
 enum EntityType {
   EntityType_Character = 0,
   EntityType_Projectile = 1,
@@ -41,6 +43,30 @@ MANUALLY_ALIGNED_STRUCT(4) Vector3 FLATBUFFERS_FINAL_CLASS {
   float z() const { return flatbuffers::EndianScalar(z_); }
 };
 STRUCT_END(Vector3, 12);
+
+MANUALLY_ALIGNED_STRUCT(4) CharacterStat FLATBUFFERS_FINAL_CLASS {
+ private:
+  int32_t HP_;
+  int32_t MP_;
+  float MPChargeRate_;
+  float RunSpeed_;
+  float DashSpeed_;
+  float Strength_;
+
+ public:
+  CharacterStat() { memset(this, 0, sizeof(CharacterStat)); }
+  CharacterStat(const CharacterStat &_o) { memcpy(this, &_o, sizeof(CharacterStat)); }
+  CharacterStat(int32_t _HP, int32_t _MP, float _MPChargeRate, float _RunSpeed, float _DashSpeed, float _Strength)
+    : HP_(flatbuffers::EndianScalar(_HP)), MP_(flatbuffers::EndianScalar(_MP)), MPChargeRate_(flatbuffers::EndianScalar(_MPChargeRate)), RunSpeed_(flatbuffers::EndianScalar(_RunSpeed)), DashSpeed_(flatbuffers::EndianScalar(_DashSpeed)), Strength_(flatbuffers::EndianScalar(_Strength)) { }
+
+  int32_t HP() const { return flatbuffers::EndianScalar(HP_); }
+  int32_t MP() const { return flatbuffers::EndianScalar(MP_); }
+  float MPChargeRate() const { return flatbuffers::EndianScalar(MPChargeRate_); }
+  float RunSpeed() const { return flatbuffers::EndianScalar(RunSpeed_); }
+  float DashSpeed() const { return flatbuffers::EndianScalar(DashSpeed_); }
+  float Strength() const { return flatbuffers::EndianScalar(Strength_); }
+};
+STRUCT_END(CharacterStat, 24);
 
 }  // namespace Data
 }  // namespace FBS

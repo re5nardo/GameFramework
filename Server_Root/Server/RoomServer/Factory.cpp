@@ -10,11 +10,14 @@
 #include "Behavior\Behaviors\General.h"
 #include "Behavior\Behaviors\Move.h"
 #include "Behavior\Behaviors\Dash.h"
+#include "Behavior\Behaviors\Die.h"
 #include "Skill\Skills\ContinueSkill.h"
 #include "Skill\Skills\FireSkill.h"
 #include "State\States\Acceleration.h"
 #include "State\States\Shield.h"
 #include "State\States\FireBehavior.h"
+#include "State\States\GeneralState.h"
+#include "State\States\ChallengerDisturbing.h"
 #include "Entity\Entities\Projectile\Projectile.h"
 
 Factory::Factory()
@@ -63,6 +66,10 @@ IBehavior* Factory::CreateBehavior(BaeGameRoom* pGameRoom, IEntity* pEntity, int
 	{
 		return new Dash(pGameRoom, pEntity, nMasterDataID);
 	}
+	else if (Die::NAME.compare(strClassName) == 0)
+	{
+		return new Die(pGameRoom, pEntity, nMasterDataID);
+	}
 
 	return NULL;
 }
@@ -85,6 +92,14 @@ IState* Factory::CreateState(BaeGameRoom* pGameRoom, IEntity* pEntity, int nMast
 	else if (FireBehavior::NAME.compare(strClassName) == 0)
 	{
 		return new FireBehavior(pGameRoom, pEntity, nMasterDataID, lStartTime);
+	}
+	else if (GeneralState::NAME.compare(strClassName) == 0)
+	{
+		return new GeneralState(pGameRoom, pEntity, nMasterDataID, lStartTime);
+	}
+	else if (ChallengerDisturbing::NAME.compare(strClassName) == 0)
+	{
+		return new ChallengerDisturbing(pGameRoom, pEntity, nMasterDataID, lStartTime);
 	}
 
 	return NULL;

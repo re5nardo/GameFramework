@@ -19,6 +19,7 @@ namespace MasterData
 		string m_strClassName;
 		float m_fLength;
 		vector<string> m_vecStringParam;
+		vector<string> m_vecCoreState;
 		vector<double> m_vecDoubleParam1;
 		vector<double> m_vecDoubleParam2;
 

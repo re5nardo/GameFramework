@@ -1,7 +1,7 @@
 include "../FBSData.fbs";
 namespace FBS.GameEvent;
 
-table Collision
+table CharacterRespawn
 {
 	EntityID:int;
 	Pos:FBS.Data.Vector3;

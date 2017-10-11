@@ -104,6 +104,7 @@
     <ClInclude Include="AI\CharacterAI\ICharacterAI.h" />
     <ClInclude Include="Behavior\BehaviorIDs.h" />
     <ClInclude Include="Behavior\Behaviors\Dash.h" />
+    <ClInclude Include="Behavior\Behaviors\Die.h" />
     <ClInclude Include="Behavior\Behaviors\General.h" />
     <ClInclude Include="Behavior\Behaviors\Move.h" />
     <ClInclude Include="Behavior\Behaviors\StopBehavior.h" />
@@ -116,7 +117,8 @@
     <ClInclude Include="Factory.h" />
     <ClInclude Include="GameEvent\GameEvents\BehaviorEnd.h" />
     <ClInclude Include="GameEvent\GameEvents\BehaviorStart.h" />
-    <ClInclude Include="GameEvent\GameEvents\Collision.h" />
+    <ClInclude Include="GameEvent\GameEvents\CharacterAttack.h" />
+    <ClInclude Include="GameEvent\GameEvents\CharacterRespawn.h" />
     <ClInclude Include="GameEvent\GameEvents\EntityCreate.h" />
     <ClInclude Include="GameEvent\GameEvents\EntityDestroy.h" />
     <ClInclude Include="GameEvent\GameEvents\Position.h" />
@@ -154,10 +156,13 @@
     <ClInclude Include="Skill\ISkill.h" />
     <ClInclude Include="Skill\Skills\ContinueSkill.h" />
     <ClInclude Include="Skill\Skills\FireSkill.h" />
+    <ClInclude Include="State\CoreState.h" />
     <ClInclude Include="State\IState.h" />
     <ClInclude Include="State\StateIDs.h" />
     <ClInclude Include="State\States\Acceleration.h" />
+    <ClInclude Include="State\States\ChallengerDisturbing.h" />
     <ClInclude Include="State\States\FireBehavior.h" />
+    <ClInclude Include="State\States\GeneralState.h" />
     <ClInclude Include="State\States\Shield.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
@@ -176,6 +181,7 @@
     <ClCompile Include="AI\CharacterAI\CharacterAIs\Flower1AI.cpp" />
     <ClCompile Include="AI\CharacterAI\ICharacterAI.cpp" />
     <ClCompile Include="Behavior\Behaviors\Dash.cpp" />
+    <ClCompile Include="Behavior\Behaviors\Die.cpp" />
     <ClCompile Include="Behavior\Behaviors\General.cpp" />
     <ClCompile Include="Behavior\Behaviors\Move.cpp" />
     <ClCompile Include="Behavior\Behaviors\StopBehavior.cpp" />
@@ -186,7 +192,8 @@
     <ClCompile Include="Factory.cpp" />
     <ClCompile Include="GameEvent\GameEvents\BehaviorEnd.cpp" />
     <ClCompile Include="GameEvent\GameEvents\BehaviorStart.cpp" />
-    <ClCompile Include="GameEvent\GameEvents\Collision.cpp" />
+    <ClCompile Include="GameEvent\GameEvents\CharacterAttack.cpp" />
+    <ClCompile Include="GameEvent\GameEvents\CharacterRespawn.cpp" />
     <ClCompile Include="GameEvent\GameEvents\EntityCreate.cpp" />
     <ClCompile Include="GameEvent\GameEvents\EntityDestroy.cpp" />
     <ClCompile Include="GameEvent\GameEvents\Position.cpp" />
@@ -226,7 +233,9 @@
     <ClCompile Include="Skill\Skills\FireSkill.cpp" />
     <ClCompile Include="State\IState.cpp" />
     <ClCompile Include="State\States\Acceleration.cpp" />
+    <ClCompile Include="State\States\ChallengerDisturbing.cpp" />
     <ClCompile Include="State\States\FireBehavior.cpp" />
+    <ClCompile Include="State\States\GeneralState.cpp" />
     <ClCompile Include="State\States\Shield.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

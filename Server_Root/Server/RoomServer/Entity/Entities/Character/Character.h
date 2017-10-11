@@ -25,8 +25,8 @@ protected:
 	list<ISkill*> m_listSkill;
 
 protected:
-	Stat m_DefaultStat;
-	Stat m_CurrentStat;
+	CharacterStat m_DefaultStat;
+	CharacterStat m_CurrentStat;
 
 public:
 	float fMoveSpeedPercent = 100;
@@ -40,12 +40,11 @@ public:
 	float GetMoveSpeed() override;
 	FBS::Data::EntityType GetEntityType() override;
 	void NotifyGameEvent(IGameEvent* pGameEvent) override;
-	bool IsMovableOnCollision(IEntity* pOther) override;
-	void OnCollision(IEntity* pOther, long long lTime) override;
 	bool IsTerrainPassable() override;
 
 public:
 	void UpdateSkills(long long lUpdateTime);
+	void LateUpdate(long long lUpdateTime) override;
 
 public:
 	ISkill* GetSkill(int nID);
@@ -54,11 +53,18 @@ public:
 	bool IsSkilling();
 
 public:
-	void SetStat(Stat stat);
+	void InitStat(CharacterStat stat);
 	float GetCurrentMP();
 	void SetCurrentMP(float fMP);
 
 public:
 	void PlusMoveSpeed(float fValue);
 	void MinusMoveSpeed(float fValue);
+
+public:
+	void OnAttacked(int nAttackingEntityID, int nDamage, long long lTime);
+	void OnRespawn(long long lTime);
+
+public:
+	bool IsAlive();
 };

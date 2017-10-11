@@ -20,6 +20,11 @@ int IState::GetMasterDataID()
 	return m_nMasterDataID;
 }
 
+long long IState::GetStartTime()
+{
+	return m_lStartTime;
+}
+
 void IState::Update(long long lUpdateTime)
 {
 	if (m_lLastUpdateTime == lUpdateTime)
@@ -39,9 +44,17 @@ void IState::Update(long long lUpdateTime)
 	m_lLastUpdateTime = lUpdateTime;
 }
 
-void IState::Remove(long long lTime)
+bool IState::HasCoreState(CoreState coreState)
 {
-	//	State End GameEvent..
+	for (vector<CoreState>::iterator it = m_vecCoreState.begin(); it != m_vecCoreState.end(); ++it)
+	{
+		if ((*it) == coreState)
+			return true;
+	}
+	
+	return false;
+}
 
-	m_pEntity->RemoveState(GetID());
+void IState::OnCollision(IEntity* pOther, long long lTime)
+{
 }

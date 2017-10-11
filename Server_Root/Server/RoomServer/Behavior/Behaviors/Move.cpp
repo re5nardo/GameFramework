@@ -7,7 +7,6 @@
 #include "btBulletCollisionCommon.h"
 #include "../../GameEvent/GameEvents/Position.h"
 #include "../../GameEvent/GameEvents/Rotation.h"
-#include "../../GameEvent/GameEvents/Collision.h"
 #include "../BehaviorIDs.h"
 
 const string Move::NAME = "Move";
