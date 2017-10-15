@@ -114,16 +114,16 @@ void BaeGameRoom::ProcessInput()
 		IMessage* pPlayerInputMsg = it->second.second;
 		Character* pCharacter = (Character*)m_mapEntity[m_mapPlayerEntity[nPlayerIndex]];
 
-		if (pPlayerInputMsg->GetID() == GameEventMoveToR_ID)
+		if (pPlayerInputMsg->GetID() == GameEventRunToR_ID)
 		{
 			if (!pCharacter->IsAlive())
 				continue;
 
-			GameEventMoveToR* pMoveToR = (GameEventMoveToR*)pPlayerInputMsg;
+			GameEventRunToR* pRunToR = (GameEventRunToR*)pPlayerInputMsg;
 
-			if (pMoveToR->m_vec3Dest != pCharacter->GetPosition())
+			if (pRunToR->m_vec3Dest != pCharacter->GetPosition())
 			{
-				pCharacter->GetBehavior(BehaviorID::MOVE)->Start(lTime, &pMoveToR->m_vec3Dest);
+				pCharacter->GetBehavior(BehaviorID::MOVE)->Start(lTime, &pRunToR->m_vec3Dest);
 			}
 		}
 		else if (pPlayerInputMsg->GetID() == GameEventDashToR_ID)
@@ -637,9 +637,9 @@ void BaeGameRoom::OnRecvMessage(unsigned int socket, IMessage* pMsg)
 	{
 		OnPreparationStateToR((PreparationStateToR*)pMsg, socket);
 	}
-	else if (pMsg->GetID() == GameEventMoveToR::MESSAGE_ID)
+	else if (pMsg->GetID() == GameEventRunToR::MESSAGE_ID)
 	{
-		OnGameEventMoveToR((GameEventMoveToR*)pMsg, socket);
+		OnGameEventRunToR((GameEventRunToR*)pMsg, socket);
 	}
 	else if (pMsg->GetID() == GameEventStopToR::MESSAGE_ID)
 	{
@@ -655,7 +655,7 @@ void BaeGameRoom::OnRecvMessage(unsigned int socket, IMessage* pMsg)
 	}
 }
 
-void BaeGameRoom::OnGameEventMoveToR(GameEventMoveToR* pMsg, unsigned int socket)
+void BaeGameRoom::OnGameEventRunToR(GameEventRunToR* pMsg, unsigned int socket)
 {
 	m_LockPlayerInput.lock();
 

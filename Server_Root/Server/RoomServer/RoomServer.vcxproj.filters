@@ -351,9 +351,6 @@
     <ClInclude Include="Messages\ToRoom\GameEventStopToR.h">
       <Filter>헤더 파일\Messages\ToRoom</Filter>
     </ClInclude>
-    <ClInclude Include="Messages\ToRoom\GameEventMoveToR.h">
-      <Filter>헤더 파일\Messages\ToRoom</Filter>
-    </ClInclude>
     <ClInclude Include="Messages\ToRoom\EnterRoomToR.h">
       <Filter>헤더 파일\Messages\ToRoom</Filter>
     </ClInclude>
@@ -416,6 +413,9 @@
     </ClInclude>
     <ClInclude Include="State\States\ChallengerDisturbing.h">
       <Filter>헤더 파일\State\States</Filter>
+    </ClInclude>
+    <ClInclude Include="Messages\ToRoom\GameEventRunToR.h">
+      <Filter>헤더 파일\Messages\ToRoom</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -563,9 +563,6 @@
     <ClCompile Include="Messages\ToRoom\GameEventStopToR.cpp">
       <Filter>소스 파일\Messages\ToRoom</Filter>
     </ClCompile>
-    <ClCompile Include="Messages\ToRoom\GameEventMoveToR.cpp">
-      <Filter>소스 파일\Messages\ToRoom</Filter>
-    </ClCompile>
     <ClCompile Include="Messages\ToRoom\EnterRoomToR.cpp">
       <Filter>소스 파일\Messages\ToRoom</Filter>
     </ClCompile>
@@ -625,6 +622,9 @@
     </ClCompile>
     <ClCompile Include="State\States\ChallengerDisturbing.cpp">
       <Filter>소스 파일\State\States</Filter>
+    </ClCompile>
+    <ClCompile Include="Messages\ToRoom\GameEventRunToR.cpp">
+      <Filter>소스 파일\Messages\ToRoom</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

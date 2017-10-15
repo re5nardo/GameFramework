@@ -22,7 +22,7 @@
 //	Client -> Room (40000 ~ 49999)
 #define ReadyForStartToR_ID						40000
 #define PreparationStateToR_ID					40001
-#define GameEventMoveToR_ID						40002
+#define GameEventRunToR_ID						40002
 #define EnterRoomToR_ID							40003
 #define GameEventStopToR_ID						40005
 #define GameInputSkillToR_ID					40006

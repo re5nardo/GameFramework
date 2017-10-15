@@ -8,8 +8,8 @@ namespace MasterData
         public string m_strClassName;
         public List<int> m_listSkillID = new List<int>();
         public List<int> m_listBehaviorID = new List<int>();
-        public float m_fHP;
-        public float m_fMP;
+        public int m_nHP;
+        public int m_nMP;
         public float m_fMoveSpeed;
         public float m_fSize;
         public string m_strModelResName;
@@ -21,8 +21,8 @@ namespace MasterData
             m_strClassName = data[2];
             Util.Parse(data[3], ',', m_listSkillID);
             Util.Parse(data[4], ',', m_listBehaviorID);
-            Util.Convert(data[5], ref m_fHP);
-            Util.Convert(data[6], ref m_fMP);
+            Util.Convert(data[5], ref m_nHP);
+            Util.Convert(data[6], ref m_nMP);
             Util.Convert(data[7], ref m_fMoveSpeed);
             Util.Convert(data[8], ref m_fSize);
             m_strModelResName = data[9];

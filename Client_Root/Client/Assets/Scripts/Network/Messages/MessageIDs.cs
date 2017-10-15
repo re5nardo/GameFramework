@@ -15,7 +15,7 @@ public class MessageID
     //  Client -> Room (40000 ~ 49999)
     public const ushort ReadyForStartToR_ID =               40000;
     public const ushort PreparationStateToR_ID =            40001;
-    public const ushort GameEventMoveToR_ID =               40002;
+    public const ushort GameEventRunToR_ID =                40002;
     public const ushort EnterRoomToR_ID =                   40003;
     public const ushort GameEventStopToR_ID =               40005;
     public const ushort GameInputSkillToR_ID =              40006;

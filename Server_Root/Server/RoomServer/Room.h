@@ -6,7 +6,6 @@
 #include "../CommonSources/Singleton.h"
 
 class CreateRoomToR;
-class GameEventMoveToR;
 class BaeGameRoom;
 class EnterRoomToR;
 

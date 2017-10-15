@@ -384,11 +384,11 @@ public class BaeGameRoom : IGameRoom
         if (!GetUserCharacter().IsAlive())
             return;
 
-        GameEventMoveToR moveToR = new GameEventMoveToR();
-        moveToR.m_nPlayerIndex = m_nUserPlayerIndex;
-        moveToR.m_vec3Dest = vec3Pos;
+        GameEventRunToR runToR = new GameEventRunToR();
+        runToR.m_nPlayerIndex = m_nUserPlayerIndex;
+        runToR.m_vec3Dest = vec3Pos;
 
-        RoomNetwork.Instance.Send(moveToR);
+        RoomNetwork.Instance.Send(runToR);
     }
         
     public void OnDashButtonClicked()

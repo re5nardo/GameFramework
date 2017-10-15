@@ -1,7 +1,7 @@
 include "FBSData.fbs";
 namespace FBS;
 
-table GameEventMoveToR
+table GameEventRunToR
 {
 	PlayerIndex:int;
 	Dest:FBS.Data.Vector3;

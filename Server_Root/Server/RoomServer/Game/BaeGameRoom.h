@@ -17,7 +17,7 @@
 
 class IMessage;
 class CreateRoomToR;
-class GameEventMoveToR;
+class GameEventRunToR;
 class GameEventIdleToR;
 class GameEventStopToR;
 class EnterRoomToR;
@@ -95,7 +95,7 @@ private:
 	void SendToAllUsers(IMessage* pMsg, string strExclusionKey = "", bool bDelete = true);
 
 	//	Protocol Handler
-	void OnGameEventMoveToR(GameEventMoveToR* pMsg, unsigned int socket);
+	void OnGameEventRunToR(GameEventRunToR* pMsg, unsigned int socket);
 	void OnGameEventStopToR(GameEventStopToR* pMsg, unsigned int socket);
 	void OnEnterRoomToR(EnterRoomToR* pMsg, unsigned int socket);
 	void OnPreparationStateToR(PreparationStateToR* pMsg, unsigned int socket);

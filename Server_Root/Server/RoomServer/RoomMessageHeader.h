@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Messages/ToRoom/GameEventMoveToR.h"
+#include "Messages/ToRoom/GameEventRunToR.h"
 #include "Messages/ToClient/GameStartToC.h"
 #include "Messages/ToRoom/ReadyForStartToR.h"
 #include "../CommonSources/Messages/ToRoom/CreateRoomToR.h"

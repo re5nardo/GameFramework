@@ -1,23 +1,23 @@
 #include "stdafx.h"
-#include "GameEventMoveToR.h"
-#include "../../../FBSFiles/GameEventMoveToR_generated.h"
+#include "GameEventRunToR.h"
+#include "../../../FBSFiles/GameEventRunToR_generated.h"
 
-GameEventMoveToR::GameEventMoveToR()
+GameEventRunToR::GameEventRunToR()
 {
 }
 
-GameEventMoveToR::~GameEventMoveToR()
+GameEventRunToR::~GameEventRunToR()
 {
 }
 
-unsigned short GameEventMoveToR::GetID()
+unsigned short GameEventRunToR::GetID()
 {
 	return MESSAGE_ID;
 }
 
-IMessage* GameEventMoveToR::Clone()
+IMessage* GameEventRunToR::Clone()
 {
-	GameEventMoveToR* pClone = new GameEventMoveToR();
+	GameEventRunToR* pClone = new GameEventRunToR();
 
 	pClone->m_nPlayerIndex = m_nPlayerIndex;
 	pClone->m_vec3Dest = m_vec3Dest;
@@ -25,11 +25,11 @@ IMessage* GameEventMoveToR::Clone()
 	return pClone;
 }
 
-const char* GameEventMoveToR::Serialize(int* pLength)
+const char* GameEventRunToR::Serialize(int* pLength)
 {
 	FBS::Data::Vector3 dest(m_vec3Dest.x(), m_vec3Dest.y(), m_vec3Dest.z());
 
-	FBS::GameEventMoveToRBuilder data_builder(m_Builder);
+	FBS::GameEventRunToRBuilder data_builder(m_Builder);
 	data_builder.add_PlayerIndex(m_nPlayerIndex);
 	data_builder.add_Dest(&dest);
 	auto data = data_builder.Finish();
@@ -41,9 +41,9 @@ const char* GameEventMoveToR::Serialize(int* pLength)
 	return (char*)m_Builder.GetBufferPointer();
 }
 
-bool GameEventMoveToR::Deserialize(const char* pChar)
+bool GameEventRunToR::Deserialize(const char* pChar)
 {
-	auto data = flatbuffers::GetRoot<FBS::GameEventMoveToR>((const void*)pChar);
+	auto data = flatbuffers::GetRoot<FBS::GameEventRunToR>((const void*)pChar);
 
 	m_nPlayerIndex = data->PlayerIndex();
 	m_vec3Dest.setX(data->Dest()->x());

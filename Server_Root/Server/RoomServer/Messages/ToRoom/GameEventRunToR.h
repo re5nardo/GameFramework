@@ -4,14 +4,14 @@
 #include "../../../CommonSources/Message/MessageIDs.h"
 #include "btBulletCollisionCommon.h"
 
-class GameEventMoveToR : public IMessage
+class GameEventRunToR : public IMessage
 {
 public:
-	GameEventMoveToR();
-	virtual ~GameEventMoveToR();
+	GameEventRunToR();
+	virtual ~GameEventRunToR();
 
 public:
-	static const unsigned short MESSAGE_ID = GameEventMoveToR_ID;
+	static const unsigned short MESSAGE_ID = GameEventRunToR_ID;
 
 public:
 	int m_nPlayerIndex;

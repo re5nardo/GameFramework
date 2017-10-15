@@ -11,8 +11,8 @@ flatc --cpp -o SourceFiles\cpp FBSFiles\EnterRoomToC.fbs
 flatc --csharp -o SourceFiles\csharp FBSFiles\EnterRoomToR.fbs
 flatc --cpp -o SourceFiles\cpp FBSFiles\EnterRoomToR.fbs
 
-flatc --csharp -o SourceFiles\csharp FBSFiles\GameEventMoveToR.fbs
-flatc --cpp -o SourceFiles\cpp FBSFiles\GameEventMoveToR.fbs
+flatc --csharp -o SourceFiles\csharp FBSFiles\GameEventRunToR.fbs
+flatc --cpp -o SourceFiles\cpp FBSFiles\GameEventRunToR.fbs
 
 flatc --csharp -o SourceFiles\csharp FBSFiles\GameEventStopToR.fbs
 flatc --cpp -o SourceFiles\cpp FBSFiles\GameEventStopToR.fbs
