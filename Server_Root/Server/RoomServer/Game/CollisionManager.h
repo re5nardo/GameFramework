@@ -2,7 +2,7 @@
 
 #include "btBulletCollisionCommon.h"
 #include "../../CommonSources/QuadTree.h"
-#include "TerrainObjectInsertChecker.h"
+#include "CollisionObjectInsertChecker.h"
 #include "CollisionObject.h"
 #include <map>
 
@@ -32,7 +32,7 @@ private:
 	map<CollisionObject::Type, map<int, CollisionObject*>>	m_mapTypeCollisionObject;	//	Typed Collision Objects
 
 private:
-	map<CollisionObject::Type, QuadTree<CollisionObject*, TerrainObjectInsertChecker>> m_mapQuadTree;
+	map<CollisionObject::Type, QuadTree<CollisionObject*, CollisionObjectInsertChecker>> m_mapQuadTree;
 
 public:
 	void Init(btVector3& vec3WorldBounds);

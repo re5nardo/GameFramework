@@ -1,16 +1,16 @@
 #include "stdafx.h"
-#include "TerrainObjectInsertChecker.h"
+#include "CollisionObjectInsertChecker.h"
 #include "CollisionObject.h"
 
-TerrainObjectInsertChecker::TerrainObjectInsertChecker()
+CollisionObjectInsertChecker::CollisionObjectInsertChecker()
 {
 }
 
-TerrainObjectInsertChecker::~TerrainObjectInsertChecker()
+CollisionObjectInsertChecker::~CollisionObjectInsertChecker()
 {
 }
 
-bool TerrainObjectInsertChecker::IsValidate(AABB boundary, CollisionObject* pCollisionObject)
+bool CollisionObjectInsertChecker::IsValidate(AABB boundary, CollisionObject* pCollisionObject)
 {
 	btTransform t = pCollisionObject->m_pbtCollisionObject->getWorldTransform();
 	btVector3 min, max;
@@ -37,7 +37,7 @@ bool TerrainObjectInsertChecker::IsValidate(AABB boundary, CollisionObject* pCol
 	return true;
 }
 
-bool TerrainObjectInsertChecker::IsMine(AABB boundary, CollisionObject* pCollisionObject)
+bool CollisionObjectInsertChecker::IsMine(AABB boundary, CollisionObject* pCollisionObject)
 {
 	int nIntersectCnt = 0;
 

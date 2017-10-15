@@ -6,11 +6,11 @@ class CollisionObject;
 
 using namespace std;
 
-class TerrainObjectInsertChecker
+class CollisionObjectInsertChecker
 {
 public:
-	TerrainObjectInsertChecker();
-	virtual ~TerrainObjectInsertChecker();
+	CollisionObjectInsertChecker();
+	virtual ~CollisionObjectInsertChecker();
 
 public:
 	bool IsValidate(AABB boundary, CollisionObject* pCollisionObject);

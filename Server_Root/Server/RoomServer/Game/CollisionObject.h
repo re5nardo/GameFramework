@@ -2,7 +2,7 @@
 
 #include "btBulletCollisionCommon.h"
 #include "../../CommonSources/QuadTree.h"
-#include "TerrainObjectInsertChecker.h"
+#include "CollisionObjectInsertChecker.h"
 
 class CollisionObject
 {
@@ -25,7 +25,7 @@ public:
 	btCollisionObject* m_pbtCollisionObject = NULL;
 
 public:
-	QuadTree<CollisionObject*, TerrainObjectInsertChecker>* m_pQuadTree = NULL;
+	QuadTree<CollisionObject*, CollisionObjectInsertChecker>* m_pQuadTree = NULL;
 
 public:
 	AABB GetAABB();

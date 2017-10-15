@@ -243,9 +243,6 @@
     <ClInclude Include="..\CommonSources\QuadTreePrerequisites.h">
       <Filter>헤더 파일\Common</Filter>
     </ClInclude>
-    <ClInclude Include="Game\TerrainObjectInsertChecker.h">
-      <Filter>헤더 파일\Game</Filter>
-    </ClInclude>
     <ClInclude Include="Game\CollisionManager.h">
       <Filter>헤더 파일\Game</Filter>
     </ClInclude>
@@ -417,6 +414,9 @@
     <ClInclude Include="Messages\ToRoom\GameEventRunToR.h">
       <Filter>헤더 파일\Messages\ToRoom</Filter>
     </ClInclude>
+    <ClInclude Include="Game\CollisionObjectInsertChecker.h">
+      <Filter>헤더 파일\Game</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -457,9 +457,6 @@
     </ClCompile>
     <ClCompile Include="..\CommonSources\QuadTreePrerequisites.cpp">
       <Filter>소스 파일\Common</Filter>
-    </ClCompile>
-    <ClCompile Include="Game\TerrainObjectInsertChecker.cpp">
-      <Filter>소스 파일\Game</Filter>
     </ClCompile>
     <ClCompile Include="Game\CollisionManager.cpp">
       <Filter>소스 파일\Game</Filter>
@@ -625,6 +622,9 @@
     </ClCompile>
     <ClCompile Include="Messages\ToRoom\GameEventRunToR.cpp">
       <Filter>소스 파일\Messages\ToRoom</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\CollisionObjectInsertChecker.cpp">
+      <Filter>소스 파일\Game</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

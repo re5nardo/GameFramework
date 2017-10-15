@@ -679,7 +679,7 @@ list<CollisionObject*> CollisionManager::GetCollisionObjects(int nTypes, AABB ra
 {
 	list<CollisionObject*> listCollisionObject;
 	list<CollisionObject*> listQueried;
-	for (map<CollisionObject::Type, QuadTree<CollisionObject*, TerrainObjectInsertChecker>>::iterator it = m_mapQuadTree.begin(); it != m_mapQuadTree.end(); ++it)
+	for (map<CollisionObject::Type, QuadTree<CollisionObject*, CollisionObjectInsertChecker>>::iterator it = m_mapQuadTree.begin(); it != m_mapQuadTree.end(); ++it)
 	{
 		if ((it->first & nTypes) == it->first)
 		{
