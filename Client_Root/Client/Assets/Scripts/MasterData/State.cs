@@ -10,7 +10,8 @@ namespace MasterData
         public List<string> m_listStringParam = new List<string>();
         public List<double> m_listDoubleParam1 = new List<double>();
         public List<double> m_listDoubleParam2 = new List<double>();
-        public string m_strResourceName;
+        public string  m_strFxName;
+        public string  m_strAnimationName;
 
         public override void SetData(List<string> data)
         {
@@ -21,7 +22,8 @@ namespace MasterData
             Util.Parse(data[4], ',', m_listStringParam);
             Util.Parse(data[5], ',', m_listDoubleParam1);
             Util.Parse(data[6], ',', m_listDoubleParam2);
-            m_strResourceName = data[7];
+            m_strFxName = data[7];
+            m_strAnimationName = data[8];
         }
     }
 }

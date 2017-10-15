@@ -15,8 +15,8 @@ Shader "UnityChan/Skin"
 	{
 		Tags
 		{
-			"RenderType"="Opaque"
-			"Queue"="Geometry"
+			"RenderType"="Transparent"
+			"Queue"="Transparent"
 			"LightMode"="ForwardBase"
 		}
 
@@ -24,6 +24,7 @@ Shader "UnityChan/Skin"
 		{
 			Cull Back
 			ZTest LEqual
+			Blend SrcAlpha OneMinusSrcAlpha
 CGPROGRAM
 #pragma multi_compile_fwdbase
 #pragma vertex vert
@@ -38,6 +39,7 @@ ENDCG
 		{
 			Cull Front
 			ZTest Less
+			Blend SrcAlpha OneMinusSrcAlpha
 CGPROGRAM
 #pragma vertex vert
 #pragma fragment frag

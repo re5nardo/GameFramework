@@ -19,8 +19,8 @@ Shader "UnityChan/Clothing - Double-sided"
 	{
 		Tags
 		{
-			"RenderType"="Opaque"
-			"Queue"="Geometry"
+			"RenderType"="Transparent"
+			"Queue"="Transparent"
 			"LightMode"="ForwardBase"
 		}		
 
@@ -28,6 +28,7 @@ Shader "UnityChan/Clothing - Double-sided"
 		{
 			Cull Off
 			ZTest LEqual
+			Blend SrcAlpha OneMinusSrcAlpha
 CGPROGRAM
 #pragma multi_compile_fwdbase
 #pragma vertex vert
@@ -42,6 +43,7 @@ ENDCG
 		{
 			Cull Front
 			ZTest Less
+			Blend SrcAlpha OneMinusSrcAlpha
 CGPROGRAM
 #pragma vertex vert
 #pragma fragment frag

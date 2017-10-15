@@ -90,16 +90,33 @@ public class EntityUI : PooledComponent
         m_trEntityUI.localRotation = Quaternion.Euler(vec3Rotation);
     }
 
-    public void Sample(Dictionary<int, float> dicBehavior)
+    public void Sample(Dictionary<int, float> dicBehavior, Dictionary<int, float> dicState)
     {
+        //  Animation
         foreach(KeyValuePair<int, float> kv in dicBehavior)
         {
             MasterData.Behavior behavior = null;
             MasterDataManager.Instance.GetData<MasterData.Behavior>(kv.Key, ref behavior);
 
+            if (string.IsNullOrEmpty(behavior.m_strAnimationName))
+                continue;
+
             m_animModel[behavior.m_strAnimationName].time = kv.Value % m_animModel[behavior.m_strAnimationName].length;
             m_animModel[behavior.m_strAnimationName].enabled = true;
             m_animModel[behavior.m_strAnimationName].weight = 1;
+        }
+
+        foreach(KeyValuePair<int, float> kv in dicState)
+        {
+            MasterData.State state = null;
+            MasterDataManager.Instance.GetData<MasterData.State>(kv.Key, ref state);
+
+            if (string.IsNullOrEmpty(state.m_strAnimationName))
+                continue;
+            
+            m_animModel[state.m_strAnimationName].time = kv.Value % m_animModel[state.m_strAnimationName].length;
+            m_animModel[state.m_strAnimationName].enabled = true;
+            m_animModel[state.m_strAnimationName].weight = 1;
         }
 
         m_animModel.Sample();
@@ -109,7 +126,21 @@ public class EntityUI : PooledComponent
             MasterData.Behavior behavior = null;
             MasterDataManager.Instance.GetData<MasterData.Behavior>(kv.Key, ref behavior);
 
+            if (string.IsNullOrEmpty(behavior.m_strAnimationName))
+                continue;
+
             m_animModel[behavior.m_strAnimationName].enabled = false;
+        }
+
+        foreach(KeyValuePair<int, float> kv in dicState)
+        {
+            MasterData.State state = null;
+            MasterDataManager.Instance.GetData<MasterData.State>(kv.Key, ref state);
+
+            if (string.IsNullOrEmpty(state.m_strAnimationName))
+                continue;
+
+            m_animModel[state.m_strAnimationName].enabled = false;
         }
     }
 

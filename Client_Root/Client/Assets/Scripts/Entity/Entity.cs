@@ -256,7 +256,7 @@ public class Entity : PooledComponent
 
     public void Sample()
     {
-        m_EntityUI.Sample(m_dicBehavior);
+        m_EntityUI.Sample(m_dicBehavior, m_dicState);
     }
 
     public void Clear()

@@ -14,8 +14,8 @@ Shader "UnityChan/Eye"
 	{
 		Tags
 		{
-			"RenderType"="Opaque"
-			"Queue"="Geometry"
+			"RenderType"="Transparent"
+			"Queue"="Transparent"
 			"LightMode"="ForwardBase"
 		}
 
@@ -23,6 +23,7 @@ Shader "UnityChan/Eye"
 		{
 			Cull Back
 			ZTest LEqual
+			Blend SrcAlpha OneMinusSrcAlpha
 CGPROGRAM
 #pragma multi_compile_fwdbase
 #pragma vertex vert

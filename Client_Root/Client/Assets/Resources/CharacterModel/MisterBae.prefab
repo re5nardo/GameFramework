@@ -178,6 +178,7 @@ GameObject:
   - component: {fileID: 455672}
   - component: {fileID: 11171684}
   - component: {fileID: 114340382768611978}
+  - component: {fileID: 114050556803025988}
   m_Layer: 0
   m_Name: MisterBae
   m_TagString: Untagged
@@ -5041,6 +5042,7 @@ Animation:
   - {fileID: 7400000, guid: a0970f6b30e7e444383f3865f7037295, type: 2}
   - {fileID: 7400000, guid: 1d11b746afd3ade4ab8227c81f1fa9fe, type: 2}
   - {fileID: 7400000, guid: f5f7b39f948dd6a4685d697fabfc8ae1, type: 2}
+  - {fileID: 7400000, guid: c9eba34af9fac0143ae218aa5188f2be, type: 2}
   m_WrapMode: 0
   m_PlayAutomatically: 0
   m_AnimatePhysics: 0
@@ -6424,6 +6426,18 @@ Prefab:
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 106336}
   m_IsPrefabParent: 1
+--- !u!114 &114050556803025988
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 106336}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 92152154a28ca5a4599e1581203f66e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_fValue: -1
 --- !u!114 &114340382768611978
 MonoBehaviour:
   m_ObjectHideFlags: 1

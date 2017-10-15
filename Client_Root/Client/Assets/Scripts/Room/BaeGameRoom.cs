@@ -9,6 +9,8 @@ public class BaeGameRoom : IGameRoom
     [SerializeField] private Camera                 m_CameraMain = null;
     [SerializeField] private CameraController       m_CameraController = null;
     [SerializeField] private SkillController        m_SkillController = null;
+    [SerializeField] private UICountTimer           m_UICountTimer = null;
+    [SerializeField] private GameObject             m_goGreyCover = null;
 
     public static new BaeGameRoom Instance
     {
@@ -215,7 +217,10 @@ public class BaeGameRoom : IGameRoom
 
             if (gameEvent.m_nEntityID == m_nUserEntityID)
             {
-                //  Dim effect off
+                //  Die effect off
+                m_goGreyCover.SetActive(false);
+                m_UICountTimer.Stop();
+                m_UICountTimer.Hide();
             }
 
             m_dicEntity[gameEvent.m_nEntityID].ProcessGameEvent(gameEvent);
@@ -405,7 +410,13 @@ public class BaeGameRoom : IGameRoom
 
         if (nKilledEntityID == m_nUserEntityID)
         {
-            //  Dim Effect On
+            MasterData.Behavior behaviorMasterData = null;
+            MasterDataManager.Instance.GetData<MasterData.Behavior>(9, ref behaviorMasterData);
+
+            //  Die Effect On
+            m_goGreyCover.SetActive(true);
+            m_UICountTimer.Work(behaviorMasterData.m_fLength);
+            m_UICountTimer.Show();
         }
     }
 #endregion
