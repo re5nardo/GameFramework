@@ -3,6 +3,8 @@
 #include "../../../GameEvent/GameEvents/EntityCreate.h"
 #include "../../../Entity/Entities/Character/Character.h"
 #include "../../../Game/BaeGameRoom.h"
+#include "../../../Factory.h"
+#include "../../../State/StateIDs.h"
 
 Flower1AI::Flower1AI(BaeGameRoom* pGameRoom, int nMasterDataID, long long lStartTime) : ICharacterAI(pGameRoom, nMasterDataID, lStartTime)
 {
@@ -42,6 +44,11 @@ void Flower1AI::UpdateBody(long long lUpdateTime)
 		pEntityCreate->m_vec3Position = m_pCharacter->GetPosition();
 
 		m_pGameRoom->AddGameEvent(pEntityCreate);
+
+		IState* pState = Factory::Instance()->CreateState(m_pGameRoom, m_pCharacter, StateID::ChallengerDisturbing, lUpdateTime);
+		pState->Initialize();
+		m_pCharacter->AddState(pState, lUpdateTime);
+		pState->Update(lUpdateTime);
 	}
 	else if (m_fCurrentTime > spawntime && m_fPreviousTime < fFireTime && fFireTime <= m_fCurrentTime)
 	{

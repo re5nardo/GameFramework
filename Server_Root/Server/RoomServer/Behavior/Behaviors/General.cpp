@@ -9,6 +9,7 @@
 #include "../../GameEvent/GameEvents/EntityCreate.h"
 #include "../../GameEvent/GameEvents/EntityDestroy.h"
 #include "../../Util.h"
+#include "../../State/StateIDs.h"
 
 const string General::NAME = "General";
 
@@ -72,6 +73,18 @@ void General::UpdateBody(long long lUpdateTime)
 
 					m_pGameRoom->AddGameEvent(pEntityCreate);
 
+					if (m_pEntity->GetEntityType() == FBS::Data::EntityType::EntityType_Character)
+					{
+						Character* pCharacter = (Character*)m_pEntity;
+						if (pCharacter->GetRole() == Character::Role::Disturber)
+						{
+							IState* pState = Factory::Instance()->CreateState(m_pGameRoom, pProjectile, StateID::ChallengerDisturbing, lUpdateTime);
+							pState->Initialize();
+							pProjectile->AddState(pState, lUpdateTime);
+							pState->Update(lUpdateTime);
+						}
+					}
+					
 					btVector3 vec3Dest = Util::GetAngledPosition(m_pEntity->GetPosition(), *itDirection, 10/*temp..*/);
 					pProjectile->GetBehavior(BehaviorID::MOVE)->Start(lUpdateTime, &vec3Dest);
 					pProjectile->GetBehavior(BehaviorID::MOVE)->Update(lUpdateTime);
