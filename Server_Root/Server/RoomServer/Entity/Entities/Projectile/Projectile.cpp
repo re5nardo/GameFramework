@@ -12,6 +12,7 @@
 Projectile::Projectile(BaeGameRoom* pGameRoom, int nProjectorID, int nID, int nMasterDataID) : IEntity(pGameRoom, nID, nMasterDataID)
 {
 	m_nProjectorID = nProjectorID;
+	m_Projector = (Character*)m_pGameRoom->GetEntity(nProjectorID);
 }
 
 Projectile::~Projectile()
@@ -71,6 +72,22 @@ bool Projectile::IsTerrainPassable()
 	return false;
 }
 
+int Projectile::GetMoveCollisionTypes()
+{
+	int nTypes = CollisionObject::Type::CollisionObjectType_None;
+
+	if (m_Projector->GetRole() == Character::Role::Challenger)
+	{
+		nTypes = CollisionObject::Type::CollisionObjectType_Character;
+	}
+	else if (m_Projector->GetRole() == Character::Role::Disturber)
+	{
+		nTypes = CollisionObject::Type::CollisionObjectType_Character_Challenger;
+	}
+
+	return nTypes;
+}
+
 int Projectile::GetProjectorID()
 {
 	return m_nProjectorID;
@@ -78,5 +95,5 @@ int Projectile::GetProjectorID()
 
 Character* Projectile::GetProjector()
 {
-	return (Character*)m_pGameRoom->GetEntity(m_nProjectorID);
+	return m_Projector;
 }

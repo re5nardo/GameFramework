@@ -12,10 +12,10 @@ CollisionObjectInsertChecker::~CollisionObjectInsertChecker()
 
 bool CollisionObjectInsertChecker::IsValidate(AABB boundary, CollisionObject* pCollisionObject)
 {
-	btTransform t = pCollisionObject->m_pbtCollisionObject->getWorldTransform();
+	btTransform t = pCollisionObject->GetbtCollisionObject()->getWorldTransform();
 	btVector3 min, max;
 
-	pCollisionObject->m_pbtCollisionObject->getRootCollisionShape()->getAabb(t, min, max);
+	pCollisionObject->GetbtCollisionObject()->getRootCollisionShape()->getAabb(t, min, max);
 
 	if (min.x() < boundary.center.x - boundary.halfDimension_x)
 	{

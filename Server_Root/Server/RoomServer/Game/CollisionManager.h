@@ -5,6 +5,7 @@
 #include "CollisionObjectInsertChecker.h"
 #include "CollisionObject.h"
 #include <map>
+#include <list>
 
 class Character;
 class Projectile;

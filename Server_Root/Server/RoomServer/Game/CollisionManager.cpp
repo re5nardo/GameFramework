@@ -4,6 +4,8 @@
 #include "BulletCollision/CollisionShapes/btCapsuleShape.h"
 #include "BulletCollision/NarrowPhaseCollision/btContinuousConvexCollision.h"
 #include "../Util.h"
+#include "../Entity/Entities/Character/Character.h"
+#include "../Entity/Entities/Projectile/Projectile.h"
 #include <limits>
 
 CollisionManager::CollisionManager()
@@ -179,13 +181,24 @@ int CollisionManager::AddCharacter(btVector3& vec3Position, float fSize, float f
 	CollisionObject* pCollisionObject = new CollisionObject(m_nSequence, CollisionObject::Type::CollisionObjectType_Character, pbtCollisionObject);
 
 	m_mapCollisionObject[m_nSequence] = pCollisionObject;
-	m_mapTypeCollisionObject[CollisionObject::Type::CollisionObjectType_Character][m_nSequence] = pCollisionObject;
 
-	if (m_mapQuadTree.count(CollisionObject::Type::CollisionObjectType_Character) == 0)
+	CollisionObject::Type type;
+	if (pCharacter->GetRole() == Character::Role::Challenger)
 	{
-		m_mapQuadTree[CollisionObject::Type::CollisionObjectType_Character].SetBoundary(AABB(XY(0, 0), m_vec3WorldBounds.x() * 0.5f, m_vec3WorldBounds.z() * 0.5f));
+		type = CollisionObject::Type::CollisionObjectType_Character_Challenger;
 	}
-	m_mapQuadTree[CollisionObject::Type::CollisionObjectType_Character].Insert(pCollisionObject);
+	else
+	{
+		type = CollisionObject::Type::CollisionObjectType_Character_Disturber;
+	}
+
+	m_mapTypeCollisionObject[type][m_nSequence] = pCollisionObject;
+
+	if (m_mapQuadTree.count(type) == 0)
+	{
+		m_mapQuadTree[type].SetBoundary(AABB(XY(0, 0), m_vec3WorldBounds.x() * 0.5f, m_vec3WorldBounds.z() * 0.5f));
+	}
+	m_mapQuadTree[type].Insert(pCollisionObject);
 
 	return m_nSequence++;
 }
@@ -208,13 +221,24 @@ int CollisionManager::AddProjectile(btVector3& vec3Position, float fSize, float 
 	CollisionObject* pCollisionObject = new CollisionObject(m_nSequence, CollisionObject::Type::CollisionObjectType_Projectile, pbtCollisionObject);
 
 	m_mapCollisionObject[m_nSequence] = pCollisionObject;
-	m_mapTypeCollisionObject[CollisionObject::Type::CollisionObjectType_Projectile][m_nSequence] = pCollisionObject;
 
-	if (m_mapQuadTree.count(CollisionObject::Type::CollisionObjectType_Projectile) == 0)
+	CollisionObject::Type type;
+	if (pProjectile->GetProjector()->GetRole() == Character::Role::Challenger)
 	{
-		m_mapQuadTree[CollisionObject::Type::CollisionObjectType_Projectile].SetBoundary(AABB(XY(0, 0), m_vec3WorldBounds.x() * 0.5f, m_vec3WorldBounds.z() * 0.5f));
+		type = CollisionObject::Type::CollisionObjectType_Projectile_Challenger;
 	}
-	m_mapQuadTree[CollisionObject::Type::CollisionObjectType_Projectile].Insert(pCollisionObject);
+	else
+	{
+		type = CollisionObject::Type::CollisionObjectType_Projectile_Disturber;
+	}
+
+	m_mapTypeCollisionObject[type][m_nSequence] = pCollisionObject;
+
+	if (m_mapQuadTree.count(type) == 0)
+	{
+		m_mapQuadTree[type].SetBoundary(AABB(XY(0, 0), m_vec3WorldBounds.x() * 0.5f, m_vec3WorldBounds.z() * 0.5f));
+	}
+	m_mapQuadTree[type].Insert(pCollisionObject);
 
 	return m_nSequence++;
 }
@@ -223,7 +247,8 @@ void CollisionManager::SetPosition(int nID, btVector3& vec3Position)
 {
 	CollisionObject* pCollisionObject = m_mapCollisionObject[nID];
 
-	pCollisionObject->m_pbtCollisionObject->getWorldTransform().setOrigin(vec3Position);
+	pCollisionObject->GetbtCollisionObject()->getWorldTransform().setOrigin(vec3Position);
+	pCollisionObject->RefreshAABB();
 
 	pCollisionObject->m_pQuadTree->Transform(pCollisionObject);
 }
@@ -232,7 +257,8 @@ void CollisionManager::SetRotation(int nID, btVector3& vec3Rotation)
 {
 	CollisionObject* pCollisionObject = m_mapCollisionObject[nID];
 
-	pCollisionObject->m_pbtCollisionObject->getWorldTransform().setRotation(Util::DegreesToQuaternion(vec3Rotation));
+	pCollisionObject->GetbtCollisionObject()->getWorldTransform().setRotation(Util::DegreesToQuaternion(vec3Rotation));
+	pCollisionObject->RefreshAABB();
 
 	pCollisionObject->m_pQuadTree->Transform(pCollisionObject);
 }
@@ -243,8 +269,8 @@ bool CollisionManager::ContinuousCollisionDectection(int nTargetID, int nOtherID
 	btConvexPenetrationDepthSolver* penetrationDepthSolver = 0;
 	btVoronoiSimplexSolver gGjkSimplexSolver;
 
-	btCollisionObject* pTarget = m_mapCollisionObject[nTargetID]->m_pbtCollisionObject;
-	btCollisionObject* pOther = m_mapCollisionObject[nOtherID]->m_pbtCollisionObject;
+	btCollisionObject* pTarget = m_mapCollisionObject[nTargetID]->GetbtCollisionObject();
+	btCollisionObject* pOther = m_mapCollisionObject[nOtherID]->GetbtCollisionObject();
 
 	btTransform trTargetOffset;
 	trTargetOffset.setIdentity();
@@ -299,8 +325,8 @@ bool CollisionManager::ContinuousCollisionDectection(int nTargetID, int nOtherID
 
 bool CollisionManager::DiscreteCollisionDectection(int nTargetID, int nOtherID, btVector3& vec3Hit)
 {
-	btCollisionObject* pTarget = m_mapCollisionObject[nTargetID]->m_pbtCollisionObject;
-	btCollisionObject* pOther = m_mapCollisionObject[nOtherID]->m_pbtCollisionObject;
+	btCollisionObject* pTarget = m_mapCollisionObject[nTargetID]->GetbtCollisionObject();
+	btCollisionObject* pOther = m_mapCollisionObject[nOtherID]->GetbtCollisionObject();
 
 	btCollisionAlgorithm* pCollisionAlgorithm = m_pCollisionWorld->getDispatcher()->findAlgorithm(pTarget, pOther);
 	btManifoldResult contactPointResult(pTarget, pOther);
@@ -338,7 +364,7 @@ bool CollisionManager::DiscreteCollisionDectection(int nTargetID, int nOtherID, 
 btVector3 vec3Target;
 bool CollisionManager::GetCollisionObjectsInRange(int nTargetID, btVector3& vec3To, int nTypes, list<CollisionObject*>* pObjects)
 {
-	btCollisionObject* pTarget = m_mapCollisionObject[nTargetID]->m_pbtCollisionObject;
+	btCollisionObject* pTarget = m_mapCollisionObject[nTargetID]->GetbtCollisionObject();
 
 	btTransform trOffset;
 	trOffset.setIdentity();
@@ -361,7 +387,7 @@ bool CollisionManager::GetCollisionObjectsInRange(int nTargetID, btVector3& vec3
 	CollisionObject* remove = NULL;
 	for (list<CollisionObject*>::iterator it = pObjects->begin(); it != pObjects->end(); ++it)
 	{
-		if ((*it)->m_nID == nTargetID)
+		if ((*it)->GetID() == nTargetID)
 		{
 			remove = *it;
 		}
@@ -372,8 +398,8 @@ bool CollisionManager::GetCollisionObjectsInRange(int nTargetID, btVector3& vec3
 	vec3Target = pTarget->getWorldTransform().getOrigin();
 	auto cmp = [](CollisionObject* a, CollisionObject* b)
 	{
-		float distance_a = Util::GetDistance2(vec3Target, a->m_pbtCollisionObject->getWorldTransform().getOrigin());
-		float distance_b = Util::GetDistance2(vec3Target, b->m_pbtCollisionObject->getWorldTransform().getOrigin());
+		float distance_a = Util::GetDistance2(vec3Target, a->GetbtCollisionObject()->getWorldTransform().getOrigin());
+		float distance_b = Util::GetDistance2(vec3Target, b->GetbtCollisionObject()->getWorldTransform().getOrigin());
 
 		return distance_a < distance_b;
 	};
@@ -389,7 +415,7 @@ bool CollisionManager::ContinuousCollisionDectectionFirst(int nID, btVector3& ve
 	btConvexPenetrationDepthSolver* penetrationDepthSolver = 0;
 	btVoronoiSimplexSolver gGjkSimplexSolver;
 
-	btCollisionObject* pTarget = m_mapCollisionObject[nID]->m_pbtCollisionObject;
+	btCollisionObject* pTarget = m_mapCollisionObject[nID]->GetbtCollisionObject();
 
 	btTransform trOffset;
 	trOffset.setIdentity();
@@ -413,8 +439,8 @@ bool CollisionManager::ContinuousCollisionDectectionFirst(int nID, btVector3& ve
 	vec3Target = pTarget->getWorldTransform().getOrigin();
 	auto cmp = [](CollisionObject* a, CollisionObject* b)
 	{
-		float distance_a = Util::GetDistance2(vec3Target, a->m_pbtCollisionObject->getWorldTransform().getOrigin());
-		float distance_b = Util::GetDistance2(vec3Target, b->m_pbtCollisionObject->getWorldTransform().getOrigin());
+		float distance_a = Util::GetDistance2(vec3Target, a->GetbtCollisionObject()->getWorldTransform().getOrigin());
+		float distance_b = Util::GetDistance2(vec3Target, b->GetbtCollisionObject()->getWorldTransform().getOrigin());
 
 		return distance_a < distance_b;
 	};
@@ -422,10 +448,10 @@ bool CollisionManager::ContinuousCollisionDectectionFirst(int nID, btVector3& ve
 
 	for (list<CollisionObject*>::iterator it = listCollisionObject.begin(); it != listCollisionObject.end(); ++it)
 	{
-		if ((*it)->m_nID == nID)
+		if ((*it)->GetID() == nID)
 			continue;
 
-		btCollisionObject* pCollisionObject = (*it)->m_pbtCollisionObject;
+		btCollisionObject* pCollisionObject = (*it)->GetbtCollisionObject();
 
 		btContinuousConvexCollision convexCaster(GetConvexShape(pTarget), GetConvexShape(pCollisionObject), &gGjkSimplexSolver, penetrationDepthSolver);
 		gGjkSimplexSolver.reset();
@@ -452,7 +478,7 @@ bool CollisionManager::ContinuousCollisionDectectionFirst(int nID, btVector3& ve
 
 			hitTrans *= trOffset.inverse();
 
-			hit->first = (*it)->m_nID;
+			hit->first = (*it)->GetID();
 			hit->second = hitTrans.getOrigin();
 
 			return true;
@@ -469,7 +495,7 @@ bool CollisionManager::ContinuousCollisionDectection(int nID, btVector3& vec3To,
 	btConvexPenetrationDepthSolver* penetrationDepthSolver = 0;
 	btVoronoiSimplexSolver gGjkSimplexSolver;
 
-	btCollisionObject* pTarget = m_mapCollisionObject[nID]->m_pbtCollisionObject;
+	btCollisionObject* pTarget = m_mapCollisionObject[nID]->GetbtCollisionObject();
 
 	btTransform trOffset;
 	trOffset.setIdentity();
@@ -491,10 +517,10 @@ bool CollisionManager::ContinuousCollisionDectection(int nID, btVector3& vec3To,
 
 	for (list<CollisionObject*>::iterator it = listCollisionObject.begin(); it != listCollisionObject.end(); ++it)
 	{
-		if ((*it)->m_nID == nID)
+		if ((*it)->GetID() == nID)
 			continue;
 
-		btCollisionObject* pCollisionObject = (*it)->m_pbtCollisionObject;
+		btCollisionObject* pCollisionObject = (*it)->GetbtCollisionObject();
 
 		btContinuousConvexCollision convexCaster(GetConvexShape(pTarget), GetConvexShape(pCollisionObject), &gGjkSimplexSolver, penetrationDepthSolver);
 		gGjkSimplexSolver.reset();
@@ -521,7 +547,7 @@ bool CollisionManager::ContinuousCollisionDectection(int nID, btVector3& vec3To,
 
 			hitTrans *= trOffset.inverse();
 
-			listHit->push_back(make_pair((*it)->m_nID, btVector3(hitTrans.getOrigin())));
+			listHit->push_back(make_pair((*it)->GetID(), btVector3(hitTrans.getOrigin())));
 		}
 	}
 	
@@ -530,7 +556,7 @@ bool CollisionManager::ContinuousCollisionDectection(int nID, btVector3& vec3To,
 
 bool CollisionManager::DiscreteCollisionDectection(int nID, int nTypes, list<pair<int, btVector3>>* listHit)
 {
-	btCollisionObject* pTarget = m_mapCollisionObject[nID]->m_pbtCollisionObject;
+	btCollisionObject* pTarget = m_mapCollisionObject[nID]->GetbtCollisionObject();
 
 	btTransform trOffset;
 	trOffset.setIdentity();
@@ -554,10 +580,10 @@ bool CollisionManager::DiscreteCollisionDectection(int nID, int nTypes, list<pai
 	btCollisionAlgorithm* pCollisionAlgorithm = NULL;
 	for (list<CollisionObject*>::iterator it = listCollisionObject.begin(); it != listCollisionObject.end(); ++it)
 	{
-		if ((*it)->m_nID == nID)
+		if ((*it)->GetID() == nID)
 			continue;
 
-		pOther = (*it)->m_pbtCollisionObject;
+		pOther = (*it)->GetbtCollisionObject();
 
 		pCollisionAlgorithm = m_pCollisionWorld->getDispatcher()->findAlgorithm(pTarget, pOther);
 		btManifoldResult contactPointResult(pTarget, pOther);
@@ -583,7 +609,7 @@ bool CollisionManager::DiscreteCollisionDectection(int nID, int nTypes, list<pai
 				btVector3 ptA = swap ? pt.getPositionWorldOnA() : pt.getPositionWorldOnB();
 				btVector3 ptB = swap ? pt.getPositionWorldOnB() : pt.getPositionWorldOnA();
 
-				listHit->push_back(make_pair((*it)->m_nID, btVector3(ptA)));
+				listHit->push_back(make_pair((*it)->GetID(), btVector3(ptA)));
 
 				break;		//	Take just one
 			}
@@ -604,7 +630,7 @@ bool CollisionManager::CehckExistInRange(btVector3& vec3Center, float fRadius, i
 	btCollisionObject* pOther = NULL;
 	for (list<CollisionObject*>::iterator it = listCollisionObject.begin(); it != listCollisionObject.end(); ++it)
 	{
-		pOther = (*it)->m_pbtCollisionObject;
+		pOther = (*it)->GetbtCollisionObject();
 
 		btTransform t = pOther->getWorldTransform();
 		btVector3 min, max;
@@ -616,7 +642,7 @@ bool CollisionManager::CehckExistInRange(btVector3& vec3Center, float fRadius, i
 
 		if (Util::CircleRectangleCollisionDectection(vec3Center, fRadius, AABB(center, halfDimension_x, halfDimension_z)))
 		{
-			listItem->push_back(make_pair((*it)->m_nID, pOther->getWorldTransform().getOrigin()));
+			listItem->push_back(make_pair((*it)->GetID(), pOther->getWorldTransform().getOrigin()));
 		}
 	}
 
@@ -627,17 +653,17 @@ bool CollisionManager::CehckExistInRange(int nID, float fRadius, int nTypes, lis
 {
 	listItem->clear();
 
-	btVector3& vec3Center = m_mapCollisionObject[nID]->m_pbtCollisionObject->getWorldTransform().getOrigin();
+	btVector3& vec3Center = m_mapCollisionObject[nID]->GetbtCollisionObject()->getWorldTransform().getOrigin();
 
 	list<CollisionObject*> listCollisionObject = GetCollisionObjects(nTypes, AABB(XY(vec3Center.x(), vec3Center.z()), fRadius, fRadius));
 
 	btCollisionObject* pOther = NULL;
 	for (list<CollisionObject*>::iterator it = listCollisionObject.begin(); it != listCollisionObject.end(); ++it)
 	{
-		if ((*it)->m_nID == nID)
+		if ((*it)->GetID() == nID)
 			continue;
 
-		pOther = (*it)->m_pbtCollisionObject;
+		pOther = (*it)->GetbtCollisionObject();
 
 		btTransform t = pOther->getWorldTransform();
 		btVector3 min, max;
@@ -649,7 +675,7 @@ bool CollisionManager::CehckExistInRange(int nID, float fRadius, int nTypes, lis
 
 		if (Util::CircleRectangleCollisionDectection(vec3Center, fRadius, AABB(center, halfDimension_x, halfDimension_z)))
 		{
-			listItem->push_back(make_pair((*it)->m_nID, pOther->getWorldTransform().getOrigin()));
+			listItem->push_back(make_pair((*it)->GetID(), pOther->getWorldTransform().getOrigin()));
 		}
 	}
 
@@ -678,14 +704,14 @@ void CollisionManager::RemoveCollisionObject(int nID)
 list<CollisionObject*> CollisionManager::GetCollisionObjects(int nTypes, AABB range)
 {
 	list<CollisionObject*> listCollisionObject;
-	list<CollisionObject*> listQueried;
+	list<CollisionObject*>* plistQueried;
 	for (map<CollisionObject::Type, QuadTree<CollisionObject*, CollisionObjectInsertChecker>>::iterator it = m_mapQuadTree.begin(); it != m_mapQuadTree.end(); ++it)
 	{
 		if ((it->first & nTypes) == it->first)
 		{
-			listQueried = it->second.QueryRange(range);
+			plistQueried = it->second.QueryRange(range);
 
-			listCollisionObject.insert(listCollisionObject.end(), listQueried.begin(), listQueried.end());
+			listCollisionObject.insert(listCollisionObject.end(), plistQueried->begin(), plistQueried->end());
 		}
 	}
 

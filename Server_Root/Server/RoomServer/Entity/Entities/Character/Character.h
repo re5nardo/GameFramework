@@ -41,6 +41,7 @@ public:
 	FBS::Data::EntityType GetEntityType() override;
 	void NotifyGameEvent(IGameEvent* pGameEvent) override;
 	bool IsTerrainPassable() override;
+	int GetMoveCollisionTypes() override;
 
 public:
 	void UpdateSkills(long long lUpdateTime);

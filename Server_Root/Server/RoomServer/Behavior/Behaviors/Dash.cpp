@@ -54,9 +54,7 @@ void Dash::UpdateBody(long long lUpdateTime)
 	btVector3 vec3Moved = vec3PosOffset.normalized() * m_pEntity->GetMoveSpeed() * 2 * m_fDeltaTime;
 	btVector3 current = vec3Pos + vec3Moved;
 
-	int nTypes = CollisionObject::Type::CollisionObjectType_Terrain | CollisionObject::Type::CollisionObjectType_Character | CollisionObject::Type::CollisionObjectType_Projectile;
-
-	m_pGameRoom->EntityMove(m_pEntity->GetID(), this, current, nTypes, m_lLastUpdateTime, lUpdateTime);
+	m_pGameRoom->EntityMove(m_pEntity->GetID(), this, current, m_pEntity->GetMoveCollisionTypes(), m_lLastUpdateTime, lUpdateTime);
 
 	//	This behavior might be stopped already in EntityMove()
 	if (!m_bActivated)

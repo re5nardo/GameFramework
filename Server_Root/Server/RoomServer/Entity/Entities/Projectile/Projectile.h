@@ -14,6 +14,7 @@ public:
 
 private:
 	int m_nProjectorID;
+	Character* m_Projector;
 	vector<string> m_vecLifeInfo;
 
 public:
@@ -22,6 +23,7 @@ public:
 	FBS::Data::EntityType GetEntityType() override;
 	void NotifyGameEvent(IGameEvent* pGameEvent) override;
 	bool IsTerrainPassable() override;
+	int GetMoveCollisionTypes() override;
 
 public:
 	int GetProjectorID();

@@ -6,6 +6,16 @@ CollisionObject::CollisionObject(int nID, Type type, btCollisionObject* pbtColli
 	m_nID = nID;
 	m_Type = type;
 	m_pbtCollisionObject = pbtCollisionObject;
+
+	btTransform t = pbtCollisionObject->getWorldTransform();
+	btVector3 min, max;
+	pbtCollisionObject->getRootCollisionShape()->getAabb(t, min, max);
+
+	XY center(t.getOrigin().x(), t.getOrigin().z());
+	float halfDimension_x = (max.x() - min.x()) * 0.5f;
+	float halfDimension_z = (max.z() - min.z()) * 0.5f;
+
+	m_AABB = AABB(center, halfDimension_x, halfDimension_z);
 }
 
 CollisionObject::~CollisionObject()
@@ -34,7 +44,27 @@ CollisionObject::~CollisionObject()
 	}
 }
 
+int CollisionObject::GetID()
+{
+	return m_nID;
+}
+
+CollisionObject::Type CollisionObject::GetCollisionObjectType()
+{
+	return m_Type;
+}
+
+btCollisionObject* CollisionObject::GetbtCollisionObject()
+{
+	return  m_pbtCollisionObject;
+}
+
 AABB CollisionObject::GetAABB()
+{
+	return m_AABB;
+}
+
+void CollisionObject::RefreshAABB()
 {
 	btTransform t = m_pbtCollisionObject->getWorldTransform();
 	btVector3 min, max;
@@ -44,5 +74,5 @@ AABB CollisionObject::GetAABB()
 	float halfDimension_x = (max.x() - min.x()) * 0.5f;
 	float halfDimension_z = (max.z() - min.z()) * 0.5f;
 
-	return AABB(center, halfDimension_x, halfDimension_z);
+	m_AABB = AABB(center, halfDimension_x, halfDimension_z);
 }

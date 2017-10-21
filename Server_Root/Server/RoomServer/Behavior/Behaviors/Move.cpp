@@ -102,9 +102,7 @@ void Move::UpdateBody(long long lUpdateTime)
 		current = m_vec3Dest;
 	}
 
-	int nTypes = CollisionObject::Type::CollisionObjectType_Terrain | CollisionObject::Type::CollisionObjectType_Character | CollisionObject::Type::CollisionObjectType_Projectile;
-
-	m_pGameRoom->EntityMove(m_pEntity->GetID(), this, current, nTypes, m_lLastUpdateTime, lUpdateTime);
+	m_pGameRoom->EntityMove(m_pEntity->GetID(), this, current, m_pEntity->GetMoveCollisionTypes(), m_lLastUpdateTime, lUpdateTime);
 
 	//	This behavior might be stopped already in EntityMove()
 	if (!m_bActivated)

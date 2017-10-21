@@ -88,6 +88,22 @@ bool Character::IsTerrainPassable()
 	return false;
 }
 
+int Character::GetMoveCollisionTypes()
+{
+	int nTypes = CollisionObject::Type::CollisionObjectType_None;
+
+	if (m_Role == Character::Role::Challenger)
+	{
+		nTypes = CollisionObject::Type::CollisionObjectType_Terrain | CollisionObject::Type::CollisionObjectType_Character_Disturber | CollisionObject::Type::CollisionObjectType_Projectile;
+	}
+	else if (m_Role == Character::Role::Disturber)
+	{
+		nTypes = CollisionObject::Type::CollisionObjectType_Terrain| CollisionObject::Type::CollisionObjectType_Character_Challenger;
+	}
+
+	return nTypes;
+}
+
 void Character::UpdateSkills(long long lUpdateTime)
 {
 	list<ISkill*> listSkill = GetActivatedSkills();

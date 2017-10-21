@@ -1,6 +1,7 @@
 #pragma once
 
 #include <list>
+#include <vector>
 #include "QuadTreePrerequisites.h"
 
 using namespace std;
@@ -37,7 +38,10 @@ private:
 	AABB boundary;
 
 	// Points in this quad tree node
-	list<T> points;
+	vector<T> points;
+
+	//	QueryRange(AABB range) output
+	list<T> pointsInRange;
 
 	// Children
 	QuadTree* northWest = NULL;
@@ -109,49 +113,48 @@ public:
 		southEast = new QuadTree(this, AABB(XY(boundary.center.x + boundary.halfDimension_x * 0.5f, boundary.center.y - boundary.halfDimension_y * 0.5f), boundary.halfDimension_x * 0.5f, boundary.halfDimension_y * 0.5f));
 	}
 
-	list<T> QueryRange(AABB range)
+	list<T>* QueryRange(AABB range)
 	{
-		// Prepare an array of results
-		list<T> pointsInRange;
+		pointsInRange.clear();
 
 		// Automatically abort if the range does not intersect this quad
 		if (!boundary.IntersectsAABB(range))
-			return pointsInRange; // empty list
+			return &pointsInRange; // empty list
 
 		// Check objects at this quad level
-		for (list<T>::iterator it = points.begin(); it != points.end(); ++it)
+		for (int i = 0; i < points.size(); ++i)
 		{
-			if (range.IntersectsAABB((*it).GetAABB()))
-				pointsInRange.push_back(*it);
+			if (range.IntersectsAABB(points[i].GetAABB()))
+				pointsInRange.push_back(points[i]);
 		}
 
 		// Terminate here, if there are no children
 		if (northWest == NULL)
-			return pointsInRange;
+			return &pointsInRange;
 
 		// Otherwise, add the points from the children
-		list<T> listQueried = northWest->QueryRange(range);
-		pointsInRange.insert(pointsInRange.end(), listQueried.begin(), listQueried.end());
+		list<T>* plistQueried = northWest->QueryRange(range);
+		pointsInRange.insert(pointsInRange.end(), plistQueried->begin(), plistQueried->end());
 
-		listQueried = northEast->QueryRange(range);
-		pointsInRange.insert(pointsInRange.end(), listQueried.begin(), listQueried.end());
+		plistQueried = northEast->QueryRange(range);
+		pointsInRange.insert(pointsInRange.end(), plistQueried->begin(), plistQueried->end());
 
-		listQueried = southWest->QueryRange(range);
-		pointsInRange.insert(pointsInRange.end(), listQueried.begin(), listQueried.end());
+		plistQueried = southWest->QueryRange(range);
+		pointsInRange.insert(pointsInRange.end(), plistQueried->begin(), plistQueried->end());
 
-		listQueried = southEast->QueryRange(range);
-		pointsInRange.insert(pointsInRange.end(), listQueried.begin(), listQueried.end());
+		plistQueried = southEast->QueryRange(range);
+		pointsInRange.insert(pointsInRange.end(), plistQueried->begin(), plistQueried->end());
 
-		return pointsInRange;
+		return &pointsInRange;
 	}
 
 	bool Remove(T p)
 	{
-		for (list<T>::iterator it = points.begin(); it != points.end(); ++it)
+		for (int i = 0; i < points.size(); ++i)
 		{
-			if (p == (*it))
+			if (p == points[i])
 			{
-				points.erase(it);
+				points.erase(points.begin() + i);
 				return true;
 			}
 		}
@@ -161,7 +164,14 @@ public:
 
 	void Transform(T p)
 	{
-		points.remove(p);
+		for (int i = 0; i < points.size(); ++i)
+		{
+			if (p == points[i])
+			{
+				points.erase(points.begin() + i);
+				break;
+			}
+		}
 
 		if (InsertChecker.IsValidate(boundary, p))
 		{
@@ -230,7 +240,10 @@ private:
 	AABB boundary;
 
 	// Points in this quad tree node
-	list<T*> points;
+	vector<T*> points;
+
+	//	QueryRange(AABB range) output
+	list<T*> pointsInRange;
 
 	// Children
 	QuadTree* northWest = NULL;
@@ -302,49 +315,48 @@ public:
 		southEast = new QuadTree(this, AABB(XY(boundary.center.x + boundary.halfDimension_x * 0.5f, boundary.center.y - boundary.halfDimension_y * 0.5f), boundary.halfDimension_x * 0.5f, boundary.halfDimension_y * 0.5f));
 	}
 
-	list<T*> QueryRange(AABB range)
+	list<T*>* QueryRange(AABB range)
 	{
-		// Prepare an array of results
-		list<T*> pointsInRange;
+		pointsInRange.clear();
 
 		// Automatically abort if the range does not intersect this quad
 		if (!boundary.IntersectsAABB(range))
-			return pointsInRange; // empty list
+			return &pointsInRange; // empty list
 
 		// Check objects at this quad level
-		for (list<T*>::iterator it = points.begin(); it != points.end(); ++it)
+		for (int i = 0; i < points.size(); ++i)
 		{
-			if (range.IntersectsAABB((*it)->GetAABB()))
-				pointsInRange.push_back(*it);
+			if (range.IntersectsAABB(points[i]->GetAABB()))
+				pointsInRange.push_back(points[i]);
 		}
 
 		// Terminate here, if there are no children
 		if (northWest == NULL)
-			return pointsInRange;
+			return &pointsInRange;
 
 		// Otherwise, add the points from the children
-		list<T*> listQueried = northWest->QueryRange(range);
-		pointsInRange.insert(pointsInRange.end(), listQueried.begin(), listQueried.end());
+		list<T*>* plistQueried = northWest->QueryRange(range);
+		pointsInRange.insert(pointsInRange.end(), plistQueried->begin(), plistQueried->end());
 
-		listQueried = northEast->QueryRange(range);
-		pointsInRange.insert(pointsInRange.end(), listQueried.begin(), listQueried.end());
+		plistQueried = northEast->QueryRange(range);
+		pointsInRange.insert(pointsInRange.end(), plistQueried->begin(), plistQueried->end());
 
-		listQueried = southWest->QueryRange(range);
-		pointsInRange.insert(pointsInRange.end(), listQueried.begin(), listQueried.end());
+		plistQueried = southWest->QueryRange(range);
+		pointsInRange.insert(pointsInRange.end(), plistQueried->begin(), plistQueried->end());
 
-		listQueried = southEast->QueryRange(range);
-		pointsInRange.insert(pointsInRange.end(), listQueried.begin(), listQueried.end());
+		plistQueried = southEast->QueryRange(range);
+		pointsInRange.insert(pointsInRange.end(), plistQueried->begin(), plistQueried->end());
 
-		return pointsInRange;
+		return &pointsInRange;
 	}
 
 	bool Remove(T* p)
 	{
-		for (list<T*>::iterator it = points.begin(); it != points.end(); ++it)
+		for (int i = 0; i < points.size(); ++i)
 		{
-			if (p == (*it))
+			if (p == points[i])
 			{
-				points.erase(it);
+				points.erase(points.begin() + i);
 				return true;
 			}
 		}
@@ -354,7 +366,14 @@ public:
 
 	void Transform(T* p)
 	{
-		points.remove(p);
+		for (int i = 0; i < points.size(); ++i)
+		{
+			if (p == points[i])
+			{
+				points.erase(points.begin() + i);
+				break;
+			}
+		}
 
 		if (InsertChecker.IsValidate(boundary, p))
 		{

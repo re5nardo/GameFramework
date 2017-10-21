@@ -358,7 +358,7 @@ void BaeGameRoom::SetObstacles(int nMapID, int nRandomSeed)
 	m_listDisturber.push_back(dummy1);
 
 	
-	/*int nDisturberCount = rand() % 10;
+	int nDisturberCount = rand() % 10;
 	nDisturberCount = 2;
 	for (int i = 0; i < 1; ++i)
 	{
@@ -385,7 +385,7 @@ void BaeGameRoom::SetObstacles(int nMapID, int nRandomSeed)
 		Flower1AI* ai6 = new Flower1AI(this, 1, 0);
 		ai6->SetData(btVector3(-5, 0, 15), btVector3(0, 0, 0));
 		m_listDisturber.push_back(ai6);
-	}*/
+	}
 }
 
 //	Target	(Other부터 처리하도록 순서 수정할까..? (이동하려는 Entity가 공격권을 가지도록 -> 먼저 공격처리가 이뤄지도록)
@@ -404,7 +404,7 @@ void BaeGameRoom::EntityMove(int nEntityID, IBehavior* pBehavior, btVector3& vec
 
 			if (ContinuousCollisionDectection(nEntityID, pOtherCollisionObject, vec3To, vec3Hit))
 			{
-				if (pOtherCollisionObject->m_Type == CollisionObject::Type::CollisionObjectType_Terrain)
+				if (pOtherCollisionObject->GetCollisionObjectType() == CollisionObject::Type::CollisionObjectType_Terrain)
 				{
 					if (pTarget->IsTerrainPassable())
 					{
@@ -413,16 +413,16 @@ void BaeGameRoom::EntityMove(int nEntityID, IBehavior* pBehavior, btVector3& vec
 
 					pBehavior->Stop(lEndTime);
 				}
-				else if (pOtherCollisionObject->m_Type == CollisionObject::Type::CollisionObjectType_Character)
+				else if (pOtherCollisionObject->GetCollisionObjectType() == CollisionObject::Type::CollisionObjectType_Character)
 				{
-					Character* pOtherCharacter = (Character*)pOtherCollisionObject->m_pbtCollisionObject->getUserPointer();
+					Character* pOtherCharacter = (Character*)pOtherCollisionObject->GetbtCollisionObject()->getUserPointer();
 
 					pTarget->OnCollision(pOtherCharacter, lEndTime);
 					pOtherCharacter->OnCollision(pTarget, lEndTime);
 				}
-				else if (pOtherCollisionObject->m_Type == CollisionObject::Type::CollisionObjectType_Projectile)
+				else if (pOtherCollisionObject->GetCollisionObjectType() == CollisionObject::Type::CollisionObjectType_Projectile)
 				{
-					Projectile* pOtherProjectile = (Projectile*)pOtherCollisionObject->m_pbtCollisionObject->getUserPointer();
+					Projectile* pOtherProjectile = (Projectile*)pOtherCollisionObject->GetbtCollisionObject()->getUserPointer();
 
 					pTarget->OnCollision(pOtherProjectile, lEndTime);
 					pOtherProjectile->OnCollision(pTarget, lEndTime);
@@ -461,7 +461,7 @@ void BaeGameRoom::CharacterDieEnd(int nCharacterID, long long lTime)
 
 bool BaeGameRoom::ContinuousCollisionDectection(int nTargetID, CollisionObject* pOther, btVector3& vec3To, btVector3& vec3Hit)
 {
-	return m_CollisionManager.ContinuousCollisionDectection(GetCollisionObjectIDByEntityID(nTargetID), pOther->m_nID, vec3To, vec3Hit);
+	return m_CollisionManager.ContinuousCollisionDectection(GetCollisionObjectIDByEntityID(nTargetID), pOther->GetID(), vec3To, vec3Hit);
 }
 
 bool BaeGameRoom::DiscreteCollisionDectection(int nTargetID, int nOtherID, btVector3& vec3Hit)
@@ -594,13 +594,7 @@ void BaeGameRoom::DestroyEntity(int nEntityID)
 	AddGameEvent(pEntityDestroy);
 
 	m_mapEntity[nEntityID]->m_bDestroyReserved = true;
-	m_mapEntity.erase(nEntityID);
-	int nCollisionObjectID = GetCollisionObjectIDByEntityID(nEntityID);
-	m_CollisionManager.RemoveCollisionObject(nCollisionObjectID);
-
-	m_mapEntityCollision.erase(nEntityID);
-	m_mapCollisionEntity.erase(nCollisionObjectID);
-
+	
 	m_listDestroyReserved.push_back(nEntityID);
 }
 
@@ -611,6 +605,13 @@ void BaeGameRoom::TrimEntity()
 		int nEntityID = *it;
 
 		delete m_mapEntity[nEntityID];
+		m_mapEntity.erase(nEntityID);
+
+		int nCollisionObjectID = GetCollisionObjectIDByEntityID(nEntityID);
+		m_CollisionManager.RemoveCollisionObject(nCollisionObjectID);
+
+		m_mapEntityCollision.erase(nEntityID);
+		m_mapCollisionEntity.erase(nCollisionObjectID);
 	}
 	m_listDestroyReserved.clear();
 }
