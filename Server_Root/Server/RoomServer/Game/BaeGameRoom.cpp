@@ -168,6 +168,22 @@ void BaeGameRoom::ProcessInput()
 
 void BaeGameRoom::Update()
 {
+	//	temp.. start position
+	if (m_nTick == 0)
+	{
+		for (map<int, int>::iterator it = m_mapPlayerEntity.begin(); it != m_mapPlayerEntity.end(); ++it)
+		{
+			IEntity* pEntity = m_mapEntity[it->second];
+
+			srand(0);
+			btVector3 vec3Start(-18 + (rand() % 36), 0, -240 + (rand() % 10));
+
+			pEntity->SetPosition(vec3Start);
+
+			AddPositionGameEvent(m_lLastUpdateTime / 1000.0f, pEntity->GetID(), m_lLastUpdateTime / 1000.0f, m_lLastUpdateTime / 1000.0f, vec3Start, vec3Start);
+		}
+	}
+
 	//	AI
 	for (list<ICharacterAI*>::iterator it = m_listDisturber.begin(); it != m_listDisturber.end(); ++it)
 	{
@@ -348,43 +364,51 @@ void BaeGameRoom::LoadMap(int nID)
 	}
 }
 
+//temp..
 void BaeGameRoom::SetObstacles(int nMapID, int nRandomSeed)
 {
 	srand(nRandomSeed);
 
-	//temp..
-	DummyCharacter1AI* dummy1 = new DummyCharacter1AI(this, 2, 0);
-	dummy1->SetData(btVector3(5, 0, 5), btVector3(0, 0, 0), btVector3(-5, 0, 5));
-	m_listDisturber.push_back(dummy1);
-
-	
-	int nDisturberCount = rand() % 10;
-	nDisturberCount = 2;
-	for (int i = 0; i < 1; ++i)
+	float z = -240;
+	while (true)
 	{
-		Flower1AI* ai = new Flower1AI(this, 1, 0);
-		ai->SetData(btVector3(5, 0, 5), btVector3(0, 0, 0));
-		m_listDisturber.push_back(ai);
+		z += (5 + (rand() % 30));
 
-		Flower1AI* ai2 = new Flower1AI(this, 1, 0);
-		ai2->SetData(btVector3(-5, 0, 5), btVector3(0, 0, 0));
-		m_listDisturber.push_back(ai2);
+		if (z > 250)
+		{
+			break;
+		}
 
-		Flower1AI* ai3 = new Flower1AI(this, 1, 0);
-		ai3->SetData(btVector3(5, 0, 10), btVector3(0, 0, 0));
-		m_listDisturber.push_back(ai3);
+		btVector3 vec3Start(-15 + (rand() % 30), 0, z);
+		btVector3 vec3Dest(-15 + (rand() % 30), 0, z);
 
-		Flower1AI* ai4 = new Flower1AI(this, 1, 0);
-		ai4->SetData(btVector3(-5, 0, 10), btVector3(0, 0, 0));
-		m_listDisturber.push_back(ai4);
+		while (vec3Start == vec3Dest)
+		{
+			vec3Start = btVector3(-15 + (rand() % 30), 0, z);
+			vec3Dest = btVector3(-15 + (rand() % 30), 0, z);
+		}
 
-		Flower1AI* ai5 = new Flower1AI(this, 1, 0);
-		ai5->SetData(btVector3(5, 0, 15), btVector3(0, 0, 0));
-		m_listDisturber.push_back(ai5);
+		DummyCharacter1AI* dummy1 = new DummyCharacter1AI(this, 2, 0);
+		dummy1->SetData(vec3Start, btVector3(0, 0, 0), vec3Dest);
+		m_listDisturber.push_back(dummy1);
+	}
 
-		Flower1AI* ai6 = new Flower1AI(this, 1, 0);
-		ai6->SetData(btVector3(-5, 0, 15), btVector3(0, 0, 0));
-		m_listDisturber.push_back(ai6);
+	//	flower1
+	z = -240;
+	while (true)
+	{
+		z += (5 + (rand() % 30));
+
+		if (z > 250)
+		{
+			break;
+		}
+
+		btVector3 vec3Start(-15 + (rand() % 30), 0, z);
+
+		Flower1AI* flower1AI = new Flower1AI(this, 1, 0);
+		flower1AI->SetData(vec3Start, btVector3(0, 0, 0));
+		m_listDisturber.push_back(flower1AI);
 	}
 }
 

@@ -46,7 +46,7 @@ void DummyCharacter1AI::UpdateBody(long long lUpdateTime)
 		list<pair<int, btVector3>> listItem;
 		int nTypes = CollisionObject::Type::CollisionObjectType_Character;
 
-		if (!m_pCharacter->GetBehavior(BehaviorID::MOVE)->IsActivated() && m_pGameRoom->CehckExistInRange(m_pCharacter->GetID(), 10, nTypes, &listItem))
+		if (!m_pCharacter->GetBehavior(BehaviorID::MOVE)->IsActivated() && m_pGameRoom->CehckExistInRange(m_pCharacter->GetID(), 30, nTypes, &listItem))
 		{
 			if (m_pCharacter->GetPosition() == m_vec3DestPosition)
 			{

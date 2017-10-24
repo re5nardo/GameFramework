@@ -195,8 +195,8 @@ public:
 	//	https://stackoverflow.com/questions/401847/circle-rectangle-collision-detection-intersection
 	static bool CircleRectangleCollisionDectection(btVector3& vec3Center, float fRadius, AABB rect)
 	{
-		float circleDistance_x = abs(vec3Center.x() - rect.halfDimension_x);
-		float circleDistance_z = abs(vec3Center.z() - rect.halfDimension_y);
+		float circleDistance_x = abs(vec3Center.x() - rect.center.x);
+		float circleDistance_z = abs(vec3Center.z() - rect.center.y);
 
 		if (circleDistance_x > (rect.halfDimension_x + fRadius)) { return false; }
 		if (circleDistance_z > (rect.halfDimension_y + fRadius)) { return false; }

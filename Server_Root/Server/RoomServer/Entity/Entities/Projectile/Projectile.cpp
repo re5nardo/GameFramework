@@ -43,7 +43,7 @@ void Projectile::Initialize()
 
 float Projectile::GetMoveSpeed()
 {
-	return 1;
+	return 3;
 }
 
 FBS::Data::EntityType Projectile::GetEntityType()

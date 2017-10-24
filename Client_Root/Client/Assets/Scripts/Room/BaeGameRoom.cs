@@ -82,41 +82,35 @@ public class BaeGameRoom : IGameRoom
 
     private void UpdateTime()
     {
-//        if (m_fLastWorldInfoTime > m_fElapsedTime + Time.deltaTime)
-//        {
-//            deltaTime = Time.deltaTime;
-//
-//            m_fElapsedTime += deltaTime;
-//            return;
-//        }
+        float fTickInterval = 0.2f;     //  server tick interval
 
         if (m_fLastWorldInfoTime > m_fElapsedTime)
         {
             if (m_fLastWorldInfoTime > m_fElapsedTime + Time.deltaTime)
             {
-                float fPlaySpeed = 1;
-
-                float fDiff = m_fLastWorldInfoTime - (m_fElapsedTime + Time.deltaTime);
-                if (fDiff > 0.25f)   //  must be bigger than server tick interval
+                float fDiff = m_fLastWorldInfoTime - m_fElapsedTime;
+                if (fDiff > fTickInterval)
                 {
-                    float fTarget = Mathf.Lerp(0.25f, fDiff, 0.5f);
+                    float fFactor = (fDiff - fTickInterval) / fTickInterval + 1;
 
-                    fPlaySpeed = (Time.deltaTime + fTarget) / Time.deltaTime;
+                    deltaTime = Time.deltaTime * fFactor;
                 }
                 else
                 {
-                    fPlaySpeed = 1;
+                    deltaTime = Time.deltaTime;
                 }
-
-                deltaTime = Time.deltaTime * fPlaySpeed;
             }
             else
             {
                 deltaTime = m_fLastWorldInfoTime - m_fElapsedTime;
             }
-
-            m_fElapsedTime += deltaTime;
         }
+        else
+        {
+            deltaTime = 0;
+        }
+
+        m_fElapsedTime += deltaTime;
     }
 
     private void ProcessWorldInfo()
