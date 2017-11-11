@@ -18,6 +18,7 @@
 #include "State\States\FireBehavior.h"
 #include "State\States\GeneralState.h"
 #include "State\States\ChallengerDisturbing.h"
+#include "State\States\DashState.h"
 #include "Entity\Entities\Projectile\Projectile.h"
 
 Factory::Factory()
@@ -100,6 +101,10 @@ IState* Factory::CreateState(BaeGameRoom* pGameRoom, IEntity* pEntity, int nMast
 	else if (ChallengerDisturbing::NAME.compare(strClassName) == 0)
 	{
 		return new ChallengerDisturbing(pGameRoom, pEntity, nMasterDataID, lStartTime);
+	}
+	else if (DashState::NAME.compare(strClassName) == 0)
+	{
+		return new DashState(pGameRoom, pEntity, nMasterDataID, lStartTime);
 	}
 
 	return NULL;

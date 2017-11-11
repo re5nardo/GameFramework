@@ -417,6 +417,9 @@
     <ClInclude Include="Game\CollisionObjectInsertChecker.h">
       <Filter>헤더 파일\Game</Filter>
     </ClInclude>
+    <ClInclude Include="State\States\DashState.h">
+      <Filter>헤더 파일\State\States</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -625,6 +628,9 @@
     </ClCompile>
     <ClCompile Include="Game\CollisionObjectInsertChecker.cpp">
       <Filter>소스 파일\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="State\States\DashState.cpp">
+      <Filter>소스 파일\State\States</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

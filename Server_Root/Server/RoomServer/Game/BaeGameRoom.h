@@ -54,10 +54,10 @@ private:
 	map<int, float>					m_mapPlayerIndexPreparationState;		//	key : PlayerIndex, value : PreparationState
 
 private:
-	map<int, pair<long long, IMessage*>>	m_mapPlayerInput;		//	key : PlayerIndex, value : <Time, Input Message>
-	map<int, int>							m_mapPlayerEntity;		//	key : PlayerIndex, value : EntityID
-	map<int, int>							m_mapEntityPlayer;		//	key : EntityID, value : PlayerIndex
-	map<int, IEntity*>						m_mapEntity;			//	key : EntityID, value : Entity
+	map<int, list<pair<long long, IMessage*>>>	m_mapPlayerInput;		//	key : PlayerIndex, value : List<Time, Input Message>
+	map<int, int>								m_mapPlayerEntity;		//	key : PlayerIndex, value : EntityID
+	map<int, int>								m_mapEntityPlayer;		//	key : EntityID, value : PlayerIndex
+	map<int, IEntity*>							m_mapEntity;			//	key : EntityID, value : Entity
 
 private:
 	list<ICharacterAI*> m_listDisturber;

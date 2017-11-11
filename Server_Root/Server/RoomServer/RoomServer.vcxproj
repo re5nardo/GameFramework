@@ -161,6 +161,7 @@
     <ClInclude Include="State\StateIDs.h" />
     <ClInclude Include="State\States\Acceleration.h" />
     <ClInclude Include="State\States\ChallengerDisturbing.h" />
+    <ClInclude Include="State\States\DashState.h" />
     <ClInclude Include="State\States\FireBehavior.h" />
     <ClInclude Include="State\States\GeneralState.h" />
     <ClInclude Include="State\States\Shield.h" />
@@ -234,6 +235,7 @@
     <ClCompile Include="State\IState.cpp" />
     <ClCompile Include="State\States\Acceleration.cpp" />
     <ClCompile Include="State\States\ChallengerDisturbing.cpp" />
+    <ClCompile Include="State\States\DashState.cpp" />
     <ClCompile Include="State\States\FireBehavior.cpp" />
     <ClCompile Include="State\States\GeneralState.cpp" />
     <ClCompile Include="State\States\Shield.cpp" />

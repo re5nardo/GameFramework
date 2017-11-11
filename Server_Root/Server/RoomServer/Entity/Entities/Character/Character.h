@@ -28,6 +28,9 @@ protected:
 	CharacterStat m_DefaultStat;
 	CharacterStat m_CurrentStat;
 
+private:
+	int m_nDashPoint = 0;
+
 public:
 	float fMoveSpeedPercent = 100;
 
@@ -68,4 +71,8 @@ public:
 
 public:
 	bool IsAlive();
+
+public:
+	float GetDashSpeed();
+	void IncreaseDashPoint(int nPoint);
 };

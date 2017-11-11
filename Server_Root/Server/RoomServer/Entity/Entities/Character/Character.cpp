@@ -187,6 +187,25 @@ bool Character::IsAlive()
 	return m_CurrentStat.m_nHP > 0;
 }
 
+float Character::GetDashSpeed()
+{
+	return m_CurrentStat.m_fDashSpeed * (fMoveSpeedPercent / 100);
+}
+
+void Character::IncreaseDashPoint(int nPoint)
+{
+	m_nDashPoint += nPoint;
+
+	if (m_nDashPoint >= m_CurrentStat.m_fMPChargeRate)
+	{
+		int nGetCount = m_nDashPoint / m_CurrentStat.m_fMPChargeRate;
+
+		m_nDashPoint = m_nDashPoint % (int)m_CurrentStat.m_fMPChargeRate;
+
+		m_CurrentStat.m_nMP += nGetCount;
+	}
+}
+
 void Character::OnAttacked(int nAttackingEntityID, int nDamage, long long lTime)
 {
 	if (HasCoreState(CoreState::CoreState_Invincible) || !IsAlive())

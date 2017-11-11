@@ -2,11 +2,12 @@
 
 public class InputManager : MonoBehaviour
 {
+    [SerializeField] private GameObject m_goInputPlane = null;
+
     private const int INPUT_PLANE_LAYER = 8;
     private const float INPUT_THRESHOLD = 1f;
 
     private bool m_bWork = false;
-    private GameObject m_goInputPlane = null;
     private Vector3Handler m_OnClicked = null;
     private Vector3 m_vec3InputDownPos = Vector3.zero;
     private Camera m_Camera = null;
@@ -22,9 +23,9 @@ public class InputManager : MonoBehaviour
         m_Camera = camera;
         m_OnClicked = OnClicked;
 
-        m_goInputPlane = new GameObject("InputPlane");
+        m_goInputPlane.SetActive(true);
         m_goInputPlane.layer = INPUT_PLANE_LAYER;
-        m_goInputPlane.AddComponent<BoxCollider>().size = new Vector3(fWidth, 0f, fHeight);
+        m_goInputPlane.GetComponent<BoxCollider>().size = new Vector3(fWidth, 0f, fHeight);
     }
 
     public void Stop()
@@ -35,41 +36,27 @@ public class InputManager : MonoBehaviour
         }
 
         m_bWork = false;
+        m_Camera = null;
+        m_OnClicked = null;
 
-        Destroy(m_goInputPlane);
+        m_goInputPlane.SetActive(false);
     }
 
-    private void Update()
+    public void OnPressed()
     {
         if (!m_bWork)
         {
             return;
         }
 
-        if(UICamera.hoveredObject != UICamera.fallThrough)
-        {
-            return;
-        }
-
         RaycastHit hitInfo;
 
-        if (Input.GetMouseButtonDown(0))
+        if (Physics.Raycast(m_Camera.ScreenPointToRay(UICamera.lastTouchPosition), out hitInfo, Mathf.Infinity, 1 << INPUT_PLANE_LAYER))
         {
-            if (Physics.Raycast(m_Camera.ScreenPointToRay(Input.mousePosition), out hitInfo, Mathf.Infinity, 1 << INPUT_PLANE_LAYER))
             {
-                m_vec3InputDownPos = hitInfo.point;
-            }
-        }
-        else if (Input.GetMouseButtonUp(0))
-        {
-            if (Physics.Raycast(m_Camera.ScreenPointToRay(Input.mousePosition), out hitInfo, Mathf.Infinity, 1 << INPUT_PLANE_LAYER))
-            {
-//                if (Vector3.Distance(m_vec3InputDownPos, hitInfo.point) <= INPUT_THRESHOLD)
+                if (m_OnClicked != null)
                 {
-                    if (m_OnClicked != null)
-                    {
-                        m_OnClicked(hitInfo.point);
-                    }
+                    m_OnClicked(hitInfo.point);
                 }
             }
         }

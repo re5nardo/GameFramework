@@ -24,6 +24,7 @@
 #include "../../FBSFiles/FBSData_generated.h"
 #include "../Behavior/Behaviors/Dash.h"
 #include "../GameEvent/GameEvents/Position.h"
+#include "../State/States/DashState.h"
 
 BaeGameRoom::BaeGameRoom(int nMatchID, vector<string> vecMatchedPlayerKey)	//	Receive Game Info from Lobby
 {
@@ -95,9 +96,12 @@ void BaeGameRoom::ProcessInput()
 	m_LockPlayerInput.lock();
 
 	vector<pair<int, pair<long long, IMessage*>>> vecPlayerInput;
-	for (map<int, pair<long long, IMessage*>>::iterator it = m_mapPlayerInput.begin(); it != m_mapPlayerInput.end(); ++it)
+	for (map<int, list<pair<long long, IMessage*>>>::iterator it = m_mapPlayerInput.begin(); it != m_mapPlayerInput.end(); ++it)
 	{
-		vecPlayerInput.push_back(make_pair(it->first, make_pair(it->second.first, it->second.second)));
+		for (list<pair<long long, IMessage*>>::iterator iter = it->second.begin(); iter != it->second.end(); ++iter)
+		{
+			vecPlayerInput.push_back(make_pair(it->first, *iter));
+		}
 	}
 	m_mapPlayerInput.clear();
 
@@ -123,7 +127,14 @@ void BaeGameRoom::ProcessInput()
 
 			if (pRunToR->m_vec3Dest != pCharacter->GetPosition())
 			{
-				pCharacter->GetBehavior(BehaviorID::MOVE)->Start(lTime, &pRunToR->m_vec3Dest);
+				if (pCharacter->GetState(StateID::DashState) != NULL)
+				{
+					pCharacter->GetBehavior(BehaviorID::DASH)->Start(lTime, &pRunToR->m_vec3Dest);
+				}
+				else
+				{
+					pCharacter->GetBehavior(BehaviorID::MOVE)->Start(lTime, &pRunToR->m_vec3Dest);
+				}
 			}
 		}
 		else if (pPlayerInputMsg->GetID() == GameEventDashToR_ID)
@@ -133,15 +144,17 @@ void BaeGameRoom::ProcessInput()
 
 			GameEventDashToR* pMsg = (GameEventDashToR*)pPlayerInputMsg;
 
-			Dash* pDash = (Dash*)pCharacter->GetBehavior(BehaviorID::DASH);
-
-			if (pDash->IsActivated())
+			IState* pState = pCharacter->GetState(StateID::DashState);
+			if (pState != NULL)
 			{
-				pDash->Prolong();
+				((DashState*)pState)->Prolong(lTime);
 			}
 			else
 			{
-				pDash->Start(lTime);
+				IState* pState = Factory::Instance()->CreateState(this, pCharacter, StateID::DashState, lTime);
+				pState->Initialize();
+				pCharacter->AddState(pState, lTime);
+				pState->Update(lTime);
 			}
 		}
 		else if (pPlayerInputMsg->GetID() == GameInputSkillToR_ID)
@@ -158,8 +171,11 @@ void BaeGameRoom::ProcessInput()
 					(*it)->ProcessInput(lTime, this, pMsg);
 			}
 		}
+	}
 
-		delete pPlayerInputMsg;
+	for (vector<pair<int, pair<long long, IMessage*>>>::iterator it = vecPlayerInput.begin(); it != vecPlayerInput.end(); ++it)
+	{
+		delete it->second.second;
 	}
 	vecPlayerInput.clear();
 
@@ -289,9 +305,12 @@ void BaeGameRoom::Reset()
 
 	m_bPlaying = false;
 
-	for (map<int, pair<long long, IMessage*>>::iterator it = m_mapPlayerInput.begin(); it != m_mapPlayerInput.end(); ++it)
+	for (map<int, list<pair<long long, IMessage*>>>::iterator it = m_mapPlayerInput.begin(); it != m_mapPlayerInput.end(); ++it)
 	{
-		delete it->second.second;
+		for (list<pair<long long, IMessage*>>::iterator iter = it->second.begin(); iter != it->second.end(); ++iter)
+		{
+			delete iter->second;
+		}
 	}
 	m_mapPlayerInput.clear();
 
@@ -684,7 +703,28 @@ void BaeGameRoom::OnGameEventRunToR(GameEventRunToR* pMsg, unsigned int socket)
 {
 	m_LockPlayerInput.lock();
 
-	m_mapPlayerInput[pMsg->m_nPlayerIndex] = make_pair(GetElapsedTime(), pMsg->Clone());
+	if (m_mapPlayerInput.count(pMsg->m_nPlayerIndex) > 0)
+	{
+		list<pair<long long, IMessage*>>* pInputs = &m_mapPlayerInput[pMsg->m_nPlayerIndex];
+
+		list<pair<long long, IMessage*>>::iterator found = find_if(pInputs->begin(), pInputs->end(), [&](pair<long long, IMessage*>& item) { return item.second->GetID() == pMsg->GetID(); });
+
+		if (found != pInputs->end())
+		{
+			delete found->second;
+
+			found->first = GetElapsedTime();
+			found->second = pMsg->Clone();
+		}
+		else
+		{
+			pInputs->push_back(make_pair(GetElapsedTime(), pMsg->Clone()));
+		}
+	}
+	else
+	{
+		m_mapPlayerInput[pMsg->m_nPlayerIndex].push_back(make_pair(GetElapsedTime(), pMsg->Clone()));
+	}
 
 	m_LockPlayerInput.unlock();
 }
@@ -693,12 +733,28 @@ void BaeGameRoom::OnGameEventStopToR(GameEventStopToR* pMsg, unsigned int socket
 {
 	m_LockPlayerInput.lock();
 
-	if (m_mapPlayerInput.count(pMsg->m_nPlayerIndex) > 0 && m_mapPlayerInput[pMsg->m_nPlayerIndex].second != NULL)
+	if (m_mapPlayerInput.count(pMsg->m_nPlayerIndex) > 0)
 	{
-		delete m_mapPlayerInput[pMsg->m_nPlayerIndex].second;
-	}
+		list<pair<long long, IMessage*>>* pInputs = &m_mapPlayerInput[pMsg->m_nPlayerIndex];
 
-	m_mapPlayerInput[pMsg->m_nPlayerIndex] = make_pair(GetElapsedTime(), pMsg->Clone());
+		list<pair<long long, IMessage*>>::iterator found = find_if(pInputs->begin(), pInputs->end(), [&](pair<long long, IMessage*>& item) { return item.second->GetID() == pMsg->GetID(); });
+
+		if (found != pInputs->end())
+		{
+			delete found->second;
+
+			found->first = GetElapsedTime();
+			found->second = pMsg->Clone();
+		}
+		else
+		{
+			pInputs->push_back(make_pair(GetElapsedTime(), pMsg->Clone()));
+		}
+	}
+	else
+	{
+		m_mapPlayerInput[pMsg->m_nPlayerIndex].push_back(make_pair(GetElapsedTime(), pMsg->Clone()));
+	}
 
 	m_LockPlayerInput.unlock();
 }
@@ -769,12 +825,28 @@ void BaeGameRoom::OnGameInputSkillToR(GameInputSkillToR* pMsg, unsigned int sock
 {
 	m_LockPlayerInput.lock();
 
-	if (m_mapPlayerInput.count(pMsg->m_nPlayerIndex) > 0 && m_mapPlayerInput[pMsg->m_nPlayerIndex].second != NULL)
+	if (m_mapPlayerInput.count(pMsg->m_nPlayerIndex) > 0)
 	{
-		delete m_mapPlayerInput[pMsg->m_nPlayerIndex].second;
-	}
+		list<pair<long long, IMessage*>>* pInputs = &m_mapPlayerInput[pMsg->m_nPlayerIndex];
 
-	m_mapPlayerInput[pMsg->m_nPlayerIndex] = make_pair(GetElapsedTime(), pMsg->Clone());
+		list<pair<long long, IMessage*>>::iterator found = find_if(pInputs->begin(), pInputs->end(), [&](pair<long long, IMessage*>& item) { return item.second->GetID() == pMsg->GetID(); });
+
+		if (found != pInputs->end())
+		{
+			delete found->second;
+
+			found->first = GetElapsedTime();
+			found->second = pMsg->Clone();
+		}
+		else
+		{
+			pInputs->push_back(make_pair(GetElapsedTime(), pMsg->Clone()));
+		}
+	}
+	else
+	{
+		m_mapPlayerInput[pMsg->m_nPlayerIndex].push_back(make_pair(GetElapsedTime(), pMsg->Clone()));
+	}
 
 	m_LockPlayerInput.unlock();
 }
@@ -783,7 +855,28 @@ void BaeGameRoom::OnGameEventDashToR(GameEventDashToR* pMsg, unsigned int socket
 {
 	m_LockPlayerInput.lock();
 
-	m_mapPlayerInput[pMsg->m_nPlayerIndex] = make_pair(GetElapsedTime(), pMsg->Clone());
+	if (m_mapPlayerInput.count(pMsg->m_nPlayerIndex) > 0)
+	{
+		list<pair<long long, IMessage*>>* pInputs = &m_mapPlayerInput[pMsg->m_nPlayerIndex];
+
+		list<pair<long long, IMessage*>>::iterator found = find_if(pInputs->begin(), pInputs->end(), [&](pair<long long, IMessage*>& item) { return item.second->GetID() == pMsg->GetID(); });
+
+		if (found != pInputs->end())
+		{
+			delete found->second;
+
+			found->first = GetElapsedTime();
+			found->second = pMsg->Clone();
+		}
+		else
+		{
+			pInputs->push_back(make_pair(GetElapsedTime(), pMsg->Clone()));
+		}
+	}
+	else
+	{
+		m_mapPlayerInput[pMsg->m_nPlayerIndex].push_back(make_pair(GetElapsedTime(), pMsg->Clone()));
+	}
 
 	m_LockPlayerInput.unlock();
 }
