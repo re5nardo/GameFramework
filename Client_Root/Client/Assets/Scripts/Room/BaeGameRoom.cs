@@ -12,6 +12,8 @@ public class BaeGameRoom : IGameRoom
     [SerializeField] private UICountTimer           m_UICountTimer = null;
     [SerializeField] private GameObject             m_goGreyCover = null;
 
+    [SerializeField] private UILabel                m_Dummy = null;
+
     public static new BaeGameRoom Instance
     {
         get
@@ -248,6 +250,60 @@ public class BaeGameRoom : IGameRoom
         RoomNetwork.Instance.Send(msgToR);
     }
 
+    float fInterval = 1f;
+    LinkedList<double> listTime = new LinkedList<double>();
+    double dMax = 0;
+    double dMin = double.MaxValue;
+    System.DateTime start;
+    int over100Count = 0;
+    int over50Count = 0;
+
+    private IEnumerator PingTest()
+    {
+        //Ping ping = new Ping("172.217.26.46");
+        Ping ping = new Ping("172.30.1.18");
+
+        while(!ping.isDone)
+        {
+            yield return null;
+        }
+
+        double dTime = ping.time;
+
+        if (dTime > 100)
+            over100Count++;
+
+        if (dTime > 50)
+            over50Count++;
+
+        listTime.AddLast(dTime);
+
+        if (dMax < dTime)
+        {
+            dMax = dTime;
+        }
+
+        if (dMin > dTime)
+        {
+            dMin = dTime;
+        }
+
+        double total = 0;
+        foreach (double time in listTime)
+        {
+            total += time;
+        }
+
+        float avr = (float)total / (float)listTime.Count;
+
+        m_Dummy.text = string.Format("Current : {0}\nAverage : {1}\nmax : {2}\nmin : {3}\nover100Count : {4}\nover50Count : {5}\nelapsedTime : {6}", dTime, avr, dMax, dMin, over100Count, over50Count, m_fElapsedTime);
+    }
+
+    private void Dummy()
+    {
+        StartCoroutine("PingTest");
+    }
+
     private void StartGame()
     {
         m_fElapsedTime = 0f;
@@ -261,6 +317,8 @@ public class BaeGameRoom : IGameRoom
         m_InputManager.Work(100, 500/*temp.. always 200, 200*/, m_CameraMain, OnClicked);
 
         StartCoroutine(Loop());
+
+        //InvokeRepeating("Dummy", fInterval, fInterval);
     }
 
     private IEnumerator PrepareGame()

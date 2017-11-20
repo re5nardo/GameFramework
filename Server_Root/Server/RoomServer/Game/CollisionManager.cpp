@@ -243,6 +243,37 @@ int CollisionManager::AddProjectile(btVector3& vec3Position, float fSize, float 
 	return m_nSequence++;
 }
 
+int CollisionManager::AddItem(btVector3& vec3Position, float fSize, float fHeight)
+{
+	btCollisionObject* pbtCollisionObject = new btCollisionObject();
+
+	//	shape
+	btCylinderShape* pCapsuleShape = new btCylinderShape(btVector3(fSize * 0.5f, fHeight * 0.5f, fSize * 0.5f));
+	pbtCollisionObject->setCollisionShape(pCapsuleShape);
+
+	//	set position
+	pbtCollisionObject->getWorldTransform().setOrigin(vec3Position);
+
+	//	set rotation
+	pbtCollisionObject->getWorldTransform().setRotation(Util::DegreesToQuaternion(btVector3(0, 0, 0)));
+
+	CollisionObject* pCollisionObject = new CollisionObject(m_nSequence, CollisionObject::Type::CollisionObjectType_Item, pbtCollisionObject);
+
+	m_mapCollisionObject[m_nSequence] = pCollisionObject;
+
+	CollisionObject::Type type = CollisionObject::Type::CollisionObjectType_Item;
+
+	m_mapTypeCollisionObject[type][m_nSequence] = pCollisionObject;
+
+	if (m_mapQuadTree.count(type) == 0)
+	{
+		m_mapQuadTree[type].SetBoundary(AABB(XY(0, 0), m_vec3WorldBounds.x() * 0.5f, m_vec3WorldBounds.z() * 0.5f));
+	}
+	m_mapQuadTree[type].Insert(pCollisionObject);
+
+	return m_nSequence++;
+}
+
 void CollisionManager::SetPosition(int nID, btVector3& vec3Position)
 {
 	CollisionObject* pCollisionObject = m_mapCollisionObject[nID];

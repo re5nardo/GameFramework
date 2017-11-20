@@ -10,6 +10,7 @@ class CharacterAI;
 class IState;
 class BaeGameRoom;
 class Projectile;
+class Item;
 
 class Factory : public Singleton<Factory>
 {
@@ -24,4 +25,5 @@ public:
 	Character*		CreateCharacter(BaeGameRoom* pGameRoom, int nID, int nMasterDataID, Character::Role role);
 	//CharacterAI*	CreateCharacterAI(BaeGameRoom* pGameRoom, int nID, int nMasterDataID);
 	Projectile*		CreateProjectile(BaeGameRoom* pGameRoom, int nProjectorID, int nID, int nMasterDataID);
+	Item*			CreateItem(BaeGameRoom* pGameRoom, long long lTime, int nID, int nMasterDataID);
 };

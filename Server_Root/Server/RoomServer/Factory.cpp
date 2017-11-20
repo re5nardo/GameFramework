@@ -20,6 +20,7 @@
 #include "State\States\ChallengerDisturbing.h"
 #include "State\States\DashState.h"
 #include "Entity\Entities\Projectile\Projectile.h"
+#include "Entity\Entities\Item\Item.h"
 
 Factory::Factory()
 {
@@ -123,4 +124,9 @@ Character* Factory::CreateCharacter(BaeGameRoom* pGameRoom, int nID, int nMaster
 Projectile* Factory::CreateProjectile(BaeGameRoom* pGameRoom, int nProjectorID, int nID, int nMasterDataID)
 {
 	return new Projectile(pGameRoom, nProjectorID, nID, nMasterDataID);
+}
+
+Item* Factory::CreateItem(BaeGameRoom* pGameRoom, long long lTime, int nID, int nMasterDataID)
+{
+	return new Item(pGameRoom, lTime, nID, nMasterDataID);
 }

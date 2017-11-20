@@ -11,6 +11,7 @@ enum EntityType:byte
 {
 	Character = 0,
 	Projectile,
+	Item,
 }
 
 struct CharacterStat

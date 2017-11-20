@@ -1,0 +1,4 @@
+ID,Name,ClassName,BehaviorIDs,Size,ModelResID,Lifespan,Height,Default_Y,DefaultBehaviorID
+0,InvincibleDummy1,Item,0,1,InvincibleDummy1,5,1,0.5,0
+1,ChallengerDisturbingDummy1,Item,0,1,ChallengerDisturbingDummy1,5,1,0.5,0
+2,MPChargeDummy1,Item,0,1,MPChargeDummy1,5,1,0.5,0

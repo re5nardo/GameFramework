@@ -94,6 +94,12 @@ public class ObjectPool : MonoSingleton<ObjectPool>
         else
         {
             obj = Object.Instantiate(Resources.Load(strKey)) as GameObject;
+
+            if (obj == null)
+            {
+                Debug.LogError("strKey is invalid! strKey : " + strKey);
+                return null;
+            }
         }
 
         obj.SetActive(true);

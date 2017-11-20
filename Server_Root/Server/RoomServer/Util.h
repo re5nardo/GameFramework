@@ -208,4 +208,30 @@ public:
 
 		return (cornerDistance_sq <= powf(fRadius, 2));
 	}
+
+	static btVector3 GetRandomePosition(int nSeed, int nMaxValue)
+	{
+		srand(nSeed);
+
+		int x = rand() % nMaxValue;
+		int y = rand() % nMaxValue;
+		int z = rand() % nMaxValue;
+
+		if ((rand() % 2) == 0)
+		{
+			x *= -1;
+		}
+
+		if ((rand() % 2) == 0)
+		{
+			y *= -1;
+		}
+
+		if ((rand() % 2) == 0)
+		{
+			z *= -1;
+		}
+
+		return btVector3(x, y, z);
+	}
 };

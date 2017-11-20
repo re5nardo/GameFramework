@@ -30,6 +30,7 @@ private:
 	void SetBehavior();
 	void SetState();
 	void SetProjectile();
+	void SetItem();
 
 public:
 	template <typename T>

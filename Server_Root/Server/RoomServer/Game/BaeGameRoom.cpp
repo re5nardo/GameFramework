@@ -6,6 +6,8 @@
 //#include "RoomMessageHeader.h"
 #include <process.h>
 #include "../Entity/Entities/Character/Character.h"
+#include "../Entity/Entities/Projectile/Projectile.h"
+#include "../Entity/Entities/Item/Item.h"
 #include "../AI/CharacterAI/CharacterAIs/Flower1AI.h"
 #include "../AI/CharacterAI/CharacterAIs/DummyCharacter1AI.h"
 #include "../AI/CharacterAI/CharacterAIs/DummyCharacter2AI.h"
@@ -19,7 +21,7 @@
 #include "../Factory.h"
 #include <cstdlib>
 #include "../Entity/IEntity.h"
-#include "../Entity/Entities/Projectile/Projectile.h"
+#include "../GameEvent/GameEvents/EntityCreate.h"
 #include "../GameEvent/GameEvents/EntityDestroy.h"
 #include "../../FBSFiles/FBSData_generated.h"
 #include "../Behavior/Behaviors/Dash.h"
@@ -81,6 +83,7 @@ void BaeGameRoom::UpdateTime()
 		m_StartTime = system_clock::now();
 		m_lDeltaTime = 0;
 		m_lLastUpdateTime = 0;
+		m_lLastItemSpawnTime = 0;
 	}
 	else
 	{
@@ -200,6 +203,31 @@ void BaeGameRoom::Update()
 		}
 	}
 
+	//	Item
+	if (m_lLastUpdateTime - m_lLastItemSpawnTime >= ITEM_SPAWN_INTERVAL)
+	{
+		int nEntityID = 0;
+		int nItemMasterDataID = rand() % 3;
+		Item* pItem = NULL;
+		CreateItem(nItemMasterDataID, &nEntityID, &pItem, m_lLastUpdateTime);
+
+		btVector3 vec3Pos = GetEntity(0)->GetPosition();
+		btVector3 vec3Rand = Util::GetRandomePosition(rand(), 10);
+
+		pItem->SetPosition(btVector3(vec3Pos.x() + vec3Rand.x(), 0, vec3Pos.z() + vec3Rand.z()));
+
+		GameEvent::EntityCreate* pEntityCreate = new GameEvent::EntityCreate();
+		pEntityCreate->m_fEventTime = m_lLastUpdateTime / 1000.0f;
+		pEntityCreate->m_nEntityID = nEntityID;
+		pEntityCreate->m_nMasterDataID = nItemMasterDataID;
+		pEntityCreate->m_EntityType = FBS::Data::EntityType_Item;
+		pEntityCreate->m_vec3Position = pItem->GetPosition();
+
+		AddGameEvent(pEntityCreate);
+
+		m_lLastItemSpawnTime = m_lLastUpdateTime;
+	}
+
 	//	AI
 	for (list<ICharacterAI*>::iterator it = m_listDisturber.begin(); it != m_listDisturber.end(); ++it)
 	{
@@ -239,6 +267,8 @@ void BaeGameRoom::LateUpdate()
 	{
 		it->second->LateUpdate(m_lLastUpdateTime);
 	}
+
+	TrimEntity();
 }
 
 void BaeGameRoom::SendWorldSnapShot()
@@ -302,6 +332,7 @@ void BaeGameRoom::Reset()
 	m_nTick = 0;
 	m_lDeltaTime = 0;
 	m_lLastUpdateTime = 0;
+	m_lLastItemSpawnTime = 0;
 
 	m_bPlaying = false;
 
@@ -628,6 +659,30 @@ bool BaeGameRoom::CreateProjectile(int nMasterDataID, int* pEntityID, Projectile
 	return true;
 }
 
+bool BaeGameRoom::CreateItem(int nMasterDataID, int* pEntityID, Item** pItem, long long lTime)
+{
+	m_LockEntitySequence.lock();
+	int nEntityID = m_nEntitySequence++;
+	m_LockEntitySequence.unlock();
+
+	Item* pNewItem = Factory::Instance()->CreateItem(this, lTime, nEntityID, nMasterDataID);
+	pNewItem->Initialize();
+	m_mapEntity[nEntityID] = pNewItem;
+
+	//	collision
+	int nCollisionObjectID = m_CollisionManager.AddItem(pNewItem->GetPosition(), pNewItem->GetSize(), pNewItem->GetHeight());
+	m_mapEntityCollision[nEntityID] = nCollisionObjectID;
+	m_mapCollisionEntity[nCollisionObjectID] = nEntityID;
+
+	if (pEntityID != NULL)
+		*pEntityID = nEntityID;
+
+	if (pItem != NULL)
+		*pItem = pNewItem;
+
+	return true;
+}
+
 void BaeGameRoom::DestroyEntity(int nEntityID)
 {
 	GameEvent::EntityDestroy* pEntityDestroy = new GameEvent::EntityDestroy();
@@ -936,6 +991,11 @@ long long BaeGameRoom::GetElapsedTime()
 	milliseconds elapsedTime = duration_cast<milliseconds>(system_clock::now() - m_StartTime);
 
 	return elapsedTime.count();
+}
+
+long long BaeGameRoom::GetLastUpdateTime()
+{
+	return m_lLastUpdateTime;
 }
 
 unsigned int __stdcall BaeGameRoom::LoopThreadStart(void* param)

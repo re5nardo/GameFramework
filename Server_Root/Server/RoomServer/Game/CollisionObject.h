@@ -17,6 +17,7 @@ public:
 		CollisionObjectType_Projectile_Challenger = 8,
 		CollisionObjectType_Projectile_Disturber = 16,
 		CollisionObjectType_Projectile = CollisionObjectType_Projectile_Challenger | CollisionObjectType_Projectile_Disturber,
+		CollisionObjectType_Item = 32,
 	};
 
 public:

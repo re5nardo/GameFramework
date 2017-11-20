@@ -32,6 +32,13 @@ public class EntityUI : PooledComponent
 
             strModelPath = string.Format("ProjectileModel/{0}", projectile.m_strModelResName);
         }
+        else if (entityType == FBS.Data.EntityType.Item)
+        {
+            MasterData.Item item = null;
+            MasterDataManager.Instance.GetData<MasterData.Item>(nMasterDataID, ref item);
+
+            strModelPath = string.Format("ItemModel/{0}", item.m_strModelResName);
+        }
 
         m_goModel = ObjectPool.Instance.GetGameObject(strModelPath);
         m_animModel = m_goModel.GetComponent<Animation>();

@@ -7,6 +7,7 @@
 #include "Behavior.h"
 #include "State.h"
 #include "Projectile.h"
+#include "Item.h"
 
 MasterDataManager::MasterDataManager()
 {
@@ -40,6 +41,7 @@ void MasterDataManager::DownloadMasterData(string strUrl)
 	SetBehavior();
 	SetState();
 	SetProjectile();
+	SetItem();
 }
 
 void MasterDataManager::SetCharacter()
@@ -149,5 +151,27 @@ void MasterDataManager::SetProjectile()
 	else
 	{
 		printf("Fail to load Projectile.xls!");
+	}
+}
+
+void MasterDataManager::SetItem()
+{
+	string strTypeName = typeid(MasterData::Item).name();
+	m_mapData[strTypeName] = map<int, IMasterData*>();
+
+	if (m_Book->load("Item.xls"))
+	{
+		Sheet* pSheet = m_Book->getSheet(0);
+		for (int row = 1; row < pSheet->lastRow(); ++row)
+		{
+			MasterData::Item* pItem = new MasterData::Item();
+			pItem->SetData(pSheet, row);
+
+			m_mapData[strTypeName][pItem->m_nID] = pItem;
+		}
+	}
+	else
+	{
+		printf("Fail to load Item.xls!");
 	}
 }

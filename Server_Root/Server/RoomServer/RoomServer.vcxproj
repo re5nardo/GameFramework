@@ -112,6 +112,7 @@
     <ClInclude Include="Data.h" />
     <ClInclude Include="Defines.h" />
     <ClInclude Include="Entity\Entities\Character\Character.h" />
+    <ClInclude Include="Entity\Entities\Item\Item.h" />
     <ClInclude Include="Entity\Entities\Projectile\Projectile.h" />
     <ClInclude Include="Entity\IEntity.h" />
     <ClInclude Include="Factory.h" />
@@ -133,6 +134,7 @@
     <ClInclude Include="MasterData\Behavior.h" />
     <ClInclude Include="MasterData\Character.h" />
     <ClInclude Include="MasterData\IMasterData.h" />
+    <ClInclude Include="MasterData\Item.h" />
     <ClInclude Include="MasterData\MasterDataManager.h" />
     <ClInclude Include="MasterData\Projectile.h" />
     <ClInclude Include="MasterData\Skill.h" />
@@ -188,6 +190,7 @@
     <ClCompile Include="Behavior\Behaviors\StopBehavior.cpp" />
     <ClCompile Include="Behavior\IBehavior.cpp" />
     <ClCompile Include="Entity\Entities\Character\Character.cpp" />
+    <ClCompile Include="Entity\Entities\Item\Item.cpp" />
     <ClCompile Include="Entity\Entities\Projectile\Projectile.cpp" />
     <ClCompile Include="Entity\IEntity.cpp" />
     <ClCompile Include="Factory.cpp" />
@@ -209,6 +212,7 @@
     <ClCompile Include="MasterData\Behavior.cpp" />
     <ClCompile Include="MasterData\Character.cpp" />
     <ClCompile Include="MasterData\IMasterData.cpp" />
+    <ClCompile Include="MasterData\Item.cpp" />
     <ClCompile Include="MasterData\MasterDataManager.cpp" />
     <ClCompile Include="MasterData\Projectile.cpp" />
     <ClCompile Include="MasterData\SKill.cpp" />

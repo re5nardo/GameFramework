@@ -160,6 +160,12 @@
     <Filter Include="소스 파일\AI\CharacterAI\CharacterAIs">
       <UniqueIdentifier>{a33bfdb0-50a4-4fff-b4cb-30817f516fdd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\Entity\Entities\Item">
+      <UniqueIdentifier>{a6e69e06-94f7-4b2b-bc66-fcf8c1631465}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Entity\Entities\Item">
+      <UniqueIdentifier>{f65d0378-33b9-4986-a347-00ed706c5b68}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -420,6 +426,12 @@
     <ClInclude Include="State\States\DashState.h">
       <Filter>헤더 파일\State\States</Filter>
     </ClInclude>
+    <ClInclude Include="MasterData\Item.h">
+      <Filter>헤더 파일\MasterData</Filter>
+    </ClInclude>
+    <ClInclude Include="Entity\Entities\Item\Item.h">
+      <Filter>헤더 파일\Entity\Entities\Item</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -631,6 +643,12 @@
     </ClCompile>
     <ClCompile Include="State\States\DashState.cpp">
       <Filter>소스 파일\State\States</Filter>
+    </ClCompile>
+    <ClCompile Include="MasterData\Item.cpp">
+      <Filter>소스 파일\MasterData</Filter>
+    </ClCompile>
+    <ClCompile Include="Entity\Entities\Item\Item.cpp">
+      <Filter>소스 파일\Entity\Entities\Item</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

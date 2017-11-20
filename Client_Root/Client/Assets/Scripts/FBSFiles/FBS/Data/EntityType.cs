@@ -7,6 +7,7 @@ public enum EntityType : sbyte
 {
  Character = 0,
  Projectile = 1,
+ Item = 2,
 };
 
 

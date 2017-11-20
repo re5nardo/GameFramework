@@ -15,12 +15,13 @@ struct CharacterStat;
 enum EntityType {
   EntityType_Character = 0,
   EntityType_Projectile = 1,
+  EntityType_Item = 2,
   EntityType_MIN = EntityType_Character,
-  EntityType_MAX = EntityType_Projectile
+  EntityType_MAX = EntityType_Item
 };
 
 inline const char **EnumNamesEntityType() {
-  static const char *names[] = { "Character", "Projectile", nullptr };
+  static const char *names[] = { "Character", "Projectile", "Item", nullptr };
   return names;
 }
 

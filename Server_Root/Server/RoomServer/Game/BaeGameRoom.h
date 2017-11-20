@@ -29,6 +29,7 @@ class IGameEvent;
 class IEntity;
 class GameEventDashToR;
 class IBehavior;
+class Item;
 
 using namespace std;
 using namespace chrono;
@@ -41,6 +42,9 @@ public:
 
 private:
 	const long long TIME_STEP = 200;		//	<-- milliseconds, TickRate is 1000(1sec) / TIME_STEP
+
+private:
+	const long long ITEM_SPAWN_INTERVAL = 5000;		//	<-- milliseconds
 
 private:
 	mutex m_LockEntitySequence;
@@ -73,6 +77,9 @@ private:
 	int							m_nTick;
 	long long					m_lDeltaTime;			//	ElapsedTime after previous tick (Milliseconds)
 	long long					m_lLastUpdateTime;		//	ElapsedTime after game was started (Milliseconds)
+
+private:
+	long long					m_lLastItemSpawnTime;	//	ElapsedTime after game was started (Milliseconds)
 
 private:
 	CollisionManager m_CollisionManager;
@@ -118,6 +125,9 @@ public:
 private:
 	long long GetElapsedTime();	//	Milliseconds
 
+public:
+	long long GetLastUpdateTime();	//	Milliseconds
+
 private:
 	void LoadMap(int nMapID);
 	void SetObstacles(int nMapID, int nRandomSeed);
@@ -153,6 +163,7 @@ public:
 public:
 	bool CreateCharacter(int nMasterDataID, int* pEntityID, Character** pCharacter, Character::Role role);
 	bool CreateProjectile(int nMasterDataID, int* pEntityID, Projectile** pProjectile, int nCreatorID);
+	bool CreateItem(int nMasterDataID, int* pEntityID, Item** pItem, long long lTime);
 	void DestroyEntity(int nEntityID);
 	void TrimEntity();
 

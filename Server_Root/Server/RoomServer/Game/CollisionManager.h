@@ -45,6 +45,7 @@ public:
 	int AddConvexPolygon2dShapeTerrainObject(btVector3& vec3Position, list<btVector3>& listPoint);
 	int AddCharacter(btVector3& vec3Position, float fSize, float fHeight, Character* pCharacter);
 	int AddProjectile(btVector3& vec3Position, float fSize, float fHeight, Projectile* pProjectile);
+	int AddItem(btVector3& vec3Position, float fSize, float fHeight);
 	void RemoveCollisionObject(int nID);
 
 public:
