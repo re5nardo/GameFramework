@@ -234,7 +234,7 @@ public class CameraController : MonoBehaviour
         }
     }
 
-    public void OnDirectionKeyHold(Vector2 vec2Direction)
+    private void OnDirectionKeyHold(Vector2 vec2Direction)
     {
         m_toggleFollowTarget.value = false;
 

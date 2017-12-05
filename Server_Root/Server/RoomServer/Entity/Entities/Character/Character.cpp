@@ -41,7 +41,7 @@ void Character::Initialize()
 	MasterData::Character* pMasterCharacter = NULL;
 	MasterDataManager::Instance()->GetData<MasterData::Character>(m_nMasterDataID, pMasterCharacter);
 
-	InitStat(CharacterStat(pMasterCharacter->m_nHP, pMasterCharacter->m_nMP, 3, pMasterCharacter->m_fMoveSpeed, pMasterCharacter->m_fMoveSpeed * 2, 5));
+	InitStat(CharacterStat(pMasterCharacter->m_nHP, pMasterCharacter->m_nMP, 3, pMasterCharacter->m_fMaximumSpeed, 5));
 
 	m_fSize = pMasterCharacter->m_fSize;
 	m_fHeight = pMasterCharacter->m_fHeight;
@@ -69,9 +69,14 @@ void Character::Initialize()
 	}
 }
 
-float Character::GetMoveSpeed()
+float Character::GetSpeed()
 {
-	return m_CurrentStat.m_fRunSpeed * (fMoveSpeedPercent / 100);
+	return m_fSpeed * (m_fSpeedPercent / 100);
+}
+
+float Character::GetMaximumSpeed()
+{
+	return m_CurrentStat.m_fMaximumSpeed;
 }
 
 FBS::Data::EntityType Character::GetEntityType()
@@ -173,13 +178,18 @@ void Character::SetCurrentMP(float fMP)
 	m_CurrentStat.m_nMP = fMP;
 }
 
+void Character::SetMoveSpeed(float fSpeed)
+{
+	m_fSpeed = fSpeed;
+}
+
 void Character::PlusMoveSpeed(float fValue)
 {
-	m_CurrentStat.m_fRunSpeed += fValue;
+	m_fSpeed += fValue;
 }
 void Character::MinusMoveSpeed(float fValue)
 {
-	m_CurrentStat.m_fRunSpeed -= fValue;
+	m_fSpeed -= fValue;
 }
 
 bool Character::IsAlive()
@@ -187,20 +197,15 @@ bool Character::IsAlive()
 	return m_CurrentStat.m_nHP > 0;
 }
 
-float Character::GetDashSpeed()
+void Character::IncreaseMovePoint(int nPoint)
 {
-	return m_CurrentStat.m_fDashSpeed * (fMoveSpeedPercent / 100);
-}
+	m_nMovePoint += nPoint;
 
-void Character::IncreaseDashPoint(int nPoint)
-{
-	m_nDashPoint += nPoint;
-
-	if (m_nDashPoint >= m_CurrentStat.m_fMPChargeRate)
+	if (m_nMovePoint >= m_CurrentStat.m_fMPChargeRate)
 	{
-		int nGetCount = m_nDashPoint / m_CurrentStat.m_fMPChargeRate;
+		int nGetCount = m_nMovePoint / m_CurrentStat.m_fMPChargeRate;
 
-		m_nDashPoint = m_nDashPoint % (int)m_CurrentStat.m_fMPChargeRate;
+		m_nMovePoint = m_nMovePoint % (int)m_CurrentStat.m_fMPChargeRate;
 
 		m_CurrentStat.m_nMP += nGetCount;
 	}

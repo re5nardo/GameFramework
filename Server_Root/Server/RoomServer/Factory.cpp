@@ -9,7 +9,6 @@
 #include "MasterData\State.h"
 #include "Behavior\Behaviors\General.h"
 #include "Behavior\Behaviors\Move.h"
-#include "Behavior\Behaviors\Dash.h"
 #include "Behavior\Behaviors\Die.h"
 #include "Skill\Skills\ContinueSkill.h"
 #include "Skill\Skills\FireSkill.h"
@@ -18,7 +17,6 @@
 #include "State\States\FireBehavior.h"
 #include "State\States\GeneralState.h"
 #include "State\States\ChallengerDisturbing.h"
-#include "State\States\DashState.h"
 #include "Entity\Entities\Projectile\Projectile.h"
 #include "Entity\Entities\Item\Item.h"
 
@@ -64,10 +62,6 @@ IBehavior* Factory::CreateBehavior(BaeGameRoom* pGameRoom, IEntity* pEntity, int
 	{
 		return new Move(pGameRoom, pEntity, nMasterDataID);
 	}
-	else if (Dash::NAME.compare(strClassName) == 0)
-	{
-		return new Dash(pGameRoom, pEntity, nMasterDataID);
-	}
 	else if (Die::NAME.compare(strClassName) == 0)
 	{
 		return new Die(pGameRoom, pEntity, nMasterDataID);
@@ -102,10 +96,6 @@ IState* Factory::CreateState(BaeGameRoom* pGameRoom, IEntity* pEntity, int nMast
 	else if (ChallengerDisturbing::NAME.compare(strClassName) == 0)
 	{
 		return new ChallengerDisturbing(pGameRoom, pEntity, nMasterDataID, lStartTime);
-	}
-	else if (DashState::NAME.compare(strClassName) == 0)
-	{
-		return new DashState(pGameRoom, pEntity, nMasterDataID, lStartTime);
 	}
 
 	return NULL;

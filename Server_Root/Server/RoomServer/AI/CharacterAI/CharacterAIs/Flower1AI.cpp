@@ -16,6 +16,7 @@ Flower1AI::~Flower1AI()
 
 float spawntime = 5;
 float interval = 3;
+int FlowerFireBehaviorID = 5;
 void Flower1AI::UpdateBody(long long lUpdateTime)
 {
 	float fFireTime = 0;
@@ -55,10 +56,10 @@ void Flower1AI::UpdateBody(long long lUpdateTime)
 		list<pair<int, btVector3>> listItem;
 		int nTypes = CollisionObject::Type::CollisionObjectType_Character_Challenger;
 
-		if (!m_pCharacter->GetBehavior(6)->IsActivated() && m_pGameRoom->CehckExistInRange(m_pCharacter->GetID(), 30, nTypes, &listItem))
+		if (!m_pCharacter->GetBehavior(FlowerFireBehaviorID)->IsActivated() && m_pGameRoom->CehckExistInRange(m_pCharacter->GetID(), 30, nTypes, &listItem))
 		{
-			m_pCharacter->GetBehavior(6)->Start(lUpdateTime);
-			m_pCharacter->GetBehavior(6)->Update(lUpdateTime);
+			m_pCharacter->GetBehavior(FlowerFireBehaviorID)->Start(lUpdateTime);
+			m_pCharacter->GetBehavior(FlowerFireBehaviorID)->Update(lUpdateTime);
 		}
 	}
 }

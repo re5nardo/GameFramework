@@ -5,6 +5,7 @@
 #include "../../MasterData/MasterDataManager.h"
 #include "../../MasterData/Skill.h"
 #include "../../Messages/ToRoom/GameInputSkillToR.h"
+#include "../../../FBSFiles/GameInputSkillToR_generated.h"
 
 const string ContinueSkill::NAME = "ContinueSkill";
 
@@ -76,12 +77,12 @@ void ContinueSkill::ProcessInput(long long lTime, BaeGameRoom* pBaeGameRoom, Gam
 {
 	if (m_bActivated)
 	{
-		if (pMsg->m_InputType == GameInputSkillToR::InputType::Release)
+		if (pMsg->m_InputType == FBS::InputType::InputType_Release)
 			m_bContinue = false;
 	}
 	else
 	{
-		if (pMsg->m_InputType == GameInputSkillToR::InputType::Press && IsValidToStart(lTime))
+		if (pMsg->m_InputType == FBS::InputType::InputType_Press && IsValidToStart(lTime))
 		{
 			Start(lTime, pBaeGameRoom);
 		}

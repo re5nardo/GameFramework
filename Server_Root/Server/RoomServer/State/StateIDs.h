@@ -10,5 +10,4 @@ public:
 	static const int GeneralState = 3;
 	static const int ChallengerDisturbing = 4;
 	static const int RespawnInvincible = 3;
-	static const int DashState = 5;
 };

@@ -10,7 +10,7 @@ namespace MasterData
         public List<int> m_listBehaviorID = new List<int>();
         public int m_nHP;
         public int m_nMP;
-        public float m_fMoveSpeed;
+        public float m_fMaximumSpeed;
         public float m_fSize;
         public string m_strModelResName;
 
@@ -23,7 +23,7 @@ namespace MasterData
             Util.Parse(data[4], ',', m_listBehaviorID);
             Util.Convert(data[5], ref m_nHP);
             Util.Convert(data[6], ref m_nMP);
-            Util.Convert(data[7], ref m_fMoveSpeed);
+            Util.Convert(data[7], ref m_fMaximumSpeed);
             Util.Convert(data[8], ref m_fSize);
             m_strModelResName = data[9];
         }

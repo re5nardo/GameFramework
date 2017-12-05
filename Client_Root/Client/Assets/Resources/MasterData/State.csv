@@ -4,4 +4,3 @@ ID,Name,ClassName,Length,StringParams,CoreStates,DoubleParam1,DoubleParam2,Anima
 2,Fade,FireBehavior,5,,,,,,
 3,RespawnInvincible,GeneralState,5,,Invincible,,,RespawnInvincible,
 4,ChallengerDisturbing,ChallengerDisturbing,-1,,ChallengerDisturbing,,,,
-5,DashState,DashState,-1,,,,,,

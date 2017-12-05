@@ -24,9 +24,8 @@
 #include "../GameEvent/GameEvents/EntityCreate.h"
 #include "../GameEvent/GameEvents/EntityDestroy.h"
 #include "../../FBSFiles/FBSData_generated.h"
-#include "../Behavior/Behaviors/Dash.h"
 #include "../GameEvent/GameEvents/Position.h"
-#include "../State/States/DashState.h"
+#include "../GameEvent/GameEvents/Rotation.h"
 
 BaeGameRoom::BaeGameRoom(int nMatchID, vector<string> vecMatchedPlayerKey)	//	Receive Game Info from Lobby
 {
@@ -130,34 +129,7 @@ void BaeGameRoom::ProcessInput()
 
 			if (pRunToR->m_vec3Dest != pCharacter->GetPosition())
 			{
-				if (pCharacter->GetState(StateID::DashState) != NULL)
-				{
-					pCharacter->GetBehavior(BehaviorID::DASH)->Start(lTime, &pRunToR->m_vec3Dest);
-				}
-				else
-				{
-					pCharacter->GetBehavior(BehaviorID::MOVE)->Start(lTime, &pRunToR->m_vec3Dest);
-				}
-			}
-		}
-		else if (pPlayerInputMsg->GetID() == GameEventDashToR_ID)
-		{
-			if (!pCharacter->IsAlive())
-				continue;
-
-			GameEventDashToR* pMsg = (GameEventDashToR*)pPlayerInputMsg;
-
-			IState* pState = pCharacter->GetState(StateID::DashState);
-			if (pState != NULL)
-			{
-				((DashState*)pState)->Prolong(lTime);
-			}
-			else
-			{
-				IState* pState = Factory::Instance()->CreateState(this, pCharacter, StateID::DashState, lTime);
-				pState->Initialize();
-				pCharacter->AddState(pState, lTime);
-				pState->Update(lTime);
+				pCharacter->GetBehavior(BehaviorID::MOVE)->Start(lTime, &pRunToR->m_vec3Dest);
 			}
 		}
 		else if (pPlayerInputMsg->GetID() == GameInputSkillToR_ID)
@@ -173,6 +145,82 @@ void BaeGameRoom::ProcessInput()
 				if (pMsg->m_nSkillID == (*it)->GetMasterDataID())
 					(*it)->ProcessInput(lTime, this, pMsg);
 			}
+		}
+		else if (pPlayerInputMsg->GetID() == GameInputMoveToR_ID)
+		{
+			if (!pCharacter->IsAlive())
+				continue;
+
+			GameInputMoveToR* pMsg = (GameInputMoveToR*)pPlayerInputMsg;
+			CharacterSpeedVariationData* pCharacterSpeedVariationData = &m_mapCharacterSpeedVariationData[nPlayerIndex];
+			float fTime = lTime / 1000.0f;
+
+			if (pCharacterSpeedVariationData->m_fLastTouchTime == -1 || pCharacterSpeedVariationData->GetLastTouchDurationEndTime() < fTime)
+			{
+				pCharacterSpeedVariationData->m_fStartSpeed = pCharacter->GetSpeed();
+				pCharacterSpeedVariationData->m_fTargetSpeed = min(pCharacter->GetMaximumSpeed(), pCharacter->GetSpeed() + pCharacterSpeedVariationData->GetTouchAccelerationValue());
+				pCharacterSpeedVariationData->m_fLastTouchTime = fTime;
+			}
+			else
+			{
+				if (pCharacterSpeedVariationData->GetLastTouchAccelerationEndTime() < fTime)
+				{
+					//    just keep speed
+					pCharacterSpeedVariationData->m_fStartSpeed = pCharacterSpeedVariationData->m_fTargetSpeed;
+					pCharacterSpeedVariationData->m_fLastTouchTime = fTime;
+				}
+				else
+				{
+					pCharacterSpeedVariationData->m_fStartSpeed = pCharacterSpeedVariationData->m_fTargetSpeed;
+					pCharacterSpeedVariationData->m_fTargetSpeed = min(pCharacter->GetMaximumSpeed(), pCharacterSpeedVariationData->m_fStartSpeed + pCharacterSpeedVariationData->GetTouchAccelerationValue());
+					pCharacterSpeedVariationData->m_fLastTouchTime = fTime;
+				}
+			}
+		}
+		else if (pPlayerInputMsg->GetID() == GameInputRotationToR_ID)
+		{
+			if (!pCharacter->IsAlive())
+				continue;
+
+			GameInputRotationToR* pMsg = (GameInputRotationToR*)pPlayerInputMsg;
+
+			GameEvent::Rotation* pRotation = new GameEvent::Rotation();
+			pRotation->m_fEventTime = lTime / 1000.0f;
+			pRotation->m_nEntityID = pCharacter->GetID();
+			pRotation->m_fStartTime = lTime / 1000.0f;
+			pRotation->m_fEndTime = lTime / 1000.0f;
+			pRotation->m_vec3StartRotation = pCharacter->GetRotation();
+			pRotation->m_vec3EndRotation = pMsg->m_Rotation;
+
+			AddGameEvent(pRotation);
+
+			pCharacter->SetRotation(pMsg->m_Rotation);
+		}
+	}
+
+	//	코드 이쁘게 다듬자..
+	//	위에 float fTime = lTime / 1000.0f;,, 아래 float fTime = m_lLastUpdateTime / 1000.0f; 기준으로 속도 계산되고 Move Behavior 실행되는데.. 관련해서 룰 명확히 정하자
+	float fTime = m_lLastUpdateTime / 1000.0f;
+	for (map<int, CharacterSpeedVariationData>::iterator it = m_mapCharacterSpeedVariationData.begin(); it != m_mapCharacterSpeedVariationData.end(); ++it)
+	{
+		int nPlayerIndex = it->first;
+		Character* pCharacter = (Character*)m_mapEntity[m_mapPlayerEntity[nPlayerIndex]];
+		CharacterSpeedVariationData* pCharacterSpeedVariationData = &it->second;
+
+		if (!pCharacter->IsAlive() || pCharacterSpeedVariationData->m_fLastTouchTime == -1)
+			continue;
+
+		pCharacter->SetMoveSpeed(pCharacterSpeedVariationData->CalculateSpeed(fTime));
+
+		if (pCharacter->GetSpeed() > 0)
+		{
+			btVector3 vec3Dest = Util::GetAngledPosition(pCharacter->GetPosition(), pCharacter->GetRotation().y(), pCharacter->GetSpeed() * 10);
+
+			pCharacter->GetBehavior(BehaviorID::MOVE)->Start(m_lLastUpdateTime, &vec3Dest);
+		}
+		else
+		{
+			pCharacter->GetBehavior(BehaviorID::MOVE)->Stop(m_lLastUpdateTime);
 		}
 	}
 
@@ -748,9 +796,13 @@ void BaeGameRoom::OnRecvMessage(unsigned int socket, IMessage* pMsg)
 	{
 		OnGameInputSkillToR((GameInputSkillToR*)pMsg, socket);
 	}
-	else if (pMsg->GetID() == GameEventDashToR::MESSAGE_ID)
+	else if (pMsg->GetID() == GameInputMoveToR::MESSAGE_ID)
 	{
-		OnGameEventDashToR((GameEventDashToR*)pMsg, socket);
+		OnGameInputMoveToR((GameInputMoveToR*)pMsg, socket);
+	}
+	else if (pMsg->GetID() == GameInputRotationToR::MESSAGE_ID)
+	{
+		OnGameInputRotationToR((GameInputRotationToR*)pMsg, socket);
 	}
 }
 
@@ -832,6 +884,8 @@ void BaeGameRoom::OnEnterRoomToR(EnterRoomToR* pMsg, unsigned int socket)
 		m_mapPlayerEntity[nPlayerIndex] = nEntityID;
 		m_mapEntityPlayer[nEntityID] = nPlayerIndex;
 
+		m_mapCharacterSpeedVariationData[nPlayerIndex] = CharacterSpeedVariationData(0);
+
 		enterRoomToC->m_nResult = 0;
 		enterRoomToC->m_nPlayerIndex = nPlayerIndex;
 		enterRoomToC->m_nPlayerEntityID = nEntityID;
@@ -906,7 +960,25 @@ void BaeGameRoom::OnGameInputSkillToR(GameInputSkillToR* pMsg, unsigned int sock
 	m_LockPlayerInput.unlock();
 }
 
-void BaeGameRoom::OnGameEventDashToR(GameEventDashToR* pMsg, unsigned int socket)
+void BaeGameRoom::OnGameInputMoveToR(GameInputMoveToR* pMsg, unsigned int socket)
+{
+	m_LockPlayerInput.lock();
+
+	if (m_mapPlayerInput.count(pMsg->m_nPlayerIndex) > 0)
+	{
+		list<pair<long long, IMessage*>>* pInputs = &m_mapPlayerInput[pMsg->m_nPlayerIndex];
+
+		pInputs->push_back(make_pair(GetElapsedTime(), pMsg->Clone()));
+	}
+	else
+	{
+		m_mapPlayerInput[pMsg->m_nPlayerIndex].push_back(make_pair(GetElapsedTime(), pMsg->Clone()));
+	}
+
+	m_LockPlayerInput.unlock();
+}
+
+void BaeGameRoom::OnGameInputRotationToR(GameInputRotationToR* pMsg, unsigned int socket)
 {
 	m_LockPlayerInput.lock();
 

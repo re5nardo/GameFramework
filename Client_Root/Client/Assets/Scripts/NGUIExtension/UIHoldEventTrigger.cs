@@ -8,6 +8,8 @@ public class UIHoldEventTrigger : MonoBehaviour
 
     public List<EventDelegate> onHold = new List<EventDelegate>();
 
+    public int touchID;
+
     private void OnPress(bool bPressed)
     {
         if (current != null) return;
@@ -16,6 +18,8 @@ public class UIHoldEventTrigger : MonoBehaviour
 
         if (bPressed)
         {
+            touchID = UICamera.currentTouchID;
+
             StartCoroutine("ProcessHold");
         }
         else

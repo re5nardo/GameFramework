@@ -11,6 +11,7 @@ public class BaeGameRoom : IGameRoom
     [SerializeField] private SkillController        m_SkillController = null;
     [SerializeField] private UICountTimer           m_UICountTimer = null;
     [SerializeField] private GameObject             m_goGreyCover = null;
+    [SerializeField] private DirectionKey           m_RotationController = null;
 
     [SerializeField] private UILabel                m_Dummy = null;
 
@@ -43,6 +44,110 @@ public class BaeGameRoom : IGameRoom
     private float m_fLastWorldInfoTime = -1;
     private Dictionary<int, List<IGameEvent>> m_dicGameEvent = new Dictionary<int, List<IGameEvent>>();
     private Dictionary<int, HashSet<IGameEvent>> m_dicProcessedGameEvent = new Dictionary<int, HashSet<IGameEvent>>();
+
+    private void Update()
+    {
+        if (!GetUserCharacter().IsAlive())
+            return;
+        
+        if (Input.GetKeyDown(KeyCode.UpArrow))
+        {
+            GameInputMoveToR moveToR = ObjectPool.Instance.GetObject<GameInputMoveToR>();
+            moveToR.m_nPlayerIndex = m_nUserPlayerIndex;
+            moveToR.m_Direction = FBS.MoveDirection.Up;
+
+            RoomNetwork.Instance.Send(moveToR);
+        }
+        else if (Input.GetKeyDown(KeyCode.DownArrow))
+        {
+            GameInputMoveToR moveToR = ObjectPool.Instance.GetObject<GameInputMoveToR>();
+            moveToR.m_nPlayerIndex = m_nUserPlayerIndex;
+            moveToR.m_Direction = FBS.MoveDirection.Down;
+
+            RoomNetwork.Instance.Send(moveToR);
+        }
+        else if (Input.GetKeyDown(KeyCode.LeftArrow))
+        {
+            GameInputMoveToR moveToR = ObjectPool.Instance.GetObject<GameInputMoveToR>();
+            moveToR.m_nPlayerIndex = m_nUserPlayerIndex;
+            moveToR.m_Direction = FBS.MoveDirection.Left;
+
+            RoomNetwork.Instance.Send(moveToR);
+        }
+        else if (Input.GetKeyDown(KeyCode.RightArrow))
+        {
+            GameInputMoveToR moveToR = ObjectPool.Instance.GetObject<GameInputMoveToR>();
+            moveToR.m_nPlayerIndex = m_nUserPlayerIndex;
+            moveToR.m_Direction = FBS.MoveDirection.Right;
+
+            RoomNetwork.Instance.Send(moveToR);
+        }
+
+        else if (Input.GetKeyDown(KeyCode.Keypad1))
+        {
+            GameInputRotationToR rotationToR = ObjectPool.Instance.GetObject<GameInputRotationToR>();
+            rotationToR.m_nPlayerIndex = m_nUserPlayerIndex;
+            rotationToR.m_Rotation = new Vector3(-1, -1, 0);
+
+            RoomNetwork.Instance.Send(rotationToR);
+        }
+        else if (Input.GetKeyDown(KeyCode.Keypad2))
+        {
+            GameInputRotationToR rotationToR = ObjectPool.Instance.GetObject<GameInputRotationToR>();
+            rotationToR.m_nPlayerIndex = m_nUserPlayerIndex;
+            rotationToR.m_Rotation = new Vector3(0, -1, 0);
+
+            RoomNetwork.Instance.Send(rotationToR);
+        }
+        else if (Input.GetKeyDown(KeyCode.Keypad3))
+        {
+            GameInputRotationToR rotationToR = ObjectPool.Instance.GetObject<GameInputRotationToR>();
+            rotationToR.m_nPlayerIndex = m_nUserPlayerIndex;
+            rotationToR.m_Rotation = new Vector3(1, -1, 0);
+
+            RoomNetwork.Instance.Send(rotationToR);
+        }
+        else if (Input.GetKeyDown(KeyCode.Keypad4))
+        {
+            GameInputRotationToR rotationToR = ObjectPool.Instance.GetObject<GameInputRotationToR>();
+            rotationToR.m_nPlayerIndex = m_nUserPlayerIndex;
+            rotationToR.m_Rotation = new Vector3(-1, 0, 0);
+
+            RoomNetwork.Instance.Send(rotationToR);
+        }
+        else if (Input.GetKeyDown(KeyCode.Keypad6))
+        {
+            GameInputRotationToR rotationToR = ObjectPool.Instance.GetObject<GameInputRotationToR>();
+            rotationToR.m_nPlayerIndex = m_nUserPlayerIndex;
+            rotationToR.m_Rotation = new Vector3(1, 0, 0);
+
+            RoomNetwork.Instance.Send(rotationToR);
+        }
+        else if (Input.GetKeyDown(KeyCode.Keypad7))
+        {
+            GameInputRotationToR rotationToR = ObjectPool.Instance.GetObject<GameInputRotationToR>();
+            rotationToR.m_nPlayerIndex = m_nUserPlayerIndex;
+            rotationToR.m_Rotation = new Vector3(-1, 1, 0);
+
+            RoomNetwork.Instance.Send(rotationToR);
+        }
+        else if (Input.GetKeyDown(KeyCode.Keypad8))
+        {
+            GameInputRotationToR rotationToR = ObjectPool.Instance.GetObject<GameInputRotationToR>();
+            rotationToR.m_nPlayerIndex = m_nUserPlayerIndex;
+            rotationToR.m_Rotation = new Vector3(0, 1, 0);
+
+            RoomNetwork.Instance.Send(rotationToR);
+        }
+        else if (Input.GetKeyDown(KeyCode.Keypad9))
+        {
+            GameInputRotationToR rotationToR = ObjectPool.Instance.GetObject<GameInputRotationToR>();
+            rotationToR.m_nPlayerIndex = m_nUserPlayerIndex;
+            rotationToR.m_Rotation = new Vector3(1, 1, 0);
+
+            RoomNetwork.Instance.Send(rotationToR);
+        }
+    }
 
     private void Start()
     {
@@ -315,6 +420,7 @@ public class BaeGameRoom : IGameRoom
         m_dicProcessedGameEvent.Clear();
 
         m_InputManager.Work(100, 500/*temp.. always 200, 200*/, m_CameraMain, OnClicked);
+        m_RotationController.onHold += OnRotationControllerHold;
 
         StartCoroutine(Loop());
 
@@ -436,22 +542,31 @@ public class BaeGameRoom : IGameRoom
         if (!GetUserCharacter().IsAlive())
             return;
 
-        GameEventRunToR runToR = new GameEventRunToR();
-        runToR.m_nPlayerIndex = m_nUserPlayerIndex;
-        runToR.m_vec3Dest = vec3Pos;
+//        GameEventRunToR runToR = new GameEventRunToR();
+//        runToR.m_nPlayerIndex = m_nUserPlayerIndex;
+//        runToR.m_vec3Dest = vec3Pos;
 
-        RoomNetwork.Instance.Send(runToR);
+        GameInputMoveToR moveToR = new GameInputMoveToR();
+        moveToR.m_nPlayerIndex = m_nUserPlayerIndex;
+        moveToR.m_Direction = FBS.MoveDirection.Up;
+
+        RoomNetwork.Instance.Send(moveToR);
     }
-        
-    public void OnDashButtonClicked()
+
+    private void OnRotationControllerHold(Vector2 vec2Direction)
     {
-        if (!GetUserCharacter().IsAlive())
-            return;
+        float y = Vector3.Angle(new Vector3(0, 0, 1), new Vector3(vec2Direction.x, 0, vec2Direction.y));
+        
+        if (vec2Direction.x < 0)
+        {
+            y = 360 - y;
+        }
 
-        GameEventDashToR dashToR = new GameEventDashToR();
-        dashToR.m_nPlayerIndex = 0;
+        GameInputRotationToR rotationToR = ObjectPool.Instance.GetObject<GameInputRotationToR>();
+        rotationToR.m_nPlayerIndex = m_nUserPlayerIndex;
+        rotationToR.m_Rotation = new Vector3(0, y, 0);
 
-        RoomNetwork.Instance.Send(dashToR);
+        RoomNetwork.Instance.Send(rotationToR);
     }
 #endregion
 
@@ -463,7 +578,7 @@ public class BaeGameRoom : IGameRoom
         if (nKilledEntityID == m_nUserEntityID)
         {
             MasterData.Behavior behaviorMasterData = null;
-            MasterDataManager.Instance.GetData<MasterData.Behavior>(9, ref behaviorMasterData);
+            MasterDataManager.Instance.GetData<MasterData.Behavior>(BehaviorID.DIE, ref behaviorMasterData);
 
             //  Die Effect On
             m_goGreyCover.SetActive(true);
@@ -480,6 +595,8 @@ public class BaeGameRoom : IGameRoom
             RoomNetwork.Instance.RemoveConnectHandler(OnConnected);
             RoomNetwork.Instance.RemoveRecvMessageHandler(OnRecvMessage);
         }
+
+        m_RotationController.onHold -= OnRotationControllerHold;
 
         Application.targetFrameRate = m_nOldFrameRate;
     }

@@ -16,7 +16,8 @@ private:
 
 public:
 	void Initialize() override;
-	float GetMoveSpeed() override;
+	float GetSpeed() override;
+	float GetMaximumSpeed() override;
 	FBS::Data::EntityType GetEntityType() override;
 	void NotifyGameEvent(IGameEvent* pGameEvent) override;
 	bool IsTerrainPassable() override;

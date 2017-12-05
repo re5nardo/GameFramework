@@ -4,17 +4,10 @@
 #include "../../../CommonSources/Message/MessageIDs.h"
 #include "btBulletCollisionCommon.h"
 #include <vector>
+#include "../../../FBSFiles/GameInputSkillToR_generated.h"
 
 class GameInputSkillToR : public IMessage
 {
-public:
-	enum InputType
-	{
-		Click = 0,
-		Press,
-		Release,
-	};
-
 public:
 	GameInputSkillToR();
 	virtual ~GameInputSkillToR();
@@ -28,7 +21,7 @@ public:
 	vector<btVector3> m_vecVector3;
 	vector<int> m_vecInt;
 	vector<float> m_vecFloat;
-	InputType m_InputType;
+	FBS::InputType m_InputType;
 
 public:
 	unsigned short GetID() override;

@@ -2,18 +2,20 @@
 
 #include "../../../CommonSources/Message/IMessage.h"
 #include "../../../CommonSources/Message/MessageIDs.h"
+#include "btBulletCollisionCommon.h"
 
-class GameEventDashToR : public IMessage
+class GameInputRotationToR : public IMessage
 {
 public:
-	GameEventDashToR();
-	virtual ~GameEventDashToR();
+	GameInputRotationToR();
+	virtual ~GameInputRotationToR();
 
 public:
-	static const unsigned short MESSAGE_ID = GameEventDashToR_ID;
+	static const unsigned short MESSAGE_ID = GameInputRotationToR_ID;
 
 public:
 	int m_nPlayerIndex;
+	btVector3 m_Rotation;
 
 public:
 	unsigned short GetID() override;

@@ -18,13 +18,12 @@ struct CharacterStat
 {
 public:
 	CharacterStat() {};
-	CharacterStat(int nHP, int nMP, float fMPChargeRate, float fRunSpeed, float fDashSpeed, float fStrength)
+	CharacterStat(int nHP, int nMP, float fMPChargeRate, float fMaximumSpeed, float fStrength)
 	{
 		m_nHP = nHP;
 		m_nMP = nMP;
 		m_fMPChargeRate = fMPChargeRate;
-		m_fRunSpeed = fRunSpeed;
-		m_fDashSpeed = fDashSpeed;
+		m_fMaximumSpeed = fMaximumSpeed;
 		m_fStrength = fStrength;
 	};
 
@@ -32,7 +31,6 @@ public:
 	int m_nHP;
 	int m_nMP;
 	float m_fMPChargeRate;
-	float m_fRunSpeed;
-	float m_fDashSpeed;
+	float m_fMaximumSpeed;
 	float m_fStrength;
 };

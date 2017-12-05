@@ -25,6 +25,7 @@ void DummyCharacter1AI::UpdateBody(long long lUpdateTime)
 		m_pGameRoom->CreateCharacter(m_nMasterDataID, NULL, &m_pCharacter, Character::Role::Disturber);
 		m_pCharacter->SetPosition(m_vec3StartPosition);
 		m_pCharacter->SetRotation(m_vec3StartRotation);
+		m_pCharacter->SetMoveSpeed(m_pCharacter->GetMaximumSpeed());
 
 		GameEvent::EntityCreate* pEntityCreate = new GameEvent::EntityCreate();
 		pEntityCreate->m_fEventTime = lUpdateTime / 1000.0f;

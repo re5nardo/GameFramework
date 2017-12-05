@@ -12,7 +12,7 @@ public class Character : Entity
         MasterData.Character characterMasterData = null;
         MasterDataManager.Instance.GetData<MasterData.Character>(nMasterDataID, ref characterMasterData);
 
-        InitStat(new CharacterStat(characterMasterData.m_nHP, characterMasterData.m_nMP, 1, characterMasterData.m_fMoveSpeed, characterMasterData.m_fMoveSpeed * 2, 1));
+        InitStat(new CharacterStat(characterMasterData.m_nHP, characterMasterData.m_nMP, 1, characterMasterData.m_fMaximumSpeed, 1));
 
         base.Initialize(entityType, nID, nMasterDataID);
     }

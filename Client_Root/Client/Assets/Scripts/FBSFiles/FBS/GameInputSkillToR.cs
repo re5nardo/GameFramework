@@ -22,7 +22,7 @@ public sealed class GameInputSkillToR : Table {
   public float GetFloats(int j) { int o = __offset(12); return o != 0 ? bb.GetFloat(__vector(o) + j * 4) : (float)0; }
   public int FloatsLength { get { int o = __offset(12); return o != 0 ? __vector_len(o) : 0; } }
   public ArraySegment<byte>? GetFloatsBytes() { return __vector_as_arraysegment(12); }
-  public int InputType { get { int o = __offset(14); return o != 0 ? bb.GetInt(o + bb_pos) : (int)0; } }
+  public InputType Input { get { int o = __offset(14); return o != 0 ? (InputType)bb.GetSbyte(o + bb_pos) : InputType.Click; } }
 
   public static Offset<GameInputSkillToR> CreateGameInputSkillToR(FlatBufferBuilder builder,
       int PlayerIndex = 0,
@@ -30,14 +30,14 @@ public sealed class GameInputSkillToR : Table {
       VectorOffset Vector3sOffset = default(VectorOffset),
       VectorOffset IntsOffset = default(VectorOffset),
       VectorOffset FloatsOffset = default(VectorOffset),
-      int InputType = 0) {
+      InputType Input = InputType.Click) {
     builder.StartObject(6);
-    GameInputSkillToR.AddInputType(builder, InputType);
     GameInputSkillToR.AddFloats(builder, FloatsOffset);
     GameInputSkillToR.AddInts(builder, IntsOffset);
     GameInputSkillToR.AddVector3s(builder, Vector3sOffset);
     GameInputSkillToR.AddSkillID(builder, SkillID);
     GameInputSkillToR.AddPlayerIndex(builder, PlayerIndex);
+    GameInputSkillToR.AddInput(builder, Input);
     return GameInputSkillToR.EndGameInputSkillToR(builder);
   }
 
@@ -52,7 +52,7 @@ public sealed class GameInputSkillToR : Table {
   public static void AddFloats(FlatBufferBuilder builder, VectorOffset FloatsOffset) { builder.AddOffset(4, FloatsOffset.Value, 0); }
   public static VectorOffset CreateFloatsVector(FlatBufferBuilder builder, float[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddFloat(data[i]); return builder.EndVector(); }
   public static void StartFloatsVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
-  public static void AddInputType(FlatBufferBuilder builder, int InputType) { builder.AddInt(5, InputType, 0); }
+  public static void AddInput(FlatBufferBuilder builder, InputType Input) { builder.AddSbyte(5, (sbyte)Input, 0); }
   public static Offset<GameInputSkillToR> EndGameInputSkillToR(FlatBufferBuilder builder) {
     int o = builder.EndObject();
     return new Offset<GameInputSkillToR>(o);

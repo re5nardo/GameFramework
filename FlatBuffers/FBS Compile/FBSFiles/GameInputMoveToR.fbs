@@ -1,0 +1,15 @@
+namespace FBS;
+
+enum MoveDirection:byte
+{
+	Up = 0,
+	Down,
+	Left,
+	Right,
+}
+
+table GameInputMoveToR
+{
+	PlayerIndex:int;
+	Direction:MoveDirection;
+}

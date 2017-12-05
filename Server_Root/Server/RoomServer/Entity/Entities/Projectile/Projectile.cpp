@@ -41,7 +41,12 @@ void Projectile::Initialize()
 	Util::Parse(pMasterProjectile->m_strLifeInfo, ':', &m_vecLifeInfo);
 }
 
-float Projectile::GetMoveSpeed()
+float Projectile::GetSpeed()
+{
+	return 3;
+}
+
+float Projectile::GetMaximumSpeed()
 {
 	return 3;
 }

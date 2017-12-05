@@ -103,7 +103,6 @@
     <ClInclude Include="AI\CharacterAI\CharacterAIs\Flower1AI.h" />
     <ClInclude Include="AI\CharacterAI\ICharacterAI.h" />
     <ClInclude Include="Behavior\BehaviorIDs.h" />
-    <ClInclude Include="Behavior\Behaviors\Dash.h" />
     <ClInclude Include="Behavior\Behaviors\Die.h" />
     <ClInclude Include="Behavior\Behaviors\General.h" />
     <ClInclude Include="Behavior\Behaviors\Move.h" />
@@ -128,11 +127,13 @@
     <ClInclude Include="GameEvent\GameEvents\StateStart.h" />
     <ClInclude Include="GameEvent\IGameEvent.h" />
     <ClInclude Include="Game\BaeGameRoom.h" />
+    <ClInclude Include="Game\CharacterSpeedVariationData.h" />
     <ClInclude Include="Game\CollisionManager.h" />
     <ClInclude Include="Game\CollisionObject.h" />
     <ClInclude Include="Game\CollisionObjectInsertChecker.h" />
     <ClInclude Include="MasterData\Behavior.h" />
     <ClInclude Include="MasterData\Character.h" />
+    <ClInclude Include="MasterData\CharacterSpeedVariation.h" />
     <ClInclude Include="MasterData\IMasterData.h" />
     <ClInclude Include="MasterData\Item.h" />
     <ClInclude Include="MasterData\MasterDataManager.h" />
@@ -146,9 +147,10 @@
     <ClInclude Include="Messages\ToClient\WorldInfoToC.h" />
     <ClInclude Include="Messages\ToClient\WorldSnapShotToC.h" />
     <ClInclude Include="Messages\ToRoom\EnterRoomToR.h" />
-    <ClInclude Include="Messages\ToRoom\GameEventDashToR.h" />
     <ClInclude Include="Messages\ToRoom\GameEventRunToR.h" />
     <ClInclude Include="Messages\ToRoom\GameEventStopToR.h" />
+    <ClInclude Include="Messages\ToRoom\GameInputMoveToR.h" />
+    <ClInclude Include="Messages\ToRoom\GameInputRotationToR.h" />
     <ClInclude Include="Messages\ToRoom\GameInputSkillToR.h" />
     <ClInclude Include="Messages\ToRoom\PreparationStateToR.h" />
     <ClInclude Include="Messages\ToRoom\ReadyForStartToR.h" />
@@ -163,7 +165,6 @@
     <ClInclude Include="State\StateIDs.h" />
     <ClInclude Include="State\States\Acceleration.h" />
     <ClInclude Include="State\States\ChallengerDisturbing.h" />
-    <ClInclude Include="State\States\DashState.h" />
     <ClInclude Include="State\States\FireBehavior.h" />
     <ClInclude Include="State\States\GeneralState.h" />
     <ClInclude Include="State\States\Shield.h" />
@@ -183,7 +184,6 @@
     <ClCompile Include="AI\CharacterAI\CharacterAIs\DummyCharacter2AI.cpp" />
     <ClCompile Include="AI\CharacterAI\CharacterAIs\Flower1AI.cpp" />
     <ClCompile Include="AI\CharacterAI\ICharacterAI.cpp" />
-    <ClCompile Include="Behavior\Behaviors\Dash.cpp" />
     <ClCompile Include="Behavior\Behaviors\Die.cpp" />
     <ClCompile Include="Behavior\Behaviors\General.cpp" />
     <ClCompile Include="Behavior\Behaviors\Move.cpp" />
@@ -206,11 +206,13 @@
     <ClCompile Include="GameEvent\GameEvents\StateStart.cpp" />
     <ClCompile Include="GameEvent\IGameEvent.cpp" />
     <ClCompile Include="Game\BaeGameRoom.cpp" />
+    <ClCompile Include="Game\CharacterSpeedVariationData.cpp" />
     <ClCompile Include="Game\CollisionManager.cpp" />
     <ClCompile Include="Game\CollisionObject.cpp" />
     <ClCompile Include="Game\CollisionObjectInsertChecker.cpp" />
     <ClCompile Include="MasterData\Behavior.cpp" />
     <ClCompile Include="MasterData\Character.cpp" />
+    <ClCompile Include="MasterData\CharacterSpeedVariation.cpp" />
     <ClCompile Include="MasterData\IMasterData.cpp" />
     <ClCompile Include="MasterData\Item.cpp" />
     <ClCompile Include="MasterData\MasterDataManager.cpp" />
@@ -224,9 +226,10 @@
     <ClCompile Include="Messages\ToClient\WorldInfoToC.cpp" />
     <ClCompile Include="Messages\ToClient\WorldSnapShotToC.cpp" />
     <ClCompile Include="Messages\ToRoom\EnterRoomToR.cpp" />
-    <ClCompile Include="Messages\ToRoom\GameEventDashToR.cpp" />
     <ClCompile Include="Messages\ToRoom\GameEventRunToR.cpp" />
     <ClCompile Include="Messages\ToRoom\GameEventStopToR.cpp" />
+    <ClCompile Include="Messages\ToRoom\GameInputMoveToR.cpp" />
+    <ClCompile Include="Messages\ToRoom\GameInputRotationToR.cpp" />
     <ClCompile Include="Messages\ToRoom\GameInputSkillToR.cpp" />
     <ClCompile Include="Messages\ToRoom\PreparationStateToR.cpp" />
     <ClCompile Include="Messages\ToRoom\ReadyForStartToR.cpp" />
@@ -239,7 +242,6 @@
     <ClCompile Include="State\IState.cpp" />
     <ClCompile Include="State\States\Acceleration.cpp" />
     <ClCompile Include="State\States\ChallengerDisturbing.cpp" />
-    <ClCompile Include="State\States\DashState.cpp" />
     <ClCompile Include="State\States\FireBehavior.cpp" />
     <ClCompile Include="State\States\GeneralState.cpp" />
     <ClCompile Include="State\States\Shield.cpp" />

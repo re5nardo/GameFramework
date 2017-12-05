@@ -13,10 +13,10 @@ public class DirectionKey : MonoBehaviour
 	}
 
 #region Event Handler
-    public void OnHold()
+    public void OnHold(int nTouchID)
     {
-        Vector3 vec3Direction = UICamera.lastWorldPosition - m_trDirectionKey.position;
-        Vector2 vec2Direction = new Vector2(vec3Direction.x, vec3Direction.y);
+        Vector2 touch = UICamera.currentCamera.ScreenToWorldPoint(UICamera.GetTouch(nTouchID).pos);
+        Vector2 vec2Direction = new Vector2(touch.x - m_trDirectionKey.position.x, touch.y - m_trDirectionKey.position.y);
         vec2Direction.Normalize();
 
         if (onHold != null)

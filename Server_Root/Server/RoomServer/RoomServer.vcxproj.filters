@@ -288,9 +288,6 @@
     <ClInclude Include="Skill\ISkill.h">
       <Filter>헤더 파일\Skill</Filter>
     </ClInclude>
-    <ClInclude Include="Behavior\Behaviors\Dash.h">
-      <Filter>헤더 파일\Behavior\Behaviors</Filter>
-    </ClInclude>
     <ClInclude Include="Skill\Skills\ContinueSkill.h">
       <Filter>헤더 파일\Skill\Skills</Filter>
     </ClInclude>
@@ -390,9 +387,6 @@
     <ClInclude Include="AI\CharacterAI\CharacterAIs\Flower1AI.h">
       <Filter>헤더 파일\AI\CharacterAI\CharacterAIs</Filter>
     </ClInclude>
-    <ClInclude Include="Messages\ToRoom\GameEventDashToR.h">
-      <Filter>헤더 파일\Messages\ToRoom</Filter>
-    </ClInclude>
     <ClInclude Include="AI\CharacterAI\CharacterAIs\DummyCharacter1AI.h">
       <Filter>헤더 파일\AI\CharacterAI\CharacterAIs</Filter>
     </ClInclude>
@@ -423,14 +417,23 @@
     <ClInclude Include="Game\CollisionObjectInsertChecker.h">
       <Filter>헤더 파일\Game</Filter>
     </ClInclude>
-    <ClInclude Include="State\States\DashState.h">
-      <Filter>헤더 파일\State\States</Filter>
-    </ClInclude>
     <ClInclude Include="MasterData\Item.h">
       <Filter>헤더 파일\MasterData</Filter>
     </ClInclude>
     <ClInclude Include="Entity\Entities\Item\Item.h">
       <Filter>헤더 파일\Entity\Entities\Item</Filter>
+    </ClInclude>
+    <ClInclude Include="Messages\ToRoom\GameInputMoveToR.h">
+      <Filter>헤더 파일\Messages\ToRoom</Filter>
+    </ClInclude>
+    <ClInclude Include="Messages\ToRoom\GameInputRotationToR.h">
+      <Filter>헤더 파일\Messages\ToRoom</Filter>
+    </ClInclude>
+    <ClInclude Include="MasterData\CharacterSpeedVariation.h">
+      <Filter>헤더 파일\MasterData</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\CharacterSpeedVariationData.h">
+      <Filter>헤더 파일\Game</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -508,9 +511,6 @@
     </ClCompile>
     <ClCompile Include="Skill\ISkill.cpp">
       <Filter>소스 파일\Skill</Filter>
-    </ClCompile>
-    <ClCompile Include="Behavior\Behaviors\Dash.cpp">
-      <Filter>소스 파일\Behavior\Behaviors</Filter>
     </ClCompile>
     <ClCompile Include="Skill\Skills\ContinueSkill.cpp">
       <Filter>소스 파일\Skill\Skills</Filter>
@@ -611,9 +611,6 @@
     <ClCompile Include="AI\CharacterAI\CharacterAIs\Flower1AI.cpp">
       <Filter>소스 파일\AI\CharacterAI\CharacterAIs</Filter>
     </ClCompile>
-    <ClCompile Include="Messages\ToRoom\GameEventDashToR.cpp">
-      <Filter>소스 파일\Messages\ToRoom</Filter>
-    </ClCompile>
     <ClCompile Include="AI\CharacterAI\CharacterAIs\DummyCharacter1AI.cpp">
       <Filter>소스 파일\AI\CharacterAI\CharacterAIs</Filter>
     </ClCompile>
@@ -641,14 +638,23 @@
     <ClCompile Include="Game\CollisionObjectInsertChecker.cpp">
       <Filter>소스 파일\Game</Filter>
     </ClCompile>
-    <ClCompile Include="State\States\DashState.cpp">
-      <Filter>소스 파일\State\States</Filter>
-    </ClCompile>
     <ClCompile Include="MasterData\Item.cpp">
       <Filter>소스 파일\MasterData</Filter>
     </ClCompile>
     <ClCompile Include="Entity\Entities\Item\Item.cpp">
       <Filter>소스 파일\Entity\Entities\Item</Filter>
+    </ClCompile>
+    <ClCompile Include="Messages\ToRoom\GameInputMoveToR.cpp">
+      <Filter>소스 파일\Messages\ToRoom</Filter>
+    </ClCompile>
+    <ClCompile Include="Messages\ToRoom\GameInputRotationToR.cpp">
+      <Filter>소스 파일\Messages\ToRoom</Filter>
+    </ClCompile>
+    <ClCompile Include="MasterData\CharacterSpeedVariation.cpp">
+      <Filter>소스 파일\MasterData</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\CharacterSpeedVariationData.cpp">
+      <Filter>소스 파일\Game</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

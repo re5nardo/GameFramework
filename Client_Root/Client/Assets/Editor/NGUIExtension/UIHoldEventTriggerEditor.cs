@@ -10,7 +10,7 @@ public class UIHoldEventTriggerEditor : Editor
     void OnEnable ()
     {
         mTrigger = target as UIHoldEventTrigger;
-        EditorPrefs.SetBool("ET0", EventDelegate.IsValid(mTrigger.onHold));
+        EditorPrefs.SetBool("HET0", EventDelegate.IsValid(mTrigger.onHold));
     }
 
     public override void OnInspectorGUI ()
@@ -18,7 +18,7 @@ public class UIHoldEventTriggerEditor : Editor
         GUILayout.Space(3f);
         NGUIEditorTools.SetLabelWidth(80f);
         bool minimalistic = NGUISettings.minimalisticLook;
-        DrawEvents("ET2", "On Hold", mTrigger.onHold, minimalistic);
+        DrawEvents("HET0", "On Hold", mTrigger.onHold, minimalistic);
     }
 
     void DrawEvents (string key, string text, List<EventDelegate> list, bool minimalistic)

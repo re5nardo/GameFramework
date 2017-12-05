@@ -14,6 +14,7 @@
 #include "CollisionManager.h"
 #include "../../FBSFiles/FBSData_generated.h"
 #include "../Entity/Entities/Character/Character.h"
+#include "CharacterSpeedVariationData.h"
 
 class IMessage;
 class CreateRoomToR;
@@ -27,9 +28,10 @@ class ICharacterAI;
 class GameInputSkillToR;
 class IGameEvent;
 class IEntity;
-class GameEventDashToR;
 class IBehavior;
 class Item;
+class GameInputMoveToR;
+class GameInputRotationToR;
 
 using namespace std;
 using namespace chrono;
@@ -41,7 +43,7 @@ public:
 	virtual ~BaeGameRoom();
 
 private:
-	const long long TIME_STEP = 200;		//	<-- milliseconds, TickRate is 1000(1sec) / TIME_STEP
+	const long long TIME_STEP = 100;		//	<-- milliseconds, TickRate is 1000(1sec) / TIME_STEP
 
 private:
 	const long long ITEM_SPAWN_INTERVAL = 5000;		//	<-- milliseconds
@@ -87,6 +89,9 @@ private:
 	map<int, int> m_mapCollisionEntity;		//	key : CollisionObject ID,	value : EntityID
 
 private:
+	map<int, CharacterSpeedVariationData> m_mapCharacterSpeedVariationData;		//	key : PlayerIndex, value : CharacterSpeedVariationData
+
+private:
 	list<IGameEvent*> m_listGameEvent;
 
 private:
@@ -107,7 +112,8 @@ private:
 	void OnEnterRoomToR(EnterRoomToR* pMsg, unsigned int socket);
 	void OnPreparationStateToR(PreparationStateToR* pMsg, unsigned int socket);
 	void OnGameInputSkillToR(GameInputSkillToR* pMsg, unsigned int socket);
-	void OnGameEventDashToR(GameEventDashToR* pMsg, unsigned int socket);
+	void OnGameInputMoveToR(GameInputMoveToR* pMsg, unsigned int socket);
+	void OnGameInputRotationToR(GameInputRotationToR* pMsg, unsigned int socket);
 
 private:
 	int GetPlayerIndexByPlayerKey(string strPlayerKey);

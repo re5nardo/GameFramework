@@ -6,9 +6,7 @@ class BehaviorID
 public:
 	static const int IDLE = 0;
 	static const int MOVE = 1;
-	static const int FIRE = 2;
-	static const int DASH = 8;
-	static const int DIE = 9;
+	static const int DIE = 7;
 
 ////	MisterBae Behaviors (10000 ~ 10999)
 //public:

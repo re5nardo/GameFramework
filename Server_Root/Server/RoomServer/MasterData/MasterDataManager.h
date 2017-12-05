@@ -3,8 +3,13 @@
 #include "../../CommonSources/Singleton.h"
 #include <map>
 #include "libxl.h"
-
-class IMasterData;
+#include "Skill.h"
+#include "Character.h"
+#include "Behavior.h"
+#include "State.h"
+#include "Projectile.h"
+#include "Item.h"
+#include "CharacterSpeedVariation.h"
 
 using namespace std;
 using namespace libxl;
@@ -31,6 +36,7 @@ private:
 	void SetState();
 	void SetProjectile();
 	void SetItem();
+	void SetCharacterSpeedVariation();
 
 public:
 	template <typename T>

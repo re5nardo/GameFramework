@@ -11,6 +11,21 @@ namespace FBS {
 
 struct GameInputSkillToR;
 
+enum InputType {
+  InputType_Click = 0,
+  InputType_Press = 1,
+  InputType_Release = 2,
+  InputType_MIN = InputType_Click,
+  InputType_MAX = InputType_Release
+};
+
+inline const char **EnumNamesInputType() {
+  static const char *names[] = { "Click", "Press", "Release", nullptr };
+  return names;
+}
+
+inline const char *EnumNameInputType(InputType e) { return EnumNamesInputType()[static_cast<int>(e)]; }
+
 struct GameInputSkillToR FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   enum {
     VT_PLAYERINDEX = 4,
@@ -18,14 +33,14 @@ struct GameInputSkillToR FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
     VT_VECTOR3S = 8,
     VT_INTS = 10,
     VT_FLOATS = 12,
-    VT_INPUTTYPE = 14
+    VT_INPUT = 14
   };
   int32_t PlayerIndex() const { return GetField<int32_t>(VT_PLAYERINDEX, 0); }
   int32_t SkillID() const { return GetField<int32_t>(VT_SKILLID, 0); }
   const flatbuffers::Vector<const FBS::Data::Vector3 *> *Vector3s() const { return GetPointer<const flatbuffers::Vector<const FBS::Data::Vector3 *> *>(VT_VECTOR3S); }
   const flatbuffers::Vector<int32_t> *Ints() const { return GetPointer<const flatbuffers::Vector<int32_t> *>(VT_INTS); }
   const flatbuffers::Vector<float> *Floats() const { return GetPointer<const flatbuffers::Vector<float> *>(VT_FLOATS); }
-  int32_t InputType() const { return GetField<int32_t>(VT_INPUTTYPE, 0); }
+  InputType Input() const { return static_cast<InputType>(GetField<int8_t>(VT_INPUT, 0)); }
   bool Verify(flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<int32_t>(verifier, VT_PLAYERINDEX) &&
@@ -36,7 +51,7 @@ struct GameInputSkillToR FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
            verifier.Verify(Ints()) &&
            VerifyField<flatbuffers::uoffset_t>(verifier, VT_FLOATS) &&
            verifier.Verify(Floats()) &&
-           VerifyField<int32_t>(verifier, VT_INPUTTYPE) &&
+           VerifyField<int8_t>(verifier, VT_INPUT) &&
            verifier.EndTable();
   }
 };
@@ -49,7 +64,7 @@ struct GameInputSkillToRBuilder {
   void add_Vector3s(flatbuffers::Offset<flatbuffers::Vector<const FBS::Data::Vector3 *>> Vector3s) { fbb_.AddOffset(GameInputSkillToR::VT_VECTOR3S, Vector3s); }
   void add_Ints(flatbuffers::Offset<flatbuffers::Vector<int32_t>> Ints) { fbb_.AddOffset(GameInputSkillToR::VT_INTS, Ints); }
   void add_Floats(flatbuffers::Offset<flatbuffers::Vector<float>> Floats) { fbb_.AddOffset(GameInputSkillToR::VT_FLOATS, Floats); }
-  void add_InputType(int32_t InputType) { fbb_.AddElement<int32_t>(GameInputSkillToR::VT_INPUTTYPE, InputType, 0); }
+  void add_Input(InputType Input) { fbb_.AddElement<int8_t>(GameInputSkillToR::VT_INPUT, static_cast<int8_t>(Input), 0); }
   GameInputSkillToRBuilder(flatbuffers::FlatBufferBuilder &_fbb) : fbb_(_fbb) { start_ = fbb_.StartTable(); }
   GameInputSkillToRBuilder &operator=(const GameInputSkillToRBuilder &);
   flatbuffers::Offset<GameInputSkillToR> Finish() {
@@ -64,14 +79,14 @@ inline flatbuffers::Offset<GameInputSkillToR> CreateGameInputSkillToR(flatbuffer
     flatbuffers::Offset<flatbuffers::Vector<const FBS::Data::Vector3 *>> Vector3s = 0,
     flatbuffers::Offset<flatbuffers::Vector<int32_t>> Ints = 0,
     flatbuffers::Offset<flatbuffers::Vector<float>> Floats = 0,
-    int32_t InputType = 0) {
+    InputType Input = InputType_Click) {
   GameInputSkillToRBuilder builder_(_fbb);
-  builder_.add_InputType(InputType);
   builder_.add_Floats(Floats);
   builder_.add_Ints(Ints);
   builder_.add_Vector3s(Vector3s);
   builder_.add_SkillID(SkillID);
   builder_.add_PlayerIndex(PlayerIndex);
+  builder_.add_Input(Input);
   return builder_.Finish();
 }
 
@@ -81,8 +96,8 @@ inline flatbuffers::Offset<GameInputSkillToR> CreateGameInputSkillToRDirect(flat
     const std::vector<const FBS::Data::Vector3 *> *Vector3s = nullptr,
     const std::vector<int32_t> *Ints = nullptr,
     const std::vector<float> *Floats = nullptr,
-    int32_t InputType = 0) {
-  return CreateGameInputSkillToR(_fbb, PlayerIndex, SkillID, Vector3s ? _fbb.CreateVector<const FBS::Data::Vector3 *>(*Vector3s) : 0, Ints ? _fbb.CreateVector<int32_t>(*Ints) : 0, Floats ? _fbb.CreateVector<float>(*Floats) : 0, InputType);
+    InputType Input = InputType_Click) {
+  return CreateGameInputSkillToR(_fbb, PlayerIndex, SkillID, Vector3s ? _fbb.CreateVector<const FBS::Data::Vector3 *>(*Vector3s) : 0, Ints ? _fbb.CreateVector<int32_t>(*Ints) : 0, Floats ? _fbb.CreateVector<float>(*Floats) : 0, Input);
 }
 
 }  // namespace FBS

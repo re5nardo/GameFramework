@@ -1,6 +1,13 @@
 include "FBSData.fbs";
 namespace FBS;
 
+enum InputType:byte
+{
+	Click = 0,
+	Press,
+	Release,
+}
+
 table GameInputSkillToR
 {
 	PlayerIndex:int;
@@ -8,5 +15,5 @@ table GameInputSkillToR
 	Vector3s:[FBS.Data.Vector3];
 	Ints:[int];
 	Floats:[float];
-	InputType:int;
+	Input:InputType;
 }

@@ -50,6 +50,12 @@ flatc --cpp -o SourceFiles\cpp FBSFiles\WorldSnapShotToC.fbs
 flatc --csharp -o SourceFiles\csharp FBSFiles\GameInputSkillToR.fbs
 flatc --cpp -o SourceFiles\cpp FBSFiles\GameInputSkillToR.fbs
 
+flatc --csharp -o SourceFiles\csharp FBSFiles\GameInputMoveToR.fbs
+flatc --cpp -o SourceFiles\cpp FBSFiles\GameInputMoveToR.fbs
+
+flatc --csharp -o SourceFiles\csharp FBSFiles\GameInputRotationToR.fbs
+flatc --cpp -o SourceFiles\cpp FBSFiles\GameInputRotationToR.fbs
+
 flatc --csharp -o SourceFiles\csharp FBSFiles\WorldInfoToC.fbs
 flatc --cpp -o SourceFiles\cpp FBSFiles\WorldInfoToC.fbs
 
@@ -79,9 +85,6 @@ flatc --cpp -o SourceFiles\cpp FBSFiles\GameEvent\EntityCreate.fbs
 
 flatc --csharp -o SourceFiles\csharp FBSFiles\GameEvent\EntityDestroy.fbs
 flatc --cpp -o SourceFiles\cpp FBSFiles\GameEvent\EntityDestroy.fbs
-
-flatc --csharp -o SourceFiles\csharp FBSFiles\GameEventDashToR.fbs
-flatc --cpp -o SourceFiles\cpp FBSFiles\GameEventDashToR.fbs
 
 flatc --csharp -o SourceFiles\csharp FBSFiles\GameEvent\CharacterAttack.fbs
 flatc --cpp -o SourceFiles\cpp FBSFiles\GameEvent\CharacterAttack.fbs

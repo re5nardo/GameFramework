@@ -48,7 +48,8 @@ public:
 
 public:
 	virtual void Initialize() = 0;
-	virtual float GetMoveSpeed() = 0;
+	virtual float GetSpeed() = 0;
+	virtual float GetMaximumSpeed() = 0;
 	virtual FBS::Data::EntityType GetEntityType() = 0;
 
 public:

@@ -29,10 +29,13 @@ protected:
 	CharacterStat m_CurrentStat;
 
 private:
-	int m_nDashPoint = 0;
+	float m_fSpeed = 0;
+
+private:
+	int m_nMovePoint = 0;
 
 public:
-	float fMoveSpeedPercent = 100;
+	float m_fSpeedPercent = 100;
 
 public:
 	void SetRole(Role role);
@@ -40,7 +43,8 @@ public:
 
 public:
 	void Initialize() override;
-	float GetMoveSpeed() override;
+	float GetSpeed() override;
+	float GetMaximumSpeed() override;
 	FBS::Data::EntityType GetEntityType() override;
 	void NotifyGameEvent(IGameEvent* pGameEvent) override;
 	bool IsTerrainPassable() override;
@@ -62,6 +66,7 @@ public:
 	void SetCurrentMP(float fMP);
 
 public:
+	void SetMoveSpeed(float fSpeed);
 	void PlusMoveSpeed(float fValue);
 	void MinusMoveSpeed(float fValue);
 
@@ -73,6 +78,5 @@ public:
 	bool IsAlive();
 
 public:
-	float GetDashSpeed();
-	void IncreaseDashPoint(int nPoint);
+	void IncreaseMovePoint(int nPoint);
 };

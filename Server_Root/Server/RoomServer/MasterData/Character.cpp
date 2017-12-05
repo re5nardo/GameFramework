@@ -27,7 +27,7 @@ namespace MasterData
 		}
 		m_nHP = pSheet->readNum(nRow, 5);
 		m_nMP = pSheet->readNum(nRow, 6);
-		m_fMoveSpeed = pSheet->readNum(nRow, 7);
+		m_fMaximumSpeed = pSheet->readNum(nRow, 7);
 		m_fSize = pSheet->readNum(nRow, 8);
 		m_fHeight = pSheet->readNum(nRow, 10);
 		m_fDefault_Y = pSheet->readNum(nRow, 11);

@@ -12,15 +12,13 @@ public sealed class CharacterStat : Struct {
   public int HP { get { return bb.GetInt(bb_pos + 0); } }
   public int MP { get { return bb.GetInt(bb_pos + 4); } }
   public float MPChargeRate { get { return bb.GetFloat(bb_pos + 8); } }
-  public float RunSpeed { get { return bb.GetFloat(bb_pos + 12); } }
-  public float DashSpeed { get { return bb.GetFloat(bb_pos + 16); } }
-  public float Strength { get { return bb.GetFloat(bb_pos + 20); } }
+  public float MaximumSpeed { get { return bb.GetFloat(bb_pos + 12); } }
+  public float Strength { get { return bb.GetFloat(bb_pos + 16); } }
 
-  public static Offset<CharacterStat> CreateCharacterStat(FlatBufferBuilder builder, int HP, int MP, float MPChargeRate, float RunSpeed, float DashSpeed, float Strength) {
-    builder.Prep(4, 24);
+  public static Offset<CharacterStat> CreateCharacterStat(FlatBufferBuilder builder, int HP, int MP, float MPChargeRate, float MaximumSpeed, float Strength) {
+    builder.Prep(4, 20);
     builder.PutFloat(Strength);
-    builder.PutFloat(DashSpeed);
-    builder.PutFloat(RunSpeed);
+    builder.PutFloat(MaximumSpeed);
     builder.PutFloat(MPChargeRate);
     builder.PutInt(MP);
     builder.PutInt(HP);

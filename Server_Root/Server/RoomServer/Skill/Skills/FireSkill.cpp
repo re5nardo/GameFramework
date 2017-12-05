@@ -6,6 +6,7 @@
 #include "../../MasterData/Skill.h"
 #include "../../Factory.h"
 #include "../../Messages/ToRoom/GameInputSkillToR.h"
+#include "../../../FBSFiles/GameInputSkillToR_generated.h"
 
 const string FireSkill::NAME = "FireSkill";
 
@@ -75,7 +76,7 @@ void FireSkill::UpdateBody(long long lUpdateTime)
 
 void FireSkill::ProcessInput(long long lTime, BaeGameRoom* pBaeGameRoom, GameInputSkillToR* pMsg)
 {
-	if (m_bActivated || pMsg->m_InputType != GameInputSkillToR::InputType::Click)
+	if (m_bActivated || pMsg->m_InputType != FBS::InputType::InputType_Click)
 		return;
 
 	if (!IsValidToStart(lTime))

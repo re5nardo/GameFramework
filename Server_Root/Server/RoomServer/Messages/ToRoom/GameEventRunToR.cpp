@@ -46,9 +46,7 @@ bool GameEventRunToR::Deserialize(const char* pChar)
 	auto data = flatbuffers::GetRoot<FBS::GameEventRunToR>((const void*)pChar);
 
 	m_nPlayerIndex = data->PlayerIndex();
-	m_vec3Dest.setX(data->Dest()->x());
-	m_vec3Dest.setY(data->Dest()->y());
-	m_vec3Dest.setZ(data->Dest()->z());
+	m_vec3Dest.setValue(data->Dest()->x(), data->Dest()->y(), data->Dest()->z());
 
 	return true;
 }

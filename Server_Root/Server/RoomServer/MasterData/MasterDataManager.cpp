@@ -2,12 +2,6 @@
 #include "MasterDataManager.h"
 #include <typeinfo>
 #include "IMasterData.h"
-#include "Skill.h"
-#include "Character.h"
-#include "Behavior.h"
-#include "State.h"
-#include "Projectile.h"
-#include "Item.h"
 
 MasterDataManager::MasterDataManager()
 {
@@ -42,6 +36,7 @@ void MasterDataManager::DownloadMasterData(string strUrl)
 	SetState();
 	SetProjectile();
 	SetItem();
+	SetCharacterSpeedVariation();
 }
 
 void MasterDataManager::SetCharacter()
@@ -173,5 +168,27 @@ void MasterDataManager::SetItem()
 	else
 	{
 		printf("Fail to load Item.xls!");
+	}
+}
+
+void MasterDataManager::SetCharacterSpeedVariation()
+{
+	string strTypeName = typeid(MasterData::CharacterSpeedVariation).name();
+	m_mapData[strTypeName] = map<int, IMasterData*>();
+
+	if (m_Book->load("CharacterSpeedVariation.xls"))
+	{
+		Sheet* pSheet = m_Book->getSheet(0);
+		for (int row = 1; row < pSheet->lastRow(); ++row)
+		{
+			MasterData::CharacterSpeedVariation* pCharacterSpeedVariation = new MasterData::CharacterSpeedVariation();
+			pCharacterSpeedVariation->SetData(pSheet, row);
+
+			m_mapData[strTypeName][pCharacterSpeedVariation->m_nID] = pCharacterSpeedVariation;
+		}
+	}
+	else
+	{
+		printf("Fail to load CharacterSpeedVariation.xls!");
 	}
 }

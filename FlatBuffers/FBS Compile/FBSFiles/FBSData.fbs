@@ -19,7 +19,6 @@ struct CharacterStat
 	HP:int;
 	MP:int;
 	MPChargeRate:float;
-	RunSpeed:float;
-	DashSpeed:float;
+	MaximumSpeed:float;
 	Strength:float;
 }

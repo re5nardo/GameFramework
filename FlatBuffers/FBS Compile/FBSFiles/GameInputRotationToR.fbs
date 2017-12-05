@@ -1,7 +1,8 @@
 include "FBSData.fbs";
 namespace FBS;
 
-table GameEventDashToR
+table GameInputRotationToR
 {
 	PlayerIndex:int;
+	Rotation:FBS.Data.Vector3;
 }

@@ -21,7 +21,7 @@ namespace MasterData
 		vector<int> m_vecBehaviorID;
 		int m_nHP;
 		int m_nMP;
-		float m_fMoveSpeed;
+		float m_fMaximumSpeed;
 		float m_fSize;
 		float m_fHeight;
 		float m_fDefault_Y;

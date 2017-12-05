@@ -85,7 +85,7 @@ public class SkillController : MonoBehaviour
         GameInputSkillToR skillToR = new GameInputSkillToR();
         skillToR.m_nPlayerIndex = 0;
         skillToR.m_nSkillID = nSkillID;
-        skillToR.m_InputType = GameInputSkillToR.InputType.Click;
+        skillToR.m_InputType = FBS.InputType.Click;
 
         RoomNetwork.Instance.Send(skillToR);
     }
@@ -98,7 +98,7 @@ public class SkillController : MonoBehaviour
         GameInputSkillToR skillToR = new GameInputSkillToR();
         skillToR.m_nPlayerIndex = 0;
         skillToR.m_nSkillID = nSkillID;
-        skillToR.m_InputType = GameInputSkillToR.InputType.Press;
+        skillToR.m_InputType = FBS.InputType.Press;
 
         RoomNetwork.Instance.Send(skillToR);
     }
@@ -111,7 +111,7 @@ public class SkillController : MonoBehaviour
         GameInputSkillToR skillToR = new GameInputSkillToR();
         skillToR.m_nPlayerIndex = 0;
         skillToR.m_nSkillID = nSkillID;
-        skillToR.m_InputType = GameInputSkillToR.InputType.Release;
+        skillToR.m_InputType = FBS.InputType.Release;
 
         RoomNetwork.Instance.Send(skillToR);
     }

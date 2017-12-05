@@ -38,7 +38,12 @@ void Item::Initialize()
 	m_fLifespan = pMasterItem->m_fLifespan;
 }
 
-float Item::GetMoveSpeed()
+float Item::GetSpeed()
+{
+	return 0;
+}
+
+float Item::GetMaximumSpeed()
 {
 	return 0;
 }
