@@ -13,6 +13,8 @@ public:
 private:
 	long long m_lSpawnedTime;
 	float m_fLifespan;
+	string m_strEffectType;
+	int m_nEffectParam;
 
 public:
 	void Initialize() override;
@@ -23,4 +25,5 @@ public:
 	bool IsTerrainPassable() override;
 	int GetMoveCollisionTypes() override;
 	void LateUpdate(long long lUpdateTime) override;
+	void OnCollision(IEntity* pOther, long long lTime) override;
 };

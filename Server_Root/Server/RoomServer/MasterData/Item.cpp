@@ -27,9 +27,10 @@ namespace MasterData
 		}
 		m_fSize = pSheet->readNum(nRow, 4);
 		m_fLifespan = pSheet->readNum(nRow, 6);
-
 		m_fHeight = pSheet->readNum(nRow, 7);
 		m_fDefault_Y = pSheet->readNum(nRow, 8);
 		m_nDefaultBehaviorID = pSheet->readNum(nRow, 9);
+		m_strEffectType = pSheet->readStr(nRow, 10);
+		m_nEffectParam = pSheet->readNum(nRow, 11);
 	}
 }

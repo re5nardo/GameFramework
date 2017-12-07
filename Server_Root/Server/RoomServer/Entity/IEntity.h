@@ -92,7 +92,7 @@ public:
 	virtual int GetMoveCollisionTypes() = 0;
 
 public:
-	void OnCollision(IEntity* pOther, long long lTime);
+	virtual void OnCollision(IEntity* pOther, long long lTime);
 
 protected:
 	void TrimState();

@@ -5,6 +5,7 @@
 #include "../../../Factory.h"
 #include "../../../Game/CollisionObject.h"
 #include "../../../Game/BaeGameRoom.h"
+#include "../../../Util.h"
 
 Item::Item(BaeGameRoom* pGameRoom, long long lTime, int nID, int nMasterDataID) : IEntity(pGameRoom, nID, nMasterDataID)
 {
@@ -36,6 +37,8 @@ void Item::Initialize()
 	}
 
 	m_fLifespan = pMasterItem->m_fLifespan;
+	m_strEffectType = pMasterItem->m_strEffectType;
+	m_nEffectParam = pMasterItem->m_nEffectParam;
 }
 
 float Item::GetSpeed()
@@ -71,8 +74,33 @@ void Item::LateUpdate(long long lUpdateTime)
 {
 	__super::LateUpdate(lUpdateTime);
 
-	/*if (m_lSpawnedTime + m_fLifespan * 1000 >= lUpdateTime)
+	if (m_lSpawnedTime + m_fLifespan * 1000 <= lUpdateTime)
 	{
 		m_pGameRoom->DestroyEntity(m_nID);
-	}*/
+	}
+}
+
+void Item::OnCollision(IEntity* pOther, long long lTime)
+{
+	__super::OnCollision(pOther, lTime);
+
+	if (m_strEffectType == "AddState")
+	{
+		if (pOther->GetState(m_nEffectParam) != NULL)
+		{
+			pOther->RemoveState(m_nEffectParam, lTime);
+		}
+
+		IState* pState = Factory::Instance()->CreateState(m_pGameRoom, pOther, m_nEffectParam, lTime);
+		pState->Initialize();
+		pOther->AddState(pState, lTime);
+		pState->Update(lTime);
+	}
+	else if (m_strEffectType == "MPCharge")
+	{
+		//((Character*)pOther)->
+		
+	}
+
+	m_pGameRoom->DestroyEntity(m_nID);
 }

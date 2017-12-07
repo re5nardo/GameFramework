@@ -127,6 +127,7 @@ public:
 
 public:
 	IEntity* GetEntity(int nEntityID);
+	IEntity* GetEntityByCollisionObjectID(int nCollisionObjectID);
 
 private:
 	long long GetElapsedTime();	//	Milliseconds

@@ -23,6 +23,8 @@ namespace MasterData
 		float m_fHeight;
 		float m_fDefault_Y;
 		int m_nDefaultBehaviorID = -1;
+		string m_strEffectType;
+		int m_nEffectParam;
 
 	public:
 		void SetData(Sheet* pSheet, int nRow) override;

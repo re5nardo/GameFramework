@@ -99,7 +99,8 @@ int Character::GetMoveCollisionTypes()
 
 	if (m_Role == Character::Role::Challenger)
 	{
-		nTypes = CollisionObject::Type::CollisionObjectType_Terrain | CollisionObject::Type::CollisionObjectType_Character_Disturber | CollisionObject::Type::CollisionObjectType_Projectile;
+		nTypes = CollisionObject::Type::CollisionObjectType_Terrain | CollisionObject::Type::CollisionObjectType_Character_Disturber | CollisionObject::Type::CollisionObjectType_Projectile
+			| CollisionObject::Type::CollisionObjectType_Item;
 	}
 	else if (m_Role == Character::Role::Disturber)
 	{

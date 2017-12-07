@@ -549,6 +549,13 @@ void BaeGameRoom::EntityMove(int nEntityID, IBehavior* pBehavior, btVector3& vec
 					pTarget->OnCollision(pOtherProjectile, lEndTime);
 					pOtherProjectile->OnCollision(pTarget, lEndTime);
 				}
+				else if (pOtherCollisionObject->GetCollisionObjectType() == CollisionObject::Type::CollisionObjectType_Item)
+				{
+					IEntity* pOther = GetEntityByCollisionObjectID(pOtherCollisionObject->GetID());
+					
+					pTarget->OnCollision(pOther, lEndTime);
+					pOther->OnCollision(pTarget, lEndTime);
+				}
 				
 				if (!pBehavior->IsActivated())
 				{
@@ -1037,6 +1044,11 @@ int BaeGameRoom::GetCollisionObjectIDByEntityID(int nEntityID)
 IEntity* BaeGameRoom::GetEntity(int nEntityID)
 {
 	return m_mapEntity[nEntityID];
+}
+
+IEntity* BaeGameRoom::GetEntityByCollisionObjectID(int nCollisionObjectID)
+{
+	return GetEntity(GetEntityIDByCollisionObjectID(nCollisionObjectID));
 }
 
 bool BaeGameRoom::IsValidPlayer(string strPlayerKey)
