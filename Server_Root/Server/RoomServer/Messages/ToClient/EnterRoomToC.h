@@ -2,7 +2,10 @@
 
 #include "../../../CommonSources/Message/IMessage.h"
 #include "../../../CommonSources/Message/MessageIDs.h"
-#include <map>
+#include "../../../FBSFiles/EnterRoomToC_generated.h"
+#include <vector>
+
+using namespace std;
 
 class EnterRoomToC : public IMessage
 {
@@ -15,9 +18,8 @@ public:
 
 public:
 	int m_nResult;
-	int m_nPlayerIndex;
-	int m_nPlayerEntityID;
-	map<int, string> m_mapPlayers;
+	int m_nUserPlayerIndex;
+	vector<FBS::PlayerInfo> m_vecPlayerInfo;
 
 public:
 	unsigned short GetID() override;

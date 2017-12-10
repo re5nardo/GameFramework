@@ -28,12 +28,13 @@ namespace MasterData
 		m_nHP = pSheet->readNum(nRow, 5);
 		m_nMP = pSheet->readNum(nRow, 6);
 		m_fMaximumSpeed = pSheet->readNum(nRow, 7);
-		m_fSize = pSheet->readNum(nRow, 8);
-		m_fHeight = pSheet->readNum(nRow, 10);
-		m_fDefault_Y = pSheet->readNum(nRow, 11);
-		if (pSheet->cellType(nRow, 12) == CellType::CELLTYPE_NUMBER)
+		m_fMPChargeRate = pSheet->readNum(nRow, 8);
+		m_fSize = pSheet->readNum(nRow, 9);
+		m_fHeight = pSheet->readNum(nRow, 11);
+		m_fDefault_Y = pSheet->readNum(nRow, 12);
+		if (pSheet->cellType(nRow, 13) == CellType::CELLTYPE_NUMBER)
 		{
-			m_nDefaultBehaviorID = pSheet->readNum(nRow, 12);
+			m_nDefaultBehaviorID = pSheet->readNum(nRow, 13);
 		}
 	}
 }

@@ -25,14 +25,8 @@ protected:
 	list<ISkill*> m_listSkill;
 
 protected:
-	CharacterStat m_DefaultStat;
-	CharacterStat m_CurrentStat;
-
-private:
-	float m_fSpeed = 0;
-
-private:
-	int m_nMovePoint = 0;
+	CharacterStatus m_OriginalStatus;
+	CharacterStatus m_CurrentStatus;
 
 public:
 	float m_fSpeedPercent = 100;
@@ -61,7 +55,7 @@ public:
 	bool IsSkilling();
 
 public:
-	void InitStat(CharacterStat stat);
+	void InitStatus(CharacterStatus status);
 	float GetCurrentMP();
 	void SetCurrentMP(float fMP);
 
@@ -73,10 +67,8 @@ public:
 public:
 	void OnAttacked(int nAttackingEntityID, int nDamage, long long lTime);
 	void OnRespawn(long long lTime);
+	void OnMoved(int nDistance);
 
 public:
 	bool IsAlive();
-
-public:
-	void IncreaseMovePoint(int nPoint);
 };

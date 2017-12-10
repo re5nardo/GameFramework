@@ -26,6 +26,8 @@
 #include "../../FBSFiles/FBSData_generated.h"
 #include "../GameEvent/GameEvents/Position.h"
 #include "../GameEvent/GameEvents/Rotation.h"
+#include "../MasterData/MasterDataManager.h"
+#include "../MasterData/Character.h"
 
 BaeGameRoom::BaeGameRoom(int nMatchID, vector<string> vecMatchedPlayerKey)	//	Receive Game Info from Lobby
 {
@@ -39,7 +41,7 @@ BaeGameRoom::BaeGameRoom(int nMatchID, vector<string> vecMatchedPlayerKey)	//	Re
 
 	m_bPlaying = false;
 
-	LoadMap(2/*temp..*/);
+	PrepareGame();
 }
 
 BaeGameRoom::~BaeGameRoom()
@@ -356,6 +358,35 @@ void BaeGameRoom::SendWorldInfo()
 	m_listGameEvent.clear();
 }
 
+void BaeGameRoom::PrepareGame()
+{
+	LoadMap(2/*temp..*/);
+
+	//	Set PlayerInfo
+	for (int i = 0; i < m_vecMatchedPlayerKey.size(); ++i)
+	{
+		int nPlayerIndex = GetPlayerIndexByPlayerKey(m_vecMatchedPlayerKey[i]);
+		int dummyCharacterMasterDataID = 0;		//	Temp..0 is MisterBae
+		int nEntityID = 0;
+		
+		MasterData::Character* pMasterCharacter = NULL;
+		MasterDataManager::Instance()->GetData<MasterData::Character>(dummyCharacterMasterDataID, pMasterCharacter);
+
+		FBS::Data::CharacterStatus status(pMasterCharacter->m_nHP, pMasterCharacter->m_nHP, pMasterCharacter->m_nMP, pMasterCharacter->m_nMP, pMasterCharacter->m_fMaximumSpeed, 0, pMasterCharacter->m_fMPChargeRate, 0);
+		FBS::PlayerInfo playerInfo(nPlayerIndex, dummyCharacterMasterDataID, nEntityID, status);
+
+		m_vecPlayerInfo.push_back(playerInfo);
+
+		Character* pCharacter = NULL;
+		CreateCharacter(dummyCharacterMasterDataID, &nEntityID, &pCharacter, Character::Role::Challenger, CharacterStatus(status));
+
+		m_mapPlayerEntity[nPlayerIndex] = nEntityID;
+		m_mapEntityPlayer[nEntityID] = nPlayerIndex;
+
+		m_mapCharacterSpeedVariationData[nPlayerIndex] = CharacterSpeedVariationData(dummyCharacterMasterDataID);
+	}
+}
+
 void BaeGameRoom::StartGame()
 {
 	m_bPlaying = true;
@@ -381,6 +412,7 @@ void BaeGameRoom::Reset()
 	m_lDeltaTime = 0;
 	m_lLastUpdateTime = 0;
 	m_lLastItemSpawnTime = 0;
+	m_vecPlayerInfo.clear();
 
 	m_bPlaying = false;
 
@@ -666,7 +698,7 @@ void BaeGameRoom::AddPositionGameEvent(float fEventTime, int nEntityID, float fS
 	AddGameEvent(pPosition);
 }
 
-bool BaeGameRoom::CreateCharacter(int nMasterDataID, int* pEntityID, Character** pCharacter, Character::Role role)
+bool BaeGameRoom::CreateCharacter(int nMasterDataID, int* pEntityID, Character** pCharacter, Character::Role role, CharacterStatus status)
 {
 	m_LockEntitySequence.lock();
 	int nEntityID = m_nEntitySequence++;
@@ -674,6 +706,7 @@ bool BaeGameRoom::CreateCharacter(int nMasterDataID, int* pEntityID, Character**
 
 	Character* pNewCharacter = Factory::Instance()->CreateCharacter(this, nEntityID, nMasterDataID, role);
 	pNewCharacter->Initialize();
+	pNewCharacter->InitStatus(status);
 	m_mapEntity[nEntityID] = pNewCharacter;
 
 	//	collision
@@ -883,23 +916,10 @@ void BaeGameRoom::OnEnterRoomToR(EnterRoomToR* pMsg, unsigned int socket)
 
 		m_mapPlayerKeySocket[pMsg->m_strPlayerKey] = socket;
 		m_mapSocketPlayerKey[socket] = pMsg->m_strPlayerKey;
-
-		//	Temp..0 is MisterBae
-		int nEntityID = 0;
-		CreateCharacter(0, &nEntityID, NULL, Character::Role::Challenger);
-
-		m_mapPlayerEntity[nPlayerIndex] = nEntityID;
-		m_mapEntityPlayer[nEntityID] = nPlayerIndex;
-
-		m_mapCharacterSpeedVariationData[nPlayerIndex] = CharacterSpeedVariationData(0);
-
+		
 		enterRoomToC->m_nResult = 0;
-		enterRoomToC->m_nPlayerIndex = nPlayerIndex;
-		enterRoomToC->m_nPlayerEntityID = nEntityID;
-		for (int i = 0; i < m_vecMatchedPlayerKey.size(); ++i)
-		{
-			enterRoomToC->m_mapPlayers[i] = m_vecMatchedPlayerKey[i];
-		}
+		enterRoomToC->m_nUserPlayerIndex = nPlayerIndex;
+		enterRoomToC->m_vecPlayerInfo = m_vecPlayerInfo;
 
 		Network::Instance()->Send(socket, enterRoomToC);
 

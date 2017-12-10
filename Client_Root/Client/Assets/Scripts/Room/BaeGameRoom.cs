@@ -469,19 +469,20 @@ public class BaeGameRoom : IGameRoom
     {
         if (msg.m_nResult == 0)
         {
-            m_nUserPlayerIndex = msg.m_nPlayerIndex;
-            m_nUserEntityID = msg.m_nPlayerEntityID;
+            m_nUserPlayerIndex = msg.m_nUserPlayerIndex;
 
-            foreach(KeyValuePair<int, string> kv in msg.m_dicPlayers)
+            foreach (FBS.PlayerInfo player in msg.m_listPlayerInfo)
             {
-                //  temp.. MisterBae
                 GameObject goCharacter = ObjectPool.Instance.GetGameObject("CharacterModel/Character");
                 Character character = goCharacter.GetComponent<Character>();
-                character.Initialize(FBS.Data.EntityType.Character, 0, 0);
-                m_dicEntity[kv.Key] = character;
+                character.Initialize(FBS.Data.EntityType.Character, player.EntityID, player.MasterDataID);
+                character.InitStatus(new CharacterStatus(player.Status));
+                m_dicEntity[player.EntityID] = character;
 
-                if (kv.Key == m_nUserPlayerIndex)
+                if (player.PlayerIndex == m_nUserPlayerIndex)
                 {
+                    m_nUserEntityID = player.EntityID;
+
                     m_CameraController.SetTarget(character.GetUITransform());
                     m_CameraController.StartFollowTarget();
 

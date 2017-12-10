@@ -11,6 +11,7 @@ namespace MasterData
         public int m_nHP;
         public int m_nMP;
         public float m_fMaximumSpeed;
+        public float m_fMPChargeRate;
         public float m_fSize;
         public string m_strModelResName;
 
@@ -24,8 +25,9 @@ namespace MasterData
             Util.Convert(data[5], ref m_nHP);
             Util.Convert(data[6], ref m_nMP);
             Util.Convert(data[7], ref m_fMaximumSpeed);
-            Util.Convert(data[8], ref m_fSize);
-            m_strModelResName = data[9];
+            Util.Convert(data[8], ref m_fMPChargeRate);
+            Util.Convert(data[9], ref m_fSize);
+            m_strModelResName = data[10];
         }
     }
 }

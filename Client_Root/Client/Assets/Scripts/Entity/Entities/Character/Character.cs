@@ -4,18 +4,8 @@ using UnityEngine;
 
 public class Character : Entity
 {
-    private CharacterStat m_DefaultStat;
-    private CharacterStat m_CurrentStat;
-
-    public override void Initialize(FBS.Data.EntityType entityType, int nID, int nMasterDataID)
-    {
-        MasterData.Character characterMasterData = null;
-        MasterDataManager.Instance.GetData<MasterData.Character>(nMasterDataID, ref characterMasterData);
-
-        InitStat(new CharacterStat(characterMasterData.m_nHP, characterMasterData.m_nMP, 1, characterMasterData.m_fMaximumSpeed, 1));
-
-        base.Initialize(entityType, nID, nMasterDataID);
-    }
+    private CharacterStatus m_OriginalStatus;
+    private CharacterStatus m_CurrentStatus;
 
     public override void ProcessGameEvent(IGameEvent iGameEvent)
     {
@@ -39,9 +29,9 @@ public class Character : Entity
     {
         Debug.Log(gameEvent.ToString());
 
-        m_CurrentStat.m_nHP -= gameEvent.m_nDamage;
+        m_CurrentStatus.m_nHP -= gameEvent.m_nDamage;
 
-        if (m_CurrentStat.m_nHP <= 0)
+        if (m_CurrentStatus.m_nHP <= 0)
         {
             BaeGameRoom.Instance.OnPlayerDie(gameEvent.m_nAttackedEntityID, gameEvent.m_nAttackingEntityID);
         }
@@ -49,19 +39,19 @@ public class Character : Entity
 
     private void ProcessCharacterRespawn(GameEvent.CharacterRespawn gameEvent)
     {
-        m_CurrentStat.m_nHP = m_DefaultStat.m_nHP;
+        m_CurrentStatus.m_nHP = m_OriginalStatus.m_nHP;
 
         m_EntityUI.SetPosition(gameEvent.m_vec3Position);
     }
 
-    public void InitStat(CharacterStat stat)
+    public void InitStatus(CharacterStatus status)
     {
-        m_DefaultStat = stat;
-        m_CurrentStat = stat;
+        m_OriginalStatus = status;
+        m_CurrentStatus = status;
     }
 
     public bool IsAlive()
     {
-        return m_CurrentStat.m_nHP > 0;
+        return m_CurrentStatus.m_nHP > 0;
     }
 }

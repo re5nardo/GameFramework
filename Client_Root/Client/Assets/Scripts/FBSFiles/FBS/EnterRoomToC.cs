@@ -12,39 +12,27 @@ public sealed class EnterRoomToC : Table {
   public EnterRoomToC __init(int _i, ByteBuffer _bb) { bb_pos = _i; bb = _bb; return this; }
 
   public int Result { get { int o = __offset(4); return o != 0 ? bb.GetInt(o + bb_pos) : (int)0; } }
-  public int PlayerIndex { get { int o = __offset(6); return o != 0 ? bb.GetInt(o + bb_pos) : (int)0; } }
-  public int PlayerEntityID { get { int o = __offset(8); return o != 0 ? bb.GetInt(o + bb_pos) : (int)0; } }
-  public int GetPlayersMapKey(int j) { int o = __offset(10); return o != 0 ? bb.GetInt(__vector(o) + j * 4) : (int)0; }
-  public int PlayersMapKeyLength { get { int o = __offset(10); return o != 0 ? __vector_len(o) : 0; } }
-  public ArraySegment<byte>? GetPlayersMapKeyBytes() { return __vector_as_arraysegment(10); }
-  public string GetPlayersMapValue(int j) { int o = __offset(12); return o != 0 ? __string(__vector(o) + j * 4) : null; }
-  public int PlayersMapValueLength { get { int o = __offset(12); return o != 0 ? __vector_len(o) : 0; } }
+  public int UserPlayerIndex { get { int o = __offset(6); return o != 0 ? bb.GetInt(o + bb_pos) : (int)0; } }
+  public PlayerInfo GetPlayers(int j) { return GetPlayers(new PlayerInfo(), j); }
+  public PlayerInfo GetPlayers(PlayerInfo obj, int j) { int o = __offset(8); return o != 0 ? obj.__init(__vector(o) + j * 44, bb) : null; }
+  public int PlayersLength { get { int o = __offset(8); return o != 0 ? __vector_len(o) : 0; } }
 
   public static Offset<EnterRoomToC> CreateEnterRoomToC(FlatBufferBuilder builder,
       int Result = 0,
-      int PlayerIndex = 0,
-      int PlayerEntityID = 0,
-      VectorOffset PlayersMapKeyOffset = default(VectorOffset),
-      VectorOffset PlayersMapValueOffset = default(VectorOffset)) {
-    builder.StartObject(5);
-    EnterRoomToC.AddPlayersMapValue(builder, PlayersMapValueOffset);
-    EnterRoomToC.AddPlayersMapKey(builder, PlayersMapKeyOffset);
-    EnterRoomToC.AddPlayerEntityID(builder, PlayerEntityID);
-    EnterRoomToC.AddPlayerIndex(builder, PlayerIndex);
+      int UserPlayerIndex = 0,
+      VectorOffset PlayersOffset = default(VectorOffset)) {
+    builder.StartObject(3);
+    EnterRoomToC.AddPlayers(builder, PlayersOffset);
+    EnterRoomToC.AddUserPlayerIndex(builder, UserPlayerIndex);
     EnterRoomToC.AddResult(builder, Result);
     return EnterRoomToC.EndEnterRoomToC(builder);
   }
 
-  public static void StartEnterRoomToC(FlatBufferBuilder builder) { builder.StartObject(5); }
+  public static void StartEnterRoomToC(FlatBufferBuilder builder) { builder.StartObject(3); }
   public static void AddResult(FlatBufferBuilder builder, int Result) { builder.AddInt(0, Result, 0); }
-  public static void AddPlayerIndex(FlatBufferBuilder builder, int PlayerIndex) { builder.AddInt(1, PlayerIndex, 0); }
-  public static void AddPlayerEntityID(FlatBufferBuilder builder, int PlayerEntityID) { builder.AddInt(2, PlayerEntityID, 0); }
-  public static void AddPlayersMapKey(FlatBufferBuilder builder, VectorOffset PlayersMapKeyOffset) { builder.AddOffset(3, PlayersMapKeyOffset.Value, 0); }
-  public static VectorOffset CreatePlayersMapKeyVector(FlatBufferBuilder builder, int[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddInt(data[i]); return builder.EndVector(); }
-  public static void StartPlayersMapKeyVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
-  public static void AddPlayersMapValue(FlatBufferBuilder builder, VectorOffset PlayersMapValueOffset) { builder.AddOffset(4, PlayersMapValueOffset.Value, 0); }
-  public static VectorOffset CreatePlayersMapValueVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
-  public static void StartPlayersMapValueVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddUserPlayerIndex(FlatBufferBuilder builder, int UserPlayerIndex) { builder.AddInt(1, UserPlayerIndex, 0); }
+  public static void AddPlayers(FlatBufferBuilder builder, VectorOffset PlayersOffset) { builder.AddOffset(2, PlayersOffset.Value, 0); }
+  public static void StartPlayersVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(44, numElems, 4); }
   public static Offset<EnterRoomToC> EndEnterRoomToC(FlatBufferBuilder builder) {
     int o = builder.EndObject();
     return new Offset<EnterRoomToC>(o);

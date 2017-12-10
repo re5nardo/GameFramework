@@ -41,8 +41,6 @@ void Character::Initialize()
 	MasterData::Character* pMasterCharacter = NULL;
 	MasterDataManager::Instance()->GetData<MasterData::Character>(m_nMasterDataID, pMasterCharacter);
 
-	InitStat(CharacterStat(pMasterCharacter->m_nHP, pMasterCharacter->m_nMP, 3, pMasterCharacter->m_fMaximumSpeed, 5));
-
 	m_fSize = pMasterCharacter->m_fSize;
 	m_fHeight = pMasterCharacter->m_fHeight;
 	m_fDefault_Y = pMasterCharacter->m_fDefault_Y;
@@ -71,12 +69,12 @@ void Character::Initialize()
 
 float Character::GetSpeed()
 {
-	return m_fSpeed * (m_fSpeedPercent / 100);
+	return m_CurrentStatus.m_fSpeed * (m_fSpeedPercent / 100);
 }
 
 float Character::GetMaximumSpeed()
 {
-	return m_CurrentStat.m_fMaximumSpeed;
+	return m_CurrentStatus.m_fMaximumSpeed;
 }
 
 FBS::Data::EntityType Character::GetEntityType()
@@ -163,53 +161,56 @@ bool Character::IsSkilling()
 	return false;
 }
 
-void Character::InitStat(CharacterStat stat)
+void Character::InitStatus(CharacterStatus status)
 {
-	m_DefaultStat = stat;
-	m_CurrentStat = stat;
+	m_OriginalStatus = status;
+	m_CurrentStatus = status;
 }
 
 float Character::GetCurrentMP()
 {
-	return m_CurrentStat.m_nMP;
+	return m_CurrentStatus.m_nMP;
 }
 
 void Character::SetCurrentMP(float fMP)
 {
-	m_CurrentStat.m_nMP = fMP;
+	m_CurrentStatus.m_nMP = fMP;
 }
 
 void Character::SetMoveSpeed(float fSpeed)
 {
-	m_fSpeed = fSpeed;
+	m_CurrentStatus.m_fSpeed = fSpeed;
 }
 
 void Character::PlusMoveSpeed(float fValue)
 {
-	m_fSpeed += fValue;
+	m_CurrentStatus.m_fSpeed += fValue;
 }
 void Character::MinusMoveSpeed(float fValue)
 {
-	m_fSpeed -= fValue;
+	m_CurrentStatus.m_fSpeed -= fValue;
 }
 
 bool Character::IsAlive()
 {
-	return m_CurrentStat.m_nHP > 0;
+	return m_CurrentStatus.m_nHP > 0;
 }
 
-void Character::IncreaseMovePoint(int nPoint)
+void Character::OnMoved(int nDistance)
 {
-	m_nMovePoint += nPoint;
+	int nBonusPoint = 100;
 
-	if (m_nMovePoint >= m_CurrentStat.m_fMPChargeRate)
+	m_CurrentStatus.m_fMovePoint += (nDistance * m_CurrentStatus.m_fMPChargeRate);
+
+	if (m_CurrentStatus.m_fMovePoint >= nBonusPoint)
 	{
-		int nGetCount = m_nMovePoint / m_CurrentStat.m_fMPChargeRate;
+		int nGetCount = m_CurrentStatus.m_fMovePoint / nBonusPoint;
 
-		m_nMovePoint = m_nMovePoint % (int)m_CurrentStat.m_fMPChargeRate;
-
-		m_CurrentStat.m_nMP += nGetCount;
+		m_CurrentStatus.m_fMovePoint -= (nGetCount * nBonusPoint);
+		m_CurrentStatus.m_nMP += nGetCount;
 	}
+
+	//	GameEvent status change
 }
 
 void Character::OnAttacked(int nAttackingEntityID, int nDamage, long long lTime)
@@ -217,7 +218,7 @@ void Character::OnAttacked(int nAttackingEntityID, int nDamage, long long lTime)
 	if (HasCoreState(CoreState::CoreState_Invincible) || !IsAlive())
 		return;
 
-	m_CurrentStat.m_nHP -= nDamage;
+	m_CurrentStatus.m_nHP -= nDamage;
 
 	GameEvent::CharacterAttack* pCharacterAttack = new GameEvent::CharacterAttack();
 	pCharacterAttack->m_fEventTime = lTime / 1000.0f;
@@ -227,7 +228,7 @@ void Character::OnAttacked(int nAttackingEntityID, int nDamage, long long lTime)
 
 	m_pGameRoom->AddGameEvent(pCharacterAttack);
 
-	if (m_CurrentStat.m_nHP <= 0)
+	if (m_CurrentStatus.m_nHP <= 0)
 	{
 		IBehavior* pDieBehavior = GetBehavior(BehaviorID::DIE);
 
@@ -238,7 +239,7 @@ void Character::OnAttacked(int nAttackingEntityID, int nDamage, long long lTime)
 
 void Character::OnRespawn(long long lTime)	//	last position?
 {
-	m_CurrentStat.m_nHP = m_DefaultStat.m_nHP;
+	m_CurrentStatus.m_nHP = m_OriginalStatus.m_nHP;
 
 	GameEvent::CharacterRespawn* pCharacterRespawn = new GameEvent::CharacterRespawn();
 	pCharacterRespawn->m_fEventTime = lTime / 1000.0f;

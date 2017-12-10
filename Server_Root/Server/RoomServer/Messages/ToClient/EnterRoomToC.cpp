@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "EnterRoomToC.h"
-#include "../../../FBSFiles/EnterRoomToC_generated.h"
+#include <list>
 
 EnterRoomToC::EnterRoomToC()
 {
@@ -22,24 +22,12 @@ IMessage* EnterRoomToC::Clone()
 
 const char* EnterRoomToC::Serialize(int* pLength)
 {
-	vector<int> vecKeys;
-	vector<Offset<flatbuffers::String>> vecValues;
-
-	for (map<int, string>::iterator it = m_mapPlayers.begin(); it != m_mapPlayers.end(); ++it)
-	{
-		vecKeys.push_back(it->first);
-		vecValues.push_back(m_Builder.CreateString(it->second));
-	}
-
-	auto playersMapKey = m_Builder.CreateVector(vecKeys);
-	auto playersMapValue = m_Builder.CreateVector(vecValues);
+	auto players = m_Builder.CreateVectorOfStructs(m_vecPlayerInfo);
 
 	FBS::EnterRoomToCBuilder data_builder(m_Builder);
 	data_builder.add_Result(m_nResult);
-	data_builder.add_PlayerIndex(m_nPlayerIndex);
-	data_builder.add_PlayerEntityID(m_nPlayerEntityID);
-	data_builder.add_PlayersMapKey(playersMapKey);
-	data_builder.add_PlayersMapValue(playersMapValue);
+	data_builder.add_UserPlayerIndex(m_nUserPlayerIndex);
+	data_builder.add_Players(players);
 	auto data = data_builder.Finish();
 
 	m_Builder.Finish(data);
@@ -53,13 +41,7 @@ bool EnterRoomToC::Deserialize(const char* pChar)
 {
 	auto data = flatbuffers::GetRoot<FBS::EnterRoomToC>((const void*)pChar);
 
-	m_nResult = data->Result();
-	m_nPlayerIndex = data->PlayerIndex();
-	m_nPlayerEntityID = data->PlayerEntityID();
-	for (int i = 0; i < data->PlayersMapKey()->size(); ++i)
-	{
-		m_mapPlayers[data->PlayersMapKey()->Get(i)] = data->PlayersMapValue()->Get(i)->str();
-	}
+	//	Not necessary.. (Deserialize() is never called in server side..)
 
 	return true;
 }

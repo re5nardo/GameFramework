@@ -22,6 +22,7 @@ namespace MasterData
 		int m_nHP;
 		int m_nMP;
 		float m_fMaximumSpeed;
+		float m_fMPChargeRate;
 		float m_fSize;
 		float m_fHeight;
 		float m_fDefault_Y;

@@ -1,10 +1,17 @@
+include "FBSData.fbs";
 namespace FBS;
+
+struct PlayerInfo
+{
+	PlayerIndex:int;
+	MasterDataID:int;
+	EntityID:int;
+	Status:FBS.Data.CharacterStatus;
+}
 
 table EnterRoomToC
 {
 	Result:int;
-	PlayerIndex:int;
-	PlayerEntityID:int;
-	PlayersMapKey:[int];
-	PlayersMapValue:[string];
+	UserPlayerIndex:int;
+	Players:[PlayerInfo];
 }

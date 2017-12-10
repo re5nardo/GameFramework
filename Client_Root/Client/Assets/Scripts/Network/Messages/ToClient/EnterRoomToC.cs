@@ -6,9 +6,8 @@ public class EnterRoomToC : IMessage
     public const ushort MESSAGE_ID = MessageID.EnterRoomToC_ID;
 
     public int m_nResult;
-    public int m_nPlayerIndex;
-    public int m_nPlayerEntityID;
-    public Dictionary<int, string> m_dicPlayers = new Dictionary<int, string>();
+    public int m_nUserPlayerIndex;
+    public List<FBS.PlayerInfo> m_listPlayerInfo = new List<FBS.PlayerInfo>();
 
     public override ushort GetID()
     {
@@ -22,25 +21,18 @@ public class EnterRoomToC : IMessage
 
     public override byte[] Serialize()
     {
-        int[] keys = new int[m_dicPlayers.Keys.Count];
-        StringOffset[] values = new StringOffset[m_dicPlayers.Values.Count];
-
-        int nIndex = 0;
-        foreach(KeyValuePair<int, string> kv in m_dicPlayers)
+        FBS.EnterRoomToC.StartPlayersVector(m_Builder, m_listPlayerInfo.Count);
+        foreach(FBS.PlayerInfo playerInfo in m_listPlayerInfo)
         {
-            keys[nIndex++] = kv.Key;
-            values[nIndex++] = m_Builder.CreateString(kv.Value);
+            FBS.PlayerInfo.CreatePlayerInfo(m_Builder, playerInfo.PlayerIndex, playerInfo.MasterDataID, playerInfo.EntityID, playerInfo.Status.MaximumHP, playerInfo.Status.HP,
+                playerInfo.Status.MaximumMP, playerInfo.Status.MP, playerInfo.Status.MaximumSpeed, playerInfo.Status.Speed, playerInfo.Status.MPChargeRate, playerInfo.Status.MovePoint);
         }
-
-        var playersMapKey = FBS.EnterRoomToC.CreatePlayersMapKeyVector(m_Builder, keys);
-        var playersMapValue = FBS.EnterRoomToC.CreatePlayersMapValueVector(m_Builder, values);
+        var players = m_Builder.EndVector();
 
         FBS.EnterRoomToC.StartEnterRoomToC(m_Builder);
         FBS.EnterRoomToC.AddResult(m_Builder, m_nResult);
-        FBS.EnterRoomToC.AddPlayerIndex(m_Builder, m_nPlayerIndex);
-        FBS.EnterRoomToC.AddPlayerEntityID(m_Builder, m_nPlayerEntityID);
-        FBS.EnterRoomToC.AddPlayersMapKey(m_Builder, playersMapKey);
-        FBS.EnterRoomToC.AddPlayersMapValue(m_Builder, playersMapValue);
+        FBS.EnterRoomToC.AddUserPlayerIndex(m_Builder, m_nUserPlayerIndex);
+        FBS.EnterRoomToC.AddPlayers(m_Builder, players);
         var data = FBS.EnterRoomToC.EndEnterRoomToC(m_Builder);
 
         m_Builder.Finish(data.Value);
@@ -55,11 +47,10 @@ public class EnterRoomToC : IMessage
         var data = FBS.EnterRoomToC.GetRootAsEnterRoomToC(buf);
 
         m_nResult = data.Result;
-        m_nPlayerIndex = data.PlayerIndex;
-        m_nPlayerEntityID = data.PlayerEntityID;
-        for (int i = 0; i < data.PlayersMapKeyLength; ++i)
+        m_nUserPlayerIndex = data.UserPlayerIndex;
+        for (int i = 0; i < data.PlayersLength; ++i)
         {
-            m_dicPlayers.Add(data.GetPlayersMapKey(i), data.GetPlayersMapValue(i));
+            m_listPlayerInfo.Add(data.GetPlayers(i));
         }
 
         return true;
@@ -67,6 +58,6 @@ public class EnterRoomToC : IMessage
 
     public override void OnReturned()
     {
-        m_dicPlayers.Clear();
+        m_listPlayerInfo.Clear();
     }
 }

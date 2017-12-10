@@ -13,6 +13,7 @@
 #include <utility>
 #include "CollisionManager.h"
 #include "../../FBSFiles/FBSData_generated.h"
+#include "../../FBSFiles/EnterRoomToC_generated.h"
 #include "../Entity/Entities/Character/Character.h"
 #include "CharacterSpeedVariationData.h"
 
@@ -55,6 +56,7 @@ private:
 private:
 	int								m_nMatchID;
 	vector<string>					m_vecMatchedPlayerKey;					//	element : PlayerKey
+	vector<FBS::PlayerInfo>			m_vecPlayerInfo;
 	map<string, unsigned int>		m_mapPlayerKeySocket;					//	key : PlayerKey, value : Socket
 	map<unsigned int, string>		m_mapSocketPlayerKey;					//	key : Socket, value : PlayerKey
 	map<int, float>					m_mapPlayerIndexPreparationState;		//	key : PlayerIndex, value : PreparationState
@@ -101,6 +103,7 @@ public:
 	void OnRecvMessage(unsigned int socket, IMessage* pMsg);
 
 private:
+	void PrepareGame();
 	void StartGame();
 	void EndGame();
 	void Reset();
@@ -168,7 +171,7 @@ public:
 	void AddPositionGameEvent(float fEventTime, int nEntityID, float fStartTime, float fEndTime, btVector3& vec3StartPosition, btVector3& vec3EndPosition);
 
 public:
-	bool CreateCharacter(int nMasterDataID, int* pEntityID, Character** pCharacter, Character::Role role);
+	bool CreateCharacter(int nMasterDataID, int* pEntityID, Character** pCharacter, Character::Role role, CharacterStatus status);
 	bool CreateProjectile(int nMasterDataID, int* pEntityID, Projectile** pProjectile, int nCreatorID);
 	bool CreateItem(int nMasterDataID, int* pEntityID, Item** pItem, long long lTime);
 	void DestroyEntity(int nEntityID);

@@ -14,11 +14,14 @@ enum EntityType:byte
 	Item,
 }
 
-struct CharacterStat
+struct CharacterStatus
 {
+	MaximumHP:int;
 	HP:int;
+	MaximumMP:int;
 	MP:int;
-	MPChargeRate:float;
 	MaximumSpeed:float;
-	Strength:float;
+	Speed:float;
+	MPChargeRate:float;
+	MovePoint:float;
 }

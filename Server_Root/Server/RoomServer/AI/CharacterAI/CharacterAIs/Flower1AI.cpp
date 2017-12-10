@@ -5,6 +5,8 @@
 #include "../../../Game/BaeGameRoom.h"
 #include "../../../Factory.h"
 #include "../../../State/StateIDs.h"
+#include "../../../MasterData/MasterDataManager.h"
+#include "../../../MasterData/Character.h"
 
 Flower1AI::Flower1AI(BaeGameRoom* pGameRoom, int nMasterDataID, long long lStartTime) : ICharacterAI(pGameRoom, nMasterDataID, lStartTime)
 {
@@ -33,7 +35,12 @@ void Flower1AI::UpdateBody(long long lUpdateTime)
 
 	if (m_fPreviousTime < spawntime && spawntime <= m_fCurrentTime)
 	{
-		m_pGameRoom->CreateCharacter(m_nMasterDataID, NULL, &m_pCharacter, Character::Role::Disturber);
+		MasterData::Character* pMasterCharacter = NULL;
+		MasterDataManager::Instance()->GetData<MasterData::Character>(m_nMasterDataID, pMasterCharacter);
+
+		CharacterStatus status(pMasterCharacter->m_nHP, pMasterCharacter->m_nHP, pMasterCharacter->m_nMP, pMasterCharacter->m_nMP, pMasterCharacter->m_fMaximumSpeed, 0, pMasterCharacter->m_fMPChargeRate, 0);
+
+		m_pGameRoom->CreateCharacter(m_nMasterDataID, NULL, &m_pCharacter, Character::Role::Disturber, status);
 		m_pCharacter->SetPosition(m_vec3Position);
 		m_pCharacter->SetRotation(m_vec3Rotation);
 

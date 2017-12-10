@@ -95,7 +95,7 @@ void Move::UpdateBody(long long lUpdateTime)
 
 	if (m_pEntity->GetEntityType() == FBS::Data::EntityType::EntityType_Character)
 	{
-		((Character*)m_pEntity)->IncreaseMovePoint((m_pEntity->GetPosition() - vec3Pos).length());
+		((Character*)m_pEntity)->OnMoved((m_pEntity->GetPosition() - vec3Pos).length());
 	}
 
 	//	This behavior might be stopped already in EntityMove()
