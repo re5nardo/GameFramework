@@ -85,6 +85,10 @@ public class WorldInfoToC : IMessage
             {
                 gameEvent = new GameEvent.CharacterRespawn();
             }
+            else if (gameEventData.Type == FBS.GameEventType.CharacterStatusChange)
+            {
+                gameEvent = new GameEvent.CharacterStatusChange();
+            }
             else
             {
                 UnityEngine.Debug.LogError("Invalid type!, GameEventType : " + gameEventData.Type.ToString());

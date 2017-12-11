@@ -98,8 +98,7 @@ void Item::OnCollision(IEntity* pOther, long long lTime)
 	}
 	else if (m_strEffectType == "MPCharge")
 	{
-		//((Character*)pOther)->
-		
+		m_pGameRoom->AddCharacterStatusChangeGameEvent(lTime / 1000.0f, pOther->GetID(), "MP", "Item", 1);
 	}
 
 	m_pGameRoom->DestroyEntity(m_nID);

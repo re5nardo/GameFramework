@@ -12,7 +12,9 @@ public class BaeGameRoom : IGameRoom
     [SerializeField] private UICountTimer           m_UICountTimer = null;
     [SerializeField] private GameObject             m_goGreyCover = null;
     [SerializeField] private DirectionKey           m_RotationController = null;
-
+    [SerializeField] private UILabel                m_lbHP = null;
+    [SerializeField] private UILabel                m_lbMP = null;
+    [SerializeField] private UILabel                m_lbMovePoint = null;
     [SerializeField] private UILabel                m_Dummy = null;
 
     public static new BaeGameRoom Instance
@@ -189,16 +191,18 @@ public class BaeGameRoom : IGameRoom
 
     private void UpdateTime()
     {
-        float fTickInterval = 0.2f;     //  server tick interval
+        float fTickInterval = 0.1f;     //  server tick interval (서버에서 받는 구조로 바꾸자)
+        float fNetworkLatency = 0.04f;
+        float fLimit = fTickInterval + fNetworkLatency;
 
         if (m_fLastWorldInfoTime > m_fElapsedTime)
         {
             if (m_fLastWorldInfoTime > m_fElapsedTime + Time.deltaTime)
             {
                 float fDiff = m_fLastWorldInfoTime - m_fElapsedTime;
-                if (fDiff > fTickInterval)
+                if (fDiff > fLimit)
                 {
-                    float fFactor = (fDiff - fTickInterval) / fTickInterval + 1;
+                    float fFactor = (fDiff - fLimit) / fLimit + 1;
 
                     deltaTime = Time.deltaTime * fFactor;
                 }
@@ -323,6 +327,12 @@ public class BaeGameRoom : IGameRoom
                 m_UICountTimer.Stop();
                 m_UICountTimer.Hide();
             }
+
+            m_dicEntity[gameEvent.m_nEntityID].ProcessGameEvent(gameEvent);
+        }
+        else if (iGameEvent.GetEventType() == FBS.GameEventType.CharacterStatusChange)
+        {
+            GameEvent.CharacterStatusChange gameEvent = (GameEvent.CharacterStatusChange)iGameEvent;
 
             m_dicEntity[gameEvent.m_nEntityID].ProcessGameEvent(gameEvent);
         }
@@ -487,6 +497,10 @@ public class BaeGameRoom : IGameRoom
                     m_CameraController.StartFollowTarget();
 
                     //m_SkillController.SetSkills(new List<int>(){0, 1, 2});
+
+                    m_lbHP.text = string.Format("x{0}", player.Status.HP);
+                    m_lbMP.text = string.Format("x{0}", player.Status.MP);
+                    m_lbMovePoint.text = string.Format("x{0}", player.Status.MovePoint);
                 }
             }
 
@@ -587,6 +601,13 @@ public class BaeGameRoom : IGameRoom
             m_UICountTimer.Show();
         }
     }
+
+    public void OnUserStatusChanged(CharacterStatus status)
+    {
+        m_lbHP.text = string.Format("x{0}", status.m_nHP);
+        m_lbMP.text = string.Format("x{0}", status.m_nMP);
+        m_lbMovePoint.text = string.Format("x{0}", (int)status.m_fMovePoint);
+    }
 #endregion
 
     private void OnDestroy()
@@ -610,6 +631,11 @@ public class BaeGameRoom : IGameRoom
     public override int GetUserPlayerIndex()
     {
         return m_nUserPlayerIndex;
+    }
+
+    public int GetUserEntityID()
+    {
+        return m_nUserEntityID;
     }
 
     public Character GetUserCharacter()

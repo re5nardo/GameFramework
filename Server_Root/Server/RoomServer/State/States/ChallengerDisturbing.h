@@ -3,6 +3,7 @@
 #include "../IState.h"
 #include "../StateIDs.h"
 #include <string>
+#include <map>
 
 using namespace std;
 
@@ -17,6 +18,9 @@ public:
 
 public:
 	static const unsigned short STATE_ID = StateID::ChallengerDisturbing;
+
+private:
+	map<int, float> m_mapDisturbingInfo;
 
 public:
 	int GetID() override;

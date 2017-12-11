@@ -23,6 +23,12 @@ public class Character : Entity
 
             ProcessCharacterRespawn(gameEvent);
         }
+        else if (iGameEvent.GetEventType() == FBS.GameEventType.CharacterStatusChange)
+        {
+            GameEvent.CharacterStatusChange gameEvent = (GameEvent.CharacterStatusChange)iGameEvent;
+
+            ProcessCharacterStatusChange(gameEvent);
+        }
     }
 
     private void ProcessCharacterAttack(GameEvent.CharacterAttack gameEvent)
@@ -31,9 +37,14 @@ public class Character : Entity
 
         m_CurrentStatus.m_nHP -= gameEvent.m_nDamage;
 
-        if (m_CurrentStatus.m_nHP <= 0)
+        if (BaeGameRoom.Instance.GetUserEntityID() == gameEvent.m_nAttackedEntityID)
         {
-            BaeGameRoom.Instance.OnPlayerDie(gameEvent.m_nAttackedEntityID, gameEvent.m_nAttackingEntityID);
+            if (m_CurrentStatus.m_nHP <= 0)
+            {
+                BaeGameRoom.Instance.OnPlayerDie(gameEvent.m_nAttackedEntityID, gameEvent.m_nAttackingEntityID);
+            }
+
+            BaeGameRoom.Instance.OnUserStatusChanged(m_CurrentStatus);
         }
     }
 
@@ -42,6 +53,32 @@ public class Character : Entity
         m_CurrentStatus.m_nHP = m_OriginalStatus.m_nHP;
 
         m_EntityUI.SetPosition(gameEvent.m_vec3Position);
+
+        if (BaeGameRoom.Instance.GetUserEntityID() == gameEvent.m_nEntityID)
+        {
+            BaeGameRoom.Instance.OnUserStatusChanged(m_CurrentStatus);
+        }
+    }
+
+    private void ProcessCharacterStatusChange(GameEvent.CharacterStatusChange gameEvent)
+    {
+        if (gameEvent.m_strStatusField == "HP")
+        {
+            m_CurrentStatus.m_nHP += (int)gameEvent.m_fValue;
+        }
+        else if (gameEvent.m_strStatusField == "MP")
+        {
+            m_CurrentStatus.m_nMP += (int)gameEvent.m_fValue;
+        }
+        else if (gameEvent.m_strStatusField == "MovePoint")
+        {
+            m_CurrentStatus.m_fMovePoint += gameEvent.m_fValue;
+        }
+
+        if (BaeGameRoom.Instance.GetUserEntityID() == gameEvent.m_nEntityID)
+        {
+            BaeGameRoom.Instance.OnUserStatusChanged(m_CurrentStatus);
+        }
     }
 
     public void InitStatus(CharacterStatus status)

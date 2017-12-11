@@ -26,6 +26,7 @@
 #include "../../FBSFiles/FBSData_generated.h"
 #include "../GameEvent/GameEvents/Position.h"
 #include "../GameEvent/GameEvents/Rotation.h"
+#include "../GameEvent/GameEvents/CharacterStatusChange.h"
 #include "../MasterData/MasterDataManager.h"
 #include "../MasterData/Character.h"
 
@@ -186,11 +187,13 @@ void BaeGameRoom::ProcessInput()
 
 			GameInputRotationToR* pMsg = (GameInputRotationToR*)pPlayerInputMsg;
 
+			float fCorrectedTime = (m_lLastUpdateTime - m_lDeltaTime) / 1000.0f;
+
 			GameEvent::Rotation* pRotation = new GameEvent::Rotation();
-			pRotation->m_fEventTime = lTime / 1000.0f;
+			pRotation->m_fEventTime = fCorrectedTime;
 			pRotation->m_nEntityID = pCharacter->GetID();
-			pRotation->m_fStartTime = lTime / 1000.0f;
-			pRotation->m_fEndTime = lTime / 1000.0f;
+			pRotation->m_fStartTime = fCorrectedTime;
+			pRotation->m_fEndTime = fCorrectedTime;
 			pRotation->m_vec3StartRotation = pCharacter->GetRotation();
 			pRotation->m_vec3EndRotation = pMsg->m_Rotation;
 
@@ -371,19 +374,17 @@ void BaeGameRoom::PrepareGame()
 		
 		MasterData::Character* pMasterCharacter = NULL;
 		MasterDataManager::Instance()->GetData<MasterData::Character>(dummyCharacterMasterDataID, pMasterCharacter);
-
 		FBS::Data::CharacterStatus status(pMasterCharacter->m_nHP, pMasterCharacter->m_nHP, pMasterCharacter->m_nMP, pMasterCharacter->m_nMP, pMasterCharacter->m_fMaximumSpeed, 0, pMasterCharacter->m_fMPChargeRate, 0);
-		FBS::PlayerInfo playerInfo(nPlayerIndex, dummyCharacterMasterDataID, nEntityID, status);
-
-		m_vecPlayerInfo.push_back(playerInfo);
 
 		Character* pCharacter = NULL;
 		CreateCharacter(dummyCharacterMasterDataID, &nEntityID, &pCharacter, Character::Role::Challenger, CharacterStatus(status));
 
 		m_mapPlayerEntity[nPlayerIndex] = nEntityID;
 		m_mapEntityPlayer[nEntityID] = nPlayerIndex;
-
 		m_mapCharacterSpeedVariationData[nPlayerIndex] = CharacterSpeedVariationData(dummyCharacterMasterDataID);
+
+		FBS::PlayerInfo playerInfo(nPlayerIndex, dummyCharacterMasterDataID, nEntityID, status);
+		m_vecPlayerInfo.push_back(playerInfo);
 	}
 }
 
@@ -696,6 +697,18 @@ void BaeGameRoom::AddPositionGameEvent(float fEventTime, int nEntityID, float fS
 	pPosition->m_vec3EndPosition = vec3EndPosition;
 
 	AddGameEvent(pPosition);
+}
+
+void BaeGameRoom::AddCharacterStatusChangeGameEvent(float fEventTime, int nEntityID, string strStatusField, string strReason, float fValue)
+{
+	GameEvent::CharacterStatusChange* pCharacterStatusChange = new GameEvent::CharacterStatusChange();
+	pCharacterStatusChange->m_fEventTime = fEventTime;
+	pCharacterStatusChange->m_nEntityID = nEntityID;
+	pCharacterStatusChange->m_strStatusField = strStatusField;
+	pCharacterStatusChange->m_strReason = strReason;
+	pCharacterStatusChange->m_fValue = fValue;
+
+	AddGameEvent(pCharacterStatusChange);
 }
 
 bool BaeGameRoom::CreateCharacter(int nMasterDataID, int* pEntityID, Character** pCharacter, Character::Role role, CharacterStatus status)

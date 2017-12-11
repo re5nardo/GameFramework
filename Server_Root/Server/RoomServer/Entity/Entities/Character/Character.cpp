@@ -97,7 +97,7 @@ int Character::GetMoveCollisionTypes()
 
 	if (m_Role == Character::Role::Challenger)
 	{
-		nTypes = CollisionObject::Type::CollisionObjectType_Terrain | CollisionObject::Type::CollisionObjectType_Character_Disturber | CollisionObject::Type::CollisionObjectType_Projectile
+		nTypes = CollisionObject::Type::CollisionObjectType_Terrain | CollisionObject::Type::CollisionObjectType_Character | CollisionObject::Type::CollisionObjectType_Projectile
 			| CollisionObject::Type::CollisionObjectType_Item;
 	}
 	else if (m_Role == Character::Role::Disturber)
@@ -196,21 +196,23 @@ bool Character::IsAlive()
 	return m_CurrentStatus.m_nHP > 0;
 }
 
-void Character::OnMoved(int nDistance)
+void Character::OnMoved(float fDistance, long long lTime)
 {
 	int nBonusPoint = 100;
-
-	m_CurrentStatus.m_fMovePoint += (nDistance * m_CurrentStatus.m_fMPChargeRate);
+	float fMovePoint = fDistance * m_CurrentStatus.m_fMPChargeRate * 100;
+	m_CurrentStatus.m_fMovePoint += fMovePoint;
+	m_pGameRoom->AddCharacterStatusChangeGameEvent(lTime / 1000.0f, m_nID, "MovePoint", "Move", fMovePoint);
 
 	if (m_CurrentStatus.m_fMovePoint >= nBonusPoint)
 	{
 		int nGetCount = m_CurrentStatus.m_fMovePoint / nBonusPoint;
 
 		m_CurrentStatus.m_fMovePoint -= (nGetCount * nBonusPoint);
-		m_CurrentStatus.m_nMP += nGetCount;
-	}
+		m_pGameRoom->AddCharacterStatusChangeGameEvent(lTime / 1000.0f, m_nID, "MovePoint", "Transfer", -nGetCount * nBonusPoint);
 
-	//	GameEvent status change
+		m_CurrentStatus.m_nMP += nGetCount;
+		m_pGameRoom->AddCharacterStatusChangeGameEvent(lTime / 1000.0f, m_nID, "MP", "MovePoint", nGetCount);
+	}
 }
 
 void Character::OnAttacked(int nAttackingEntityID, int nDamage, long long lTime)

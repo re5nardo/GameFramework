@@ -169,6 +169,7 @@ public:
 public:
 	void AddGameEvent(IGameEvent* pGameEvent);
 	void AddPositionGameEvent(float fEventTime, int nEntityID, float fStartTime, float fEndTime, btVector3& vec3StartPosition, btVector3& vec3EndPosition);
+	void AddCharacterStatusChangeGameEvent(float fEventTime, int nEntityID, string strStatusField, string strReason, float fValue);
 
 public:
 	bool CreateCharacter(int nMasterDataID, int* pEntityID, Character** pCharacter, Character::Role role, CharacterStatus status);

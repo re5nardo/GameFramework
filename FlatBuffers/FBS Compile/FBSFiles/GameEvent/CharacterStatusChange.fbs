@@ -1,0 +1,9 @@
+namespace FBS.GameEvent;
+
+table CharacterStatusChange
+{
+	EntityID:int;
+	StatusField:string;
+	Reason:string;
+	Value:float;
+}

@@ -67,7 +67,7 @@ public:
 public:
 	void OnAttacked(int nAttackingEntityID, int nDamage, long long lTime);
 	void OnRespawn(long long lTime);
-	void OnMoved(int nDistance);
+	void OnMoved(float fDistance, long long lTime);
 
 public:
 	bool IsAlive();

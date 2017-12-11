@@ -91,3 +91,6 @@ flatc --cpp -o SourceFiles\cpp FBSFiles\GameEvent\CharacterAttack.fbs
 
 flatc --csharp -o SourceFiles\csharp FBSFiles\GameEvent\CharacterRespawn.fbs
 flatc --cpp -o SourceFiles\cpp FBSFiles\GameEvent\CharacterRespawn.fbs
+
+flatc --csharp -o SourceFiles\csharp FBSFiles\GameEvent\CharacterStatusChange.fbs
+flatc --cpp -o SourceFiles\cpp FBSFiles\GameEvent\CharacterStatusChange.fbs

@@ -13,8 +13,9 @@ public enum GameEventType : sbyte
  Rotation = 5,
  CharacterAttack = 6,
  CharacterRespawn = 7,
- EntityCreate = 8,
- EntityDestroy = 9,
+ CharacterStatusChange = 8,
+ EntityCreate = 9,
+ EntityDestroy = 10,
 };
 
 
