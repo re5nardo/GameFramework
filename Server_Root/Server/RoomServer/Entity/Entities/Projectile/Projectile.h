@@ -25,6 +25,7 @@ public:
 	void NotifyGameEvent(IGameEvent* pGameEvent) override;
 	bool IsTerrainPassable() override;
 	int GetMoveCollisionTypes() override;
+	int GetAttackTargetTypes() override;
 
 public:
 	int GetProjectorID();

@@ -46,51 +46,7 @@ void General::UpdateBody(long long lUpdateTime)
 	{
 		if ((m_fCurrentTime == 0 && it->m_fTime == 0) || (m_fPreviousTime < it->m_fTime && it->m_fTime <= m_fCurrentTime))
 		{
-			if (it->m_strID == "Fire")
-			{
-				vector<float> vecDirection;
-				vector<string> vecString;
-				Util::Parse(m_strStringParams, ',', &vecString);
-				for (vector<string>::iterator it = vecString.begin(); it != vecString.end(); ++it)
-				{
-					vecDirection.push_back(atof((*it).c_str()));
-				}
-
-				for (vector<float>::iterator itDirection = vecDirection.begin(); itDirection != vecDirection.end(); ++itDirection)
-				{
-					int nEntityID = 0;
-					int nProjectileMasterDataID = atoi(it->m_vecParams[0].c_str());
-					Projectile* pProjectile = NULL;
-					m_pGameRoom->CreateProjectile(nProjectileMasterDataID, &nEntityID, &pProjectile, m_pEntity->GetID());
-					pProjectile->SetPosition(m_pEntity->GetPosition());
-
-					GameEvent::EntityCreate* pEntityCreate = new GameEvent::EntityCreate();
-					pEntityCreate->m_fEventTime = lUpdateTime / 1000.0f;
-					pEntityCreate->m_nEntityID = nEntityID;
-					pEntityCreate->m_nMasterDataID = nProjectileMasterDataID;
-					pEntityCreate->m_EntityType = FBS::Data::EntityType_Projectile;
-					pEntityCreate->m_vec3Position = pProjectile->GetPosition();
-
-					m_pGameRoom->AddGameEvent(pEntityCreate);
-
-					if (m_pEntity->GetEntityType() == FBS::Data::EntityType::EntityType_Character)
-					{
-						Character* pCharacter = (Character*)m_pEntity;
-						if (pCharacter->GetRole() == Character::Role::Disturber)
-						{
-							IState* pState = Factory::Instance()->CreateState(m_pGameRoom, pProjectile, StateID::ChallengerDisturbing, lUpdateTime);
-							pState->Initialize();
-							pProjectile->AddState(pState, lUpdateTime);
-							pState->Update(lUpdateTime);
-						}
-					}
-					
-					btVector3 vec3Dest = Util::GetAngledPosition(m_pEntity->GetPosition(), *itDirection, 10/*temp..*/);
-					pProjectile->GetBehavior(BehaviorID::MOVE)->Start(lUpdateTime, &vec3Dest);
-					pProjectile->GetBehavior(BehaviorID::MOVE)->Update(lUpdateTime);
-				}
-			}
-			else if (it->m_strID == "AddState")
+			if (it->m_strID == "AddState")
 			{
 				int nStateID = atoi(it->m_vecParams[0].c_str());
 				

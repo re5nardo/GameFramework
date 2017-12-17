@@ -90,6 +90,7 @@ public:
 public:
 	virtual bool IsTerrainPassable() = 0;
 	virtual int GetMoveCollisionTypes() = 0;
+	virtual int GetAttackTargetTypes() = 0;
 
 public:
 	virtual void OnCollision(IEntity* pOther, long long lTime);

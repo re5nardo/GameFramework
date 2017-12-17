@@ -108,6 +108,11 @@ int Character::GetMoveCollisionTypes()
 	return nTypes;
 }
 
+int Character::GetAttackTargetTypes()
+{
+	return CollisionObject::Type::CollisionObjectType_Character_Challenger;
+}
+
 void Character::UpdateSkills(long long lUpdateTime)
 {
 	list<ISkill*> listSkill = GetActivatedSkills();

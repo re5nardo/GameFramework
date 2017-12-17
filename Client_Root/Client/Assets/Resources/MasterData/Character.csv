@@ -1,5 +1,5 @@
 ID,Name,ClassName,SkillIDs,BehaviorIDs,HP,MP,MaximumSpeed,MPChargeRate (MP/°Å¸®),Size,ModelResID,Height,Default_Y,DefaultBehaviorID
-0,MisterBae,Character,"0,1,2","0,1,2,3,4,7",3,3,5,0.01,1,MisterBae,3,0,0
+0,MisterBae,Character,"0,1,2","0,1,2,3,4,7",3,3,5,0.01,0.5,MisterBae,3,0,0
 1,Flower1,Character,,"0,5",3,3,0,0.01,1,Flower1,3,0,0
 2,DummyCharacter1,Character,,"0,1",3,3,10,0.01,3,DummyCharacter1,3,0,
-3,DummyCharacter2,Character,,"0,1",3,3,5,0.01,10,DummyCharacter2,10,2,
+3,DummyCharacter2,Character,,"0,8",3,3,5,0.01,1,DummyCharacter2,3,0,0

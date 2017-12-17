@@ -24,6 +24,7 @@ public:
 	void NotifyGameEvent(IGameEvent* pGameEvent) override;
 	bool IsTerrainPassable() override;
 	int GetMoveCollisionTypes() override;
+	int GetAttackTargetTypes() override;
 	void LateUpdate(long long lUpdateTime) override;
 	void OnCollision(IEntity* pOther, long long lTime) override;
 };

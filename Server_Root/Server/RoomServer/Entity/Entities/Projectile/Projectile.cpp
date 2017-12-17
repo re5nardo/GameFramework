@@ -93,6 +93,11 @@ int Projectile::GetMoveCollisionTypes()
 	return nTypes;
 }
 
+int Projectile::GetAttackTargetTypes()
+{
+	return CollisionObject::Type::CollisionObjectType_Character_Challenger;
+}
+
 int Projectile::GetProjectorID()
 {
 	return m_nProjectorID;

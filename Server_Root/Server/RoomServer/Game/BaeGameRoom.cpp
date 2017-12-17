@@ -275,6 +275,7 @@ void BaeGameRoom::Update()
 		pEntityCreate->m_nMasterDataID = nItemMasterDataID;
 		pEntityCreate->m_EntityType = FBS::Data::EntityType_Item;
 		pEntityCreate->m_vec3Position = pItem->GetPosition();
+		pEntityCreate->m_vec3Rotation = pItem->GetRotation();
 
 		AddGameEvent(pEntityCreate);
 
@@ -541,6 +542,24 @@ void BaeGameRoom::SetObstacles(int nMapID, int nRandomSeed)
 		flower1AI->SetData(vec3Start, btVector3(0, 0, 0));
 		m_listDisturber.push_back(flower1AI);
 	}
+
+	//	DummyCharacter2
+	z = -240;
+	while (true)
+	{
+		z += (5 + (rand() % 30));
+
+		if (z > 250)
+		{
+			break;
+		}
+
+		btVector3 vec3Start(-15 + (rand() % 30), 0, z);
+
+		DummyCharacter2AI* dummy2 = new DummyCharacter2AI(this, 3, 0);
+		dummy2->SetData(vec3Start, btVector3(0, 0, 0));
+		m_listDisturber.push_back(dummy2);
+	}
 }
 
 //	Target	(Other부터 처리하도록 순서 수정할까..? (이동하려는 Entity가 공격권을 가지도록 -> 먼저 공격처리가 이뤄지도록)
@@ -634,6 +653,11 @@ bool BaeGameRoom::DiscreteCollisionDectection(int nTargetID, int nOtherID, btVec
 bool BaeGameRoom::GetCollisionObjectsInRange(int nTargetID, btVector3& vec3To, int nTypes, list<CollisionObject*>* pObjects)
 {
 	return m_CollisionManager.GetCollisionObjectsInRange(GetCollisionObjectIDByEntityID(nTargetID), vec3To, nTypes, pObjects);
+}
+
+bool BaeGameRoom::GetCollisionObjectsInRange(btVector3& vec3Position, btVector3& vec3Rotation, btVector3& vec3Range, int nTypes, list<CollisionObject*>* pObjects)
+{
+	return m_CollisionManager.GetCollisionObjectsInRange(vec3Position, vec3Rotation, vec3Range, nTypes, pObjects);
 }
 
 bool BaeGameRoom::CheckDiscreteCollisionDectection(int nEntityID, int nTypes, list<pair<int, btVector3>>* listHit)

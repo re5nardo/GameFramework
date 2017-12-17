@@ -7,4 +7,5 @@ table EntityCreate
 	MasterDataID:int;
 	Type:FBS.Data.EntityType;
 	Pos:FBS.Data.Vector3;
+	Rot:FBS.Data.Vector3;
 }

@@ -104,6 +104,7 @@
     <ClInclude Include="AI\CharacterAI\ICharacterAI.h" />
     <ClInclude Include="Behavior\BehaviorIDs.h" />
     <ClInclude Include="Behavior\Behaviors\Die.h" />
+    <ClInclude Include="Behavior\Behaviors\Fire.h" />
     <ClInclude Include="Behavior\Behaviors\General.h" />
     <ClInclude Include="Behavior\Behaviors\Move.h" />
     <ClInclude Include="Behavior\Behaviors\StopBehavior.h" />
@@ -186,6 +187,7 @@
     <ClCompile Include="AI\CharacterAI\CharacterAIs\Flower1AI.cpp" />
     <ClCompile Include="AI\CharacterAI\ICharacterAI.cpp" />
     <ClCompile Include="Behavior\Behaviors\Die.cpp" />
+    <ClCompile Include="Behavior\Behaviors\Fire.cpp" />
     <ClCompile Include="Behavior\Behaviors\General.cpp" />
     <ClCompile Include="Behavior\Behaviors\Move.cpp" />
     <ClCompile Include="Behavior\Behaviors\StopBehavior.cpp" />

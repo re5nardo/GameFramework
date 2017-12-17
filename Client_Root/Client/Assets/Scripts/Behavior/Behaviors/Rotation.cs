@@ -10,6 +10,8 @@ namespace Behavior
         {
             m_Entity = entity;
             m_GameEvent = gameEvent;
+
+            m_Entity.SetRotation(gameEvent.m_vec3StartRotation);
         }
 
         public override bool Update()

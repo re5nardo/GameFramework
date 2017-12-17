@@ -16,12 +16,15 @@ public sealed class EntityCreate : Table {
   public FBS.Data.EntityType Type { get { int o = __offset(8); return o != 0 ? (FBS.Data.EntityType)bb.GetSbyte(o + bb_pos) : FBS.Data.EntityType.Character; } }
   public FBS.Data.Vector3 Pos { get { return GetPos(new FBS.Data.Vector3()); } }
   public FBS.Data.Vector3 GetPos(FBS.Data.Vector3 obj) { int o = __offset(10); return o != 0 ? obj.__init(o + bb_pos, bb) : null; }
+  public FBS.Data.Vector3 Rot { get { return GetRot(new FBS.Data.Vector3()); } }
+  public FBS.Data.Vector3 GetRot(FBS.Data.Vector3 obj) { int o = __offset(12); return o != 0 ? obj.__init(o + bb_pos, bb) : null; }
 
-  public static void StartEntityCreate(FlatBufferBuilder builder) { builder.StartObject(4); }
+  public static void StartEntityCreate(FlatBufferBuilder builder) { builder.StartObject(5); }
   public static void AddEntityID(FlatBufferBuilder builder, int EntityID) { builder.AddInt(0, EntityID, 0); }
   public static void AddMasterDataID(FlatBufferBuilder builder, int MasterDataID) { builder.AddInt(1, MasterDataID, 0); }
   public static void AddType(FlatBufferBuilder builder, FBS.Data.EntityType Type) { builder.AddSbyte(2, (sbyte)Type, 0); }
   public static void AddPos(FlatBufferBuilder builder, Offset<FBS.Data.Vector3> PosOffset) { builder.AddStruct(3, PosOffset.Value, 0); }
+  public static void AddRot(FlatBufferBuilder builder, Offset<FBS.Data.Vector3> RotOffset) { builder.AddStruct(4, RotOffset.Value, 0); }
   public static Offset<EntityCreate> EndEntityCreate(FlatBufferBuilder builder) {
     int o = builder.EndObject();
     return new Offset<EntityCreate>(o);

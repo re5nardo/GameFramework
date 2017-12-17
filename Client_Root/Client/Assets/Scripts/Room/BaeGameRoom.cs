@@ -44,6 +44,7 @@ public class BaeGameRoom : IGameRoom
     private float m_fLastUpdateTime = -0.001f;  //  include (The reason why default value is -0.001 is for processing events that happen at 0 sec)
     private float m_fElapsedTime = 0;           //  include
     private float m_fLastWorldInfoTime = -1;
+    private bool m_bEntitySample = false;
     private Dictionary<int, List<IGameEvent>> m_dicGameEvent = new Dictionary<int, List<IGameEvent>>();
     private Dictionary<int, HashSet<IGameEvent>> m_dicProcessedGameEvent = new Dictionary<int, HashSet<IGameEvent>>();
 
@@ -163,30 +164,47 @@ public class BaeGameRoom : IGameRoom
     {
         while (true)
         {
-            if (m_fLastWorldInfoTime == -1)
+            while(m_fLastWorldInfoTime == -1)
+            {
                 yield return null;
-
-            UpdateWorld();
-
-            yield return null;
+            }
 
             UpdateTime();
+
+            if (m_fLastUpdateTime < m_fElapsedTime)
+            {
+                UpdateWorld();
+
+                m_fLastUpdateTime = m_fElapsedTime;
+
+                m_bEntitySample = true;
+            }
+
+            yield return null;
+        }
+    }
+
+    private void LateUpdate()
+    {
+        if (m_bEntitySample)
+        {
+            EntitySample();
+
+            m_bEntitySample = false;
+        }
+    }
+
+    private void EntitySample()
+    {
+        foreach (KeyValuePair<int, Entity> kv in m_dicEntity)
+        {
+            kv.Value.Sample();
         }
     }
 
     private void UpdateWorld()
     {
-        if (m_fLastUpdateTime >= m_fElapsedTime)
-            return;
-
         ProcessWorldInfo();
-
-        foreach (KeyValuePair<int, Entity> kv in m_dicEntity)
-        {
-            kv.Value.Sample();
-        }
-
-        m_fLastUpdateTime = m_fElapsedTime;
     }
 
     private void UpdateTime()
@@ -299,6 +317,7 @@ public class BaeGameRoom : IGameRoom
             Entity entity = goEntity.GetComponent<Entity>();
             entity.Initialize(gameEvent.m_EntityType, gameEvent.m_nEntityID, gameEvent.m_nMasterDataID);
             entity.SetPosition(gameEvent.m_vec3Position);
+            entity.SetRotation(gameEvent.m_vec3Rotation);
 
             m_dicEntity[gameEvent.m_nEntityID] = entity;
         }

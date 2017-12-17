@@ -70,6 +70,11 @@ int Item::GetMoveCollisionTypes()
 	return CollisionObject::Type::CollisionObjectType_Character_Challenger;
 }
 
+int Item::GetAttackTargetTypes()
+{
+	return CollisionObject::Type::CollisionObjectType_None;
+}
+
 void Item::LateUpdate(long long lUpdateTime)
 {
 	__super::LateUpdate(lUpdateTime);

@@ -10,6 +10,7 @@
 #include "Behavior\Behaviors\General.h"
 #include "Behavior\Behaviors\Move.h"
 #include "Behavior\Behaviors\Die.h"
+#include "Behavior\Behaviors\Fire.h"
 #include "Skill\Skills\ContinueSkill.h"
 #include "Skill\Skills\FireSkill.h"
 #include "State\States\Acceleration.h"
@@ -65,6 +66,10 @@ IBehavior* Factory::CreateBehavior(BaeGameRoom* pGameRoom, IEntity* pEntity, int
 	else if (Die::NAME.compare(strClassName) == 0)
 	{
 		return new Die(pGameRoom, pEntity, nMasterDataID);
+	}
+	else if (Fire::NAME.compare(strClassName) == 0)
+	{
+		return new Fire(pGameRoom, pEntity, nMasterDataID);
 	}
 
 	return NULL;

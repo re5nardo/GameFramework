@@ -40,6 +40,7 @@ void DummyCharacter1AI::UpdateBody(long long lUpdateTime)
 		pEntityCreate->m_nMasterDataID = m_nMasterDataID;
 		pEntityCreate->m_EntityType = FBS::Data::EntityType_Character;
 		pEntityCreate->m_vec3Position = m_pCharacter->GetPosition();
+		pEntityCreate->m_vec3Rotation = m_pCharacter->GetRotation();
 
 		m_pGameRoom->AddGameEvent(pEntityCreate);
 

@@ -54,11 +54,13 @@ public:
 
 public:
 	bool ContinuousCollisionDectection(int nTargetID, int nOtherID, btVector3& vec3To, btVector3& vec3Hit);
-	bool DiscreteCollisionDectection(int nTargetID, int nOtherID, btVector3& vec3Hit);
+	bool DiscreteCollisionDectection(int nTargetID, int nOtherID, btVector3& vec3Hit);	//	not used..
 	bool GetCollisionObjectsInRange(int nTargetID, btVector3& vec3To, int nTypes, list<CollisionObject*>* pObjects);
+	bool GetCollisionObjectsInRange(btVector3& vec3Position, btVector3& vec3Rotation, btVector3& vec3Range, int nTypes, list<CollisionObject*>* pObjects);
 	bool ContinuousCollisionDectectionFirst(int nID, btVector3& vec3To, int nTypes, pair<int, btVector3>* hit);
 	bool ContinuousCollisionDectection(int nID, btVector3& vec3To, int nTypes, list<pair<int, btVector3>>* listHit);
-	bool DiscreteCollisionDectection(int nID, int nTypes, list<pair<int, btVector3>>* listHit);
+	bool DiscreteCollisionDectection(int nID, int nTypes, list<pair<int, btVector3>>* listHit);	//	not used..
+	bool DiscreteCollisionDectection(btCollisionObject* pbtCollisionObject1, btCollisionObject* pbtCollisionObject2);
 	bool CehckExistInRange(btVector3& vec3Center, float fRadius, int nTypes, list<pair<int, btVector3>>* listItem);	//	Ignore Y-axis
 	bool CehckExistInRange(int nID, float fRadius, int nTypes, list<pair<int, btVector3>>* listItem);	//	Ignore Y-axis
 

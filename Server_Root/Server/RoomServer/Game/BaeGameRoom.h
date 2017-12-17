@@ -151,6 +151,7 @@ public:
 	bool ContinuousCollisionDectection(int nTargetID, CollisionObject* pOther, btVector3& vec3To, btVector3& vec3Hit);
 	bool DiscreteCollisionDectection(int nTargetID, int nOtherID, btVector3& vec3Hit);
 	bool GetCollisionObjectsInRange(int nTargetID, btVector3& vec3To, int nTypes, list<CollisionObject*>* pObjects);
+	bool GetCollisionObjectsInRange(btVector3& vec3Position, btVector3& vec3Rotation, btVector3& vec3Range, int nTypes, list<CollisionObject*>* pObjects);
 
 	bool CheckDiscreteCollisionDectection(int nEntityID, int nTypes, list<pair<int, btVector3>>* listHit);
 	bool CheckContinuousCollisionDectectionFirst(int nEntityID, btVector3& vec3Dest, int nTypes, pair<int, btVector3>* hit);

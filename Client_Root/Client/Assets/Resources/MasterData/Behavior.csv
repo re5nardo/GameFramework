@@ -4,6 +4,7 @@ ID,Name,ClassName,Length,StringParams,AnimationName,Actions
 2,Stop,Stop,0.5,,Stop,
 3,OverHeat,General,0.3,,OverHeat,AddState:0.2:0
 4,ElectronicShield,General,0.6,1:0.5,ElectronicShield,AddState:0.5:1
-5,FlowerFire,General,0.5,"0,45,90,135,180,225,270,315",Fire,Fire:0.2:0
+5,FlowerFire,Fire,0.5,"0,15,30,45,345,330,315",Fire,Project:0.2:0
 6,Spawn,General,0.2,,Spawn,
 7,Die,Die,10,,Die,
+8,Spark,Fire,1,,Spark,Fire:0.5:0:1:1:2:1:30

@@ -439,6 +439,40 @@ bool CollisionManager::GetCollisionObjectsInRange(int nTargetID, btVector3& vec3
 	return pObjects->size() > 0;
 }
 
+bool CollisionManager::GetCollisionObjectsInRange(btVector3& vec3Position, btVector3& vec3Rotation, btVector3& vec3Range, int nTypes, list<CollisionObject*>* pObjects)
+{
+	btTransform t;
+	t.setOrigin(vec3Position);
+	t.setRotation(Util::DegreesToQuaternion(vec3Rotation));
+
+	btBoxShape btBoxShape(vec3Range);
+
+	btCollisionObject target;
+	target.setWorldTransform(t);
+	target.setCollisionShape(&btBoxShape);
+
+	btVector3 min, max;
+	btBoxShape.getAabb(t, min, max);
+
+	XY center(vec3Position.x(), vec3Position.z());
+	float halfDimension_x = max.x() - min.x();
+	float halfDimension_z = max.z() - min.z();
+
+	list<CollisionObject*> listCandidate = GetCollisionObjects(nTypes, AABB(center, halfDimension_x, halfDimension_z));
+
+	for (list<CollisionObject*>::iterator it = listCandidate.begin(); it != listCandidate.end(); ++it)
+	{
+		CollisionObject* pCandidate = *it;
+
+		if (DiscreteCollisionDectection(&target, pCandidate->GetbtCollisionObject()))
+		{
+			pObjects->push_back(pCandidate);
+		}
+	}
+
+	return pObjects->size() > 0;
+}
+
 //	This shows poor performance where the distance between start to dest is long
 bool CollisionManager::ContinuousCollisionDectectionFirst(int nID, btVector3& vec3To, int nTypes, pair<int, btVector3>* hit)
 {
@@ -646,7 +680,44 @@ bool CollisionManager::DiscreteCollisionDectection(int nID, int nTypes, list<pai
 			}
 
 			contactManifold->clearManifold();
+
+			break;		//	Take just one
 		}
+	}
+
+	return false;
+}
+
+bool CollisionManager::DiscreteCollisionDectection(btCollisionObject* pbtCollisionObject1, btCollisionObject* pbtCollisionObject2)
+{
+	btCollisionAlgorithm* pCollisionAlgorithm = m_pCollisionWorld->getDispatcher()->findAlgorithm(pbtCollisionObject1, pbtCollisionObject2);
+	btManifoldResult contactPointResult(pbtCollisionObject1, pbtCollisionObject2);
+
+	pCollisionAlgorithm->processCollision(pbtCollisionObject1, pbtCollisionObject2, m_pCollisionWorld->getDispatchInfo(), &contactPointResult);
+
+	btManifoldArray manifoldArray;
+	pCollisionAlgorithm->getAllContactManifolds(manifoldArray);	//	All contact possible cases? (NarrowPhase)
+
+	int numManifolds = manifoldArray.size();
+	for (int i = 0; i < numManifolds; ++i)
+	{
+		btPersistentManifold* contactManifold = manifoldArray[i];
+		btCollisionObject* body0 = static_cast<btCollisionObject*>(contactManifold->getBody0());
+
+		int numContacts = contactManifold->getNumContacts();
+		bool swap = body0 == pbtCollisionObject1;
+
+		for (int j = 0; j < numContacts; ++j)
+		{
+			btManifoldPoint& pt = contactManifold->getContactPoint(j);
+
+			btVector3 ptA = swap ? pt.getPositionWorldOnA() : pt.getPositionWorldOnB();
+			btVector3 ptB = swap ? pt.getPositionWorldOnB() : pt.getPositionWorldOnA();
+
+			return true;	//	Take just one
+		}
+
+		contactManifold->clearManifold();
 	}
 
 	return false;

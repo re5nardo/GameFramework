@@ -17,6 +17,7 @@ namespace GameEvent
 		int m_nMasterDataID;
 		FBS::Data::EntityType m_EntityType;
 		btVector3 m_vec3Position;
+		btVector3 m_vec3Rotation;
 
 	public:
 		FBS::GameEventType GetType() override;

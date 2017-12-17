@@ -438,6 +438,9 @@
     <ClInclude Include="GameEvent\GameEvents\CharacterStatusChange.h">
       <Filter>헤더 파일\GameEvent\GameEvents</Filter>
     </ClInclude>
+    <ClInclude Include="Behavior\Behaviors\Fire.h">
+      <Filter>헤더 파일\Behavior\Behaviors</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -661,6 +664,9 @@
     </ClCompile>
     <ClCompile Include="GameEvent\GameEvents\CharacterStatusChange.cpp">
       <Filter>소스 파일\GameEvent\GameEvents</Filter>
+    </ClCompile>
+    <ClCompile Include="Behavior\Behaviors\Fire.cpp">
+      <Filter>소스 파일\Behavior\Behaviors</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
