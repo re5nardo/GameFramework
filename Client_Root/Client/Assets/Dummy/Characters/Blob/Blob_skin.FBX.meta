@@ -1,0 +1,179 @@
+fileFormatVersion: 2
+guid: 43b88d310b84b544f999ae628c6c9e41
+timeCreated: 1471927460
+licenseType: Free
+ModelImporter:
+  serializedVersion: 19
+  fileIDToRecycleName:
+    100000: Bip001
+    100002: //RootNode
+    100004: Bone_B_extra
+    100006: Bone_B_leaf_a
+    100008: Bone_B_leaf_b
+    100010: Bone_B_leaf_c
+    100012: Bone_C_leaf_a
+    100014: Bone_C_leaf_b
+    100016: Bone_C_leaf_c
+    100018: Bone_down_jaw
+    100020: Bone_F_leaf_a
+    100022: Bone_F_leaf_b
+    100024: Bone_F_leaf_c
+    100026: Bone_L_cheek
+    100028: Bone_L_downeye
+    100030: Bone_L_extra
+    100032: Bone_L_eye
+    100034: Bone_L_leaf_a
+    100036: Bone_L_leaf_b
+    100038: Bone_L_leaf_c
+    100040: Bone_L_upeye
+    100042: Bone_R_cheek
+    100044: Bone_R_downeye
+    100046: Bone_R_extra
+    100048: Bone_R_eye
+    100050: Bone_R_leaf_a
+    100052: Bone_R_leaf_b
+    100054: Bone_R_leaf_c
+    100056: Bone_R_upeye
+    100058: Bone_up_jaw
+    100060: Item_Slime01
+    100062: Item_Slime02
+    100064: Item_Slime03
+    100066: Item_Slime04
+    100068: spine
+    100070: spine1
+    100072: SHADOW01
+    100074: SHADOW02
+    100076: SHADOW03
+    100078: SHADOW04
+    400000: Bip001
+    400002: //RootNode
+    400004: Bone_B_extra
+    400006: Bone_B_leaf_a
+    400008: Bone_B_leaf_b
+    400010: Bone_B_leaf_c
+    400012: Bone_C_leaf_a
+    400014: Bone_C_leaf_b
+    400016: Bone_C_leaf_c
+    400018: Bone_down_jaw
+    400020: Bone_F_leaf_a
+    400022: Bone_F_leaf_b
+    400024: Bone_F_leaf_c
+    400026: Bone_L_cheek
+    400028: Bone_L_downeye
+    400030: Bone_L_extra
+    400032: Bone_L_eye
+    400034: Bone_L_leaf_a
+    400036: Bone_L_leaf_b
+    400038: Bone_L_leaf_c
+    400040: Bone_L_upeye
+    400042: Bone_R_cheek
+    400044: Bone_R_downeye
+    400046: Bone_R_extra
+    400048: Bone_R_eye
+    400050: Bone_R_leaf_a
+    400052: Bone_R_leaf_b
+    400054: Bone_R_leaf_c
+    400056: Bone_R_upeye
+    400058: Bone_up_jaw
+    400060: Item_Slime01
+    400062: Item_Slime02
+    400064: Item_Slime03
+    400066: Item_Slime04
+    400068: spine
+    400070: spine1
+    400072: SHADOW01
+    400074: SHADOW02
+    400076: SHADOW03
+    400078: SHADOW04
+    2300000: Item_Slime02
+    2300002: Item_Slime03
+    3300000: Item_Slime02
+    3300002: Item_Slime03
+    4300000: Item_Slime01
+    4300002: Item_Slime02
+    4300004: Item_Slime03
+    4300006: Item_Slime04
+    4300008: SHADOW01
+    4300010: SHADOW02
+    4300012: SHADOW03
+    4300014: SHADOW04
+    9500000: //RootNode
+    11100000: //RootNode
+    13700000: Item_Slime01
+    13700002: Item_Slime04
+    13700004: Item_Slime02
+    13700006: Item_Slime03
+    13700008: SHADOW01
+    13700010: SHADOW02
+    13700012: SHADOW03
+    13700014: SHADOW04
+  materials:
+    importMaterials: 0
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 0
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 2
+  importAnimation: 0
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 0
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 1
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
