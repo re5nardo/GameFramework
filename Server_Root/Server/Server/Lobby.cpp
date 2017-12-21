@@ -3,6 +3,7 @@
 #include "../CommonSources/Network/Network.h"
 #include "../CommonSources/Message/IMessage.h"
 #include "LobbyMessageHeader.h"
+#include "../CommonSources/tinyxml2.h"
 #include <time.h>
 //#include <math.h>
 
@@ -29,6 +30,37 @@ void Lobby::SendToAllUsers(IMessage* pMsg)
 	}
 	
 	delete pMsg;
+}
+
+
+string Lobby::GetRoomServerIP()
+{
+	tinyxml2::XMLDocument doc;
+	doc.LoadFile("LobbyServerConfig.xml");
+
+	tinyxml2::XMLElement* pRoomServerInfo = doc.FirstChildElement("RoomServerInfo");
+
+	return pRoomServerInfo->FirstChildElement("IP")->GetText();
+}
+
+int Lobby::GetRoomServerPort()
+{
+	tinyxml2::XMLDocument doc;
+	doc.LoadFile("LobbyServerConfig.xml");
+
+	tinyxml2::XMLElement* pRoomServerInfo = doc.FirstChildElement("RoomServerInfo");
+
+	return atoi(pRoomServerInfo->FirstChildElement("Port")->GetText());
+}
+
+int Lobby::GetMatchingPlayerCount()
+{
+	tinyxml2::XMLDocument doc;
+	doc.LoadFile("LobbyServerConfig.xml");
+
+	tinyxml2::XMLElement* pMatchingPlayerCount = doc.FirstChildElement("MatchingPlayerCount");
+
+	return atoi(pMatchingPlayerCount->GetText());
 }
 
 void Lobby::OnAccept(unsigned int socket)
@@ -84,7 +116,7 @@ void Lobby::OnSelectNormalGameToL(SelectNormalGameToL* pMsg, unsigned int socket
 {
 	//	Match making.. & select room server..
 	//	...
-	int nMatchingPlayerCount = 2;
+	int nMatchingPlayerCount = GetMatchingPlayerCount();
 	m_queueMatchingPool.push(m_mapSocketPlayerKey[socket]);
 
 	if (m_queueMatchingPool.size() >= nMatchingPlayerCount)
@@ -98,7 +130,7 @@ void Lobby::OnSelectNormalGameToL(SelectNormalGameToL* pMsg, unsigned int socket
 			m_queueMatchingPool.pop();
 		}
 
-		Network::Instance()->Send("175.197.227.73", 9111, req);
+		Network::Instance()->Send(GetRoomServerIP().c_str(), GetRoomServerPort(), req);
 	}
 }
 

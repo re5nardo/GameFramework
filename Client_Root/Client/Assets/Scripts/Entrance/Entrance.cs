@@ -3,14 +3,11 @@ using UnityEngine.SceneManagement;
 
 public class Entrance : MonoBehaviour
 {
-    private string m_strIP = "172.30.1.18";
-    private int m_nPort = 9110;
-
     private void Start()
     {
         MasterDataManager.Instance.DownloadMasterData("");
 
-        Network.Instance.ConnectToServer(m_strIP, m_nPort, OnConnected, OnRecvMessage);
+        Network.Instance.ConnectToServer(Config.Instance.GetLobbyServerIP(), Config.Instance.GetLobbyServerPort(), OnConnected, OnRecvMessage);
     }
 
     private void OnConnected(bool bResult)

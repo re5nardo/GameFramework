@@ -94,6 +94,7 @@
     <ClInclude Include="..\CommonSources\Network\NetworkCore.h" />
     <ClInclude Include="..\CommonSources\Network\NetworkDefines.h" />
     <ClInclude Include="..\CommonSources\Singleton.h" />
+    <ClInclude Include="..\CommonSources\tinyxml2.h" />
     <ClInclude Include="Data.h" />
     <ClInclude Include="Defines.h" />
     <ClInclude Include="Glicko2.h" />
@@ -114,6 +115,7 @@
     <ClCompile Include="..\CommonSources\Network\Accepter.cpp" />
     <ClCompile Include="..\CommonSources\Network\Network.cpp" />
     <ClCompile Include="..\CommonSources\Network\NetworkCore.cpp" />
+    <ClCompile Include="..\CommonSources\tinyxml2.cpp" />
     <ClCompile Include="Glicko2.cpp" />
     <ClCompile Include="Lobby.cpp" />
     <ClCompile Include="LobbyMessageConvertor.cpp" />

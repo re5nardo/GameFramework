@@ -27,10 +27,6 @@ public class BaeGameRoom : IGameRoom
 
     public static float deltaTime = 0;
 
-    //  Temp
-    private string m_strIP = "172.30.1.18";
-    private int m_nPort = 9111;
-
     private Dictionary<int, Entity> m_dicEntity = new Dictionary<int, Entity>();
 
     private int m_nOldFrameRate = 0;
@@ -157,7 +153,7 @@ public class BaeGameRoom : IGameRoom
         m_nOldFrameRate = Application.targetFrameRate;
         Application.targetFrameRate = 30;
 
-        RoomNetwork.Instance.ConnectToServer(m_strIP, m_nPort, OnConnected, OnRecvMessage);
+        RoomNetwork.Instance.ConnectToServer(Config.Instance.GetRoomServerIP(), Config.Instance.GetRoomServerPort(), OnConnected, OnRecvMessage);
     }
         
     private IEnumerator Loop()

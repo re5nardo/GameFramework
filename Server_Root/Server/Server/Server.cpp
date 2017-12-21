@@ -1,12 +1,13 @@
 #include "stdafx.h"
 #include "Lobby.h"
-
+#include "../CommonSources/tinyxml2.h"
 
 void ClearSingltons();
+int GetBindPort();
 
 int _tmain(int argc, _TCHAR* argv[])
 {
-	Lobby* pLobby = new Lobby(9110);
+	Lobby* pLobby = new Lobby(GetBindPort());
 
 	int nExit = -1;
 	while (true)
@@ -27,4 +28,15 @@ int _tmain(int argc, _TCHAR* argv[])
 
 void ClearSingltons()
 {
+}
+
+//	temp..
+int GetBindPort()
+{
+	tinyxml2::XMLDocument doc;
+	doc.LoadFile("LobbyServerConfig.xml");
+
+	tinyxml2::XMLElement* pPort = doc.FirstChildElement("Port");
+
+	return atoi(pPort->GetText());
 }

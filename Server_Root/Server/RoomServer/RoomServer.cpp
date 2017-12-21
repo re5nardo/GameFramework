@@ -4,16 +4,16 @@
 #include "stdafx.h"
 #include "Room.h"
 #include "MasterData\MasterDataManager.h"
+#include "../CommonSources/tinyxml2.h"
 
 void ClearSingltons();
-
-
+int GetBindPort();
 
 int _tmain(int argc, _TCHAR* argv[])
 {
 	MasterDataManager::Instance()->DownloadMasterData("");
 
-	Room* pRoom = new Room(9111);
+	Room* pRoom = new Room(GetBindPort());
 
 	int nExit = -1;
 	while (true)
@@ -34,4 +34,14 @@ int _tmain(int argc, _TCHAR* argv[])
 
 void ClearSingltons()
 {
+}
+
+int GetBindPort()
+{
+	tinyxml2::XMLDocument doc;
+	doc.LoadFile("RoomServerConfig.xml");
+
+	tinyxml2::XMLElement* pPort = doc.FirstChildElement("Port");
+
+	return atoi(pPort->GetText());
 }

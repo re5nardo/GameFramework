@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ServerInfo>
+	<LobbyServerInfo>
+		<IP>172.30.1.18</IP>
+		<Port>9110</Port>
+  	</LobbyServerInfo>
+  	<RoomServerInfo>
+  		<IP>172.30.1.18</IP>
+  		<Port>9111</Port>
+  	</RoomServerInfo>
+</ServerInfo>

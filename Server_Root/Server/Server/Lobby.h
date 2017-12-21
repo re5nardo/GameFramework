@@ -27,6 +27,11 @@ private:
 	queue<string>	m_queueMatchingPool;
 
 private:
+	string GetRoomServerIP();		//	temp..
+	int GetRoomServerPort();		//	temp..
+	int GetMatchingPlayerCount();	//	temp..
+
+private:
 	void OnAccept(unsigned int socket);
 	void OnRecvMessage(unsigned int socket, IMessage* pMsg);
 

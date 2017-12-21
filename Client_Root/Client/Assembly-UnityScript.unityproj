@@ -49,6 +49,7 @@
      <Compile Include="Assets\fightBOT (free)\script\robo_animationCheck_free.js" />
      <None Include="Assets\Third Party\NGUI\Examples\Shaders\Unlit - Depth Cutout.shader" />
      <None Include="Assets\UnityChan\Models\UnityChanShader\Shader\Unitychan_chara_eye.shader" />
+     <None Include="Assets\Config.xml" />
      <None Include="Assets\DownloadedResources\MOBA and Tower Defense\Standard Assets\Effects\ImageEffects\Shaders\_BloomAndFlares\BlendOneOne.shader" />
      <None Include="Assets\Third Party\NGUI\ReadMe - 3.8.2.txt" />
      <None Include="Assets\Third Party\NGUI\Resources\Shaders\Unlit - Transparent Masked 1.shader" />
