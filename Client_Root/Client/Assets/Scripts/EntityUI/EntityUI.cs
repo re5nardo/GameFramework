@@ -41,7 +41,7 @@ public class EntityUI : PooledComponent
         }
 
         m_goModel = ObjectPool.Instance.GetGameObject(strModelPath);
-        m_animModel = m_goModel.GetComponent<Animation>();
+        m_animModel = m_goModel.GetComponentInChildren<Animation>();
 
         m_goModel.transform.parent = m_trEntityUI;
         m_goModel.transform.localPosition = Vector3.zero;

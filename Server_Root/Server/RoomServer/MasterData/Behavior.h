@@ -30,6 +30,6 @@ namespace MasterData
 		vector<Action> m_vecAction;
 
 	public:
-		void SetData(Sheet* pSheet, int nRow) override;
+		void SetData(vector<string> data) override;
 	};
 }

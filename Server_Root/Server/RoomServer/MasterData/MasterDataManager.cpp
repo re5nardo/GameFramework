@@ -2,20 +2,14 @@
 #include "MasterDataManager.h"
 #include <typeinfo>
 #include "IMasterData.h"
+#include "../Util.h"
 
 MasterDataManager::MasterDataManager()
 {
-	m_Book = xlCreateBook();
 }
 
 MasterDataManager::~MasterDataManager()
 {
-	if (m_Book != NULL)
-	{
-		m_Book->release();
-		//delete m_Book;		Does release() delete instance?
-	}
-
 	for (map<string, map<int, IMasterData*>>::iterator it = m_mapData.begin(); it != m_mapData.end(); ++it)
 	{
 		for (map<int, IMasterData*>::iterator iter = it->second.begin(); iter != it->second.end(); ++it)
@@ -44,20 +38,13 @@ void MasterDataManager::SetCharacter()
 	string strTypeName = typeid(MasterData::Character).name();
 	m_mapData[strTypeName] = map<int, IMasterData*>();
 
-	if (m_Book->load("Character.xls"))
+	vector<vector<string>> vectorData = Util::ReadCSV("Character.csv");
+	for (int row = 1; row < vectorData.size(); ++row)
 	{
-		Sheet* pSheet = m_Book->getSheet(0);
-		for (int row = 1; row < pSheet->lastRow(); ++row)
-		{
-			MasterData::Character* pCharacter = new MasterData::Character();
-			pCharacter->SetData(pSheet, row);
+		MasterData::Character* pCharacter = new MasterData::Character();
+		pCharacter->SetData(vectorData[row]);
 
-			m_mapData[strTypeName][pCharacter->m_nID] = pCharacter;
-		}
-	}
-	else
-	{
-		printf("Fail to load Character.xls!");
+		m_mapData[strTypeName][pCharacter->m_nID] = pCharacter;
 	}
 }
 
@@ -66,20 +53,13 @@ void MasterDataManager::SetSkill()
 	string strTypeName = typeid(MasterData::Skill).name();
 	m_mapData[strTypeName] = map<int, IMasterData*>();
 
-	if (m_Book->load("Skill.xls"))
+	vector<vector<string>> vectorData = Util::ReadCSV("Skill.csv");
+	for (int row = 1; row < vectorData.size(); ++row)
 	{
-		Sheet* pSheet = m_Book->getSheet(0);
-		for (int row = 1; row < pSheet->lastRow(); ++row)
-		{
-			MasterData::Skill* pSkill = new MasterData::Skill();
-			pSkill->SetData(pSheet, row);
+		MasterData::Skill* pSkill = new MasterData::Skill();
+		pSkill->SetData(vectorData[row]);
 
-			m_mapData[strTypeName][pSkill->m_nID] = pSkill;
-		}
-	}
-	else
-	{
-		printf("Fail to load Skill.xls!");
+		m_mapData[strTypeName][pSkill->m_nID] = pSkill;
 	}
 }
 
@@ -88,20 +68,13 @@ void MasterDataManager::SetBehavior()
 	string strTypeName = typeid(MasterData::Behavior).name();
 	m_mapData[strTypeName] = map<int, IMasterData*>();
 
-	if (m_Book->load("Behavior.xls"))
+	vector<vector<string>> vectorData = Util::ReadCSV("Behavior.csv");
+	for (int row = 1; row < vectorData.size(); ++row)
 	{
-		Sheet* pSheet = m_Book->getSheet(0);
-		for (int row = 1; row < pSheet->lastRow(); ++row)
-		{
-			MasterData::Behavior* pBehavior = new MasterData::Behavior();
-			pBehavior->SetData(pSheet, row);
+		MasterData::Behavior* pBehavior = new MasterData::Behavior();
+		pBehavior->SetData(vectorData[row]);
 
-			m_mapData[strTypeName][pBehavior->m_nID] = pBehavior;
-		}
-	}
-	else
-	{
-		printf("Fail to load Behavior.xls!");
+		m_mapData[strTypeName][pBehavior->m_nID] = pBehavior;
 	}
 }
 
@@ -110,20 +83,13 @@ void MasterDataManager::SetState()
 	string strTypeName = typeid(MasterData::State).name();
 	m_mapData[strTypeName] = map<int, IMasterData*>();
 
-	if (m_Book->load("State.xls"))
+	vector<vector<string>> vectorData = Util::ReadCSV("State.csv");
+	for (int row = 1; row < vectorData.size(); ++row)
 	{
-		Sheet* pSheet = m_Book->getSheet(0);
-		for (int row = 1; row < pSheet->lastRow(); ++row)
-		{
-			MasterData::State* pState = new MasterData::State();
-			pState->SetData(pSheet, row);
+		MasterData::State* pState = new MasterData::State();
+		pState->SetData(vectorData[row]);
 
-			m_mapData[strTypeName][pState->m_nID] = pState;
-		}
-	}
-	else
-	{
-		printf("Fail to load State.xls!");
+		m_mapData[strTypeName][pState->m_nID] = pState;
 	}
 }
 
@@ -132,20 +98,13 @@ void MasterDataManager::SetProjectile()
 	string strTypeName = typeid(MasterData::Projectile).name();
 	m_mapData[strTypeName] = map<int, IMasterData*>();
 
-	if (m_Book->load("Projectile.xls"))
+	vector<vector<string>> vectorData = Util::ReadCSV("Projectile.csv");
+	for (int row = 1; row < vectorData.size(); ++row)
 	{
-		Sheet* pSheet = m_Book->getSheet(0);
-		for (int row = 1; row < pSheet->lastRow(); ++row)
-		{
-			MasterData::Projectile* pProjectile = new MasterData::Projectile();
-			pProjectile->SetData(pSheet, row);
+		MasterData::Projectile* pProjectile = new MasterData::Projectile();
+		pProjectile->SetData(vectorData[row]);
 
-			m_mapData[strTypeName][pProjectile->m_nID] = pProjectile;
-		}
-	}
-	else
-	{
-		printf("Fail to load Projectile.xls!");
+		m_mapData[strTypeName][pProjectile->m_nID] = pProjectile;
 	}
 }
 
@@ -154,20 +113,13 @@ void MasterDataManager::SetItem()
 	string strTypeName = typeid(MasterData::Item).name();
 	m_mapData[strTypeName] = map<int, IMasterData*>();
 
-	if (m_Book->load("Item.xls"))
+	vector<vector<string>> vectorData = Util::ReadCSV("Item.csv");
+	for (int row = 1; row < vectorData.size(); ++row)
 	{
-		Sheet* pSheet = m_Book->getSheet(0);
-		for (int row = 1; row < pSheet->lastRow(); ++row)
-		{
-			MasterData::Item* pItem = new MasterData::Item();
-			pItem->SetData(pSheet, row);
+		MasterData::Item* pItem = new MasterData::Item();
+		pItem->SetData(vectorData[row]);
 
-			m_mapData[strTypeName][pItem->m_nID] = pItem;
-		}
-	}
-	else
-	{
-		printf("Fail to load Item.xls!");
+		m_mapData[strTypeName][pItem->m_nID] = pItem;
 	}
 }
 
@@ -176,19 +128,12 @@ void MasterDataManager::SetCharacterSpeedVariation()
 	string strTypeName = typeid(MasterData::CharacterSpeedVariation).name();
 	m_mapData[strTypeName] = map<int, IMasterData*>();
 
-	if (m_Book->load("CharacterSpeedVariation.xls"))
+	vector<vector<string>> vectorData = Util::ReadCSV("CharacterSpeedVariation.csv");
+	for (int row = 1; row < vectorData.size(); ++row)
 	{
-		Sheet* pSheet = m_Book->getSheet(0);
-		for (int row = 1; row < pSheet->lastRow(); ++row)
-		{
-			MasterData::CharacterSpeedVariation* pCharacterSpeedVariation = new MasterData::CharacterSpeedVariation();
-			pCharacterSpeedVariation->SetData(pSheet, row);
+		MasterData::CharacterSpeedVariation* pCharacterSpeedVariation = new MasterData::CharacterSpeedVariation();
+		pCharacterSpeedVariation->SetData(vectorData[row]);
 
-			m_mapData[strTypeName][pCharacterSpeedVariation->m_nID] = pCharacterSpeedVariation;
-		}
-	}
-	else
-	{
-		printf("Fail to load CharacterSpeedVariation.xls!");
+		m_mapData[strTypeName][pCharacterSpeedVariation->m_nID] = pCharacterSpeedVariation;
 	}
 }

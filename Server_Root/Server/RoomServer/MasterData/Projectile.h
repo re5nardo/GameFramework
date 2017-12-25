@@ -25,6 +25,6 @@ namespace MasterData
 		int m_nDefaultBehaviorID = -1;
 
 	public:
-		void SetData(Sheet* pSheet, int nRow) override;
+		void SetData(vector<string> data) override;
 	};
 }

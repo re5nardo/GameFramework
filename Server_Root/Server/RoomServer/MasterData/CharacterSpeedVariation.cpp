@@ -11,13 +11,13 @@ namespace MasterData
 	{
 	}
 
-	void CharacterSpeedVariation::SetData(Sheet* pSheet, int nRow)
+	void CharacterSpeedVariation::SetData(vector<string> data)
 	{
-		m_nID = pSheet->readNum(nRow, 0);
-		m_nTargetCharacterID = pSheet->readNum(nRow, 1);
-		m_fTouchAcceleration = pSheet->readNum(nRow, 2);
-		m_fTouchAccelerationEndPoint = pSheet->readNum(nRow, 3);
-		m_fTouchDecelerationStartPoint = pSheet->readNum(nRow, 4);
-		m_fTouchDuration = pSheet->readNum(nRow, 5);
+		m_nID = atoi(data[0].c_str());
+		m_nTargetCharacterID = atoi(data[1].c_str());
+		m_fTouchAcceleration = atof(data[2].c_str());
+		m_fTouchAccelerationEndPoint = atof(data[3].c_str());
+		m_fTouchDecelerationStartPoint = atof(data[4].c_str());
+		m_fTouchDuration = atof(data[5].c_str());
 	}
 }

@@ -1,0 +1,7 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<Port>9110</Port>
+<MatchingPlayerCount>1</MatchingPlayerCount>
+<RoomServerInfo>
+	<IP>172.30.1.18</IP>
+	<Port>9111</Port>
+</RoomServerInfo>

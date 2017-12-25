@@ -24,6 +24,6 @@ namespace MasterData
 		vector<double> m_vecDoubleParam2;
 
 	public:
-		void SetData(Sheet* pSheet, int nRow) override;
+		void SetData(vector<string> data) override;
 	};
 }

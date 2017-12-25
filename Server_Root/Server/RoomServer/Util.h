@@ -4,8 +4,11 @@
 #include <math.h>
 #include <sstream>
 #include <vector>
+#include <list>
 #include "btBulletCollisionCommon.h"
 #include "../CommonSources/QuadTreePrerequisites.h"
+#include <fstream>
+#include <algorithm>
 
 using namespace std;
 
@@ -151,10 +154,17 @@ public:
 		btVector3 criteria(0, 0, 1);
 		btScalar angle = 0;
 
-		angle = criteria.angle(vec3Target) * 180 / M_PI;
-		if (criteria.x() >= vec3Target.x())
+		if (vec3Target == btVector3(0, 0, 0))
 		{
-			angle = 360 - angle;
+			angle = 0;
+		}
+		else
+		{
+			angle = criteria.angle(vec3Target) * 180 / M_PI;
+			if (criteria.x() >= vec3Target.x())
+			{
+				angle = 360 - angle;
+			}
 		}
 
 		return angle;
@@ -233,5 +243,122 @@ public:
 		}
 
 		return btVector3(x, y, z);
+	}
+
+	static string ReplaceAll(string &str, const string& from, const string& to)
+	{
+		size_t start_pos = 0;
+		while ((start_pos = str.find(from, start_pos)) != string::npos)
+		{
+			str.replace(start_pos, from.length(), to);
+			start_pos += to.length();
+		}
+
+		return str;
+	}
+
+	static vector<vector<string>> ReadCSV(string strFilePath)
+	{
+		vector<vector<string>> vectorData;
+
+		// read File
+		list<string> lines;
+		ifstream openFile(strFilePath.data());
+		if (openFile.is_open())
+		{
+			string line;
+			while (getline(openFile, line))
+			{
+				lines.push_back(line);
+			}
+			openFile.close();
+		}
+
+		for (list<string>::iterator it = lines.begin(); it != lines.end(); ++it)
+		{
+			string line = *it;
+
+			if (line == "")
+				continue;
+
+			vector<string> listWord;
+			bool bInsideQuotes = false;
+			int nWordStart = 0;
+
+			for (int i = 0; i < line.size(); ++i)
+			{
+				bool bLast = i == line.size() - 1;
+
+				if (line[i] == ',')
+				{
+					if (bLast)
+					{
+						listWord.push_back(line.substr(nWordStart, i - nWordStart));
+						listWord.push_back("");
+					}
+					else
+					{
+						if (!bInsideQuotes)
+						{
+							listWord.push_back(line.substr(nWordStart, i - nWordStart));
+							nWordStart = i + 1;
+						}
+					}
+				}
+				else if (line[i] == '"')
+				{
+					if (bInsideQuotes)
+					{
+						if (bLast)
+						{
+							string substr = line.substr(nWordStart, i - nWordStart);
+							listWord.push_back(ReplaceAll(substr, "\"\"", "\""));
+						}
+						else
+						{
+							if (line[i + 1] != '"')
+							{
+								string substr = line.substr(nWordStart, i - nWordStart);
+								listWord.push_back(ReplaceAll(substr, "\"\"", "\""));
+								bInsideQuotes = false;
+
+								if (line[i + 1] == ',')
+								{
+									if (i == line.size() - 2)
+									{
+										listWord.push_back("");
+									}
+									else
+									{
+										++i;
+										nWordStart = i + 1;
+									}
+								}
+							}
+							else
+							{
+								++i;
+							}
+						}
+					}
+					else
+					{
+						nWordStart = i + 1;
+						bInsideQuotes = true;
+					}
+				}
+				else
+				{
+					if (bLast)
+					{
+						listWord.push_back(line.substr(nWordStart, line.size() - nWordStart));
+					}
+				}
+			}
+
+			vectorData.push_back(listWord);
+		}
+
+		return vectorData;
 	}
 };

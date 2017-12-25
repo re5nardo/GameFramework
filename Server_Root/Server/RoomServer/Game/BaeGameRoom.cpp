@@ -8,9 +8,15 @@
 #include "../Entity/Entities/Character/Character.h"
 #include "../Entity/Entities/Projectile/Projectile.h"
 #include "../Entity/Entities/Item/Item.h"
-#include "../AI/CharacterAI/CharacterAIs/Flower1AI.h"
-#include "../AI/CharacterAI/CharacterAIs/DummyCharacter1AI.h"
-#include "../AI/CharacterAI/CharacterAIs/DummyCharacter2AI.h"
+#include "../AI/CharacterAI/CharacterAIs/BlobAI.h"
+#include "../AI/CharacterAI/CharacterAIs/CockatriceAI.h"
+#include "../AI/CharacterAI/CharacterAIs/GolemAI.h"
+#include "../AI/CharacterAI/CharacterAIs/IceGolemAI.h"
+#include "../AI/CharacterAI/CharacterAIs/IceQueenMaidAI.h"
+#include "../AI/CharacterAI/CharacterAIs/MamboRabbitAI.h"
+#include "../AI/CharacterAI/CharacterAIs/QueenMamboRabbitAI.h"
+#include "../AI/CharacterAI/CharacterAIs/SkullArcherAI.h"
+#include "../AI/CharacterAI/CharacterAIs/YetiAI.h"
 #include "../Messages/ToClient/WorldSnapShotToC.h"
 #include "../Messages/ToClient/WorldInfoToC.h"
 #include "../Behavior/BehaviorIDs.h"
@@ -502,63 +508,101 @@ void BaeGameRoom::SetObstacles(int nMapID, int nRandomSeed)
 	srand(nRandomSeed);
 
 	float z = -240;
-	while (true)
+	while (z <= 250)
 	{
-		z += (5 + (rand() % 30));
+		int num = rand() % 10;
 
-		if (z > 250)
+		if (num == 0 || num == 1)
 		{
-			break;
+			float z_area = 30;
+
+			btVector3 vec3StartPos(-15 + (rand() % 30), 0, z + z_area * 0.5f);
+			btVector3 vec3StartRot(0, 0, 0);
+
+			BlobAI* pBlob = new BlobAI(this, 4, 0);
+			pBlob->SetData(vec3StartPos, vec3StartRot);
+			m_listDisturber.push_back(pBlob);
+
+			z += z_area;
 		}
-
-		btVector3 vec3Start(-15 + (rand() % 30), 0, z);
-		btVector3 vec3Dest(-15 + (rand() % 30), 0, z);
-
-		while (vec3Start == vec3Dest)
+		else if (num == 2)
 		{
-			vec3Start = btVector3(-15 + (rand() % 30), 0, z);
-			vec3Dest = btVector3(-15 + (rand() % 30), 0, z);
+			float z_area = 10;
+			int nCount = 1 + (rand() % 4);
+			bool left = (rand() % 2) == 0;
+
+			for (int i = 0; i < nCount; ++i)
+			{
+				btVector3 vec3StartPos(left ? -18 : 18, 0, z + z_area * 0.5f);
+				btVector3 vec3StartRot(0, left ? 90 : 270, 0);
+
+				QueenMamboRabbitAI* pQueenMamboRabbit = new QueenMamboRabbitAI(this, 5, 0);
+				pQueenMamboRabbit->SetData(vec3StartPos, vec3StartRot);
+				m_listDisturber.push_back(pQueenMamboRabbit);
+
+				z += z_area;
+			}
 		}
-
-		DummyCharacter1AI* dummy1 = new DummyCharacter1AI(this, 2, 0);
-		dummy1->SetData(vec3Start, btVector3(0, 0, 0), vec3Dest);
-		m_listDisturber.push_back(dummy1);
-	}
-
-	//	flower1
-	z = -240;
-	while (true)
-	{
-		z += (5 + (rand() % 30));
-
-		if (z > 250)
+		else if (num == 3 || num == 4)
 		{
-			break;
+			//	1945 비행기 무리
 		}
-
-		btVector3 vec3Start(-15 + (rand() % 30), 0, z);
-
-		Flower1AI* flower1AI = new Flower1AI(this, 1, 0);
-		flower1AI->SetData(vec3Start, btVector3(0, 0, 0));
-		m_listDisturber.push_back(flower1AI);
-	}
-
-	//	DummyCharacter2
-	z = -240;
-	while (true)
-	{
-		z += (5 + (rand() % 30));
-
-		if (z > 250)
+		else if (num == 5 || num == 6 || num == 7)
 		{
-			break;
+			float z_area = 8;
+			bool left = (rand() % 2) == 0;
+
+			btVector3 vec3Start(left ? -18 : 18, 0, z + z_area * 0.5f);
+			btVector3 vec3StartRotation(0, 0, 0);
+			btVector3 vec3Dest(-vec3Start.x(), vec3Start.y(), vec3Start.z());
+
+			ICharacterAI* pCharacterAI = NULL;
+			if (num == 5)
+			{
+				YetiAI* pYeti = new YetiAI(this, 6, 0);
+				pYeti->SetData(vec3Start, vec3StartRotation, vec3Dest);
+				pCharacterAI = pYeti;
+			}
+			else if (num == 6)
+			{
+				GolemAI* pGolem = new GolemAI(this, 7, 0);
+				pGolem->SetData(vec3Start, vec3StartRotation, vec3Dest);
+				pCharacterAI = pGolem;
+			}
+			else if (num == 7)
+			{
+				IceGolemAI* pIceGolem = new IceGolemAI(this, 8, 0);
+				pIceGolem->SetData(vec3Start, vec3StartRotation, vec3Dest);
+				pCharacterAI = pIceGolem;
+			}
+			m_listDisturber.push_back(pCharacterAI);
+
+			z += z_area;
 		}
+		else if (num == 8 || num == 9)
+		{
+			float z_area = 10;
 
-		btVector3 vec3Start(-15 + (rand() % 30), 0, z);
+			btVector3 vec3StartPos(-15 + (rand() % 30), 0, z + z_area * 0.5f);
+			btVector3 vec3StartRot(0, 0, 0);
 
-		DummyCharacter2AI* dummy2 = new DummyCharacter2AI(this, 3, 0);
-		dummy2->SetData(vec3Start, btVector3(0, 0, 0));
-		m_listDisturber.push_back(dummy2);
+			ICharacterAI* pCharacterAI = NULL;
+			if (num == 8)
+			{
+				SkullArcherAI* pSkullArcher = new SkullArcherAI(this, 11, 0);
+				pSkullArcher->SetData(vec3StartPos, vec3StartRot);
+				pCharacterAI = pSkullArcher;
+			}
+			else if (num == 9)
+			{
+				MamboRabbitAI* pMamboRabbit = new MamboRabbitAI(this, 12, 0);
+				pMamboRabbit->SetData(vec3StartPos, vec3StartRot);
+				pCharacterAI = pMamboRabbit;
+			}
+			m_listDisturber.push_back(pCharacterAI);
+
+			z += z_area;
+		}
 	}
 }
 

@@ -1,8 +1,9 @@
 #pragma once
 
-#include "libxl.h"
+#include <vector>
+#include <string>
 
-using namespace libxl;
+using namespace std;
 
 class IMasterData
 {
@@ -14,5 +15,5 @@ public:
 	int m_nID;
 
 public:
-	virtual void SetData(Sheet* pSheet, int nRow) = 0;
+	virtual void SetData(vector<string> data) = 0;
 };

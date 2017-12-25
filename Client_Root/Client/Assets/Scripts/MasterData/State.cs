@@ -8,6 +8,7 @@ namespace MasterData
         public string m_strClassName;
         public float m_fLength;
         public List<string> m_listStringParam = new List<string>();
+        public List<string> m_listCoreState = new List<string>();
         public List<double> m_listDoubleParam1 = new List<double>();
         public List<double> m_listDoubleParam2 = new List<double>();
         public string  m_strFxName;
@@ -20,10 +21,11 @@ namespace MasterData
             m_strClassName = data[2];
             Util.Convert(data[3], ref m_fLength);
             Util.Parse(data[4], ',', m_listStringParam);
-            Util.Parse(data[5], ',', m_listDoubleParam1);
-            Util.Parse(data[6], ',', m_listDoubleParam2);
-            m_strFxName = data[7];
+            Util.Parse(data[5], ',', m_listCoreState);
+            Util.Parse(data[6], ',', m_listDoubleParam1);
+            Util.Parse(data[7], ',', m_listDoubleParam2);
             m_strAnimationName = data[8];
+            m_strFxName = data[9];
         }
     }
 }

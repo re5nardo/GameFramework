@@ -2,7 +2,6 @@
 
 #include "../../CommonSources/Singleton.h"
 #include <map>
-#include "libxl.h"
 #include "Skill.h"
 #include "Character.h"
 #include "Behavior.h"
@@ -12,16 +11,12 @@
 #include "CharacterSpeedVariation.h"
 
 using namespace std;
-using namespace libxl;
 
 class MasterDataManager : public Singleton<MasterDataManager>
 {
 public:
 	MasterDataManager();
 	virtual ~MasterDataManager();
-
-private:
-	Book* m_Book = NULL;
 
 private:
 	map<string, map<int, IMasterData*>> m_mapData;

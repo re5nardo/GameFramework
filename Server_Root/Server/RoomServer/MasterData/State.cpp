@@ -12,17 +12,16 @@ namespace MasterData
 	{
 	}
 
-	void State::SetData(Sheet* pSheet, int nRow)
+	void State::SetData(vector<string> data)
 	{
-		string stringparams = pSheet->cellType(nRow, 4) != CellType::CELLTYPE_EMPTY ? pSheet->readStr(nRow, 4) : "";
-		string corestates = pSheet->cellType(nRow, 5) != CellType::CELLTYPE_EMPTY ? pSheet->readStr(nRow, 5) : "";
-		string doubleparams1 = pSheet->cellType(nRow, 6) != CellType::CELLTYPE_EMPTY ? pSheet->readStr(nRow, 6) : "";
-		string doubleparams2 = pSheet->cellType(nRow, 7) != CellType::CELLTYPE_EMPTY ? pSheet->readStr(nRow, 7) : "";
-
-		m_nID = pSheet->readNum(nRow, 0);
-		m_strName = pSheet->readStr(nRow, 1);
-		m_strClassName = pSheet->readStr(nRow, 2);
-		m_fLength = pSheet->readNum(nRow, 3);
+		m_nID = atoi(data[0].c_str());
+		m_strName = data[1];
+		m_strClassName = data[2];
+		m_fLength = atof(data[3].c_str());
+		string stringparams = data[4];
+		string corestates = data[5];
+		string doubleparams1 = data[6];
+		string doubleparams2 = data[7];
 		Util::Parse(stringparams, ',', &m_vecStringParam);
 		Util::Parse(corestates, ',', &m_vecCoreState);
 		Util::Parse(doubleparams1, ',', &m_vecDoubleParam1);

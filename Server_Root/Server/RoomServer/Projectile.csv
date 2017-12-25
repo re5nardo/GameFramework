@@ -1,0 +1,2 @@
+ID,Name,ClassName,BehaviorIDs,Size,ModelResID,LifeInfo,Height,Default_Y,DefaultBehaviorID
+0,FlowerBomb,Projectile,1,1,FlowerBomb,Arrival,1,0.5,

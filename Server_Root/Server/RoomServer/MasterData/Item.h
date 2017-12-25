@@ -27,6 +27,6 @@ namespace MasterData
 		int m_nEffectParam;
 
 	public:
-		void SetData(Sheet* pSheet, int nRow) override;
+		void SetData(vector<string> data) override;
 	};
 }

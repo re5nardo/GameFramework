@@ -52,14 +52,14 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>..\..\libxl-win-3.8.0\libxl-3.8.0.0\include_cpp;..\..\..\FlatBuffers\flatbuffers-1.4.0\include;..\..\bullet-2.80-rev2531\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\FlatBuffers\flatbuffers-1.4.0\include;..\..\bullet-2.80-rev2531\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ObjectFileName>$(IntDir)/%(RelativeDir)/</ObjectFileName>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>ws2_32.lib;BulletCollision_debug.lib;BulletDynamics_debug.lib;LinearMath_debug.lib;libxl.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\..\bullet-2.80-rev2531\lib;..\..\libxl-win-3.8.0\libxl-3.8.0.0\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>ws2_32.lib;BulletCollision_debug.lib;BulletDynamics_debug.lib;LinearMath_debug.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\..\bullet-2.80-rev2531\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -98,9 +98,15 @@
     <ClInclude Include="..\CommonSources\QuadTreePrerequisites.h" />
     <ClInclude Include="..\CommonSources\Singleton.h" />
     <ClInclude Include="..\CommonSources\tinyxml2.h" />
-    <ClInclude Include="AI\CharacterAI\CharacterAIs\DummyCharacter1AI.h" />
-    <ClInclude Include="AI\CharacterAI\CharacterAIs\DummyCharacter2AI.h" />
-    <ClInclude Include="AI\CharacterAI\CharacterAIs\Flower1AI.h" />
+    <ClInclude Include="AI\CharacterAI\CharacterAIs\BlobAI.h" />
+    <ClInclude Include="AI\CharacterAI\CharacterAIs\CockatriceAI.h" />
+    <ClInclude Include="AI\CharacterAI\CharacterAIs\GolemAI.h" />
+    <ClInclude Include="AI\CharacterAI\CharacterAIs\IceGolemAI.h" />
+    <ClInclude Include="AI\CharacterAI\CharacterAIs\IceQueenMaidAI.h" />
+    <ClInclude Include="AI\CharacterAI\CharacterAIs\MamboRabbitAI.h" />
+    <ClInclude Include="AI\CharacterAI\CharacterAIs\QueenMamboRabbitAI.h" />
+    <ClInclude Include="AI\CharacterAI\CharacterAIs\SkullArcherAI.h" />
+    <ClInclude Include="AI\CharacterAI\CharacterAIs\YetiAI.h" />
     <ClInclude Include="AI\CharacterAI\ICharacterAI.h" />
     <ClInclude Include="Behavior\BehaviorIDs.h" />
     <ClInclude Include="Behavior\Behaviors\Die.h" />
@@ -182,9 +188,15 @@
     <ClCompile Include="..\CommonSources\Network\NetworkCore.cpp" />
     <ClCompile Include="..\CommonSources\QuadTreePrerequisites.cpp" />
     <ClCompile Include="..\CommonSources\tinyxml2.cpp" />
-    <ClCompile Include="AI\CharacterAI\CharacterAIs\DummyCharacter1AI.cpp" />
-    <ClCompile Include="AI\CharacterAI\CharacterAIs\DummyCharacter2AI.cpp" />
-    <ClCompile Include="AI\CharacterAI\CharacterAIs\Flower1AI.cpp" />
+    <ClCompile Include="AI\CharacterAI\CharacterAIs\BlobAI.cpp" />
+    <ClCompile Include="AI\CharacterAI\CharacterAIs\CockatriceAI.cpp" />
+    <ClCompile Include="AI\CharacterAI\CharacterAIs\GolemAI.cpp" />
+    <ClCompile Include="AI\CharacterAI\CharacterAIs\IceGolemAI.cpp" />
+    <ClCompile Include="AI\CharacterAI\CharacterAIs\IceQueenMaidAI.cpp" />
+    <ClCompile Include="AI\CharacterAI\CharacterAIs\MamboRabbitAI.cpp" />
+    <ClCompile Include="AI\CharacterAI\CharacterAIs\QueenMamboRabbitAI.cpp" />
+    <ClCompile Include="AI\CharacterAI\CharacterAIs\SkullArcherAI.cpp" />
+    <ClCompile Include="AI\CharacterAI\CharacterAIs\YetiAI.cpp" />
     <ClCompile Include="AI\CharacterAI\ICharacterAI.cpp" />
     <ClCompile Include="Behavior\Behaviors\Die.cpp" />
     <ClCompile Include="Behavior\Behaviors\Fire.cpp" />

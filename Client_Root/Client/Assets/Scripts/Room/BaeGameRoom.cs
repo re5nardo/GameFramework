@@ -46,7 +46,7 @@ public class BaeGameRoom : IGameRoom
 
     private void Update()
     {
-        if (!GetUserCharacter().IsAlive())
+        if (GetUserCharacter() == null || !GetUserCharacter().IsAlive())
             return;
         
         if (Input.GetKeyDown(KeyCode.UpArrow))
@@ -219,6 +219,10 @@ public class BaeGameRoom : IGameRoom
                     float fFactor = (fDiff - fLimit) / fLimit + 1;
 
                     deltaTime = Time.deltaTime * fFactor;
+                    if (m_fElapsedTime + deltaTime > m_fLastWorldInfoTime)
+                    {
+                        deltaTime = m_fLastWorldInfoTime - m_fElapsedTime;
+                    }
                 }
                 else
                 {
@@ -562,6 +566,12 @@ public class BaeGameRoom : IGameRoom
                 m_dicGameEvent.Add(nSec, new List<IGameEvent>());
             
             m_dicGameEvent[nSec].Add(iGameEvent);
+
+            if (iGameEvent.m_fEventTime < m_fLastUpdateTime)
+            {
+                Debug.LogError(string.Format("EventTime of GameEvent < LastUpdateTime!! EventTime : {0}, LastUpdateTime : {1}", iGameEvent.m_fEventTime, m_fLastUpdateTime));
+                Debug.LogError(iGameEvent.ToString());
+            }
         }
     }
 #endregion
@@ -655,6 +665,9 @@ public class BaeGameRoom : IGameRoom
 
     public Character GetUserCharacter()
     {
+        if (!m_dicEntity.ContainsKey(m_nUserEntityID))
+            return null;
+
         return (Character)m_dicEntity[m_nUserEntityID];
     }
 

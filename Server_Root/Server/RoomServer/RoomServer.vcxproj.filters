@@ -384,15 +384,6 @@
     <ClInclude Include="AI\CharacterAI\ICharacterAI.h">
       <Filter>헤더 파일\AI\CharacterAI</Filter>
     </ClInclude>
-    <ClInclude Include="AI\CharacterAI\CharacterAIs\Flower1AI.h">
-      <Filter>헤더 파일\AI\CharacterAI\CharacterAIs</Filter>
-    </ClInclude>
-    <ClInclude Include="AI\CharacterAI\CharacterAIs\DummyCharacter1AI.h">
-      <Filter>헤더 파일\AI\CharacterAI\CharacterAIs</Filter>
-    </ClInclude>
-    <ClInclude Include="AI\CharacterAI\CharacterAIs\DummyCharacter2AI.h">
-      <Filter>헤더 파일\AI\CharacterAI\CharacterAIs</Filter>
-    </ClInclude>
     <ClInclude Include="Behavior\Behaviors\Die.h">
       <Filter>헤더 파일\Behavior\Behaviors</Filter>
     </ClInclude>
@@ -440,6 +431,33 @@
     </ClInclude>
     <ClInclude Include="Behavior\Behaviors\Fire.h">
       <Filter>헤더 파일\Behavior\Behaviors</Filter>
+    </ClInclude>
+    <ClInclude Include="AI\CharacterAI\CharacterAIs\BlobAI.h">
+      <Filter>헤더 파일\AI\CharacterAI\CharacterAIs</Filter>
+    </ClInclude>
+    <ClInclude Include="AI\CharacterAI\CharacterAIs\CockatriceAI.h">
+      <Filter>헤더 파일\AI\CharacterAI\CharacterAIs</Filter>
+    </ClInclude>
+    <ClInclude Include="AI\CharacterAI\CharacterAIs\GolemAI.h">
+      <Filter>헤더 파일\AI\CharacterAI\CharacterAIs</Filter>
+    </ClInclude>
+    <ClInclude Include="AI\CharacterAI\CharacterAIs\IceGolemAI.h">
+      <Filter>헤더 파일\AI\CharacterAI\CharacterAIs</Filter>
+    </ClInclude>
+    <ClInclude Include="AI\CharacterAI\CharacterAIs\IceQueenMaidAI.h">
+      <Filter>헤더 파일\AI\CharacterAI\CharacterAIs</Filter>
+    </ClInclude>
+    <ClInclude Include="AI\CharacterAI\CharacterAIs\MamboRabbitAI.h">
+      <Filter>헤더 파일\AI\CharacterAI\CharacterAIs</Filter>
+    </ClInclude>
+    <ClInclude Include="AI\CharacterAI\CharacterAIs\QueenMamboRabbitAI.h">
+      <Filter>헤더 파일\AI\CharacterAI\CharacterAIs</Filter>
+    </ClInclude>
+    <ClInclude Include="AI\CharacterAI\CharacterAIs\SkullArcherAI.h">
+      <Filter>헤더 파일\AI\CharacterAI\CharacterAIs</Filter>
+    </ClInclude>
+    <ClInclude Include="AI\CharacterAI\CharacterAIs\YetiAI.h">
+      <Filter>헤더 파일\AI\CharacterAI\CharacterAIs</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -614,15 +632,6 @@
     <ClCompile Include="AI\CharacterAI\ICharacterAI.cpp">
       <Filter>소스 파일\AI\CharacterAI</Filter>
     </ClCompile>
-    <ClCompile Include="AI\CharacterAI\CharacterAIs\Flower1AI.cpp">
-      <Filter>소스 파일\AI\CharacterAI\CharacterAIs</Filter>
-    </ClCompile>
-    <ClCompile Include="AI\CharacterAI\CharacterAIs\DummyCharacter1AI.cpp">
-      <Filter>소스 파일\AI\CharacterAI\CharacterAIs</Filter>
-    </ClCompile>
-    <ClCompile Include="AI\CharacterAI\CharacterAIs\DummyCharacter2AI.cpp">
-      <Filter>소스 파일\AI\CharacterAI\CharacterAIs</Filter>
-    </ClCompile>
     <ClCompile Include="Behavior\Behaviors\Die.cpp">
       <Filter>소스 파일\Behavior\Behaviors</Filter>
     </ClCompile>
@@ -667,6 +676,33 @@
     </ClCompile>
     <ClCompile Include="Behavior\Behaviors\Fire.cpp">
       <Filter>소스 파일\Behavior\Behaviors</Filter>
+    </ClCompile>
+    <ClCompile Include="AI\CharacterAI\CharacterAIs\BlobAI.cpp">
+      <Filter>소스 파일\AI\CharacterAI\CharacterAIs</Filter>
+    </ClCompile>
+    <ClCompile Include="AI\CharacterAI\CharacterAIs\CockatriceAI.cpp">
+      <Filter>소스 파일\AI\CharacterAI\CharacterAIs</Filter>
+    </ClCompile>
+    <ClCompile Include="AI\CharacterAI\CharacterAIs\GolemAI.cpp">
+      <Filter>소스 파일\AI\CharacterAI\CharacterAIs</Filter>
+    </ClCompile>
+    <ClCompile Include="AI\CharacterAI\CharacterAIs\IceGolemAI.cpp">
+      <Filter>소스 파일\AI\CharacterAI\CharacterAIs</Filter>
+    </ClCompile>
+    <ClCompile Include="AI\CharacterAI\CharacterAIs\IceQueenMaidAI.cpp">
+      <Filter>소스 파일\AI\CharacterAI\CharacterAIs</Filter>
+    </ClCompile>
+    <ClCompile Include="AI\CharacterAI\CharacterAIs\MamboRabbitAI.cpp">
+      <Filter>소스 파일\AI\CharacterAI\CharacterAIs</Filter>
+    </ClCompile>
+    <ClCompile Include="AI\CharacterAI\CharacterAIs\QueenMamboRabbitAI.cpp">
+      <Filter>소스 파일\AI\CharacterAI\CharacterAIs</Filter>
+    </ClCompile>
+    <ClCompile Include="AI\CharacterAI\CharacterAIs\SkullArcherAI.cpp">
+      <Filter>소스 파일\AI\CharacterAI\CharacterAIs</Filter>
+    </ClCompile>
+    <ClCompile Include="AI\CharacterAI\CharacterAIs\YetiAI.cpp">
+      <Filter>소스 파일\AI\CharacterAI\CharacterAIs</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

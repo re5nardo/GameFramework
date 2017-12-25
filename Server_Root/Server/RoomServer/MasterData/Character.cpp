@@ -12,29 +12,20 @@ namespace MasterData
 	{
 	}
 
-	void Character::SetData(Sheet* pSheet, int nRow)
+	void Character::SetData(vector<string> data)
 	{
-		m_nID = pSheet->readNum(nRow, 0);
-		m_strName = pSheet->readStr(nRow, 1);
-		m_strClassName = pSheet->readStr(nRow, 2);
-		if (pSheet->cellType(nRow, 3) == CellType::CELLTYPE_STRING)
-		{
-			Util::Parse(pSheet->readStr(nRow, 3), ',', &m_vecSkillID);
-		}
-		if (pSheet->cellType(nRow, 4) == CellType::CELLTYPE_STRING)
-		{
-			Util::Parse(pSheet->readStr(nRow, 4), ',', &m_vecBehaviorID);
-		}
-		m_nHP = pSheet->readNum(nRow, 5);
-		m_nMP = pSheet->readNum(nRow, 6);
-		m_fMaximumSpeed = pSheet->readNum(nRow, 7);
-		m_fMPChargeRate = pSheet->readNum(nRow, 8);
-		m_fSize = pSheet->readNum(nRow, 9);
-		m_fHeight = pSheet->readNum(nRow, 11);
-		m_fDefault_Y = pSheet->readNum(nRow, 12);
-		if (pSheet->cellType(nRow, 13) == CellType::CELLTYPE_NUMBER)
-		{
-			m_nDefaultBehaviorID = pSheet->readNum(nRow, 13);
-		}
+		m_nID = atoi(data[0].c_str());
+		m_strName = data[1];
+		m_strClassName = data[2];
+		Util::Parse(data[3], ',', &m_vecSkillID);
+		Util::Parse(data[4], ',', &m_vecBehaviorID);
+		m_nHP = atoi(data[5].c_str());
+		m_nMP = atoi(data[6].c_str());
+		m_fMaximumSpeed = atof(data[7].c_str());
+		m_fMPChargeRate = atof(data[8].c_str());
+		m_fSize = atof(data[9].c_str());
+		m_fHeight = atof(data[11].c_str());
+		m_fDefault_Y = atof(data[12].c_str());
+		m_nDefaultBehaviorID = atoi(data[13].c_str());
 	}
 }
