@@ -88,7 +88,9 @@ public class Util
         List<List<string>> listData = new List<List<string>>();
 
         TextAsset textAsset = (TextAsset)Resources.Load(strFilePath) as TextAsset;
-        string[] lines = textAsset.text.Replace("\r", "").Split('\n');
+
+        string text = System.Text.Encoding.UTF8.GetString(textAsset.bytes); //  unity 2017 can't read text with ansi encoding..
+        string[] lines = text.Replace("\r", "").Split('\n');
 
         foreach(string line in lines)
         {
