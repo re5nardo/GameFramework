@@ -1,0 +1,13 @@
+namespace FBS;
+
+enum PlayerInputType:byte
+{
+	Position = 0,
+	Rotation,
+}
+
+table PlayerInputData
+{
+	Type:PlayerInputType;
+	Data:[byte];
+}

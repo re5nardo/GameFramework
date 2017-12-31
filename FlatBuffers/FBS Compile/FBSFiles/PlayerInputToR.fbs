@@ -1,0 +1,8 @@
+include "PlayerInputData.fbs";
+namespace FBS;
+
+table PlayerInputToR
+{
+	Type:PlayerInputType;
+	Data:[byte];
+}

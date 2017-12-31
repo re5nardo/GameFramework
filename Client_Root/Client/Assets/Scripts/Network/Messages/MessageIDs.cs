@@ -21,6 +21,7 @@ public class MessageID
     public const ushort GameInputSkillToR_ID =              40006;
     public const ushort GameInputMoveToR_ID =               40008;
     public const ushort GameInputRotationToR_ID =           40009;
+    public const ushort PlayerInputToR_ID =                 40010;
 
 
     //  Room -> Client (50000 ~ 59999)
@@ -30,4 +31,5 @@ public class MessageID
     public const ushort PlayerEnterRoomToC_ID =             50004;
     public const ushort WorldSnapShotToC_ID =               50008;
     public const ushort WorldInfoToC_ID =                   50009;
+    public const ushort TickInfoToC_ID =                    50010;
 }

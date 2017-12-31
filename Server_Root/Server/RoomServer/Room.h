@@ -7,6 +7,7 @@
 
 class CreateRoomToR;
 class BaeGameRoom;
+class BaeGameRoom2;
 class EnterRoomToR;
 
 using namespace std;
@@ -21,8 +22,10 @@ private:
 	map<string, unsigned int>			m_mapPlayerKeySocket;
 	map<unsigned int, string>			m_mapSocketPlayerKey;
 	RoomMessageConvertor				m_MessageConvertor;
-	map<int, BaeGameRoom*>				m_mapMatchIDGameRoom;
-	map<string, BaeGameRoom*>			m_mapPlayerKeyGameRoom;
+	//map<int, BaeGameRoom*>			m_mapMatchIDGameRoom;
+	//map<string, BaeGameRoom*>			m_mapPlayerKeyGameRoom;
+	map<int, BaeGameRoom2*>				m_mapMatchIDGameRoom;
+	map<string, BaeGameRoom2*>			m_mapPlayerKeyGameRoom;
 
 private:
 	void OnAccept(unsigned int socket);

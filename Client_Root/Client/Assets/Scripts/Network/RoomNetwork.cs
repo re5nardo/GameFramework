@@ -234,6 +234,10 @@ public class RoomNetwork : MonoSingleton<RoomNetwork>
         {
             msg = ObjectPool.Instance.GetObject<WorldInfoToC>();
         }
+        else if (nMessageID == TickInfoToC.MESSAGE_ID)
+        {
+            msg = ObjectPool.Instance.GetObject<TickInfoToC>();
+        }
 
         if (msg != null)
         {

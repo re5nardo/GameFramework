@@ -135,6 +135,7 @@
     <ClInclude Include="GameEvent\GameEvents\StateStart.h" />
     <ClInclude Include="GameEvent\IGameEvent.h" />
     <ClInclude Include="Game\BaeGameRoom.h" />
+    <ClInclude Include="Game\BaeGameRoom2.h" />
     <ClInclude Include="Game\CharacterSpeedVariationData.h" />
     <ClInclude Include="Game\CollisionManager.h" />
     <ClInclude Include="Game\CollisionObject.h" />
@@ -152,6 +153,7 @@
     <ClInclude Include="Messages\ToClient\GameStartToC.h" />
     <ClInclude Include="Messages\ToClient\PlayerEnterRoomToC.h" />
     <ClInclude Include="Messages\ToClient\PreparationStateToC.h" />
+    <ClInclude Include="Messages\ToClient\TickInfoToC.h" />
     <ClInclude Include="Messages\ToClient\WorldInfoToC.h" />
     <ClInclude Include="Messages\ToClient\WorldSnapShotToC.h" />
     <ClInclude Include="Messages\ToRoom\EnterRoomToR.h" />
@@ -160,8 +162,11 @@
     <ClInclude Include="Messages\ToRoom\GameInputMoveToR.h" />
     <ClInclude Include="Messages\ToRoom\GameInputRotationToR.h" />
     <ClInclude Include="Messages\ToRoom\GameInputSkillToR.h" />
+    <ClInclude Include="Messages\ToRoom\PlayerInputToR.h" />
     <ClInclude Include="Messages\ToRoom\PreparationStateToR.h" />
     <ClInclude Include="Messages\ToRoom\ReadyForStartToR.h" />
+    <ClInclude Include="PlayerInput\IPlayerInput.h" />
+    <ClInclude Include="PlayerInput\PlayerInputs\Rotation.h" />
     <ClInclude Include="Room.h" />
     <ClInclude Include="RoomMessageConvertor.h" />
     <ClInclude Include="RoomMessageHeader.h" />
@@ -222,6 +227,7 @@
     <ClCompile Include="GameEvent\GameEvents\StateStart.cpp" />
     <ClCompile Include="GameEvent\IGameEvent.cpp" />
     <ClCompile Include="Game\BaeGameRoom.cpp" />
+    <ClCompile Include="Game\BaeGameRoom2.cpp" />
     <ClCompile Include="Game\CharacterSpeedVariationData.cpp" />
     <ClCompile Include="Game\CollisionManager.cpp" />
     <ClCompile Include="Game\CollisionObject.cpp" />
@@ -239,6 +245,7 @@
     <ClCompile Include="Messages\ToClient\GameStartToC.cpp" />
     <ClCompile Include="Messages\ToClient\PlayerEnterRoomToC.cpp" />
     <ClCompile Include="Messages\ToClient\PreparationStateToC.cpp" />
+    <ClCompile Include="Messages\ToClient\TickInfoToC.cpp" />
     <ClCompile Include="Messages\ToClient\WorldInfoToC.cpp" />
     <ClCompile Include="Messages\ToClient\WorldSnapShotToC.cpp" />
     <ClCompile Include="Messages\ToRoom\EnterRoomToR.cpp" />
@@ -247,8 +254,11 @@
     <ClCompile Include="Messages\ToRoom\GameInputMoveToR.cpp" />
     <ClCompile Include="Messages\ToRoom\GameInputRotationToR.cpp" />
     <ClCompile Include="Messages\ToRoom\GameInputSkillToR.cpp" />
+    <ClCompile Include="Messages\ToRoom\PlayerInputToR.cpp" />
     <ClCompile Include="Messages\ToRoom\PreparationStateToR.cpp" />
     <ClCompile Include="Messages\ToRoom\ReadyForStartToR.cpp" />
+    <ClCompile Include="PlayerInput\IPlayerInput.cpp" />
+    <ClCompile Include="PlayerInput\PlayerInputs\Rotation.cpp" />
     <ClCompile Include="Room.cpp" />
     <ClCompile Include="RoomMessageConvertor.cpp" />
     <ClCompile Include="RoomServer.cpp" />

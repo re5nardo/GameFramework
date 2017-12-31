@@ -1,0 +1,8 @@
+include "PlayerInputData.fbs";
+namespace FBS;
+
+table TickInfoToC
+{
+	Tick:int;
+	PlayerInputs:[PlayerInputData];
+}

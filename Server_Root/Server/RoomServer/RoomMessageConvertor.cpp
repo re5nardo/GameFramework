@@ -47,6 +47,10 @@ IMessage* RoomMessageConvertor::GetMessage(const unsigned short nMessageID, cons
 	{
 		pMsg = new GameInputRotationToR();
 	}
+	else if (nMessageID == PlayerInputToR::MESSAGE_ID)
+	{
+		pMsg = new PlayerInputToR();
+	}
 
 	if (pMsg != NULL)
 	{

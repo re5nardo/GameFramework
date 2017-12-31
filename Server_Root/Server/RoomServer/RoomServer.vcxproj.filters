@@ -166,6 +166,18 @@
     <Filter Include="헤더 파일\Entity\Entities\Item">
       <UniqueIdentifier>{f65d0378-33b9-4986-a347-00ed706c5b68}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\PlayerInput">
+      <UniqueIdentifier>{b1edc10e-6ffe-4f3b-a768-e89bc848cdd9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\PlayerInput\PlayerInputs">
+      <UniqueIdentifier>{c2b6a088-e414-4688-a30c-a4d5517ab6d5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\PlayerInput">
+      <UniqueIdentifier>{e5822a02-df48-4b27-9a4b-3c7a6ac69b6f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\PlayerInput\PlayerInputs">
+      <UniqueIdentifier>{2806bf63-1982-413b-a94e-d2904d7d1719}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -459,6 +471,21 @@
     <ClInclude Include="AI\CharacterAI\CharacterAIs\YetiAI.h">
       <Filter>헤더 파일\AI\CharacterAI\CharacterAIs</Filter>
     </ClInclude>
+    <ClInclude Include="Game\BaeGameRoom2.h">
+      <Filter>헤더 파일\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Messages\ToRoom\PlayerInputToR.h">
+      <Filter>헤더 파일\Messages\ToRoom</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerInput\IPlayerInput.h">
+      <Filter>헤더 파일\PlayerInput</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerInput\PlayerInputs\Rotation.h">
+      <Filter>헤더 파일\PlayerInput\PlayerInputs</Filter>
+    </ClInclude>
+    <ClInclude Include="Messages\ToClient\TickInfoToC.h">
+      <Filter>헤더 파일\Messages\ToClient</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -703,6 +730,21 @@
     </ClCompile>
     <ClCompile Include="AI\CharacterAI\CharacterAIs\YetiAI.cpp">
       <Filter>소스 파일\AI\CharacterAI\CharacterAIs</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\BaeGameRoom2.cpp">
+      <Filter>소스 파일\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Messages\ToRoom\PlayerInputToR.cpp">
+      <Filter>소스 파일\Messages\ToRoom</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerInput\IPlayerInput.cpp">
+      <Filter>소스 파일\PlayerInput</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerInput\PlayerInputs\Rotation.cpp">
+      <Filter>소스 파일\PlayerInput\PlayerInputs</Filter>
+    </ClCompile>
+    <ClCompile Include="Messages\ToClient\TickInfoToC.cpp">
+      <Filter>소스 파일\Messages\ToClient</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

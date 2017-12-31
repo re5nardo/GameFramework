@@ -17,7 +17,8 @@ public class Lobby : MonoBehaviour
             if (msg.m_nResult == 0)
             {
                 //  Go to GameRoom
-                SceneManager.LoadScene("BaeGameRoom");
+                //SceneManager.LoadScene("BaeGameRoom");
+                SceneManager.LoadScene("BaeGameRoom2");
             }
             else
             {

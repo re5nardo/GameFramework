@@ -3,7 +3,8 @@
 #include "../CommonSources/Network/Network.h"
 #include "../CommonSources/Message/IMessage.h"
 #include "RoomMessageHeader.h"
-#include "Game\BaeGameRoom.h"
+//#include "Game\BaeGameRoom.h"
+#include "Game\BaeGameRoom2.h"
 #include <time.h>
 //#include <math.h>
 
@@ -53,7 +54,7 @@ void Room::OnRecvMessage(unsigned int socket, IMessage* pMsg)
 //	Protocol Handlers
 void Room::OnCreateRoomToR(CreateRoomToR* pMsg, unsigned int socket)
 {
-	BaeGameRoom* gameRoom = new BaeGameRoom(pMsg->m_nMatchID, pMsg->m_vecPlayers);
+	BaeGameRoom2* gameRoom = new BaeGameRoom2(pMsg->m_nMatchID, pMsg->m_vecPlayers);
 	
 	m_mapMatchIDGameRoom[pMsg->m_nMatchID] = gameRoom;
 

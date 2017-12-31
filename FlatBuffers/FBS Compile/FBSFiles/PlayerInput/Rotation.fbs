@@ -1,0 +1,8 @@
+include "../FBSData.fbs";
+namespace FBS.PlayerInput;
+
+table Rotation
+{
+	EntityID:int;
+	Rot:FBS.Data.Vector3;
+}
