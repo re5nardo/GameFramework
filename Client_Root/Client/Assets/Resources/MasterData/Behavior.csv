@@ -14,3 +14,5 @@ ID,Name,ClassName,Length,StringParams,AnimationName,Actions
 12,IceQueenMaidFire,Fire,1.23,,attack,Project:0.56:0
 13,SkullArcherFire,Fire,1.3,0,attack,Project:0.33:0
 14,MamboRabbitFire,Fire,1.06,0,attack,Project:0.3:0
+15,Rotation,General,-1,,,
+16,Jump,General,-1,,,

@@ -18,7 +18,8 @@ public class Config : Singleton<Config>
 
     private void SetServerInfo()
     {
-        XmlDocument xmlDoc = XmlEditor.Instance.LoadXml(Application.dataPath + System.IO.Path.DirectorySeparatorChar + CONFIG_FILE_NAME);
+//        XmlDocument xmlDoc = XmlEditor.Instance.LoadXml(Application.dataPath + System.IO.Path.DirectorySeparatorChar + CONFIG_FILE_NAME);
+        XmlDocument xmlDoc = XmlEditor.Instance.LoadXmlFromResources("Config");
 
         XmlNode ServerInfo = xmlDoc.SelectSingleNode("ServerInfo");
         XmlNode LobbyServerInfo = ServerInfo.SelectSingleNode("LobbyServerInfo");

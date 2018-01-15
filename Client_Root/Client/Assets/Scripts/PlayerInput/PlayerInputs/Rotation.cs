@@ -20,7 +20,7 @@ namespace PlayerInput
             FBS.PlayerInput.Rotation.StartRotation(m_Builder);
             FBS.PlayerInput.Rotation.AddEntityID(m_Builder, m_nEntityID);
             FBS.PlayerInput.Rotation.AddRot(m_Builder, rot);
-            var data = FBS.EnterRoomToR.EndEnterRoomToR(m_Builder);
+            var data = FBS.PlayerInput.Rotation.EndRotation(m_Builder);
 
             m_Builder.Finish(data.Value);
 

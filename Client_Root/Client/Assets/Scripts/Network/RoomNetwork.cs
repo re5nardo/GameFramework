@@ -208,43 +208,52 @@ public class RoomNetwork : MonoSingleton<RoomNetwork>
 
     private IMessage GetIMessage(ushort nMessageID, byte[] data)
     {
-        IMessage msg = null;
+        try
+        {
+            IMessage msg = null;
 
-        if (nMessageID == EnterRoomToC.MESSAGE_ID)
-        {
-            msg = ObjectPool.Instance.GetObject<EnterRoomToC>();
-        }
-        else if (nMessageID == PreparationStateToC.MESSAGE_ID)
-        {
-            msg = ObjectPool.Instance.GetObject<PreparationStateToC>();
-        }
-        else if (nMessageID == GameStartToC.MESSAGE_ID)
-        {
-            msg = ObjectPool.Instance.GetObject<GameStartToC>();
-        }
-        else if (nMessageID == PlayerEnterRoomToC.MESSAGE_ID)
-        {
-            msg = ObjectPool.Instance.GetObject<PlayerEnterRoomToC>();
-        }
-        else if (nMessageID == WorldSnapShotToC.MESSAGE_ID)
-        {
-            msg = ObjectPool.Instance.GetObject<WorldSnapShotToC>();
-        }
-        else if (nMessageID == WorldInfoToC.MESSAGE_ID)
-        {
-            msg = ObjectPool.Instance.GetObject<WorldInfoToC>();
-        }
-        else if (nMessageID == TickInfoToC.MESSAGE_ID)
-        {
-            msg = ObjectPool.Instance.GetObject<TickInfoToC>();
-        }
+            if (nMessageID == EnterRoomToC.MESSAGE_ID)
+            {
+                msg = ObjectPool.Instance.GetObject<EnterRoomToC>();
+            }
+            else if (nMessageID == PreparationStateToC.MESSAGE_ID)
+            {
+                msg = ObjectPool.Instance.GetObject<PreparationStateToC>();
+            }
+            else if (nMessageID == GameStartToC.MESSAGE_ID)
+            {
+                msg = ObjectPool.Instance.GetObject<GameStartToC>();
+            }
+            else if (nMessageID == PlayerEnterRoomToC.MESSAGE_ID)
+            {
+                msg = ObjectPool.Instance.GetObject<PlayerEnterRoomToC>();
+            }
+            else if (nMessageID == WorldSnapShotToC.MESSAGE_ID)
+            {
+                msg = ObjectPool.Instance.GetObject<WorldSnapShotToC>();
+            }
+            else if (nMessageID == WorldInfoToC.MESSAGE_ID)
+            {
+                msg = ObjectPool.Instance.GetObject<WorldInfoToC>();
+            }
+            else if (nMessageID == TickInfoToC.MESSAGE_ID)
+            {
+                msg = ObjectPool.Instance.GetObject<TickInfoToC>();
+            }
 
-        if (msg != null)
-        {
-            msg.Deserialize(data);
-        }
+            if (msg != null)
+            {
+                msg.Deserialize(data);
+            }
 
-        return msg;
+            return msg;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e.ToString());
+
+            return null;
+        }
     }
 
     public void Send(IMessage msg)

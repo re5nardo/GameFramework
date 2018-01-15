@@ -4,6 +4,13 @@ namespace MasterData
 {
     public class Behavior : IMasterData
     {
+        public struct Action
+        {
+            public string m_strID;
+            public float m_fTime;
+            public List<string> m_vecParams;
+        };
+
         public string  m_strName;
         public string  m_strClassName;
         public float   m_fLength;

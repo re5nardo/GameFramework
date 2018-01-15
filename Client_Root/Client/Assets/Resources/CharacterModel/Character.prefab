@@ -19,7 +19,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4921444412666838}
-  - component: {fileID: 114613643419025294}
+  - component: {fileID: 114386074069472738}
   m_Layer: 0
   m_Name: Character
   m_TagString: Untagged
@@ -40,7 +40,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &114613643419025294
+--- !u!114 &114386074069472738
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -52,3 +52,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_strKey: 
+  m_vec3Velocity: {x: 0, y: 0, z: 0}
+  m_fSpeedPercent: 100

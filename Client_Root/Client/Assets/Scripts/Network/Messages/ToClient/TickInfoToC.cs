@@ -46,6 +46,10 @@ public class TickInfoToC : IMessage
             {
                 playerInput = new PlayerInput.Rotation();
             }
+            else if (playerInputData.Type == FBS.PlayerInputType.Position)
+            {
+                playerInput = new PlayerInput.Position();
+            }
             else
             {
                 UnityEngine.Debug.LogError("Invalid type!, PlayerInputType : " + playerInputData.Type.ToString());

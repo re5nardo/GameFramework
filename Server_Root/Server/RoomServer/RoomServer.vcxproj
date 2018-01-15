@@ -166,6 +166,7 @@
     <ClInclude Include="Messages\ToRoom\PreparationStateToR.h" />
     <ClInclude Include="Messages\ToRoom\ReadyForStartToR.h" />
     <ClInclude Include="PlayerInput\IPlayerInput.h" />
+    <ClInclude Include="PlayerInput\PlayerInputs\Position.h" />
     <ClInclude Include="PlayerInput\PlayerInputs\Rotation.h" />
     <ClInclude Include="Room.h" />
     <ClInclude Include="RoomMessageConvertor.h" />
@@ -258,6 +259,7 @@
     <ClCompile Include="Messages\ToRoom\PreparationStateToR.cpp" />
     <ClCompile Include="Messages\ToRoom\ReadyForStartToR.cpp" />
     <ClCompile Include="PlayerInput\IPlayerInput.cpp" />
+    <ClCompile Include="PlayerInput\PlayerInputs\Position.cpp" />
     <ClCompile Include="PlayerInput\PlayerInputs\Rotation.cpp" />
     <ClCompile Include="Room.cpp" />
     <ClCompile Include="RoomMessageConvertor.cpp" />

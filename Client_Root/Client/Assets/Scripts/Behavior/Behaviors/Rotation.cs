@@ -4,58 +4,34 @@ namespace Behavior
 {
     public class Rotation : IBehavior
     {
-        private GameEvent.Rotation m_GameEvent;
+        private Vector3 m_vec3Start;
+        private Vector3 m_vec3Target;
 
-        public void Initialize(Entity entity, GameEvent.Rotation gameEvent)
+        public override void Initialize(IEntity entity, int nMasterDataID)
         {
             m_Entity = entity;
-            m_GameEvent = gameEvent;
-
-            m_Entity.SetRotation(gameEvent.m_vec3StartRotation);
+            m_nMasterDataID = nMasterDataID;
         }
 
-        public override bool Update()
+        public override void Start(float fTickInterval, int nStartTick, params object[] param)
         {
-            if (m_GameEvent.m_fEndTime > BaeGameRoom.Instance.GetElapsedTime())
+            base.Start(fTickInterval, nStartTick, param);
+
+            m_vec3Start = m_Entity.GetRotation();
+            m_vec3Target = (Vector3)param[0];
+        }
+
+        float fRotSpeed = 0.1f;
+        protected override void UpdateBody(int nUpdateTick)
+        {
+            float fTime = (nUpdateTick - m_nStartTick + 1) * m_fTickInterval;
+            float fValue = fTime / fRotSpeed;
+
+            m_Entity.SetRotation(Quaternion.Lerp(Quaternion.Euler(m_vec3Start), Quaternion.Euler(m_vec3Target), fValue).eulerAngles);
+
+            if (fValue >= 1)
             {
-                float t = 1 - (m_GameEvent.m_fEndTime - BaeGameRoom.Instance.GetElapsedTime()) / (m_GameEvent.m_fEndTime - m_GameEvent.m_fStartTime);
-
-                Vector3 vec3PrevRotation = m_GameEvent.m_vec3StartRotation;
-                Vector3 vec3NextRotation = m_GameEvent.m_vec3EndRotation;
-
-                if (vec3NextRotation.y < vec3PrevRotation.y)
-                {
-                    vec3NextRotation.y += 360;
-                }
-
-                //  For lerp calculation
-                //  Clockwise rotation
-                if (vec3NextRotation.y - vec3PrevRotation.y <= 180)
-                {
-                    if (vec3PrevRotation.y > vec3NextRotation.y)
-                        vec3NextRotation.y += 360;
-                }
-                //  CounterClockwise rotation
-                else
-                {
-                    if (vec3PrevRotation.y < vec3NextRotation.y)
-                        vec3PrevRotation.y += 360;
-                }
-
-                Vector3 vecRotation;
-                vecRotation.x = Mathf.Lerp(vec3PrevRotation.x, vec3NextRotation.x, t);
-                vecRotation.y = Mathf.Lerp(vec3PrevRotation.y, vec3NextRotation.y, t);
-                vecRotation.z = Mathf.Lerp(vec3PrevRotation.z, vec3NextRotation.z, t);
-
-                m_Entity.SetRotation(vecRotation);
-
-                return true;
-            }
-            else
-            {
-                m_Entity.SetRotation(m_GameEvent.m_vec3EndRotation);
-
-                return false;
+                Stop();
             }
         }
     }

@@ -7,12 +7,9 @@ public class EntityUI : PooledComponent
     private GameObject m_goModel = null;
     private Animation m_animModel = null;
 
-    private Transform m_trEntityUI = null;
-
-    private void Awake()
-    {
-        m_trEntityUI = transform;
-    }
+    private Transform m_trModel = null;
+    private CharacterController m_CharacterController = null;
+    private TickBasedAnimationPlayer m_TickBasedAnimationPlayer = null;
 
     public void Initialize(FBS.Data.EntityType entityType, int nID, int nMasterDataID)
     {
@@ -43,10 +40,15 @@ public class EntityUI : PooledComponent
         m_goModel = ObjectPool.Instance.GetGameObject(strModelPath);
         m_animModel = m_goModel.GetComponentInChildren<Animation>();
 
-        m_goModel.transform.parent = m_trEntityUI;
+        m_goModel.transform.parent = transform;
         m_goModel.transform.localPosition = Vector3.zero;
         m_goModel.transform.localRotation = Quaternion.identity;
         m_goModel.transform.localScale = Vector3.one;
+
+        m_trModel = m_goModel.transform;
+        m_CharacterController = m_goModel.GetComponent<CharacterController>();
+        m_TickBasedAnimationPlayer = m_goModel.GetComponent<TickBasedAnimationPlayer>();
+        m_TickBasedAnimationPlayer.SetTickInterval(BaeGameRoom2.Instance.GetTickInterval());
     }
 
     public float GetAnimationClipLegth(string strClipName)
@@ -85,70 +87,59 @@ public class EntityUI : PooledComponent
         return m_animModel.GetClip(strClipName) != null;
     }
 
+    public void Move(Vector3 vec3Motion)
+    {
+        m_CharacterController.Move(vec3Motion);
+    }
+
+    public bool IsGrounded()
+    {
+        return m_CharacterController.isGrounded;
+    }
+
+    //  Local position
+    public Vector3 GetPosition()
+    {
+        return m_trModel.localPosition;
+    }
+
     //  Local position
     public void SetPosition(Vector3 vec3Position)
     {
-        m_trEntityUI.localPosition = vec3Position;
+        m_trModel.localPosition = vec3Position;
+    }
+
+    //  Local rotation
+    public Vector3 GetRotation()
+    {
+        return m_trModel.localRotation.eulerAngles;
     }
 
     //  Local rotation
     public void SetRotation(Vector3 vec3Rotation)
     {
-        m_trEntityUI.localRotation = Quaternion.Euler(vec3Rotation);
+        m_trModel.localRotation = Quaternion.Euler(vec3Rotation);
     }
 
-    public void Sample(Dictionary<int, float> dicBehavior, Dictionary<int, float> dicState)
+    //  Local rotation
+    public Vector3 GetForward()
     {
-        //  Animation
-        foreach(KeyValuePair<int, float> kv in dicBehavior)
-        {
-            MasterData.Behavior behavior = null;
-            MasterDataManager.Instance.GetData<MasterData.Behavior>(kv.Key, ref behavior);
+        return m_trModel.forward;
+    }
 
-            if (string.IsNullOrEmpty(behavior.m_strAnimationName))
-                continue;
+    public void Play(string strAnimation, int nStartTick, bool bLoop = false, float fWeight = 1)
+    {
+        m_TickBasedAnimationPlayer.Play(strAnimation, nStartTick, bLoop, fWeight);
+    }
 
-            m_animModel[behavior.m_strAnimationName].time = kv.Value % m_animModel[behavior.m_strAnimationName].length;
-            m_animModel[behavior.m_strAnimationName].enabled = true;
-            m_animModel[behavior.m_strAnimationName].weight = 1;
-        }
+    public void Stop(string strAnimation)
+    {
+        m_TickBasedAnimationPlayer.Stop(strAnimation);
+    }
 
-        foreach(KeyValuePair<int, float> kv in dicState)
-        {
-            MasterData.State state = null;
-            MasterDataManager.Instance.GetData<MasterData.State>(kv.Key, ref state);
-
-            if (string.IsNullOrEmpty(state.m_strAnimationName))
-                continue;
-            
-            m_animModel[state.m_strAnimationName].time = kv.Value % m_animModel[state.m_strAnimationName].length;
-            m_animModel[state.m_strAnimationName].enabled = true;
-            m_animModel[state.m_strAnimationName].weight = 1;
-        }
-
-        m_animModel.Sample();
-
-        foreach(KeyValuePair<int, float> kv in dicBehavior)
-        {
-            MasterData.Behavior behavior = null;
-            MasterDataManager.Instance.GetData<MasterData.Behavior>(kv.Key, ref behavior);
-
-            if (string.IsNullOrEmpty(behavior.m_strAnimationName))
-                continue;
-
-            m_animModel[behavior.m_strAnimationName].enabled = false;
-        }
-
-        foreach(KeyValuePair<int, float> kv in dicState)
-        {
-            MasterData.State state = null;
-            MasterDataManager.Instance.GetData<MasterData.State>(kv.Key, ref state);
-
-            if (string.IsNullOrEmpty(state.m_strAnimationName))
-                continue;
-
-            m_animModel[state.m_strAnimationName].enabled = false;
-        }
+    public Transform GetModelTransform()
+    {
+        return m_trModel;
     }
 
     public void Clear()
@@ -163,5 +154,10 @@ public class EntityUI : PooledComponent
     public override void OnReturned()
     {
         Clear();
+    }
+
+    public void Draw(int nTick)
+    {
+        m_TickBasedAnimationPlayer.Draw(nTick);
     }
 }

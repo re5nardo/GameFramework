@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "PlayerInputToR.h"
-#include "../../PlayerInput/IPlayerInput.h"
 #include "../../PlayerInput/PlayerInputs/Rotation.h"
+#include "../../PlayerInput/PlayerInputs/Position.h"
 
 PlayerInputToR::PlayerInputToR()
 {
@@ -58,6 +58,21 @@ bool PlayerInputToR::Deserialize(const char* pChar)
 	if (m_Type == FBS::PlayerInputType::PlayerInputType_Rotation)
 	{
 		PlayerInput::Rotation* playerInput = new PlayerInput::Rotation();
+
+		vector<char> vecChar;
+		const flatbuffers::Vector<int8_t>* vecInt8 = data->Data();
+		for (flatbuffers::Vector<int8_t>::iterator it = vecInt8->begin(); it != vecInt8->end(); ++it)
+		{
+			vecChar.push_back(*it);
+		}
+
+		playerInput->Deserialize(&vecChar[0]);
+
+		m_PlayerInput = playerInput;
+	}
+	else if (m_Type == FBS::PlayerInputType::PlayerInputType_Position)
+	{
+		PlayerInput::Position* playerInput = new PlayerInput::Position();
 
 		vector<char> vecChar;
 		const flatbuffers::Vector<int8_t>* vecInt8 = data->Data();

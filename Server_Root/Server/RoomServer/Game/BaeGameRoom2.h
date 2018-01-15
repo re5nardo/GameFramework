@@ -36,7 +36,7 @@ public:
 	virtual ~BaeGameRoom2();
 
 private:
-	const long long TIME_STEP = 10;		//	<-- milliseconds, TickRate is 1000(1sec) / TIME_STEP
+	const long long TIME_STEP = 25;		//	<-- milliseconds, TickRate is 1000(1sec) / TIME_STEP
 
 private:
 	int								m_nMatchID;

@@ -27,7 +27,7 @@ public class BaeGameRoom : IGameRoom
 
     public static float deltaTime = 0;
 
-    private Dictionary<int, Entity> m_dicEntity = new Dictionary<int, Entity>();
+    private Dictionary<int, IEntity> m_dicEntity = new Dictionary<int, IEntity>();
 
     private int m_nOldFrameRate = 0;
     private int m_nUserPlayerIndex = -1;
@@ -192,9 +192,9 @@ public class BaeGameRoom : IGameRoom
 
     private void EntitySample()
     {
-        foreach (KeyValuePair<int, Entity> kv in m_dicEntity)
+        foreach (KeyValuePair<int, IEntity> kv in m_dicEntity)
         {
-            kv.Value.Sample();
+//            kv.Value.Sample();
         }
     }
 
@@ -273,95 +273,95 @@ public class BaeGameRoom : IGameRoom
 
     private void ProcessGameEvent(IGameEvent iGameEvent)
     {
-        if (iGameEvent.GetEventType() == FBS.GameEventType.BehaviorStart)
-        {
-            GameEvent.BehaviorStart gameEvent = (GameEvent.BehaviorStart)iGameEvent;
-
-            m_dicEntity[gameEvent.m_nEntityID].ProcessGameEvent(gameEvent);
-        }
-        else if (iGameEvent.GetEventType() == FBS.GameEventType.BehaviorEnd)
-        {
-            GameEvent.BehaviorEnd gameEvent = (GameEvent.BehaviorEnd)iGameEvent;
-
-            m_dicEntity[gameEvent.m_nEntityID].ProcessGameEvent(gameEvent);
-        }
-        else if (iGameEvent.GetEventType() == FBS.GameEventType.StateStart)
-        {
-            GameEvent.StateStart gameEvent = (GameEvent.StateStart)iGameEvent;
-
-            m_dicEntity[gameEvent.m_nEntityID].ProcessGameEvent(gameEvent);
-        }
-        else if (iGameEvent.GetEventType() == FBS.GameEventType.StateEnd)
-        {
-            GameEvent.StateEnd gameEvent = (GameEvent.StateEnd)iGameEvent;
-
-            m_dicEntity[gameEvent.m_nEntityID].ProcessGameEvent(gameEvent);
-        }
-        else if (iGameEvent.GetEventType() == FBS.GameEventType.Position)
-        {
-            GameEvent.Position gameEvent = (GameEvent.Position)iGameEvent;
-
-            m_dicEntity[gameEvent.m_nEntityID].ProcessGameEvent(gameEvent);
-        }
-        else if (iGameEvent.GetEventType() == FBS.GameEventType.Rotation)
-        {
-            GameEvent.Rotation gameEvent = (GameEvent.Rotation)iGameEvent;
-
-            m_dicEntity[gameEvent.m_nEntityID].ProcessGameEvent(gameEvent);
-        }
-        else if (iGameEvent.GetEventType() == FBS.GameEventType.EntityCreate)
-        {
-            GameEvent.EntityCreate gameEvent = (GameEvent.EntityCreate)iGameEvent;
-
-            GameObject goEntity = ObjectPool.Instance.GetGameObject("CharacterModel/Entity");
-            Entity entity = goEntity.GetComponent<Entity>();
-            entity.Initialize(gameEvent.m_EntityType, gameEvent.m_nEntityID, gameEvent.m_nMasterDataID);
-            entity.SetPosition(gameEvent.m_vec3Position);
-            entity.SetRotation(gameEvent.m_vec3Rotation);
-
-            m_dicEntity[gameEvent.m_nEntityID] = entity;
-        }
-        else if (iGameEvent.GetEventType() == FBS.GameEventType.EntityDestroy)
-        {
-            GameEvent.EntityDestroy gameEvent = (GameEvent.EntityDestroy)iGameEvent;
-
-            ObjectPool.Instance.ReturnGameObject(m_dicEntity[gameEvent.m_nEntityID].gameObject);
-
-            m_dicEntity.Remove(gameEvent.m_nEntityID);
-        }
-        else if (iGameEvent.GetEventType() == FBS.GameEventType.CharacterAttack)
-        {
-            GameEvent.CharacterAttack gameEvent = (GameEvent.CharacterAttack)iGameEvent;
-
-            m_dicEntity[gameEvent.m_nAttackedEntityID].ProcessGameEvent(gameEvent);
-        }
-        else if (iGameEvent.GetEventType() == FBS.GameEventType.CharacterRespawn)
-        {
-            GameEvent.CharacterRespawn gameEvent = (GameEvent.CharacterRespawn)iGameEvent;
-
-            if (gameEvent.m_nEntityID == m_nUserEntityID)
-            {
-                //  Die effect off
-                m_goGreyCover.SetActive(false);
-                m_UICountTimer.Stop();
-                m_UICountTimer.Hide();
-            }
-
-            m_dicEntity[gameEvent.m_nEntityID].ProcessGameEvent(gameEvent);
-        }
-        else if (iGameEvent.GetEventType() == FBS.GameEventType.CharacterStatusChange)
-        {
-            GameEvent.CharacterStatusChange gameEvent = (GameEvent.CharacterStatusChange)iGameEvent;
-
-            m_dicEntity[gameEvent.m_nEntityID].ProcessGameEvent(gameEvent);
-        }
-
-        if (!m_dicProcessedGameEvent.ContainsKey((int)iGameEvent.m_fEventTime))
-        {
-            m_dicProcessedGameEvent[(int)iGameEvent.m_fEventTime] = new HashSet<IGameEvent>();
-        }
-
-        m_dicProcessedGameEvent[(int)iGameEvent.m_fEventTime].Add(iGameEvent);
+//        if (iGameEvent.GetEventType() == FBS.GameEventType.BehaviorStart)
+//        {
+//            GameEvent.BehaviorStart gameEvent = (GameEvent.BehaviorStart)iGameEvent;
+//
+//            m_dicEntity[gameEvent.m_nEntityID].ProcessGameEvent(gameEvent);
+//        }
+//        else if (iGameEvent.GetEventType() == FBS.GameEventType.BehaviorEnd)
+//        {
+//            GameEvent.BehaviorEnd gameEvent = (GameEvent.BehaviorEnd)iGameEvent;
+//
+//            m_dicEntity[gameEvent.m_nEntityID].ProcessGameEvent(gameEvent);
+//        }
+//        else if (iGameEvent.GetEventType() == FBS.GameEventType.StateStart)
+//        {
+//            GameEvent.StateStart gameEvent = (GameEvent.StateStart)iGameEvent;
+//
+//            m_dicEntity[gameEvent.m_nEntityID].ProcessGameEvent(gameEvent);
+//        }
+//        else if (iGameEvent.GetEventType() == FBS.GameEventType.StateEnd)
+//        {
+//            GameEvent.StateEnd gameEvent = (GameEvent.StateEnd)iGameEvent;
+//
+//            m_dicEntity[gameEvent.m_nEntityID].ProcessGameEvent(gameEvent);
+//        }
+//        else if (iGameEvent.GetEventType() == FBS.GameEventType.Position)
+//        {
+//            GameEvent.Position gameEvent = (GameEvent.Position)iGameEvent;
+//
+//            m_dicEntity[gameEvent.m_nEntityID].ProcessGameEvent(gameEvent);
+//        }
+//        else if (iGameEvent.GetEventType() == FBS.GameEventType.Rotation)
+//        {
+//            GameEvent.Rotation gameEvent = (GameEvent.Rotation)iGameEvent;
+//
+//            m_dicEntity[gameEvent.m_nEntityID].ProcessGameEvent(gameEvent);
+//        }
+//        else if (iGameEvent.GetEventType() == FBS.GameEventType.EntityCreate)
+//        {
+//            GameEvent.EntityCreate gameEvent = (GameEvent.EntityCreate)iGameEvent;
+//
+//            GameObject goEntity = ObjectPool.Instance.GetGameObject("CharacterModel/Entity");
+//            Entity entity = goEntity.GetComponent<Entity>();
+//            entity.Initialize(gameEvent.m_EntityType, gameEvent.m_nEntityID, gameEvent.m_nMasterDataID);
+//            entity.SetPosition(gameEvent.m_vec3Position);
+//            entity.SetRotation(gameEvent.m_vec3Rotation);
+//
+//            m_dicEntity[gameEvent.m_nEntityID] = entity;
+//        }
+//        else if (iGameEvent.GetEventType() == FBS.GameEventType.EntityDestroy)
+//        {
+//            GameEvent.EntityDestroy gameEvent = (GameEvent.EntityDestroy)iGameEvent;
+//
+//            ObjectPool.Instance.ReturnGameObject(m_dicEntity[gameEvent.m_nEntityID].gameObject);
+//
+//            m_dicEntity.Remove(gameEvent.m_nEntityID);
+//        }
+//        else if (iGameEvent.GetEventType() == FBS.GameEventType.CharacterAttack)
+//        {
+//            GameEvent.CharacterAttack gameEvent = (GameEvent.CharacterAttack)iGameEvent;
+//
+//            m_dicEntity[gameEvent.m_nAttackedEntityID].ProcessGameEvent(gameEvent);
+//        }
+//        else if (iGameEvent.GetEventType() == FBS.GameEventType.CharacterRespawn)
+//        {
+//            GameEvent.CharacterRespawn gameEvent = (GameEvent.CharacterRespawn)iGameEvent;
+//
+//            if (gameEvent.m_nEntityID == m_nUserEntityID)
+//            {
+//                //  Die effect off
+//                m_goGreyCover.SetActive(false);
+//                m_UICountTimer.Stop();
+//                m_UICountTimer.Hide();
+//            }
+//
+//            m_dicEntity[gameEvent.m_nEntityID].ProcessGameEvent(gameEvent);
+//        }
+//        else if (iGameEvent.GetEventType() == FBS.GameEventType.CharacterStatusChange)
+//        {
+//            GameEvent.CharacterStatusChange gameEvent = (GameEvent.CharacterStatusChange)iGameEvent;
+//
+//            m_dicEntity[gameEvent.m_nEntityID].ProcessGameEvent(gameEvent);
+//        }
+//
+//        if (!m_dicProcessedGameEvent.ContainsKey((int)iGameEvent.m_fEventTime))
+//        {
+//            m_dicProcessedGameEvent[(int)iGameEvent.m_fEventTime] = new HashSet<IGameEvent>();
+//        }
+//
+//        m_dicProcessedGameEvent[(int)iGameEvent.m_fEventTime].Add(iGameEvent);
     }
 
     private void OnConnected(bool bResult)
@@ -504,7 +504,10 @@ public class BaeGameRoom : IGameRoom
             {
                 GameObject goCharacter = ObjectPool.Instance.GetGameObject("CharacterModel/Character");
                 Character character = goCharacter.GetComponent<Character>();
-                character.Initialize(FBS.Data.EntityType.Character, player.EntityID, player.MasterDataID);
+
+//                character.Initialize(player.EntityID, player.MasterDataID);
+
+//                character.Initialize(FBS.Data.EntityType.Character, player.EntityID, player.MasterDataID);
                 character.InitStatus(new CharacterStatus(player.Status));
                 m_dicEntity[player.EntityID] = character;
 
@@ -512,7 +515,7 @@ public class BaeGameRoom : IGameRoom
                 {
                     m_nUserEntityID = player.EntityID;
 
-                    m_CameraController.SetTarget(character.GetUITransform());
+                    m_CameraController.SetTarget(character.GetModelTransform());
                     m_CameraController.StartFollowTarget();
 
                     //m_SkillController.SetSkills(new List<int>(){0, 1, 2});
@@ -729,7 +732,7 @@ public class BaeGameRoom : IGameRoom
 
         foreach(KeyValuePair<int, Dictionary<string, KeyValuePair<float, float>>> playerBehaviors in dicPlayerBehaviors)
         {
-            m_dicEntity[playerBehaviors.Key].SampleBehaviors(playerBehaviors.Value, fInterpolationValue, end.m_fTime - start.m_fTime, fEmptyValue); 
+//            m_dicEntity[playerBehaviors.Key].SampleBehaviors(playerBehaviors.Value, fInterpolationValue, end.m_fTime - start.m_fTime, fEmptyValue); 
         }
 
         //  Position
