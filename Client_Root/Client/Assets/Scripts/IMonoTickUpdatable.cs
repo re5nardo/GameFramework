@@ -1,5 +1,8 @@
-﻿
-public abstract class ITickUpdatable
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public abstract class IMonoTickUpdatable : MonoBehaviour
 {
     protected float m_fTickInterval = 0;
     protected int m_nStartTick = -1;
@@ -15,7 +18,7 @@ public abstract class ITickUpdatable
     {
         if (m_nLastUpdateTick == nUpdateTick)
             return;
-        
+
         UpdateBody(nUpdateTick);
 
         m_nLastUpdateTick = nUpdateTick;
@@ -23,6 +26,3 @@ public abstract class ITickUpdatable
 
     protected abstract void UpdateBody(int nUpdateTick);
 }
-
-
-//    protected abstract void UpdateBody(float fStartTime, float fEndTime, bool bIncludeStartTime = false);

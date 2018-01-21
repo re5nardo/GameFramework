@@ -29,9 +29,9 @@ public abstract class IBehavior : ITickUpdatable, IPooledObject
         return m_nMasterDataID;
     }
 
-    public override void Start(float fTickInterval, int nStartTick, params object[] param)
+    public override void StartTick(float fTickInterval, int nStartTick, params object[] param)
     {
-        base.Start(fTickInterval, nStartTick, param);
+        base.StartTick(fTickInterval, nStartTick, param);
 
         if (m_bActivated)
             return;

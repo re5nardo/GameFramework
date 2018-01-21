@@ -38,6 +38,7 @@ public class BaeGameRoom2 : IGameRoom
 
     private Dictionary<int, int> m_dicPlayerEntity = new Dictionary<int, int>();      //  key : PlayerIndex, value : EntityID
     private Dictionary<int, int> m_dicEntityPlayer = new Dictionary<int, int>();      //  key : EntityID, value : PlayerIndex
+    private List<FloatingObject> m_listFloatingObject = new List<FloatingObject>();
 
 #region Room Logic
     private void Update()
@@ -126,8 +127,18 @@ public class BaeGameRoom2 : IGameRoom
 #endregion
 
 #region Game Logic
+    public void RegisterFloatingObject(FloatingObject fObj)
+    {
+        m_listFloatingObject.Add(fObj);
+    }
+
     private IEnumerator Loop()
     {
+        foreach(FloatingObject fObj in m_listFloatingObject)
+        {
+            fObj.StartTick(GetTickInterval(), 0);
+        }
+
         while (true)
         {
             while(m_nTick > m_nServerTick)
@@ -136,7 +147,15 @@ public class BaeGameRoom2 : IGameRoom
             }
 
             int nCountToProcess = 1;
-            if (m_nServerTick - m_nTick >= 3)
+            if (m_nServerTick - m_nTick >= 40)
+            {
+                nCountToProcess = 10;
+            }
+            else if (m_nServerTick - m_nTick >= 20)
+            {
+                nCountToProcess = 4;
+            }
+            else if (m_nServerTick - m_nTick >= 3)
             {
                 nCountToProcess = 2;
             }
@@ -183,8 +202,8 @@ public class BaeGameRoom2 : IGameRoom
                     if (!character.IsAlive())
                         continue;
 
-                    character.GetBehavior(BehaviorID.ROTATION).Start(m_fTickInterval, m_nTick, rotation.m_vec3Rotation);
-                    character.GetBehavior(BehaviorID.MOVE).Start(m_fTickInterval, m_nTick);
+                    character.GetBehavior(BehaviorID.ROTATION).StartTick(m_fTickInterval, m_nTick, rotation.m_vec3Rotation);
+                    character.GetBehavior(BehaviorID.MOVE).StartTick(m_fTickInterval, m_nTick);
                 }
                 else if (input.GetPlayerInputType() == FBS.PlayerInputType.Position)
                 {
@@ -195,7 +214,7 @@ public class BaeGameRoom2 : IGameRoom
                     if (!character.IsAlive())
                         continue;
 
-                    character.GetBehavior(BehaviorID.JUMP).Start(m_fTickInterval, m_nTick);
+                    character.GetBehavior(BehaviorID.JUMP).StartTick(m_fTickInterval, m_nTick);
                 }
             }
         }
@@ -203,6 +222,11 @@ public class BaeGameRoom2 : IGameRoom
 
     private void UpdateWorld()
     {
+        foreach(FloatingObject fObj in m_listFloatingObject)
+        {
+            fObj.UpdateTick(m_nTick); 
+        }
+
         foreach(IEntity entity in m_dicEntity.Values)
         {
             entity.UpdateStates(m_nTick);
@@ -233,6 +257,9 @@ public class BaeGameRoom2 : IGameRoom
         m_nServerTick = -1;
         m_dicPlayerInput.Clear();
         m_dicEntity.Clear();
+        m_dicPlayerEntity.Clear();
+        m_dicEntityPlayer.Clear();
+        m_listFloatingObject.Clear();
     }
 
     private void StartGame()
@@ -248,7 +275,7 @@ public class BaeGameRoom2 : IGameRoom
     private IEnumerator PrepareGame()
     {
         //  prefare for game
-        yield return SceneManager.LoadSceneAsync("BasicStraightWay"/*temp.. always TestMap*/, LoadSceneMode.Additive);
+        yield return SceneManager.LoadSceneAsync("TestMap2"/*temp.. always TestMap*/, LoadSceneMode.Additive);
 
         PreparationStateToR preparationStateToR = new PreparationStateToR();
         preparationStateToR.m_fState = 1.0f;

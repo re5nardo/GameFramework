@@ -23,3 +23,6 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/BaeGameRoom2.unity
     guid: dac5c4828f21331499a71436e910cbbd
+  - enabled: 1
+    path: Assets/Scenes/Maps/TestMap2.unity
+    guid: bdc2eb86d83d54d42a3fb72992a93d4f

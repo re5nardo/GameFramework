@@ -84,17 +84,15 @@ public class Character : IEntity
     {
         if (m_nDefaultBehaviorID != -1 && !IsBehavioring() && GetBehavior(m_nDefaultBehaviorID) != null && IsAlive())
         {
-            GetBehavior(m_nDefaultBehaviorID).Start(BaeGameRoom2.Instance.GetTickInterval(), nUpdateTick);
-        }
-
-        m_vec3Velocity.y += (Physics.gravity.y * BaeGameRoom2.Instance.GetTickInterval());
-
-        if (IsGrounded() && m_vec3Velocity.y < 0)
-        {
-            m_vec3Velocity.y = 0;
+            GetBehavior(m_nDefaultBehaviorID).StartTick(BaeGameRoom2.Instance.GetTickInterval(), nUpdateTick);
         }
 
         Move(m_vec3Velocity * BaeGameRoom2.Instance.GetTickInterval());
+
+        if (m_vec3Velocity.y > 0)
+        {
+            Jump();
+        }
     }
 
     //    public ISkill* GetSkill(int nID);
@@ -144,8 +142,8 @@ public class Character : IEntity
         {
             IBehavior dieBehavior = GetBehavior(BehaviorID.DIE);
 
-            dieBehavior.Start(BaeGameRoom2.Instance.GetTickInterval(), nTick);
-            dieBehavior.Update(nTick);
+            dieBehavior.StartTick(BaeGameRoom2.Instance.GetTickInterval(), nTick);
+            dieBehavior.UpdateTick(nTick);
         }
     }
 
@@ -156,7 +154,7 @@ public class Character : IEntity
         IState state = Factory.Instance.CreateState(this, /*StateID.RespawnInvincible*/1, nTick);
         state.Initialize(this, 1, nTick);
         AddState(state, nTick);
-        state.Update(nTick);
+        state.UpdateTick(nTick);
     }
 
     public void OnMoved(float fDistance, long lTime)

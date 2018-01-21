@@ -27,7 +27,7 @@ public abstract class IEntity : PooledComponent
         List<IBehavior> listBehavior = GetActivatedBehaviors();
         foreach(IBehavior behavior in listBehavior)
         {
-            behavior.Update(nUpdateTick);
+            behavior.UpdateTick(nUpdateTick);
         }
     }
 
@@ -36,7 +36,7 @@ public abstract class IEntity : PooledComponent
         List<IState> listState = GetStates();
         foreach(IState state in listState)
         {
-            state.Update(nUpdateTick);
+            state.UpdateTick(nUpdateTick);
         }
     }
 
@@ -53,6 +53,11 @@ public abstract class IEntity : PooledComponent
     public void Move(Vector3 vec3Motion)
     {
         m_EntityUI.Move(vec3Motion);
+    }
+
+    public void Jump()
+    {
+        m_EntityUI.Jump();
     }
 
     public bool IsGrounded()

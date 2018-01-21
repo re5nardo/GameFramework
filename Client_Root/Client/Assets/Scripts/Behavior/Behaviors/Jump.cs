@@ -16,19 +16,18 @@ namespace Behavior
         {
             if (nUpdateTick == m_nStartTick)
             {
-                Vector3 offset = m_Entity.GetForward().normalized * 5/*m_pEntity.GetSpeed()*/;
-
-                m_Entity.m_vec3Velocity.x = offset.x;
-                m_Entity.m_vec3Velocity.y += 10;
-                m_Entity.m_vec3Velocity.z = offset.z;
+                m_Entity.m_vec3Velocity.y = 10;
             }
-            else if(m_Entity.IsGrounded())
+            else if(nUpdateTick > m_nStartTick)
             {
-                m_Entity.m_vec3Velocity.x = 0;
-                m_Entity.m_vec3Velocity.z = 0;
+                m_Entity.m_vec3Velocity.y = 0;
 
                 Stop();
             }
+
+//            m_Entity.Jump();
+//
+//            Stop(); //  next tick stop..? 시작과 같은 틱에 종료..?(괜찮나..? 개념적으로 맞는지 고민해보자)
         }
     }
 }

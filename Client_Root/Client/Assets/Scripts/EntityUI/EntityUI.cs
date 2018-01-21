@@ -8,7 +8,7 @@ public class EntityUI : PooledComponent
     private Animation m_animModel = null;
 
     private Transform m_trModel = null;
-    private CharacterController m_CharacterController = null;
+    private Rigidbody m_ModelRigidbody = null;
     private TickBasedAnimationPlayer m_TickBasedAnimationPlayer = null;
 
     public void Initialize(FBS.Data.EntityType entityType, int nID, int nMasterDataID)
@@ -46,7 +46,7 @@ public class EntityUI : PooledComponent
         m_goModel.transform.localScale = Vector3.one;
 
         m_trModel = m_goModel.transform;
-        m_CharacterController = m_goModel.GetComponent<CharacterController>();
+        m_ModelRigidbody = m_goModel.GetComponent<Rigidbody>();
         m_TickBasedAnimationPlayer = m_goModel.GetComponent<TickBasedAnimationPlayer>();
         m_TickBasedAnimationPlayer.SetTickInterval(BaeGameRoom2.Instance.GetTickInterval());
     }
@@ -89,12 +89,21 @@ public class EntityUI : PooledComponent
 
     public void Move(Vector3 vec3Motion)
     {
-        m_CharacterController.Move(vec3Motion);
+        Vector3 move = new Vector3(vec3Motion.x, 0, vec3Motion.z);
+
+        m_ModelRigidbody.MovePosition(m_ModelRigidbody.position + move);
+    }
+
+    public void Jump()
+    {
+        m_ModelRigidbody.AddForce(Vector3.up * 500);
     }
 
     public bool IsGrounded()
     {
-        return m_CharacterController.isGrounded;
+        return true;
+
+//        return m_CharacterController.isGrounded;
     }
 
     //  Local position
