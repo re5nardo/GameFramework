@@ -16,7 +16,7 @@ public abstract class IBehavior : ITickUpdatable, IPooledObject
 
     protected float m_fLength;
     protected string  m_strStringParams;
-    protected List<MasterData.Behavior.Action> m_vecAction;
+    protected List<MasterData.Behavior.Action> m_listAction;
 
     protected bool m_bActivated = false;
 

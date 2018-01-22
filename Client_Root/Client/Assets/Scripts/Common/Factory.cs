@@ -5,7 +5,7 @@ using UnityEngine;
 public class Factory : MonoSingleton<Factory>
 {
 //    public ISkill         CreateSkill(BaeGameRoom* pGameRoom, IEntity* pEntity, int nMasterDataID);
-    public IBehavior CreateBehavior(IEntity pEntity, int nMasterDataID)
+    public IBehavior CreateBehavior(IEntity entity, int nMasterDataID)
     {
         MasterData.Behavior pMasterBehavior = null;
         MasterDataManager.Instance.GetData<MasterData.Behavior>(nMasterDataID, ref pMasterBehavior);
@@ -16,7 +16,7 @@ public class Factory : MonoSingleton<Factory>
         {
             Behavior.Move move = new Behavior.Move();
 
-            move.Initialize(pEntity, nMasterDataID);
+            move.Initialize(entity, nMasterDataID);
 
             return move;
         }
@@ -24,7 +24,7 @@ public class Factory : MonoSingleton<Factory>
         {
             Behavior.Rotation rotation = new Behavior.Rotation();
 
-            rotation.Initialize(pEntity, nMasterDataID);
+            rotation.Initialize(entity, nMasterDataID);
 
             return rotation;
         }
@@ -32,7 +32,7 @@ public class Factory : MonoSingleton<Factory>
         {
             Behavior.Idle idle = new Behavior.Idle();
 
-            idle.Initialize(pEntity, nMasterDataID);
+            idle.Initialize(entity, nMasterDataID);
 
             return idle;
         }
@@ -40,52 +40,56 @@ public class Factory : MonoSingleton<Factory>
         {
             Behavior.Jump jump = new Behavior.Jump();
 
-            jump.Initialize(pEntity, nMasterDataID);
+            jump.Initialize(entity, nMasterDataID);
 
             return jump;
+        }
+        else if (pMasterBehavior.m_strName == "BlobFire")
+        {
+            Behavior.Fire fire = new Behavior.Fire();
+
+            fire.Initialize(entity, nMasterDataID);
+
+            return fire;
         }
 
         return null;
     }
 
-    public IState CreateState(IEntity pEntity, int nMasterDataID, long lStartTime)
+    public IState CreateState(IEntity entity, int nMasterDataID)
     {
         MasterData.State pMasterState = null;
         MasterDataManager.Instance.GetData<MasterData.State>(nMasterDataID, ref pMasterState);
 
-//        string strClassName = pMasterState->m_strClassName;
-//
-//        if (Acceleration::NAME.compare(strClassName) == 0)
-//        {
-//            return new Acceleration(pGameRoom, pEntity, nMasterDataID, lStartTime);
-//        }
-//        else if (Shield::NAME.compare(strClassName) == 0)
-//        {
-//            return new Shield(pGameRoom, pEntity, nMasterDataID, lStartTime);
-//        }
-//        else if (FireBehavior::NAME.compare(strClassName) == 0)
-//        {
-//            return new FireBehavior(pGameRoom, pEntity, nMasterDataID, lStartTime);
-//        }
-//        else if (GeneralState::NAME.compare(strClassName) == 0)
-//        {
-//            return new GeneralState(pGameRoom, pEntity, nMasterDataID, lStartTime);
-//        }
-//        else if (ChallengerDisturbing::NAME.compare(strClassName) == 0)
-//        {
-//            return new ChallengerDisturbing(pGameRoom, pEntity, nMasterDataID, lStartTime);
-//        }
+        string strClassName = pMasterState.m_strClassName;
+
+        if (pMasterState.m_strName == "ChallengerDisturbing")
+        {
+            State.ChallengerDisturbing challengerDisturbing = new State.ChallengerDisturbing();
+
+            challengerDisturbing.Initialize(entity, nMasterDataID);
+
+            return challengerDisturbing;
+        }
 
         return null;
     }
 
-    public Character CreateCharacter(int nID, int nMasterDataID, Character.Role role)
+    public Character CreateCharacter(int nMasterDataID, Character.Role role)
     {
         GameObject goCharacter = ObjectPool.Instance.GetGameObject("CharacterModel/Character");
         Character character = goCharacter.GetComponent<Character>();
-        character.Initialize(nID, nMasterDataID, role);
+//        character.Initialize(nID, nMasterDataID, role);
 
         return character;
+    }
+
+    public Projectile CreateProjectile(int nProjectorID, int nMasterDataID)
+    {
+        GameObject goProjectile = ObjectPool.Instance.GetGameObject("ProjectileModel/Projectile");
+        Projectile projectile = goProjectile.GetComponent<Projectile>();
+
+        return projectile;
     }
 
     //CharacterAI*  CreateCharacterAI(BaeGameRoom* pGameRoom, int nID, int nMasterDataID);

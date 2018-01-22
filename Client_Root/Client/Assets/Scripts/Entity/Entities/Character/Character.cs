@@ -151,8 +151,8 @@ public class Character : IEntity
     {
         m_CurrentStatus.m_nHP = m_OriginalStatus.m_nHP;
 
-        IState state = Factory.Instance.CreateState(this, /*StateID.RespawnInvincible*/1, nTick);
-        state.Initialize(this, 1, nTick);
+        IState state = Factory.Instance.CreateState(this, /*StateID.RespawnInvincible*/1);
+        state.Initialize(this, 1);
         AddState(state, nTick);
         state.UpdateTick(nTick);
     }

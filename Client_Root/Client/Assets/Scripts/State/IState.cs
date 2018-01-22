@@ -5,11 +5,11 @@ public abstract class IState : ITickUpdatable
     protected int m_nMasterDataID = -1;
 
     protected float m_fLength;
-    protected List<CoreState> m_vecCoreState;
+    protected List<CoreState> m_listCoreState = new List<CoreState>();
 
     protected IEntity m_Entity;
 
-    public abstract void Initialize(IEntity entity, int nMasterDataID, long lStartTime);
+    public abstract void Initialize(IEntity entity, int nMasterDataID);
 
     public int GetMasterDataID()
     {
@@ -18,10 +18,10 @@ public abstract class IState : ITickUpdatable
 
     public bool HasCoreState(CoreState coreState)
     {
-        return m_vecCoreState.Exists(x => x == coreState);
+        return m_listCoreState.Exists(x => x == coreState);
     }
 
-    public virtual void OnCollision(IEntity other, long lTime)
+    public virtual void OnCollision(IEntity other, int nTick)
     {
     }
 };

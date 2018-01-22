@@ -29,6 +29,7 @@ public class BaeGameRoom2 : IGameRoom
     private int m_nUserPlayerIndex = -1;
     private int m_nUserEntityID = -1;
     private float m_fElapsedTime = 0;       //  not used..
+    private int m_nEntitySequence = 0;
 
     private float m_fTickInterval = 0.025f;
     private int m_nTick = 0;
@@ -39,6 +40,8 @@ public class BaeGameRoom2 : IGameRoom
     private Dictionary<int, int> m_dicPlayerEntity = new Dictionary<int, int>();      //  key : PlayerIndex, value : EntityID
     private Dictionary<int, int> m_dicEntityPlayer = new Dictionary<int, int>();      //  key : EntityID, value : PlayerIndex
     private List<FloatingObject> m_listFloatingObject = new List<FloatingObject>();
+    private List<MovingObject> m_listMovingObject = new List<MovingObject>();
+    private List<ICharacterAI> m_listDisturber = new List<ICharacterAI>();
 
 #region Room Logic
     private void Update()
@@ -132,11 +135,26 @@ public class BaeGameRoom2 : IGameRoom
         m_listFloatingObject.Add(fObj);
     }
 
+    public void RegisterMovingObject(MovingObject mObj)
+    {
+        m_listMovingObject.Add(mObj);
+    }
+
     private IEnumerator Loop()
     {
         foreach(FloatingObject fObj in m_listFloatingObject)
         {
             fObj.StartTick(GetTickInterval(), 0);
+        }
+
+        foreach(MovingObject mObj in m_listMovingObject)
+        {
+            mObj.StartTick(GetTickInterval(), 0);
+        }
+
+        foreach(ICharacterAI disturber in m_listDisturber)
+        {
+            disturber.StartTick(GetTickInterval(), 0);
         }
 
         while (true)
@@ -227,12 +245,27 @@ public class BaeGameRoom2 : IGameRoom
             fObj.UpdateTick(m_nTick); 
         }
 
-        foreach(IEntity entity in m_dicEntity.Values)
+        foreach(MovingObject mObj in m_listMovingObject)
+        {
+            mObj.UpdateTick(m_nTick); 
+        }
+
+        foreach(ICharacterAI disturber in m_listDisturber)
+        {
+            disturber.UpdateTick(m_nTick);
+        }
+
+        //  Copy values because m_dicEntity can be modified during iterating
+        IEntity[] entities = new IEntity[m_dicEntity.Values.Count];
+        m_dicEntity.Values.CopyTo(entities, 0);
+        foreach(IEntity entity in entities)
         {
             entity.UpdateStates(m_nTick);
         }
 
-        foreach(IEntity entity in m_dicEntity.Values)
+        entities = new IEntity[m_dicEntity.Values.Count];
+        m_dicEntity.Values.CopyTo(entities, 0);
+        foreach(IEntity entity in entities)
         {
             entity.UpdateBehaviors(m_nTick);
         }
@@ -260,6 +293,17 @@ public class BaeGameRoom2 : IGameRoom
         m_dicPlayerEntity.Clear();
         m_dicEntityPlayer.Clear();
         m_listFloatingObject.Clear();
+        m_listMovingObject.Clear();
+        m_listDisturber.Clear();
+    }
+
+    private void SetDisturber()
+    {
+
+//        BlobAI blobAI = new BlobAI();
+//        blobAI.Initialize(4);
+//
+//        m_listDisturber.Add(blobAI);
     }
 
     private void StartGame()
@@ -268,6 +312,8 @@ public class BaeGameRoom2 : IGameRoom
         m_RotationController.onHold += OnRotationControllerHold;
 
         m_nServerTick = 0;
+
+        SetDisturber();
 
         StartCoroutine(Loop());
     }
@@ -315,6 +361,27 @@ public class BaeGameRoom2 : IGameRoom
     {
         return m_fTickInterval;
     }
+
+    public void CreateCharacter(int nMasterDataID, ref int nEntityID, ref Character character, Character.Role role, CharacterStatus status)
+    {
+        nEntityID = m_nEntitySequence++;
+
+        character = Factory.Instance.CreateCharacter(nMasterDataID, role);
+        character.Initialize(nEntityID, nMasterDataID, role);
+        character.InitStatus(status);
+
+        m_dicEntity[nEntityID] = character;
+    }
+
+    public void CreateProjectile(int nMasterDataID, ref int nEntityID, ref Projectile projectile, int nCreatorID)
+    {
+        nEntityID = m_nEntitySequence++;
+
+        projectile = Factory.Instance.CreateProjectile(nCreatorID, nMasterDataID);
+        projectile.Initialize(nEntityID, nMasterDataID);
+
+        m_dicEntity[nEntityID] = projectile;
+    }
 #endregion
 
 #region Network Message Handler
@@ -344,16 +411,16 @@ public class BaeGameRoom2 : IGameRoom
 
             foreach (FBS.PlayerInfo player in msg.m_listPlayerInfo)
             {
-                Character character = Factory.Instance.CreateCharacter(player.EntityID, player.MasterDataID, Character.Role.Challenger);
-                character.InitStatus(new CharacterStatus(player.Status));
+                int nEntityID = 0;
+                Character character = null;
+                CreateCharacter(player.MasterDataID, ref nEntityID, ref character, Character.Role.Challenger, new CharacterStatus(player.Status));
 
-                m_dicEntity[player.EntityID] = character;
-                m_dicPlayerEntity[player.PlayerIndex] = player.EntityID;
-                m_dicEntityPlayer[player.EntityID] = player.PlayerIndex;
+                m_dicPlayerEntity[player.PlayerIndex] = nEntityID;
+                m_dicEntityPlayer[nEntityID] = player.PlayerIndex;
 
                 if (player.PlayerIndex == m_nUserPlayerIndex)
                 {
-                    m_nUserEntityID = player.EntityID;
+                    m_nUserEntityID = nEntityID;
 
                     m_CameraController.SetTarget(character.GetModelTransform());
                     m_CameraController.StartFollowTarget();
