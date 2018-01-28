@@ -4,11 +4,10 @@ using UnityEngine;
 
 public class MovingObject : IMonoTickUpdatable
 {
-    [SerializeField] private Vector3 m_vec3Start;
-    [SerializeField] private Vector3 m_vec3End;
-    [SerializeField] private float m_fSpeed = 3;
-    [SerializeField] private float m_fInitValue = 0;
-
+    private Vector3 m_vec3Start;
+    private Vector3 m_vec3End;
+    private float m_fSpeed;
+    private float m_fInitValue;
     private List<Rigidbody> m_dicCollision = new List<Rigidbody>();
     private Transform m_trMine;
     private float m_fElapsedTime;
@@ -19,6 +18,13 @@ public class MovingObject : IMonoTickUpdatable
         BaeGameRoom2.Instance.RegisterMovingObject(this);
 
         m_trMine = transform;
+
+        m_trMine.localScale = new Vector3(Random.Range(1, 10), Random.Range(1, 10), Random.Range(1, 10));
+
+        m_vec3Start = new Vector3(Random.Range(40, 45), Random.Range(20, 1000), 0);
+        m_vec3End = new Vector3(-m_vec3Start.x, m_vec3Start.y, m_vec3Start.z);
+        m_fSpeed = Random.Range(10, 50);
+        m_fInitValue = Random.Range(0f, 1f);
 
         m_fExpectedTime = (m_vec3End - m_vec3Start).magnitude / m_fSpeed;
     }
@@ -32,10 +38,11 @@ public class MovingObject : IMonoTickUpdatable
         m_trMine.position = Vector3.Lerp(m_vec3Start, m_vec3End, fTime / m_fExpectedTime);
     }
 
-    void OnCollisionEnter(Collision collisionInfo)
+    private void OnCollisionEnter(Collision collisionInfo)
     {
-        Debug.Log("[OnCollisionEnter] " + collisionInfo.gameObject.name);
+    }
 
-//        m_dicCollision.Add(collisionInfo.rigidbody, transform.position);
+    private void OnTriggerEnter(Collider colliderInfo)
+    {
     }
 }

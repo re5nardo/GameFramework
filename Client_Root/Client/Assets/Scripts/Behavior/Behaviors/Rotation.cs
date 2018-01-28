@@ -24,15 +24,18 @@ namespace Behavior
         float fRotSpeed = 0.1f;
         protected override void UpdateBody(int nUpdateTick)
         {
-            float fTime = (nUpdateTick - m_nStartTick + 1) * m_fTickInterval;
-            float fValue = fTime / fRotSpeed;
+//            float fTime = (nUpdateTick - m_nStartTick + 1) * m_fTickInterval;
+//            float fValue = fTime / fRotSpeed;
 
-            m_Entity.SetRotation(Quaternion.Lerp(Quaternion.Euler(m_vec3Start), Quaternion.Euler(m_vec3Target), fValue).eulerAngles);
+            m_Entity.SetRotation(m_vec3Target);
+            Stop();
 
-            if (fValue >= 1)
-            {
-                Stop();
-            }
+//            m_Entity.SetRotation(Quaternion.Lerp(Quaternion.Euler(m_vec3Start), Quaternion.Euler(m_vec3Target), fValue).eulerAngles);
+
+//            if (fValue >= 1)
+//            {
+//                Stop();
+//            }
         }
     }
 }

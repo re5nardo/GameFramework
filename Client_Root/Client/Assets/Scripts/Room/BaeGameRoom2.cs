@@ -15,7 +15,8 @@ public class BaeGameRoom2 : IGameRoom
     [SerializeField] private UILabel                m_lbHP = null;
     [SerializeField] private UILabel                m_lbMP = null;
     [SerializeField] private UILabel                m_lbMovePoint = null;
-    [SerializeField] private UILabel                m_Dummy = null;
+    [SerializeField] private UILabel                m_lbNotice = null;
+    [SerializeField] private UILabel                m_lbInfo = null;
 
     public static new BaeGameRoom2 Instance
     {
@@ -90,7 +91,7 @@ public class BaeGameRoom2 : IGameRoom
     private void Start()
     {
         m_nOldFrameRate = Application.targetFrameRate;
-        Application.targetFrameRate = 30;
+//        Application.targetFrameRate = 30;
 
         RoomNetwork.Instance.ConnectToServer(Config.Instance.GetRoomServerIP(), Config.Instance.GetRoomServerPort(), OnConnected, OnRecvMessage);
     }
@@ -197,12 +198,33 @@ public class BaeGameRoom2 : IGameRoom
         }
     }
 
+    private float GetUserRank()
+    {
+        float fUserHeight = GetUserCharacter().GetCurrentHeight();
+        int nRank = 1;
+
+        foreach(int nID in m_dicPlayerEntity.Values)
+        {
+            Character character = m_dicEntity[nID] as Character;
+
+            if (character.GetID() == GetUserEntityID())
+                continue;
+
+            if (character.GetCurrentHeight() > fUserHeight)
+                nRank++;
+        }
+
+        return nRank;
+    }
+
     private void Draw()
     {
         foreach (IEntity entity in m_dicEntity.Values)
         {
             entity.Draw(m_nTick);
         }
+
+        m_lbInfo.text = string.Format("{0} / {1}\n현재 높이 : {2}m\n최고 높이 : {3}m", GetUserRank(), m_dicPlayerEntity.Count, (int)GetUserCharacter().GetCurrentHeight(), (int)GetUserCharacter().GetBestHeight());
     }
 
     private void ProcessInput()
@@ -321,7 +343,7 @@ public class BaeGameRoom2 : IGameRoom
     private IEnumerator PrepareGame()
     {
         //  prefare for game
-        yield return SceneManager.LoadSceneAsync("TestMap2"/*temp.. always TestMap*/, LoadSceneMode.Additive);
+        yield return SceneManager.LoadSceneAsync("TestMap3"/*temp.. always TestMap*/, LoadSceneMode.Additive);
 
         PreparationStateToR preparationStateToR = new PreparationStateToR();
         preparationStateToR.m_fState = 1.0f;

@@ -15,11 +15,9 @@ namespace PlayerInput
 
         public override byte[] Serialize()
         {
-            var pos = FBS.Data.Vector3.CreateVector3(m_Builder, m_vec3Position.x, m_vec3Position.y, m_vec3Position.z);
-
             FBS.PlayerInput.Position.StartPosition(m_Builder);
             FBS.PlayerInput.Position.AddEntityID(m_Builder, m_nEntityID);
-            FBS.PlayerInput.Position.AddPos(m_Builder, pos);
+            FBS.PlayerInput.Position.AddPos(m_Builder, FBS.Data.Vector3.CreateVector3(m_Builder, m_vec3Position.x, m_vec3Position.y, m_vec3Position.z));
             var data = FBS.PlayerInput.Position.EndPosition(m_Builder);
 
             m_Builder.Finish(data.Value);

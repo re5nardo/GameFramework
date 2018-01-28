@@ -19,6 +19,8 @@ public class Character : IEntity
 
     public float m_fSpeedPercent = 100;
 
+    private float m_fBestHeight = 0;
+
     public void SetRole(Role role)
     {
         m_Role = role;
@@ -93,6 +95,8 @@ public class Character : IEntity
         {
             Jump();
         }
+
+        m_fBestHeight = Mathf.Max(m_fBestHeight, GetCurrentHeight());
     }
 
     //    public ISkill* GetSkill(int nID);
@@ -179,5 +183,15 @@ public class Character : IEntity
     public bool IsAlive()
     {
         return m_CurrentStatus.m_nHP > 0;
+    }
+
+    public float GetCurrentHeight()
+    {
+        return m_EntityUI.GetPosition().y;
+    }
+
+    public float GetBestHeight()
+    {
+        return m_fBestHeight;
     }
 }

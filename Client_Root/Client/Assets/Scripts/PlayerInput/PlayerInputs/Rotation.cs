@@ -15,11 +15,9 @@ namespace PlayerInput
 
         public override byte[] Serialize()
         {
-            var rot = FBS.Data.Vector3.CreateVector3(m_Builder, m_vec3Rotation.x, m_vec3Rotation.y, m_vec3Rotation.z);
-
             FBS.PlayerInput.Rotation.StartRotation(m_Builder);
             FBS.PlayerInput.Rotation.AddEntityID(m_Builder, m_nEntityID);
-            FBS.PlayerInput.Rotation.AddRot(m_Builder, rot);
+            FBS.PlayerInput.Rotation.AddRot(m_Builder, FBS.Data.Vector3.CreateVector3(m_Builder, m_vec3Rotation.x, m_vec3Rotation.y, m_vec3Rotation.z));
             var data = FBS.PlayerInput.Rotation.EndRotation(m_Builder);
 
             m_Builder.Finish(data.Value);

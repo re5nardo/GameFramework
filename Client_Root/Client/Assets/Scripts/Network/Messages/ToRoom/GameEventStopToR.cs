@@ -20,11 +20,9 @@ public class GameEventStopToR : IMessage
 
     public override byte[] Serialize()
     {
-        var pos = FBS.Data.Vector3.CreateVector3(m_Builder, m_vec3Pos.x, m_vec3Pos.y, m_vec3Pos.z);
-
         FBS.GameEventStopToR.StartGameEventStopToR(m_Builder);
         FBS.GameEventStopToR.AddPlayerIndex(m_Builder, m_nPlayerIndex);
-        FBS.GameEventStopToR.AddPos(m_Builder, pos);
+        FBS.GameEventStopToR.AddPos(m_Builder, FBS.Data.Vector3.CreateVector3(m_Builder, m_vec3Pos.x, m_vec3Pos.y, m_vec3Pos.z));
         var data = FBS.GameEventStopToR.EndGameEventStopToR(m_Builder);
 
         m_Builder.Finish(data.Value);

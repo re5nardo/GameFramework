@@ -25,6 +25,14 @@ public abstract class IEntity : PooledComponent
     public void UpdateBehaviors(int nUpdateTick)
     {
         List<IBehavior> listBehavior = GetActivatedBehaviors();
+        listBehavior.Sort(delegate(IBehavior x, IBehavior y)
+        {
+            if (x.GetMasterDataID() == BehaviorID.ROTATION && y.GetMasterDataID() == BehaviorID.ROTATION) return 0;
+            else if (x.GetMasterDataID() == BehaviorID.ROTATION) return 1;
+            else if (y.GetMasterDataID() == BehaviorID.ROTATION) return -1;
+            else return 0;
+        });
+        
         foreach(IBehavior behavior in listBehavior)
         {
             behavior.UpdateTick(nUpdateTick);

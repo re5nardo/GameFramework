@@ -27,9 +27,6 @@ public class WorldSnapShotToC : IMessage
         {
             FBS.EntityState entityState = m_listEntityState[i];
 
-            var pos = FBS.Data.Vector3.CreateVector3(m_Builder, entityState.Position.X, entityState.Position.Y, entityState.Position.Z);
-            var rot = FBS.Data.Vector3.CreateVector3(m_Builder, entityState.Rotation.X, entityState.Rotation.Y, entityState.Rotation.Z);
-
             int[] keys = new int[entityState.BehaviorsMapKeyLength];
             float[] values = new float[entityState.BehaviorsMapValueLength];
 
@@ -44,8 +41,8 @@ public class WorldSnapShotToC : IMessage
 
             FBS.EntityState.StartEntityState(m_Builder);
             FBS.EntityState.AddPlayerIndex(m_Builder, entityState.PlayerIndex);
-            FBS.EntityState.AddPosition(m_Builder, pos);
-            FBS.EntityState.AddRotation(m_Builder, rot);
+            FBS.EntityState.AddPosition(m_Builder, FBS.Data.Vector3.CreateVector3(m_Builder, entityState.Position.X, entityState.Position.Y, entityState.Position.Z));
+            FBS.EntityState.AddRotation(m_Builder, FBS.Data.Vector3.CreateVector3(m_Builder, entityState.Rotation.X, entityState.Rotation.Y, entityState.Rotation.Z));
             FBS.EntityState.AddBehaviorsMapKey(m_Builder, behaviorsMapKey);
             FBS.EntityState.AddBehaviorsMapValue(m_Builder, behaviorsMapValue);
 
