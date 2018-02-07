@@ -7,8 +7,18 @@ public abstract class ICharacterAI : ITickUpdatable
     protected int m_nMasterDataID = -1;
     protected Character m_character;
 
-    public virtual void Initialize(int nMasterDataID)
+    protected float m_fTickInterval = 0;
+    protected int m_nStartTick = -1;
+
+    public virtual void StartTick(int nStartTick, params object[] param)
     {
+        m_nStartTick = nStartTick;
+    }
+
+    public virtual void Initialize(int nMasterDataID, float fTickInterval)
+    {
+        m_fTickInterval = fTickInterval;
+
 //        int nEntityID = 0;
 //        Character character = null;
 //

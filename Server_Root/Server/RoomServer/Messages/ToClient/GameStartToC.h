@@ -13,6 +13,10 @@ public:
 	static const unsigned short MESSAGE_ID = GameStartToC_ID;
 
 public:
+	float m_fTickInterval;
+	int m_nRandomSeed;
+
+public:
 	unsigned short GetID() override;
 	IMessage* Clone() override;
 	const char* Serialize(int* pLength = NULL) override;

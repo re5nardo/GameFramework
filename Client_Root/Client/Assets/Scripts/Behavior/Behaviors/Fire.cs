@@ -8,10 +8,11 @@ namespace Behavior
     {
         IEntity m_Target;
 
-        public override void Initialize(IEntity entity, int nMasterDataID)
+        public override void Initialize(IEntity entity, int nMasterDataID, float fTickInterval)
         {
             m_Entity = entity;
             m_nMasterDataID = nMasterDataID;
+            m_fTickInterval = fTickInterval;
 
             MasterData.Behavior masterBehavior = null;
             MasterDataManager.Instance.GetData<MasterData.Behavior>(nMasterDataID, ref masterBehavior);
@@ -25,7 +26,9 @@ namespace Behavior
         {
             foreach(MasterData.Behavior.Action action in m_listAction)
             {
-                if (nUpdateTick * m_fTickInterval <= action.m_fTime && action.m_fTime < ((nUpdateTick + 1) * m_fTickInterval))
+                int nTick = (int)(action.m_fTime / m_fTickInterval);
+
+                if (nUpdateTick == nTick)
                 {
                     if (action.m_strID == "Project")
                     {
@@ -46,9 +49,12 @@ namespace Behavior
                                 Character character = (Character)m_Entity;
                                 if (character.GetRole() == Character.Role.Disturber)
                                 {
-                                    IState state = Factory.Instance.CreateState(projectile, 4);
-                                    state.Initialize(projectile, 4);
+                                    IState state = Factory.Instance.CreateState(4);
+                                    state.Initialize(projectile, 4, BaeGameRoom2.Instance.GetTickInterval());
+
                                     projectile.AddState(state, nUpdateTick);
+
+                                    state.StartTick(nUpdateTick);
                                     state.UpdateTick(nUpdateTick);
                                 }
                             }
@@ -63,7 +69,7 @@ namespace Behavior
                                 fTargetAngle = 0;   //  dummy
                             }
 
-                            projectile.GetBehavior(BehaviorID.MOVE).StartTick(BaeGameRoom2.Instance.GetTickInterval(), nUpdateTick);
+                            projectile.GetBehavior(BehaviorID.MOVE).StartTick(nUpdateTick);
                             projectile.GetBehavior(BehaviorID.MOVE).UpdateTick(nUpdateTick);
                         }
                     }

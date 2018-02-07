@@ -4,6 +4,9 @@ public class GameStartToC : IMessage
 {
     public const ushort MESSAGE_ID = MessageID.GameStartToC_ID;
 
+    public float m_fTickInterval;
+    public int m_nRandomSeed;
+
     public override ushort GetID()
     {
         return MESSAGE_ID;
@@ -17,6 +20,8 @@ public class GameStartToC : IMessage
     public override byte[] Serialize()
     {
         FBS.GameStartToC.StartGameStartToC(m_Builder);
+        FBS.GameStartToC.AddTickInterval(m_Builder, m_fTickInterval);
+        FBS.GameStartToC.AddRandomSeed(m_Builder, m_nRandomSeed);
         var data = FBS.GameStartToC.EndGameStartToC(m_Builder);
 
         m_Builder.Finish(data.Value);
@@ -29,6 +34,9 @@ public class GameStartToC : IMessage
         var buf = new ByteBuffer(bytes);
 
         var data = FBS.GameStartToC.GetRootAsGameStartToC(buf);
+
+        m_fTickInterval = data.TickInterval;
+        m_nRandomSeed = data.RandomSeed;
 
         return true;
     }

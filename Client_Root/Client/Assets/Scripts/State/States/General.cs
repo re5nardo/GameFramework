@@ -4,9 +4,9 @@ using UnityEngine;
 
 namespace State
 {
-    public class ChallengerDisturbing : IState
+    public class General : IState
     {
-        private Dictionary<int, float> m_dicDisturbingInfo = new Dictionary<int, float>();
+        private int m_nLifeTime;
 
         public override void Initialize(IEntity entity, int nMasterDataID, float fTickInterval)
         {
@@ -34,27 +34,20 @@ namespace State
                     m_listCoreState.Add(CoreState.CoreState_Faint);
                 }
             }
+
+            if (m_fLength == -1)
+            {
+                m_nLifeTime = -1;
+            }
+            else
+            {
+                m_nLifeTime = (int)(m_fLength / m_fTickInterval);
+            }
         }
 
         protected override void UpdateBody(int nUpdateTick)
         {
-            float fTime = (nUpdateTick - m_nStartTick + 1) * m_fTickInterval;
-
-            List<int> listToRemove = new List<int>();
-            foreach(KeyValuePair<int, float> kv in m_dicDisturbingInfo)
-            {
-                if (fTime - kv.Value > 3)
-                {
-                    listToRemove.Add(kv.Key);
-                }
-            }
-
-            foreach (int key in listToRemove)
-            {
-                m_dicDisturbingInfo.Remove(key);
-            }
-
-            if (m_fLength != -1 && fTime >= m_fLength)
+            if (m_nLifeTime != -1 && nUpdateTick == m_nStartTick + m_nLifeTime)
             {
                 m_Entity.RemoveState(m_nMasterDataID, nUpdateTick);
             }

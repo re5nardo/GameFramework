@@ -31,6 +31,7 @@ public class BaeGameRoom2 : IGameRoom
     private int m_nUserEntityID = -1;
     private float m_fElapsedTime = 0;       //  not used..
     private int m_nEntitySequence = 0;
+    private int m_nRandomSeed = 0;
 
     private float m_fTickInterval = 0.025f;
     private int m_nTick = 0;
@@ -141,21 +142,23 @@ public class BaeGameRoom2 : IGameRoom
         m_listMovingObject.Add(mObj);
     }
 
+    //  should save client.version to meta file ( for checking compatibility)
     private IEnumerator Loop()
     {
         foreach(FloatingObject fObj in m_listFloatingObject)
         {
-            fObj.StartTick(GetTickInterval(), 0);
+            fObj.StartTick(0);
         }
 
         foreach(MovingObject mObj in m_listMovingObject)
         {
-            mObj.StartTick(GetTickInterval(), 0);
+            mObj.StartTick(0);
         }
 
         foreach(ICharacterAI disturber in m_listDisturber)
         {
-            disturber.StartTick(GetTickInterval(), 0);
+            disturber.Initialize(4, m_fTickInterval);
+            disturber.StartTick(0);
         }
 
         while (true)
@@ -239,11 +242,11 @@ public class BaeGameRoom2 : IGameRoom
 
                     Character character = m_dicEntity[rotation.m_nEntityID] as Character;
 
-                    if (!character.IsAlive())
+                    if (!character.IsAlive() || character.HasCoreState(CoreState.CoreState_Faint))
                         continue;
 
-                    character.GetBehavior(BehaviorID.ROTATION).StartTick(m_fTickInterval, m_nTick, rotation.m_vec3Rotation);
-                    character.GetBehavior(BehaviorID.MOVE).StartTick(m_fTickInterval, m_nTick);
+                    character.GetBehavior(BehaviorID.ROTATION).StartTick(m_nTick, rotation.m_vec3Rotation);
+                    character.GetBehavior(BehaviorID.MOVE).StartTick(m_nTick);
                 }
                 else if (input.GetPlayerInputType() == FBS.PlayerInputType.Position)
                 {
@@ -251,10 +254,10 @@ public class BaeGameRoom2 : IGameRoom
 
                     Character character = m_dicEntity[position.m_nEntityID] as Character;
 
-                    if (!character.IsAlive())
+                    if (!character.IsAlive() || character.HasCoreState(CoreState.CoreState_Faint))
                         continue;
 
-                    character.GetBehavior(BehaviorID.JUMP).StartTick(m_fTickInterval, m_nTick);
+                    character.GetBehavior(BehaviorID.JUMP).StartTick(m_nTick);
                 }
             }
         }
@@ -282,6 +285,8 @@ public class BaeGameRoom2 : IGameRoom
         m_dicEntity.Values.CopyTo(entities, 0);
         foreach(IEntity entity in entities)
         {
+            //  !entity.isalive() return;
+
             entity.UpdateStates(m_nTick);
         }
 
@@ -289,14 +294,21 @@ public class BaeGameRoom2 : IGameRoom
         m_dicEntity.Values.CopyTo(entities, 0);
         foreach(IEntity entity in entities)
         {
+            //  !entity.isalive() return;
+
             entity.UpdateBehaviors(m_nTick);
         }
     }
 
     private void LateUpdateWorld()
     {
-        foreach(IEntity entity in m_dicEntity.Values)
+        //  Copy values because m_dicEntity can be modified during iterating
+        IEntity[] entities = new IEntity[m_dicEntity.Values.Count];
+        m_dicEntity.Values.CopyTo(entities, 0);
+        foreach(IEntity entity in entities)
         {
+            //  !entity.isalive() return;
+
             entity.LateUpdateWorld(m_nTick);
         }
     }
@@ -379,6 +391,11 @@ public class BaeGameRoom2 : IGameRoom
 
     }
 
+    public int GetCurrentTick()
+    {
+        return m_nTick;
+    }
+
     public float GetTickInterval()
     {
         return m_fTickInterval;
@@ -388,7 +405,7 @@ public class BaeGameRoom2 : IGameRoom
     {
         nEntityID = m_nEntitySequence++;
 
-        character = Factory.Instance.CreateCharacter(nMasterDataID, role);
+        character = Factory.Instance.CreateCharacter(nMasterDataID);
         character.Initialize(nEntityID, nMasterDataID, role);
         character.InitStatus(status);
 
@@ -399,7 +416,7 @@ public class BaeGameRoom2 : IGameRoom
     {
         nEntityID = m_nEntitySequence++;
 
-        projectile = Factory.Instance.CreateProjectile(nCreatorID, nMasterDataID);
+        projectile = Factory.Instance.CreateProjectile(nMasterDataID);
         projectile.Initialize(nEntityID, nMasterDataID);
 
         m_dicEntity[nEntityID] = projectile;
@@ -467,6 +484,10 @@ public class BaeGameRoom2 : IGameRoom
     private void OnGameStartToC(GameStartToC msg)
     {
 //        ResetGame();
+
+        m_fTickInterval = msg.m_fTickInterval;
+        m_nRandomSeed = msg.m_nRandomSeed;
+
         StartGame();
     }
 

@@ -1,15 +1,7 @@
 ﻿
 public abstract class ITickUpdatable
 {
-    protected float m_fTickInterval = 0;
-    protected int m_nStartTick = -1;
     private int m_nLastUpdateTick = -1;
-
-    public virtual void StartTick(float fTickInterval, int nStartTick, params object[] param)
-    {
-        m_fTickInterval = fTickInterval;
-        m_nStartTick = nStartTick;
-    }
 
     public void UpdateTick(int nUpdateTick)
     {

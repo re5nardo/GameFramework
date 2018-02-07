@@ -14,3 +14,9 @@ public struct BehaviorAnimationInfo
     public string behaviorKey;
     public string clipName;
 }
+
+
+public class GameObjectLayer
+{
+    public const int CHARACTER = 9;
+}

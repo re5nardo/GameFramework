@@ -24,9 +24,17 @@ public class Projectile : IEntity
 
         foreach(int nBehaviorID in masterProjectile.m_listBehaviorID)
         {
-            m_listBehavior.Add(Factory.Instance.CreateBehavior(this, nBehaviorID));
+            IBehavior behavior = Factory.Instance.CreateBehavior(nBehaviorID);
 
-            m_listBehavior.RemoveAll(x => x == null);
+            if (behavior == null)
+            {
+                Debug.LogWarning("behavior is null! nBehaviorID : " + nBehaviorID);
+                continue;
+            }
+
+            behavior.Initialize(this, nBehaviorID, BaeGameRoom2.Instance.GetTickInterval());
+
+            m_listBehavior.Add(behavior);
         }
 
         GameObject goEntityUI = ObjectPool.Instance.GetGameObject("CharacterModel/EntityUI");
@@ -49,7 +57,7 @@ public class Projectile : IEntity
     {
         if (m_nDefaultBehaviorID != -1 && !IsBehavioring() && GetBehavior(m_nDefaultBehaviorID) != null)
         {
-            GetBehavior(m_nDefaultBehaviorID).StartTick(BaeGameRoom2.Instance.GetTickInterval(), nUpdateTick);
+            GetBehavior(m_nDefaultBehaviorID).StartTick(nUpdateTick);
         }
 
         Move(m_vec3Velocity * BaeGameRoom2.Instance.GetTickInterval());

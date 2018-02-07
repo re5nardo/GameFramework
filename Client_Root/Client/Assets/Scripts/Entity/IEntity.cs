@@ -32,19 +32,23 @@ public abstract class IEntity : PooledComponent
             else if (y.GetMasterDataID() == BehaviorID.ROTATION) return -1;
             else return 0;
         });
-        
+
         foreach(IBehavior behavior in listBehavior)
         {
+            if (!behavior.IsActivated())
+                continue;
+
             behavior.UpdateTick(nUpdateTick);
         }
     }
 
     public void UpdateStates(int nUpdateTick)
     {
+        //  Notice m_listState can be modified during iterating
         List<IState> listState = GetStates();
-        foreach(IState state in listState)
+        for (int i = listState.Count - 1; i >= 0; --i)
         {
-            state.UpdateTick(nUpdateTick);
+            listState[i].UpdateTick(nUpdateTick);
         }
     }
 
@@ -135,7 +139,15 @@ public abstract class IEntity : PooledComponent
 
     public void RemoveState(int nMasterDataID, int nTick)
     {
-        m_listState.RemoveAll(x => x.GetMasterDataID() == nMasterDataID);
+        for (int i = m_listState.Count - 1; i >= 0; --i)
+        {
+            if (m_listState[i].GetMasterDataID() == nMasterDataID)
+            {
+                ObjectPool.Instance.ReturnObject(m_listState[i]);
+
+                m_listState.RemoveAt(i);
+            }
+        }
     }
 
     public bool HasCoreState(CoreState coreState)

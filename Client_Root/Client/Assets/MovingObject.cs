@@ -12,6 +12,8 @@ public class MovingObject : IMonoTickUpdatable
     private Transform m_trMine;
     private float m_fElapsedTime;
     private float m_fExpectedTime;
+    private float m_fTickInterval;
+    private int m_nStartTick = -1;
 
     private void Awake()
     {
@@ -27,11 +29,17 @@ public class MovingObject : IMonoTickUpdatable
         m_fInitValue = Random.Range(0f, 1f);
 
         m_fExpectedTime = (m_vec3End - m_vec3Start).magnitude / m_fSpeed;
+        m_fTickInterval = BaeGameRoom2.Instance.GetTickInterval();
+    }
+
+    public void StartTick(int nSTartTick)
+    {
+        m_nStartTick = nSTartTick;
     }
 
     protected override void UpdateBody(int nUpdateTick)
     {
-        m_fElapsedTime = nUpdateTick * BaeGameRoom2.Instance.GetTickInterval() + (m_fInitValue / 1 * m_fExpectedTime);
+        m_fElapsedTime = (nUpdateTick + 1) * m_fTickInterval + (m_fInitValue / 1 * m_fExpectedTime);
 
         float fTime = m_fElapsedTime % m_fExpectedTime;
 
@@ -40,9 +48,39 @@ public class MovingObject : IMonoTickUpdatable
 
     private void OnCollisionEnter(Collision collisionInfo)
     {
+        if (collisionInfo.gameObject.layer == GameObjectLayer.CHARACTER)
+        {
+            Character character = collisionInfo.gameObject.GetComponentInParent<Character>();
+
+            if (!character.IsAlive() || character.HasCoreState(CoreState.CoreState_Invincible))
+                return;
+            
+            IState state = Factory.Instance.CreateState(StateID.FAINT);
+            state.Initialize(character, StateID.FAINT, BaeGameRoom2.Instance.GetTickInterval());
+
+            character.AddState(state, BaeGameRoom2.Instance.GetCurrentTick());
+
+            state.StartTick(BaeGameRoom2.Instance.GetCurrentTick());
+            state.UpdateTick(BaeGameRoom2.Instance.GetCurrentTick());
+        }
     }
 
     private void OnTriggerEnter(Collider colliderInfo)
     {
+        if (colliderInfo.gameObject.layer == GameObjectLayer.CHARACTER)
+        {
+            Character character = colliderInfo.gameObject.GetComponentInParent<Character>();
+
+            if (!character.IsAlive() || character.HasCoreState(CoreState.CoreState_Invincible))
+                return;
+
+            IState state = Factory.Instance.CreateState(StateID.FAINT);
+            state.Initialize(character, StateID.FAINT, BaeGameRoom2.Instance.GetTickInterval());
+
+            character.AddState(state, BaeGameRoom2.Instance.GetCurrentTick());
+
+            state.StartTick(BaeGameRoom2.Instance.GetCurrentTick());
+            state.UpdateTick(BaeGameRoom2.Instance.GetCurrentTick());
+        }
     }
 }

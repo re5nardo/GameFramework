@@ -7,15 +7,16 @@ namespace Behavior
         private Vector3 m_vec3Start;
         private Vector3 m_vec3Target;
 
-        public override void Initialize(IEntity entity, int nMasterDataID)
+        public override void Initialize(IEntity entity, int nMasterDataID, float fTickInterval)
         {
             m_Entity = entity;
             m_nMasterDataID = nMasterDataID;
+            m_fTickInterval = fTickInterval;
         }
 
-        public override void StartTick(float fTickInterval, int nStartTick, params object[] param)
+        public override void StartTick(int nStartTick, params object[] param)
         {
-            base.StartTick(fTickInterval, nStartTick, param);
+            base.StartTick(nStartTick, param);
 
             m_vec3Start = m_Entity.GetRotation();
             m_vec3Target = (Vector3)param[0];

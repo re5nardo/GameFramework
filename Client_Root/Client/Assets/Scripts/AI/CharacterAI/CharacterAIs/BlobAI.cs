@@ -10,11 +10,12 @@ public class BlobAI : ICharacterAI
 
     private int m_nCoolTime = FIRE_COOLTIME;
 
-    public override void Initialize(int nMasterDataID)
+    public override void Initialize(int nMasterDataID, float fTickInterval)
     {
-        base.Initialize(nMasterDataID);
+        base.Initialize(nMasterDataID, fTickInterval);
 
         m_nMasterDataID = nMasterDataID;
+        m_fTickInterval = fTickInterval;
 
 //        btVector3& vec3StartPosition, btVector3& vec3StartRotation
     }
@@ -37,7 +38,7 @@ public class BlobAI : ICharacterAI
         {
             if (!m_character.GetBehavior(FIRE_BEHAVIOR_ID).IsActivated() && m_nCoolTime == 0)
             {
-                m_character.GetBehavior(FIRE_BEHAVIOR_ID).StartTick(BaeGameRoom2.Instance.GetTickInterval(), nUpdateTick);
+                m_character.GetBehavior(FIRE_BEHAVIOR_ID).StartTick(nUpdateTick);
                 m_character.GetBehavior(FIRE_BEHAVIOR_ID).UpdateTick(nUpdateTick);
 
                 m_nCoolTime = FIRE_COOLTIME;

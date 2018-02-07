@@ -52,11 +52,11 @@ public class TickBasedAnimationPlayer : MonoBehaviour
 
             if(animationState.wrapMode != WrapMode.Loop && state.m_bLoop)
             {
-                animationState.time = ((nTick - state.m_nStartTick) * m_fTickInterval) % animationState.length;
+                animationState.time = ((nTick - state.m_nStartTick + 1) * m_fTickInterval) % animationState.length;
             }
             else
             {
-                animationState.time = (nTick - state.m_nStartTick) * m_fTickInterval;
+                animationState.time = (nTick - state.m_nStartTick + 1) * m_fTickInterval;
             }
         }
 
@@ -71,7 +71,7 @@ public class TickBasedAnimationPlayer : MonoBehaviour
 
             if(!state.m_bLoop)
             {
-                if(animationState.length <= (nTick - state.m_nStartTick) * m_fTickInterval)
+                if(animationState.length <= (nTick - state.m_nStartTick + 1) * m_fTickInterval)
                 {
                     listToRemove.Add(state.m_strAnimation);
                 }

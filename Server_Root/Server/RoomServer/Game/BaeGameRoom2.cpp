@@ -161,6 +161,9 @@ void BaeGameRoom2::StartGame()
 	m_bPlaying = true;
 
 	GameStartToC* gameStartToC = new GameStartToC();
+	gameStartToC->m_fTickInterval = TIME_STEP / 1000.0f;
+	gameStartToC->m_nRandomSeed = 0;	//	Temp
+
 	SendToAllUsers(gameStartToC);
 
 	_beginthreadex(NULL, 0, LoopThreadStart, this, 0, NULL);

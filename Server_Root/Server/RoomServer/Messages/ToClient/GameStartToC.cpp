@@ -23,6 +23,8 @@ IMessage* GameStartToC::Clone()
 const char* GameStartToC::Serialize(int* pLength)
 {
 	FBS::GameStartToCBuilder data_builder(m_Builder);
+	data_builder.add_TickInterval(m_fTickInterval);
+	data_builder.add_RandomSeed(m_nRandomSeed);
 	auto data = data_builder.Finish();
 
 	m_Builder.Finish(data);
@@ -35,6 +37,9 @@ const char* GameStartToC::Serialize(int* pLength)
 bool GameStartToC::Deserialize(const char* pChar)
 {
 	auto data = flatbuffers::GetRoot<FBS::GameStartToC>((const void*)pChar);
+
+	m_fTickInterval = data->TickInterval();
+	m_nRandomSeed = data->RandomSeed();
 
 	return true;
 }

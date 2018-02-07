@@ -4,8 +4,11 @@ using UnityEngine;
 
 public class Factory : MonoSingleton<Factory>
 {
-//    public ISkill         CreateSkill(BaeGameRoom* pGameRoom, IEntity* pEntity, int nMasterDataID);
-    public IBehavior CreateBehavior(IEntity entity, int nMasterDataID)
+//    public ISkill         CreateSkill(BaeGameRoom* pGameRoom, IEntity* pEntity, int nMasterDataID)
+//    {
+//    }
+
+    public IBehavior CreateBehavior(int nMasterDataID)
     {
         MasterData.Behavior pMasterBehavior = null;
         MasterDataManager.Instance.GetData<MasterData.Behavior>(nMasterDataID, ref pMasterBehavior);
@@ -14,77 +17,60 @@ public class Factory : MonoSingleton<Factory>
 
         if (pMasterBehavior.m_strName == "Move")
         {
-            Behavior.Move move = new Behavior.Move();
-
-            move.Initialize(entity, nMasterDataID);
-
-            return move;
+            return new Behavior.Move();
         }
         else if (pMasterBehavior.m_strName == "Rotation")
         {
-            Behavior.Rotation rotation = new Behavior.Rotation();
-
-            rotation.Initialize(entity, nMasterDataID);
-
-            return rotation;
+            return new Behavior.Rotation();
         }
         else if (pMasterBehavior.m_strName == "Idle")
         {
-            Behavior.Idle idle = new Behavior.Idle();
-
-            idle.Initialize(entity, nMasterDataID);
-
-            return idle;
+            return new Behavior.Idle();
         }
         else if (pMasterBehavior.m_strName == "Jump")
         {
-            Behavior.Jump jump = new Behavior.Jump();
-
-            jump.Initialize(entity, nMasterDataID);
-
-            return jump;
+            return new Behavior.Jump();
         }
         else if (pMasterBehavior.m_strName == "BlobFire")
         {
-            Behavior.Fire fire = new Behavior.Fire();
-
-            fire.Initialize(entity, nMasterDataID);
-
-            return fire;
+            return new Behavior.Fire();
         }
 
         return null;
     }
 
-    public IState CreateState(IEntity entity, int nMasterDataID)
+    public IState CreateState(int nMasterDataID)
     {
         MasterData.State pMasterState = null;
         MasterDataManager.Instance.GetData<MasterData.State>(nMasterDataID, ref pMasterState);
 
         string strClassName = pMasterState.m_strClassName;
 
-        if (pMasterState.m_strName == "ChallengerDisturbing")
+        if (pMasterState.m_strClassName == "ChallengerDisturbing")
         {
-            State.ChallengerDisturbing challengerDisturbing = new State.ChallengerDisturbing();
-
-            challengerDisturbing.Initialize(entity, nMasterDataID);
-
-            return challengerDisturbing;
+            return ObjectPool.instance.GetObject<State.ChallengerDisturbing>();
+        }
+        else if (pMasterState.m_strClassName == "Faint")
+        {
+            return ObjectPool.instance.GetObject<State.Faint>();
+        }
+        else if (pMasterState.m_strClassName == "General")
+        {
+            return ObjectPool.instance.GetObject<State.General>();
         }
 
         return null;
     }
 
-    public Character CreateCharacter(int nMasterDataID, Character.Role role)
+    public Character CreateCharacter(int nMasterDataID)
     {
         GameObject goCharacter = ObjectPool.Instance.GetGameObject("CharacterModel/Character");
         Character character = goCharacter.GetComponent<Character>();
-//        character.Initialize(nID, nMasterDataID, role);
 
         return character;
     }
 
-    public Projectile CreateProjectile(int nProjectorID, int nMasterDataID)
+    public Projectile CreateProjectile(int nMasterDataID)
     {
         GameObject goProjectile = ObjectPool.Instance.GetGameObject("ProjectileModel/Projectile");
         Projectile projectile = goProjectile.GetComponent<Projectile>();

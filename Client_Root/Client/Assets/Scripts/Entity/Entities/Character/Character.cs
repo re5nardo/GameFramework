@@ -47,12 +47,22 @@ public class Character : IEntity
 
         foreach(int nBehaviorID in masterCharacter.m_listBehaviorID)
         {
-            m_listBehavior.Add(Factory.Instance.CreateBehavior(this, nBehaviorID));
+            IBehavior behavior = Factory.Instance.CreateBehavior(nBehaviorID);
 
-            m_listBehavior.RemoveAll(x => x == null);
+            if (behavior == null)
+            {
+                Debug.LogWarning("behavior is null! nBehaviorID : " + nBehaviorID);
+                continue;
+            }
+
+            behavior.Initialize(this, nBehaviorID, BaeGameRoom2.Instance.GetTickInterval());
+
+            m_listBehavior.Add(behavior);
         }
 
         GameObject goEntityUI = ObjectPool.Instance.GetGameObject("CharacterModel/EntityUI");
+        goEntityUI.transform.parent = gameObject.transform;
+
         EntityUI entityUI = goEntityUI.GetComponent<EntityUI>();
         entityUI.Initialize(FBS.Data.EntityType.Character, nID, nMasterDataID);
 
@@ -84,9 +94,14 @@ public class Character : IEntity
 
     public override void LateUpdateWorld(int nUpdateTick)
     {
+        m_fBestHeight = Mathf.Max(m_fBestHeight, GetCurrentHeight());   //  Timing correct?
+
+        if (HasCoreState(CoreState.CoreState_Faint))
+            return;
+
         if (m_nDefaultBehaviorID != -1 && !IsBehavioring() && GetBehavior(m_nDefaultBehaviorID) != null && IsAlive())
         {
-            GetBehavior(m_nDefaultBehaviorID).StartTick(BaeGameRoom2.Instance.GetTickInterval(), nUpdateTick);
+            GetBehavior(m_nDefaultBehaviorID).StartTick(nUpdateTick);
         }
 
         Move(m_vec3Velocity * BaeGameRoom2.Instance.GetTickInterval());
@@ -95,8 +110,6 @@ public class Character : IEntity
         {
             Jump();
         }
-
-        m_fBestHeight = Mathf.Max(m_fBestHeight, GetCurrentHeight());
     }
 
     //    public ISkill* GetSkill(int nID);
@@ -146,7 +159,7 @@ public class Character : IEntity
         {
             IBehavior dieBehavior = GetBehavior(BehaviorID.DIE);
 
-            dieBehavior.StartTick(BaeGameRoom2.Instance.GetTickInterval(), nTick);
+            dieBehavior.StartTick(nTick);
             dieBehavior.UpdateTick(nTick);
         }
     }
@@ -155,9 +168,12 @@ public class Character : IEntity
     {
         m_CurrentStatus.m_nHP = m_OriginalStatus.m_nHP;
 
-        IState state = Factory.Instance.CreateState(this, /*StateID.RespawnInvincible*/1);
-        state.Initialize(this, 1);
+        IState state = Factory.Instance.CreateState(/*StateID.RespawnInvincible*/1);
+        state.Initialize(this, 1, BaeGameRoom2.Instance.GetTickInterval());
+
         AddState(state, nTick);
+
+        state.StartTick(nTick);
         state.UpdateTick(nTick);
     }
 

@@ -1,15 +1,9 @@
 ﻿using System.Collections.Generic;
 
-public abstract class IBehavior : ITickUpdatable, IPooledObject
+public abstract class IBehavior : ITickUpdatable
 {
-    protected DestroyType m_DestroyType_ = DestroyType.Normal;
-    public DestroyType m_DestroyType { get { return m_DestroyType_; } set { m_DestroyType_ = value; } }
-
-    protected System.DateTime m_StartTime_ = System.DateTime.Now;
-    public System.DateTime m_StartTime { get { return m_StartTime_; } set { m_StartTime_ = value; } }
-
-    protected bool m_bInUse_ = false;
-    public bool m_bInUse { get { return m_bInUse_; } set { m_bInUse_ = value; } }
+    protected float m_fTickInterval = 0;
+    protected int m_nStartTick = -1;
 
     protected int m_nMasterDataID = -1;
     protected IEntity m_Entity;
@@ -22,16 +16,16 @@ public abstract class IBehavior : ITickUpdatable, IPooledObject
 
     public virtual void OnUsed() {}
     public virtual void OnReturned() {}
-    public abstract void Initialize(IEntity entity, int nMasterDataID);
+    public abstract void Initialize(IEntity entity, int nMasterDataID, float fTickInterval);
 
     public int GetMasterDataID()
     {
         return m_nMasterDataID;
     }
 
-    public override void StartTick(float fTickInterval, int nStartTick, params object[] param)
+    public virtual void StartTick(int nStartTick, params object[] param)
     {
-        base.StartTick(fTickInterval, nStartTick, param);
+        m_nStartTick = nStartTick;
 
         if (m_bActivated)
             return;

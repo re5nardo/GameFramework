@@ -11,6 +11,8 @@ public class FloatingObject : IMonoTickUpdatable
     private Transform m_trMine;
     private float m_fExpectedTime = 5;
     private float m_fElapsedTime;
+    private float m_fTickInterval;
+    private int m_nStartTick = -1;
 
     private void Awake()
     {
@@ -18,11 +20,17 @@ public class FloatingObject : IMonoTickUpdatable
 
         m_trMine = transform;
         m_fExpectedTime = Random.Range(2, 5);
+        m_fTickInterval = BaeGameRoom2.Instance.GetTickInterval();
+    }
+
+    public void StartTick(int nSTartTick)
+    {
+        m_nStartTick = nSTartTick;
     }
 
     protected override void UpdateBody(int nUpdateTick)
     {
-        m_fElapsedTime = nUpdateTick * BaeGameRoom2.Instance.GetTickInterval();
+        m_fElapsedTime = (nUpdateTick + 1) * m_fTickInterval;
 
         float fTime = m_fElapsedTime % (m_fExpectedTime * 2);
 

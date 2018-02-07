@@ -2,4 +2,6 @@ namespace FBS;
 
 table GameStartToC
 {
+	TickInterval:float;
+	RandomSeed:int;
 }
