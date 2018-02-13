@@ -6,7 +6,7 @@ namespace State
 {
     public class Faint : IState
     {
-        private int m_nLifeTime;
+        private int m_nLifespan;
 
         public override void Initialize(IEntity entity, int nMasterDataID, float fTickInterval)
         {
@@ -37,17 +37,17 @@ namespace State
 
             if (m_fLength == -1)
             {
-                m_nLifeTime = -1;
+                m_nLifespan = -1;
             }
             else
             {
-                m_nLifeTime = (int)(m_fLength / m_fTickInterval);
+                m_nLifespan = (int)(m_fLength / m_fTickInterval);
             }
         }
 
         protected override void UpdateBody(int nUpdateTick)
         {
-            if (m_nLifeTime != -1 && nUpdateTick == m_nStartTick + m_nLifeTime)
+            if (m_nLifespan != -1 && nUpdateTick == m_nStartTick + m_nLifespan)
             {
                 m_Entity.RemoveState(m_nMasterDataID, nUpdateTick);
 
