@@ -4,6 +4,7 @@ enum PlayerInputType:byte
 {
 	Position = 0,
 	Rotation,
+	GameItem,
 }
 
 table PlayerInputData

@@ -19,7 +19,7 @@ public class MasterDataManager : MonoSingleton<MasterDataManager>
         SetBehavior();
         SetState();
         SetProjectile();
-        SetItem();
+        SetGameItem();
     }
 
     private void SetCharacter()
@@ -92,17 +92,17 @@ public class MasterDataManager : MonoSingleton<MasterDataManager>
         }
     }
 
-    private void SetItem()
+    private void SetGameItem()
     {
-        m_dicData[typeof(MasterData.Item)] = new Dictionary<int, IMasterData>();
+        m_dicData[typeof(MasterData.GameItem)] = new Dictionary<int, IMasterData>();
 
-        List<List<string>> listData = Util.ReadCSV("MasterData/Item");
+        List<List<string>> listData = Util.ReadCSV("MasterData/GameItem");
         for (int row = 1; row < listData.Count; ++row)
         {
-            MasterData.Item item = new MasterData.Item();
-            item.SetData(listData[row]);
+            MasterData.GameItem gameItem = new MasterData.GameItem();
+            gameItem.SetData(listData[row]);
 
-            m_dicData[typeof(MasterData.Item)][item.m_nID] = item;
+            m_dicData[typeof(MasterData.GameItem)][gameItem.m_nID] = gameItem;
         }
     }
 

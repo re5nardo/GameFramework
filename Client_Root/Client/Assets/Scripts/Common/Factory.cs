@@ -10,28 +10,28 @@ public class Factory : MonoSingleton<Factory>
 
     public IBehavior CreateBehavior(int nMasterDataID)
     {
-        MasterData.Behavior pMasterBehavior = null;
-        MasterDataManager.Instance.GetData<MasterData.Behavior>(nMasterDataID, ref pMasterBehavior);
+        MasterData.Behavior masterData = null;
+        MasterDataManager.Instance.GetData<MasterData.Behavior>(nMasterDataID, ref masterData);
 
-        string strClassName = pMasterBehavior.m_strClassName;
+        string strClassName = masterData.m_strClassName;
 
-        if (pMasterBehavior.m_strName == "Move")
+        if (masterData.m_strName == "Move")
         {
             return new Behavior.Move();
         }
-        else if (pMasterBehavior.m_strName == "Rotation")
+        else if (masterData.m_strName == "Rotation")
         {
             return new Behavior.Rotation();
         }
-        else if (pMasterBehavior.m_strName == "Idle")
+        else if (masterData.m_strName == "Idle")
         {
             return new Behavior.Idle();
         }
-        else if (pMasterBehavior.m_strName == "Jump")
+        else if (masterData.m_strName == "Jump")
         {
             return new Behavior.Jump();
         }
-        else if (pMasterBehavior.m_strName == "BlobFire")
+        else if (masterData.m_strName == "BlobFire")
         {
             return new Behavior.Fire();
         }
@@ -41,20 +41,20 @@ public class Factory : MonoSingleton<Factory>
 
     public IState CreateState(int nMasterDataID)
     {
-        MasterData.State pMasterState = null;
-        MasterDataManager.Instance.GetData<MasterData.State>(nMasterDataID, ref pMasterState);
+        MasterData.State masterData = null;
+        MasterDataManager.Instance.GetData<MasterData.State>(nMasterDataID, ref masterData);
 
-        string strClassName = pMasterState.m_strClassName;
+        string strClassName = masterData.m_strClassName;
 
-        if (pMasterState.m_strClassName == "ChallengerDisturbing")
+        if (masterData.m_strClassName == "ChallengerDisturbing")
         {
             return ObjectPool.instance.GetObject<State.ChallengerDisturbing>();
         }
-        else if (pMasterState.m_strClassName == "Faint")
+        else if (masterData.m_strClassName == "Faint")
         {
             return ObjectPool.instance.GetObject<State.Faint>();
         }
-        else if (pMasterState.m_strClassName == "General")
+        else if (masterData.m_strClassName == "General")
         {
             return ObjectPool.instance.GetObject<State.General>();
         }
@@ -76,6 +76,14 @@ public class Factory : MonoSingleton<Factory>
         Projectile projectile = goProjectile.GetComponent<Projectile>();
 
         return projectile;
+    }
+
+    public GameItem CreateGameItem()
+    {
+        GameObject goGameItem = ObjectPool.Instance.GetGameObject("ItemModel/GameItem");
+        GameItem gameItem = goGameItem.GetComponent<GameItem>();
+
+        return gameItem;
     }
 
     //CharacterAI*  CreateCharacterAI(BaeGameRoom* pGameRoom, int nID, int nMasterDataID);

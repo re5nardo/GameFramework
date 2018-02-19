@@ -1,0 +1,7 @@
+ID,Name,ClassName,Type,ModelResID,Lifespan (sec)
+0,SuperBead,GameItem,Possession,SuperBead,15
+1,FireBead,GameItem,Possession,FireBead,15
+2,WaterBead,GameItem,Possession,WaterBead,15
+3,EarthBead,GameItem,Possession,EarthBead,15
+4,WindBead,GameItem,Possession,WindBead,15
+5,MetalBead,GameItem,Possession,MetalBead,15

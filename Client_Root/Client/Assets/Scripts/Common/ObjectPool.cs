@@ -98,12 +98,12 @@ public class ObjectPool : MonoSingleton<ObjectPool>
                     Debug.LogError("strKey is invalid! strKey : " + strKey);
                     return null;
                 }
-
-                pooled = obj.GetComponent<PooledComponent>();
-                pooled.m_strKey = strKey;
-
-//                m_hashAll.Add(pooled);
             }
+
+            pooled = obj.GetComponent<PooledComponent>();
+            pooled.m_strKey = strKey;
+
+            //                m_hashAll.Add(pooled);
 
             obj.SetActive(true);
             obj.transform.parent = null;

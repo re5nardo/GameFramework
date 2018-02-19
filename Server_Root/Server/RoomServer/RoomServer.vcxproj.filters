@@ -489,6 +489,9 @@
     <ClInclude Include="PlayerInput\PlayerInputs\Position.h">
       <Filter>헤더 파일\PlayerInput\PlayerInputs</Filter>
     </ClInclude>
+    <ClInclude Include="PlayerInput\PlayerInputs\GameItem.h">
+      <Filter>헤더 파일\PlayerInput\PlayerInputs</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -750,6 +753,9 @@
       <Filter>소스 파일\Messages\ToClient</Filter>
     </ClCompile>
     <ClCompile Include="PlayerInput\PlayerInputs\Position.cpp">
+      <Filter>소스 파일\PlayerInput\PlayerInputs</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerInput\PlayerInputs\GameItem.cpp">
       <Filter>소스 파일\PlayerInput\PlayerInputs</Filter>
     </ClCompile>
   </ItemGroup>

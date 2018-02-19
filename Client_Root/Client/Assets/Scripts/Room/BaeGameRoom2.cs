@@ -6,9 +6,11 @@ using UnityEngine.SceneManagement;
 public class BaeGameRoom2 : IGameRoom
 {
     [SerializeField] private InputManager           m_InputManager = null;
+    [SerializeField] private GameItemManager        m_GameItemManager = null;
     [SerializeField] private Camera                 m_CameraMain = null;
     [SerializeField] private CameraController       m_CameraController = null;
     [SerializeField] private SkillController        m_SkillController = null;
+    [SerializeField] private GameItemButton[]       m_GameItemButtons = null;
     [SerializeField] private UICountTimer           m_UICountTimer = null;
     [SerializeField] private GameObject             m_goGreyCover = null;
     [SerializeField] private DirectionKey           m_RotationController = null;
@@ -94,6 +96,11 @@ public class BaeGameRoom2 : IGameRoom
         m_nOldFrameRate = Application.targetFrameRate;
 //        Application.targetFrameRate = 30;
 
+        foreach(GameItemButton gameItemButton in m_GameItemButtons)
+        {
+            gameItemButton.onClicked = OnGameItemButtonClicked;
+        }
+
         RoomNetwork.Instance.ConnectToServer(Config.Instance.GetRoomServerIP(), Config.Instance.GetRoomServerPort(), OnConnected, OnRecvMessage);
     }
 
@@ -126,6 +133,11 @@ public class BaeGameRoom2 : IGameRoom
         }
 
         m_RotationController.onHold -= OnRotationControllerHold;
+
+        foreach(GameItemButton gameItemButton in m_GameItemButtons)
+        {
+            gameItemButton.onClicked = null;
+        }
 
         Application.targetFrameRate = m_nOldFrameRate;
     }
@@ -259,6 +271,17 @@ public class BaeGameRoom2 : IGameRoom
 
                     character.GetBehavior(BehaviorID.JUMP).StartTick(m_nTick);
                 }
+                else if (input.GetPlayerInputType() == FBS.PlayerInputType.GameItem)
+                {
+                    PlayerInput.GameItem gameItem = input as PlayerInput.GameItem;
+
+                    Character character = m_dicEntity[m_dicPlayerEntity[gameItem.m_nPlayerIndex]] as Character;
+
+                    if (!character.IsAlive())
+                        continue;
+                    
+                    character.OnUseGameItem(gameItem.m_nGameItemID);
+                }
             }
         }
     }
@@ -298,6 +321,8 @@ public class BaeGameRoom2 : IGameRoom
 
             entity.UpdateBehaviors(m_nTick);
         }
+
+        m_GameItemManager.UpdateTick(m_nTick);
     }
 
     private void LateUpdateWorld()
@@ -420,6 +445,25 @@ public class BaeGameRoom2 : IGameRoom
         projectile.Initialize(nEntityID, nMasterDataID);
 
         m_dicEntity[nEntityID] = projectile;
+    }
+
+    public void GetPlayersHeight(ref float fTop, ref float fBottom)
+    {
+        float fTempTop = float.MinValue;
+        float fTempBottom = float.MaxValue;
+
+        foreach(int nEntityID in m_dicPlayerEntity.Values)
+        {
+            IEntity player = m_dicEntity[nEntityID];
+
+            float fHeight = player.GetPosition().y;
+
+            fTempTop = Mathf.Max(fTempTop, fHeight);
+            fTempBottom = Mathf.Min(fTempBottom, fHeight);
+        }
+
+        fTop = fTempTop;
+        fBottom = fTempBottom;
     }
 #endregion
 
@@ -548,6 +592,23 @@ public class BaeGameRoom2 : IGameRoom
 
         RoomNetwork.Instance.Send(inputToR);
     }
+
+    private void OnGameItemButtonClicked(GameItem gameItem)
+    {
+        if (!GetUserCharacter().IsAlive())
+            return;
+
+        PlayerInputToR inputToR = ObjectPool.Instance.GetObject<PlayerInputToR>();
+        inputToR.m_Type = FBS.PlayerInputType.GameItem;
+
+        PlayerInput.GameItem inputGameItem = ObjectPool.Instance.GetObject<PlayerInput.GameItem>();
+        inputGameItem.m_nPlayerIndex = m_nUserPlayerIndex;
+        inputGameItem.m_nGameItemID = gameItem.GetID();
+
+        inputToR.m_Data = inputGameItem.Serialize();
+
+        RoomNetwork.Instance.Send(inputToR);
+    }
 #endregion
 
 #region Game Event Handler
@@ -572,6 +633,21 @@ public class BaeGameRoom2 : IGameRoom
         m_lbHP.text = string.Format("x{0}", status.m_nHP);
         m_lbMP.text = string.Format("x{0}", status.m_nMP);
         m_lbMovePoint.text = string.Format("x{0}", (int)status.m_fMovePoint);
+    }
+
+    public void OnUserGameItemChanged(List<GameItem> listGameItem)
+    {
+        for (int i = 0; i < m_GameItemButtons.Length; ++i)
+        {
+            if (listGameItem.Count > i)
+            {
+                m_GameItemButtons[i].SetData(listGameItem[i]);
+            }
+            else
+            {
+                m_GameItemButtons[i].SetData(null);
+            }
+        }
     }
 #endregion
 }

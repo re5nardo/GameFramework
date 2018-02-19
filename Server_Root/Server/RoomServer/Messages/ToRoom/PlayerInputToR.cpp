@@ -2,6 +2,7 @@
 #include "PlayerInputToR.h"
 #include "../../PlayerInput/PlayerInputs/Rotation.h"
 #include "../../PlayerInput/PlayerInputs/Position.h"
+#include "../../PlayerInput/PlayerInputs/GameItem.h"
 
 PlayerInputToR::PlayerInputToR()
 {
@@ -57,34 +58,25 @@ bool PlayerInputToR::Deserialize(const char* pChar)
 
 	if (m_Type == FBS::PlayerInputType::PlayerInputType_Rotation)
 	{
-		PlayerInput::Rotation* playerInput = new PlayerInput::Rotation();
-
-		vector<char> vecChar;
-		const flatbuffers::Vector<int8_t>* vecInt8 = data->Data();
-		for (flatbuffers::Vector<int8_t>::iterator it = vecInt8->begin(); it != vecInt8->end(); ++it)
-		{
-			vecChar.push_back(*it);
-		}
-
-		playerInput->Deserialize(&vecChar[0]);
-
-		m_PlayerInput = playerInput;
+		m_PlayerInput = new PlayerInput::Rotation();
 	}
 	else if (m_Type == FBS::PlayerInputType::PlayerInputType_Position)
 	{
-		PlayerInput::Position* playerInput = new PlayerInput::Position();
-
-		vector<char> vecChar;
-		const flatbuffers::Vector<int8_t>* vecInt8 = data->Data();
-		for (flatbuffers::Vector<int8_t>::iterator it = vecInt8->begin(); it != vecInt8->end(); ++it)
-		{
-			vecChar.push_back(*it);
-		}
-
-		playerInput->Deserialize(&vecChar[0]);
-
-		m_PlayerInput = playerInput;
+		m_PlayerInput = new PlayerInput::Position();
 	}
+	else if (m_Type == FBS::PlayerInputType::PlayerInputType_GameItem)
+	{
+		m_PlayerInput = new PlayerInput::GameItem();
+	}
+
+	vector<char> vecChar;
+	const flatbuffers::Vector<int8_t>* vecInt8 = data->Data();
+	for (flatbuffers::Vector<int8_t>::iterator it = vecInt8->begin(); it != vecInt8->end(); ++it)
+	{
+		vecChar.push_back(*it);
+	}
+
+	m_PlayerInput->Deserialize(&vecChar[0]);
 
 	return true;
 }

@@ -71,6 +71,9 @@ flatc --cpp -o SourceFiles\cpp FBSFiles\PlayerInput\Rotation.fbs
 flatc --csharp -o SourceFiles\csharp FBSFiles\PlayerInput\Position.fbs
 flatc --cpp -o SourceFiles\cpp FBSFiles\PlayerInput\Position.fbs
 
+flatc --csharp -o SourceFiles\csharp FBSFiles\PlayerInput\GameItem.fbs
+flatc --cpp -o SourceFiles\cpp FBSFiles\PlayerInput\GameItem.fbs
+
 flatc --csharp -o SourceFiles\csharp FBSFiles\GameEventData.fbs
 flatc --cpp -o SourceFiles\cpp FBSFiles\GameEventData.fbs
 

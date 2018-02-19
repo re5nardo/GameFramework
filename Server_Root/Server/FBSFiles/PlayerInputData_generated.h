@@ -12,12 +12,13 @@ struct PlayerInputData;
 enum PlayerInputType {
   PlayerInputType_Position = 0,
   PlayerInputType_Rotation = 1,
+  PlayerInputType_GameItem = 2,
   PlayerInputType_MIN = PlayerInputType_Position,
-  PlayerInputType_MAX = PlayerInputType_Rotation
+  PlayerInputType_MAX = PlayerInputType_GameItem
 };
 
 inline const char **EnumNamesPlayerInputType() {
-  static const char *names[] = { "Position", "Rotation", nullptr };
+  static const char *names[] = { "Position", "Rotation", "GameItem", nullptr };
   return names;
 }
 

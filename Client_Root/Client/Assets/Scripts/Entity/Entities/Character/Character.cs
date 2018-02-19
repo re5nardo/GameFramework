@@ -13,6 +13,7 @@ public class Character : IEntity
     private Role m_Role = Role.Challenger;
 
     //    protected List<ISkill> m_listSkill;
+    private List<GameItem> m_listGameItem = new List<GameItem>();
 
     protected CharacterStatus m_OriginalStatus;
     protected CharacterStatus m_CurrentStatus;
@@ -209,5 +210,40 @@ public class Character : IEntity
     public float GetBestHeight()
     {
         return m_fBestHeight;
+    }
+
+    public void OnGetGameItem(GameItem item)
+    {
+        if (m_listGameItem.Count < 2)
+        {
+            m_listGameItem.Add(item);
+
+            if (BaeGameRoom2.Instance.GetUserEntityID() == m_nID)
+            {
+                BaeGameRoom2.Instance.OnUserGameItemChanged(m_listGameItem);
+            }
+        }
+    }
+
+    public void OnUseGameItem(int nID)
+    {
+        GameItem found = m_listGameItem.Find(x => x.GetID() == nID);
+
+        if (found == null)
+        {
+            Debug.LogError("[OnUseGameItem] found is null! nID : " + nID);
+            return;
+        }
+
+        //  To Do : process use game item
+        //  ...
+        Debug.Log("[OnUseGameItem] MasterDataID : " + found.GetMasterDataID());
+
+        m_listGameItem.Remove(found);
+
+        if (BaeGameRoom2.Instance.GetUserEntityID() == m_nID)
+        {
+            BaeGameRoom2.Instance.OnUserGameItemChanged(m_listGameItem);
+        }
     }
 }

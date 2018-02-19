@@ -7,6 +7,7 @@ public enum PlayerInputType : sbyte
 {
  Position = 0,
  Rotation = 1,
+ GameItem = 2,
 };
 
 

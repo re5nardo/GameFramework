@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using System;
 
 public class Util
 {
@@ -226,6 +227,23 @@ public class Util
         else
         {
             Debug.LogWarning("Can't convert to double type! strText : " + strText);
+            return false;
+        }
+    }
+
+    public static bool Convert<T>(string strText, ref T output) where T : struct, IConvertible
+    {
+        if (string.IsNullOrEmpty(strText))
+            return false;
+
+        try
+        {
+            output = (T)Enum.Parse(typeof(T), strText);
+            return true;
+        }
+        catch(Exception e)
+        {
+            Debug.LogError(e.ToString());
             return false;
         }
     }

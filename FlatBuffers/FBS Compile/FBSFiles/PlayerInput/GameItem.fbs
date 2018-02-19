@@ -1,0 +1,8 @@
+include "../FBSData.fbs";
+namespace FBS.PlayerInput;
+
+table GameItem
+{
+	PlayerIndex:int;
+	GameItemID:int;
+}
