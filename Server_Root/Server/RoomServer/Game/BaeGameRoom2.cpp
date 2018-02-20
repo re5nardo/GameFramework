@@ -140,11 +140,13 @@ void BaeGameRoom2::SendTickInfo()
 
 void BaeGameRoom2::PrepareGame()
 {
+	srand(time(NULL));
+
 	//	Set PlayerInfo
 	for (int i = 0; i < m_vecMatchedPlayerKey.size(); ++i)
 	{
 		int nPlayerIndex = GetPlayerIndexByPlayerKey(m_vecMatchedPlayerKey[i]);
-		int dummyCharacterMasterDataID = 0;		//	Temp..0 is MisterBae
+		int dummyCharacterMasterDataID = rand() % 2 == 0 ? 0 : rand() % 2 == 0 ? 7 : 9;		//	Temp..rand
 		int nEntityID = 0;
 
 		MasterData::Character* pMasterCharacter = NULL;
