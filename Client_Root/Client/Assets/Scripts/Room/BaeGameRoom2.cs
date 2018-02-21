@@ -609,6 +609,23 @@ public class BaeGameRoom2 : IGameRoom
 
         RoomNetwork.Instance.Send(inputToR);
     }
+
+    public void OnJumpButtonClicked()
+    {
+        if (!GetUserCharacter().IsAlive())
+            return;
+
+        PlayerInputToR inputToR = ObjectPool.Instance.GetObject<PlayerInputToR>();
+        inputToR.m_Type = FBS.PlayerInputType.Position;
+
+        PlayerInput.Position position = ObjectPool.Instance.GetObject<PlayerInput.Position>();
+        position.m_nEntityID = m_nUserEntityID;
+        position.m_vec3Position = Vector3.zero;
+
+        inputToR.m_Data = position.Serialize();
+
+        RoomNetwork.Instance.Send(inputToR);
+    }
 #endregion
 
 #region Game Event Handler

@@ -20,6 +20,16 @@ namespace Behavior
 
             m_vec3Start = m_Entity.GetRotation();
             m_vec3Target = (Vector3)param[0];
+
+            //  Limit rotation (just left or right)
+            if (m_vec3Target.y > 180)
+            {
+                m_vec3Target.y = 270;
+            }
+            else
+            {
+                m_vec3Target.y = 90;
+            }
         }
 
         float fRotSpeed = 0.1f;
