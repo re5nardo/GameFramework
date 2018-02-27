@@ -7,6 +7,8 @@ public class UIHoldEventTrigger : MonoBehaviour
     static public UIHoldEventTrigger current;
 
     public List<EventDelegate> onHold = new List<EventDelegate>();
+    public List<EventDelegate> onPress = new List<EventDelegate>();
+    public List<EventDelegate> onRelease = new List<EventDelegate>();
 
     public int touchID;
 
@@ -20,10 +22,14 @@ public class UIHoldEventTrigger : MonoBehaviour
         {
             touchID = UICamera.currentTouchID;
 
+            EventDelegate.Execute(onPress);
+
             StartCoroutine("ProcessHold");
         }
         else
         {
+            EventDelegate.Execute(onRelease);
+
             StopCoroutine("ProcessHold");
         }
 

@@ -33,7 +33,6 @@ public class BaeGameRoom2 : IGameRoom
     private int m_nUserEntityID = -1;
     private float m_fElapsedTime = 0;       //  not used..
     private int m_nEntitySequence = 0;
-    private int m_nRandomSeed = 0;
 
     private float m_fTickInterval = 0.025f;
     private int m_nTick = 0;
@@ -144,19 +143,17 @@ public class BaeGameRoom2 : IGameRoom
 #endregion
 
 #region Game Logic
-    public void RegisterFloatingObject(FloatingObject fObj)
-    {
-        m_listFloatingObject.Add(fObj);
-    }
-
-    public void RegisterMovingObject(MovingObject mObj)
-    {
-        m_listMovingObject.Add(mObj);
-    }
-
     //  should save client.version to meta file ( for checking compatibility)
     private IEnumerator Loop()
     {
+        for (int i = 0; i < 100; ++i)
+        {
+            MovingObject movingObject = ObjectPool.Instance.GetGameObject("MovingObject").GetComponent<MovingObject>();
+
+            movingObject.Initialize();
+            m_listMovingObject.Add(movingObject);
+        }
+
         foreach(FloatingObject fObj in m_listFloatingObject)
         {
             fObj.StartTick(0);
@@ -530,7 +527,7 @@ public class BaeGameRoom2 : IGameRoom
 //        ResetGame();
 
         m_fTickInterval = msg.m_fTickInterval;
-        m_nRandomSeed = msg.m_nRandomSeed;
+        Random.InitState(msg.m_nRandomSeed);
 
         StartGame();
     }
@@ -571,6 +568,12 @@ public class BaeGameRoom2 : IGameRoom
 
     private void OnRotationControllerHold(Vector2 vec2Direction)
     {
+        if (vec2Direction == Vector2.zero)
+        {
+            Debug.LogWarning("[OnRotationControllerHold] vec2Direction is zero!");
+            return;
+        }
+
         if (!GetUserCharacter().IsAlive())
             return;
 

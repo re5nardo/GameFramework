@@ -14,10 +14,8 @@ public class FloatingObject : IMonoTickUpdatable
     private float m_fTickInterval;
     private int m_nStartTick = -1;
 
-    private void Awake()
+    public void Initialize()
     {
-        BaeGameRoom2.Instance.RegisterFloatingObject(this);
-
         m_trMine = transform;
         m_fExpectedTime = Random.Range(2, 5);
         m_fTickInterval = BaeGameRoom2.Instance.GetTickInterval();

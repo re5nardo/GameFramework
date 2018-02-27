@@ -15,10 +15,8 @@ public class MovingObject : IMonoTickUpdatable
     private float m_fTickInterval;
     private int m_nStartTick = -1;
 
-    private void Awake()
+    public void Initialize()
     {
-        BaeGameRoom2.Instance.RegisterMovingObject(this);
-
         m_trMine = transform;
 
         m_trMine.localScale = new Vector3(Random.Range(1, 10), Random.Range(1, 10), Random.Range(1, 10));

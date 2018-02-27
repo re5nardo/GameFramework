@@ -7,6 +7,8 @@ public class DirectionKey : MonoBehaviour
 
     private Transform m_trDirectionKey = null;
 
+    private Vector2 m_vec2Start;
+
     private void Start ()
     {
         m_trDirectionKey = transform;
@@ -16,11 +18,16 @@ public class DirectionKey : MonoBehaviour
     public void OnHold(int nTouchID)
     {
         Vector2 touch = UICamera.currentCamera.ScreenToWorldPoint(UICamera.GetTouch(nTouchID).pos);
-        Vector2 vec2Direction = new Vector2(touch.x - m_trDirectionKey.position.x, touch.y - m_trDirectionKey.position.y);
+        Vector2 vec2Direction = new Vector2(touch.x - m_vec2Start.x, touch.y - m_vec2Start.y);
         vec2Direction.Normalize();
 
         if (onHold != null)
             onHold(vec2Direction);
+    }
+
+    public void OnPressd(int nTouchID)
+    {
+        m_vec2Start = UICamera.currentCamera.ScreenToWorldPoint(UICamera.GetTouch(nTouchID).pos);
     }
 #endregion
 }
