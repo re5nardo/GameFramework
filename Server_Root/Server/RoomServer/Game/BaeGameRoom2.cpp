@@ -67,19 +67,26 @@ void BaeGameRoom2::Loop()
 	//	Tick Process
 	while (m_bPlaying)
 	{
-		long long lTickProcessTime = GetElapsedTime() - m_lLastUpdateTime;
-
-		//	Wait tick interval
-		if (TIME_STEP > lTickProcessTime)
-			Sleep(TIME_STEP - lTickProcessTime);
+		m_lLastUpdateTime = GetElapsedTime();
 
 		ProcessInput();
 
 		SendTickInfo();
 
-		m_lLastUpdateTime = GetElapsedTime();
+		if (m_nTick == m_nEndTick)
+		{
+			EndGame();
+		}
+		else
+		{
+			m_nTick++;
+		}
 
-		m_nTick++;
+		long long lTickProcessTime = GetElapsedTime() - m_lLastUpdateTime;
+
+		//	Wait tick interval
+		if (TIME_STEP > lTickProcessTime)
+			Sleep(TIME_STEP - lTickProcessTime);
 	}
 }
 
@@ -122,7 +129,7 @@ void BaeGameRoom2::SendTickInfo()
 {
 	TickInfoToC* pTickInfoToC = new TickInfoToC();
 
-	pTickInfoToC->m_nTick = m_nTick + 1;
+	pTickInfoToC->m_nTick = m_nTick;
 
 	for (list<IPlayerInput*>::iterator it = m_listPlayerInput.begin(); it != m_listPlayerInput.end(); ++it)
 	{
@@ -156,6 +163,8 @@ void BaeGameRoom2::PrepareGame()
 		FBS::PlayerInfo playerInfo(nPlayerIndex, dummyCharacterMasterDataID, nEntityID, status);
 		m_vecPlayerInfo.push_back(playerInfo);
 	}
+
+	m_nEndTick = TIME_LIMIT / TIME_STEP - 1;
 }
 
 void BaeGameRoom2::StartGame()
@@ -173,7 +182,13 @@ void BaeGameRoom2::StartGame()
 
 void BaeGameRoom2::EndGame()
 {
-	Reset();
+	//	send end data to players
+
+
+	//Reset();
+
+
+	_endthreadex(0);
 }
 
 void BaeGameRoom2::Reset()

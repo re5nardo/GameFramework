@@ -36,7 +36,8 @@ public:
 	virtual ~BaeGameRoom2();
 
 private:
-	const long long TIME_STEP = 25;		//	<-- milliseconds, TickRate is 1000(1sec) / TIME_STEP
+	const long long TIME_STEP = 25;					//	<-- milliseconds, TickRate is 1000(1sec) / TIME_STEP
+	const long long TIME_LIMIT = 1000 * 120;		//	<-- milliseconds
 
 private:
 	int								m_nMatchID;
@@ -59,6 +60,7 @@ private:
 private:
 	system_clock::time_point	m_StartTime;
 	int							m_nTick;
+	int							m_nEndTick;
 	long long					m_lDeltaTime;			//	ElapsedTime after previous tick (Milliseconds)
 	long long					m_lLastUpdateTime;		//	ElapsedTime after game was started (Milliseconds)
 

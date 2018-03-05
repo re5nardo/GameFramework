@@ -19,7 +19,7 @@ Accepter::~Accepter()
 
 int Accepter::Start()
 {
-	if (m_bListening )
+	if (m_bListening)
 	{
 		return 0;
 	}

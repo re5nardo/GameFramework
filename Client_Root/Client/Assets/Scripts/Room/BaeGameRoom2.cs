@@ -28,6 +28,8 @@ public class BaeGameRoom2 : IGameRoom
         }
     }
 
+    private const float TOUCH_PERCEPTION_TIME = 0.2f;
+
     private int m_nOldFrameRate = 0;
     private int m_nUserPlayerIndex = -1;
     private int m_nUserEntityID = -1;
@@ -42,7 +44,6 @@ public class BaeGameRoom2 : IGameRoom
 
     private Dictionary<int, int> m_dicPlayerEntity = new Dictionary<int, int>();      //  key : PlayerIndex, value : EntityID
     private Dictionary<int, int> m_dicEntityPlayer = new Dictionary<int, int>();      //  key : EntityID, value : PlayerIndex
-    private List<FloatingObject> m_listFloatingObject = new List<FloatingObject>();
     private List<MovingObject> m_listMovingObject = new List<MovingObject>();
     private List<ICharacterAI> m_listDisturber = new List<ICharacterAI>();
 
@@ -94,6 +95,8 @@ public class BaeGameRoom2 : IGameRoom
     {
         m_nOldFrameRate = Application.targetFrameRate;
 //        Application.targetFrameRate = 30;
+
+        m_RotationController.onHold += OnRotationControllerHold;
 
         foreach(GameItemButton gameItemButton in m_GameItemButtons)
         {
@@ -154,11 +157,6 @@ public class BaeGameRoom2 : IGameRoom
             m_listMovingObject.Add(movingObject);
         }
 
-        foreach(FloatingObject fObj in m_listFloatingObject)
-        {
-            fObj.StartTick(0);
-        }
-
         foreach(MovingObject mObj in m_listMovingObject)
         {
             mObj.StartTick(0);
@@ -170,11 +168,13 @@ public class BaeGameRoom2 : IGameRoom
             disturber.StartTick(0);
         }
 
+        yield return new WaitForSeconds(TOUCH_PERCEPTION_TIME); //  Fill buffer
+
         while (true)
         {
-            while(m_nTick > m_nServerTick)
+            while(m_nTick > m_nServerTick)  //  정상적인 상황 X (네트워크 지연 또는 순단 등등에 의해 버퍼가 비어버린 상황)
             {
-                yield return null;
+                yield return new WaitForSeconds(TOUCH_PERCEPTION_TIME); //  Fill buffer
             }
 
             int nCountToProcess = 1;
@@ -206,7 +206,7 @@ public class BaeGameRoom2 : IGameRoom
                 m_nTick++;
             }
 
-            yield return null;
+            yield return new WaitForSeconds(m_fTickInterval);
         }
     }
 
@@ -285,11 +285,6 @@ public class BaeGameRoom2 : IGameRoom
 
     private void UpdateWorld()
     {
-        foreach(FloatingObject fObj in m_listFloatingObject)
-        {
-            fObj.UpdateTick(m_nTick); 
-        }
-
         foreach(MovingObject mObj in m_listMovingObject)
         {
             mObj.UpdateTick(m_nTick); 
@@ -348,7 +343,6 @@ public class BaeGameRoom2 : IGameRoom
         m_dicEntity.Clear();
         m_dicPlayerEntity.Clear();
         m_dicEntityPlayer.Clear();
-        m_listFloatingObject.Clear();
         m_listMovingObject.Clear();
         m_listDisturber.Clear();
     }
@@ -364,13 +358,6 @@ public class BaeGameRoom2 : IGameRoom
 
     private void StartGame()
     {
-        m_InputManager.Work(100, 500/*temp.. always 200, 200*/, m_CameraMain, OnClicked);
-        m_RotationController.onHold += OnRotationControllerHold;
-
-        m_nServerTick = 0;
-
-        SetDisturber();
-
         StartCoroutine(Loop());
     }
 
@@ -378,6 +365,10 @@ public class BaeGameRoom2 : IGameRoom
     {
         //  prefare for game
         yield return SceneManager.LoadSceneAsync("TestMap3"/*temp.. always TestMap*/, LoadSceneMode.Additive);
+
+        m_InputManager.Work(100, 500/*temp.. always 200, 200*/, m_CameraMain, OnClicked);
+
+        SetDisturber();
 
         PreparationStateToR preparationStateToR = new PreparationStateToR();
         preparationStateToR.m_fState = 1.0f;
