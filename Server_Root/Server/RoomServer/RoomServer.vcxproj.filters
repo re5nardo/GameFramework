@@ -492,6 +492,12 @@
     <ClInclude Include="PlayerInput\PlayerInputs\GameItem.h">
       <Filter>헤더 파일\PlayerInput\PlayerInputs</Filter>
     </ClInclude>
+    <ClInclude Include="Messages\ToClient\GameEndToC.h">
+      <Filter>헤더 파일\Messages\ToClient</Filter>
+    </ClInclude>
+    <ClInclude Include="Messages\ToRoom\GameResultToR.h">
+      <Filter>헤더 파일\Messages\ToRoom</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -757,6 +763,12 @@
     </ClCompile>
     <ClCompile Include="PlayerInput\PlayerInputs\GameItem.cpp">
       <Filter>소스 파일\PlayerInput\PlayerInputs</Filter>
+    </ClCompile>
+    <ClCompile Include="Messages\ToClient\GameEndToC.cpp">
+      <Filter>소스 파일\Messages\ToClient</Filter>
+    </ClCompile>
+    <ClCompile Include="Messages\ToRoom\GameResultToR.cpp">
+      <Filter>소스 파일\Messages\ToRoom</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

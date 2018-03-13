@@ -99,8 +99,6 @@ public class Network : MonoSingleton<Network>
 		
 	private void ConnectCallback(IAsyncResult ar)
 	{
-        m_bConnectCallbacked = true;
-
 		try
 		{
 			// Retrieve the socket from the state object.
@@ -119,6 +117,8 @@ public class Network : MonoSingleton<Network>
 
             m_bConnectResult = false;
 		}
+
+        m_bConnectCallbacked = true;
 	}
 
 	private void ReceiveStart()
@@ -283,7 +283,14 @@ public class Network : MonoSingleton<Network>
 		{
 			m_Socket.Shutdown(SocketShutdown.Both);
 			m_Socket.Close();
+            m_Socket = null;
 		}
+
+        m_MessagesReceived.Clear();
+        m_bConnectResult = false;
+        m_bConnectCallbacked = false;
+        m_ConnectCallback = null;
+        m_RecvMessageCallback = null;
 	}
 	#endregion
 }

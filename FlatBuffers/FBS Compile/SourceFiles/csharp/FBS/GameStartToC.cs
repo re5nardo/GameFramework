@@ -13,19 +13,23 @@ public sealed class GameStartToC : Table {
 
   public float TickInterval { get { int o = __offset(4); return o != 0 ? bb.GetFloat(o + bb_pos) : (float)0.0f; } }
   public int RandomSeed { get { int o = __offset(6); return o != 0 ? bb.GetInt(o + bb_pos) : (int)0; } }
+  public int TimeLimit { get { int o = __offset(8); return o != 0 ? bb.GetInt(o + bb_pos) : (int)0; } }
 
   public static Offset<GameStartToC> CreateGameStartToC(FlatBufferBuilder builder,
       float TickInterval = 0.0f,
-      int RandomSeed = 0) {
-    builder.StartObject(2);
+      int RandomSeed = 0,
+      int TimeLimit = 0) {
+    builder.StartObject(3);
+    GameStartToC.AddTimeLimit(builder, TimeLimit);
     GameStartToC.AddRandomSeed(builder, RandomSeed);
     GameStartToC.AddTickInterval(builder, TickInterval);
     return GameStartToC.EndGameStartToC(builder);
   }
 
-  public static void StartGameStartToC(FlatBufferBuilder builder) { builder.StartObject(2); }
+  public static void StartGameStartToC(FlatBufferBuilder builder) { builder.StartObject(3); }
   public static void AddTickInterval(FlatBufferBuilder builder, float TickInterval) { builder.AddFloat(0, TickInterval, 0.0f); }
   public static void AddRandomSeed(FlatBufferBuilder builder, int RandomSeed) { builder.AddInt(1, RandomSeed, 0); }
+  public static void AddTimeLimit(FlatBufferBuilder builder, int TimeLimit) { builder.AddInt(2, TimeLimit, 0); }
   public static Offset<GameStartToC> EndGameStartToC(FlatBufferBuilder builder) {
     int o = builder.EndObject();
     return new Offset<GameStartToC>(o);

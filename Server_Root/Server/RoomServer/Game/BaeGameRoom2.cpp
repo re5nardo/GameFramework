@@ -20,6 +20,7 @@
 #include "../Messages/ToClient/WorldSnapShotToC.h"
 #include "../Messages/ToClient/WorldInfoToC.h"
 #include "../Messages/ToClient/TickInfoToC.h"
+#include "../Messages/ToClient/GameEndToC.h"
 #include "../Behavior/BehaviorIDs.h"
 #include "../../CommonSources/tinyxml2.h"
 #include "../../CommonSources/QuadTree.h"
@@ -164,7 +165,7 @@ void BaeGameRoom2::PrepareGame()
 		m_vecPlayerInfo.push_back(playerInfo);
 	}
 
-	m_nEndTick = TIME_LIMIT / TIME_STEP - 1;
+	m_nEndTick = TIME_LIMIT * 1000 / TIME_STEP - 1;
 }
 
 void BaeGameRoom2::StartGame()
@@ -174,6 +175,7 @@ void BaeGameRoom2::StartGame()
 	GameStartToC* gameStartToC = new GameStartToC();
 	gameStartToC->m_fTickInterval = TIME_STEP / 1000.0f;
 	gameStartToC->m_nRandomSeed = 0;	//	Temp
+	gameStartToC->m_nTimeLimit = TIME_LIMIT;
 
 	SendToAllUsers(gameStartToC);
 
@@ -247,6 +249,10 @@ void BaeGameRoom2::OnRecvMessage(unsigned int socket, IMessage* pMsg)
 	else if (pMsg->GetID() == PlayerInputToR::MESSAGE_ID)
 	{
 		OnPlayerInputToR((PlayerInputToR*)pMsg, socket);
+	}
+	else if (pMsg->GetID() == GameResultToR::MESSAGE_ID)
+	{
+		OnGameResultToR((GameResultToR*)pMsg, socket);
 	}
 }
 
@@ -387,6 +393,14 @@ void BaeGameRoom2::OnPlayerInputToR(PlayerInputToR* pMsg, unsigned int socket)
 	m_listPlayerInput.push_back(pMsg->m_PlayerInput->Clone());
 
 	m_LockPlayerInput.unlock();
+}
+
+void BaeGameRoom2::OnGameResultToR(GameResultToR* pMsg, unsigned int socket)
+{
+	GameEndToC* gameEndToC = new GameEndToC();
+	gameEndToC->m_vecPlayerRankInfo = pMsg->m_vecPlayerRankInfo;
+
+	SendToAllUsers(gameEndToC);
 }
 
 int BaeGameRoom2::GetPlayerIndexByPlayerKey(string strPlayerKey)

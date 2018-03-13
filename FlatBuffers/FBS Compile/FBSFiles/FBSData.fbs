@@ -25,3 +25,10 @@ struct CharacterStatus
 	MPChargeRate:float;
 	MovePoint:float;
 }
+
+struct PlayerRankInfo
+{
+	PlayerIndex:int;
+	Rank:int;
+	Height:float;
+}

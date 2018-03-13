@@ -15,6 +15,7 @@ public:
 public:
 	float m_fTickInterval;
 	int m_nRandomSeed;
+	int m_nTimeLimit;
 
 public:
 	unsigned short GetID() override;

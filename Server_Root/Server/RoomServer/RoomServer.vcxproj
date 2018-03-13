@@ -150,6 +150,7 @@
     <ClInclude Include="MasterData\Skill.h" />
     <ClInclude Include="MasterData\State.h" />
     <ClInclude Include="Messages\ToClient\EnterRoomToC.h" />
+    <ClInclude Include="Messages\ToClient\GameEndToC.h" />
     <ClInclude Include="Messages\ToClient\GameStartToC.h" />
     <ClInclude Include="Messages\ToClient\PlayerEnterRoomToC.h" />
     <ClInclude Include="Messages\ToClient\PreparationStateToC.h" />
@@ -162,6 +163,7 @@
     <ClInclude Include="Messages\ToRoom\GameInputMoveToR.h" />
     <ClInclude Include="Messages\ToRoom\GameInputRotationToR.h" />
     <ClInclude Include="Messages\ToRoom\GameInputSkillToR.h" />
+    <ClInclude Include="Messages\ToRoom\GameResultToR.h" />
     <ClInclude Include="Messages\ToRoom\PlayerInputToR.h" />
     <ClInclude Include="Messages\ToRoom\PreparationStateToR.h" />
     <ClInclude Include="Messages\ToRoom\ReadyForStartToR.h" />
@@ -244,6 +246,7 @@
     <ClCompile Include="MasterData\SKill.cpp" />
     <ClCompile Include="MasterData\State.cpp" />
     <ClCompile Include="Messages\ToClient\EnterRoomToC.cpp" />
+    <ClCompile Include="Messages\ToClient\GameEndToC.cpp" />
     <ClCompile Include="Messages\ToClient\GameStartToC.cpp" />
     <ClCompile Include="Messages\ToClient\PlayerEnterRoomToC.cpp" />
     <ClCompile Include="Messages\ToClient\PreparationStateToC.cpp" />
@@ -256,6 +259,7 @@
     <ClCompile Include="Messages\ToRoom\GameInputMoveToR.cpp" />
     <ClCompile Include="Messages\ToRoom\GameInputRotationToR.cpp" />
     <ClCompile Include="Messages\ToRoom\GameInputSkillToR.cpp" />
+    <ClCompile Include="Messages\ToRoom\GameResultToR.cpp" />
     <ClCompile Include="Messages\ToRoom\PlayerInputToR.cpp" />
     <ClCompile Include="Messages\ToRoom\PreparationStateToR.cpp" />
     <ClCompile Include="Messages\ToRoom\ReadyForStartToR.cpp" />

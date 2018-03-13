@@ -12,6 +12,8 @@ struct Vector3;
 
 struct CharacterStatus;
 
+struct PlayerRankInfo;
+
 enum EntityType {
   EntityType_Character = 0,
   EntityType_Projectile = 1,
@@ -72,6 +74,24 @@ MANUALLY_ALIGNED_STRUCT(4) CharacterStatus FLATBUFFERS_FINAL_CLASS {
   float MovePoint() const { return flatbuffers::EndianScalar(MovePoint_); }
 };
 STRUCT_END(CharacterStatus, 32);
+
+MANUALLY_ALIGNED_STRUCT(4) PlayerRankInfo FLATBUFFERS_FINAL_CLASS {
+ private:
+  int32_t PlayerIndex_;
+  int32_t Rank_;
+  float Height_;
+
+ public:
+  PlayerRankInfo() { memset(this, 0, sizeof(PlayerRankInfo)); }
+  PlayerRankInfo(const PlayerRankInfo &_o) { memcpy(this, &_o, sizeof(PlayerRankInfo)); }
+  PlayerRankInfo(int32_t _PlayerIndex, int32_t _Rank, float _Height)
+    : PlayerIndex_(flatbuffers::EndianScalar(_PlayerIndex)), Rank_(flatbuffers::EndianScalar(_Rank)), Height_(flatbuffers::EndianScalar(_Height)) { }
+
+  int32_t PlayerIndex() const { return flatbuffers::EndianScalar(PlayerIndex_); }
+  int32_t Rank() const { return flatbuffers::EndianScalar(Rank_); }
+  float Height() const { return flatbuffers::EndianScalar(Height_); }
+};
+STRUCT_END(PlayerRankInfo, 12);
 
 }  // namespace Data
 }  // namespace FBS

@@ -29,6 +29,7 @@
 #define GameInputMoveToR_ID						40008
 #define GameInputRotationToR_ID					40009
 #define PlayerInputToR_ID						40010
+#define GameResultToR_ID						40011
 
 //	Room -> Client (50000 ~ 59999)
 #define PreparationStateToC_ID					50000
@@ -38,3 +39,4 @@
 #define WorldSnapShotToC_ID						50008
 #define WorldInfoToC_ID							50009
 #define TickInfoToC_ID							50010
+#define GameEndToC_ID							50011

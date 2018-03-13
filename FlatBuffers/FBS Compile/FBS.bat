@@ -20,6 +20,12 @@ flatc --cpp -o SourceFiles\cpp FBSFiles\GameEventStopToR.fbs
 flatc --csharp -o SourceFiles\csharp FBSFiles\GameStartToC.fbs
 flatc --cpp -o SourceFiles\cpp FBSFiles\GameStartToC.fbs
 
+flatc --csharp -o SourceFiles\csharp FBSFiles\GameEndToC.fbs
+flatc --cpp -o SourceFiles\cpp FBSFiles\GameEndToC.fbs
+
+flatc --csharp -o SourceFiles\csharp FBSFiles\GameResultToR.fbs
+flatc --cpp -o SourceFiles\cpp FBSFiles\GameResultToR.fbs
+
 flatc --csharp -o SourceFiles\csharp FBSFiles\JoinLobbyToC.fbs
 flatc --cpp -o SourceFiles\cpp FBSFiles\JoinLobbyToC.fbs
 

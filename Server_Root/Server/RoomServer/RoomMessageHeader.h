@@ -15,3 +15,4 @@
 #include "Messages/ToRoom/GameInputMoveToR.h"
 #include "Messages/ToRoom/GameInputRotationToR.h"
 #include "Messages/ToRoom/PlayerInputToR.h"
+#include "Messages/ToRoom/GameResultToR.h"

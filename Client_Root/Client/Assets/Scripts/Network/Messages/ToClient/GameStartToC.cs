@@ -6,6 +6,7 @@ public class GameStartToC : IMessage
 
     public float m_fTickInterval;
     public int m_nRandomSeed;
+    public int m_nTimeLimit;
 
     public override ushort GetID()
     {
@@ -22,6 +23,7 @@ public class GameStartToC : IMessage
         FBS.GameStartToC.StartGameStartToC(m_Builder);
         FBS.GameStartToC.AddTickInterval(m_Builder, m_fTickInterval);
         FBS.GameStartToC.AddRandomSeed(m_Builder, m_nRandomSeed);
+        FBS.GameStartToC.AddTimeLimit(m_Builder, m_nTimeLimit);
         var data = FBS.GameStartToC.EndGameStartToC(m_Builder);
 
         m_Builder.Finish(data.Value);
@@ -37,6 +39,7 @@ public class GameStartToC : IMessage
 
         m_fTickInterval = data.TickInterval;
         m_nRandomSeed = data.RandomSeed;
+        m_nTimeLimit = data.TimeLimit;
 
         return true;
     }

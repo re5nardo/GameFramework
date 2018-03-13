@@ -1,0 +1,7 @@
+include "FBSData.fbs";
+namespace FBS;
+
+table GameEndToC
+{
+	PlayerRanks:[FBS.Data.PlayerRankInfo];
+}

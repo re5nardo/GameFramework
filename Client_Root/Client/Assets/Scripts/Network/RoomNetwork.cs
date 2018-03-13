@@ -94,8 +94,6 @@ public class RoomNetwork : MonoSingleton<RoomNetwork>
 
     private void ConnectCallback(IAsyncResult ar)
     {
-        m_bConnectCallbacked = true;
-
         try
         {
             // Retrieve the socket from the state object.
@@ -114,6 +112,8 @@ public class RoomNetwork : MonoSingleton<RoomNetwork>
 
             m_bConnectResult = false;
         }
+
+        m_bConnectCallbacked = true;
     }
 
     private void ReceiveStart()
@@ -240,6 +240,10 @@ public class RoomNetwork : MonoSingleton<RoomNetwork>
             {
                 msg = ObjectPool.Instance.GetObject<TickInfoToC>();
             }
+            else if (nMessageID == GameEndToC.MESSAGE_ID)
+            {
+                msg = ObjectPool.Instance.GetObject<GameEndToC>();
+            }
 
             if (msg != null)
             {
@@ -307,7 +311,14 @@ public class RoomNetwork : MonoSingleton<RoomNetwork>
         {
             m_Socket.Shutdown(SocketShutdown.Both);
             m_Socket.Close();
+            m_Socket = null;
         }
+
+        m_MessagesReceived.Clear();
+        m_bConnectResult = false;
+        m_bConnectCallbacked = false;
+        m_ConnectCallback = null;
+        m_RecvMessageCallback = null;
     }
     #endregion
 }

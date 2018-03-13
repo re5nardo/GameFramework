@@ -25,6 +25,7 @@ class GameInputMoveToR;
 class GameInputRotationToR;
 class PlayerInputToR;
 class IPlayerInput;
+class GameResultToR;
 
 using namespace std;
 using namespace chrono;
@@ -37,7 +38,7 @@ public:
 
 private:
 	const long long TIME_STEP = 25;					//	<-- milliseconds, TickRate is 1000(1sec) / TIME_STEP
-	const long long TIME_LIMIT = 1000 * 120;		//	<-- milliseconds
+	const int TIME_LIMIT = 120;						//	<-- seconds
 
 private:
 	int								m_nMatchID;
@@ -81,6 +82,7 @@ private:
 	void OnGameInputMoveToR(GameInputMoveToR* pMsg, unsigned int socket);
 	void OnGameInputRotationToR(GameInputRotationToR* pMsg, unsigned int socket);
 	void OnPlayerInputToR(PlayerInputToR* pMsg, unsigned int socket);
+	void OnGameResultToR(GameResultToR* pMsg, unsigned int socket);
 
 private:
 	int GetPlayerIndexByPlayerKey(string strPlayerKey);

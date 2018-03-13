@@ -19,6 +19,7 @@ public class BaeGameRoom2 : IGameRoom
     [SerializeField] private UILabel                m_lbMovePoint = null;
     [SerializeField] private UILabel                m_lbNotice = null;
     [SerializeField] private UILabel                m_lbInfo = null;
+    [SerializeField] private UILabel                m_lbTime = null;
 
     public static new BaeGameRoom2 Instance
     {
@@ -38,6 +39,7 @@ public class BaeGameRoom2 : IGameRoom
 
     private float m_fTickInterval = 0.025f;
     private int m_nTick = 0;
+    private int m_nEndTick = 0;
     private int m_nServerTick = -1;
     private Dictionary<int, List<IPlayerInput>> m_dicPlayerInput = new Dictionary<int, List<IPlayerInput>>();
     private Dictionary<int, IEntity> m_dicEntity = new Dictionary<int, IEntity>();
@@ -46,6 +48,8 @@ public class BaeGameRoom2 : IGameRoom
     private Dictionary<int, int> m_dicEntityPlayer = new Dictionary<int, int>();      //  key : EntityID, value : PlayerIndex
     private List<MovingObject> m_listMovingObject = new List<MovingObject>();
     private List<ICharacterAI> m_listDisturber = new List<ICharacterAI>();
+
+    private List<PlayerRankInfo> m_listPlayerRankInfo = new List<PlayerRankInfo>();
 
 #region Room Logic
     private void Update()
@@ -203,11 +207,66 @@ public class BaeGameRoom2 : IGameRoom
 
                 Physics.Simulate(m_fTickInterval);
 
+                if (m_nTick == m_nEndTick)
+                {
+                    GameResultToR resultToR = ObjectPool.Instance.GetObject<GameResultToR>();
+                    resultToR.m_listPlayerRankInfo = GetPlayerRankInfos();
+
+                    RoomNetwork.Instance.Send(resultToR);
+
+                    yield break;
+                }
+
                 m_nTick++;
             }
 
             yield return new WaitForSeconds(m_fTickInterval);
         }
+    }
+
+    private List<PlayerRankInfo> GetPlayerRankInfos()
+    {
+        List<Character> listRetire = new List<Character>();
+        foreach(KeyValuePair<int, int> kv in m_dicPlayerEntity)
+        {
+            int nPlayerIndex = kv.Key;
+            int nEntityID = kv.Value;
+
+            if (m_listPlayerRankInfo.Exists(x => x.m_nPlayerIndex == nPlayerIndex))
+                continue;
+
+            Character character = m_dicEntity[nEntityID] as Character;
+            listRetire.Add(character);
+        }
+
+        listRetire.Sort(CompareCharacterHeight);
+
+        int nRank = m_listPlayerRankInfo.Count + 1;
+        float fHeight = listRetire[0].GetCurrentHeight();
+
+        for (int i = 0; i < listRetire.Count; ++i)
+        {
+            Character character = listRetire[i];
+            if (character.GetCurrentHeight() != fHeight)
+            {
+                nRank++;
+                fHeight = character.GetCurrentHeight();
+            }
+
+            PlayerRankInfo info = new PlayerRankInfo();
+            info.m_nPlayerIndex = m_dicEntityPlayer[character.GetID()];
+            info.m_nRank = nRank;
+            info.m_fHeight = fHeight;
+
+            m_listPlayerRankInfo.Add(info);
+        }
+
+        return m_listPlayerRankInfo;
+    }
+
+    private int CompareCharacterHeight(Character a, Character b)
+    {
+        return a.GetCurrentHeight().CompareTo(b.GetCurrentHeight());
     }
 
     private float GetUserRank()
@@ -237,6 +296,8 @@ public class BaeGameRoom2 : IGameRoom
         }
 
         m_lbInfo.text = string.Format("{0} / {1}\n현재 높이 : {2}m\n최고 높이 : {3}m", GetUserRank(), m_dicPlayerEntity.Count, (int)GetUserCharacter().GetCurrentHeight(), (int)GetUserCharacter().GetBestHeight());
+
+        SetRemainTime((m_nEndTick - m_nTick) * m_fTickInterval);
     }
 
     private void ProcessInput()
@@ -345,6 +406,8 @@ public class BaeGameRoom2 : IGameRoom
         m_dicEntityPlayer.Clear();
         m_listMovingObject.Clear();
         m_listDisturber.Clear();
+
+        m_listPlayerRankInfo.Clear();
     }
 
     private void SetDisturber()
@@ -453,6 +516,14 @@ public class BaeGameRoom2 : IGameRoom
         fTop = fTempTop;
         fBottom = fTempBottom;
     }
+
+    private void SetRemainTime(float fRemainTime)
+    {
+        int sec = (int)fRemainTime;
+        int milliSec = (int)((fRemainTime - sec) * 1000);
+
+        m_lbTime.text = string.Format("{0}:{1:000}", sec, milliSec);
+    }
 #endregion
 
 #region Network Message Handler
@@ -469,6 +540,10 @@ public class BaeGameRoom2 : IGameRoom
         else if (iMsg.GetID() == TickInfoToC.MESSAGE_ID)
         {
             OnTickInfoToC((TickInfoToC)iMsg);
+        }
+        else if (iMsg.GetID() == GameEndToC.MESSAGE_ID)
+        {
+            OnGameEndToC((GameEndToC)iMsg);
         }
 
         ObjectPool.Instance.ReturnObject(iMsg);
@@ -519,6 +594,9 @@ public class BaeGameRoom2 : IGameRoom
 
         m_fTickInterval = msg.m_fTickInterval;
         Random.InitState(msg.m_nRandomSeed);
+        m_nEndTick = (int)(msg.m_nTimeLimit / m_fTickInterval) - 1;
+
+        SetRemainTime(msg.m_nTimeLimit);
 
         StartGame();
     }
@@ -536,6 +614,14 @@ public class BaeGameRoom2 : IGameRoom
         }
 
         m_nServerTick = msg.m_nTick;
+    }
+
+    private void OnGameEndToC(GameEndToC msg)
+    {
+        Debug.LogWarning("GameEndToC!");
+
+        GameResultPopup popup = PopupManager.Instance.ShowPopup("GameResultPopup") as GameResultPopup;
+        popup.SetData(msg.m_listPlayerRankInfo);
     }
 #endregion
 

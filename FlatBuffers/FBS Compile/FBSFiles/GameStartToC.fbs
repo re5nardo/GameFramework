@@ -4,4 +4,6 @@ table GameStartToC
 {
 	TickInterval:float;
 	RandomSeed:int;
+	TimeLimit:int;
+
 }
