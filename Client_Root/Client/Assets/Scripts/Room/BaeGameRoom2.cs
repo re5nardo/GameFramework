@@ -32,6 +32,7 @@ public class BaeGameRoom2 : IGameRoom
     private const float TOUCH_PERCEPTION_TIME = 0.2f;
 
     private int m_nOldFrameRate = 0;
+    private Vector3 m_vec3OldGravity;
     private int m_nUserPlayerIndex = -1;
     private int m_nUserEntityID = -1;
     private float m_fElapsedTime = 0;       //  not used..
@@ -100,6 +101,9 @@ public class BaeGameRoom2 : IGameRoom
         m_nOldFrameRate = Application.targetFrameRate;
 //        Application.targetFrameRate = 30;
 
+        m_vec3OldGravity = Physics.gravity;
+        Physics.gravity *= 2;
+
         m_RotationController.onHold += OnRotationControllerHold;
 
         foreach(GameItemButton gameItemButton in m_GameItemButtons)
@@ -146,6 +150,7 @@ public class BaeGameRoom2 : IGameRoom
         }
 
         Application.targetFrameRate = m_nOldFrameRate;
+        Physics.gravity = m_vec3OldGravity;
     }
 #endregion
 

@@ -98,7 +98,9 @@ public class EntityUI : PooledComponent
     {
 //        m_ModelRigidbody.AddForce((Vector3.up + m_trModel.forward.normalized).normalized * 300);
 
-        m_ModelRigidbody.AddForce(Vector3.up * 200);
+//        m_ModelRigidbody.AddForce(Vector3.up * 200);
+
+        m_ModelRigidbody.AddForce(m_ModelRigidbody.mass * -Physics.gravity * 20);
     }
 
     public bool IsGrounded()
