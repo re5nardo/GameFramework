@@ -13,7 +13,7 @@ public class Character : IEntity
     private Role m_Role = Role.Challenger;
 
     //    protected List<ISkill> m_listSkill;
-    private List<GameItem> m_listGameItem = new List<GameItem>();
+    private GameItem[] m_GameItems = new GameItem[2];
 
     protected CharacterStatus m_OriginalStatus;
     protected CharacterStatus m_CurrentStatus;
@@ -214,36 +214,48 @@ public class Character : IEntity
 
     public void OnGetGameItem(GameItem item)
     {
-        if (m_listGameItem.Count < 2)
+        for (int i = 0; i < m_GameItems.Length; ++i)
         {
-            m_listGameItem.Add(item);
-
-            if (BaeGameRoom2.Instance.GetUserEntityID() == m_nID)
+            if (m_GameItems[i] == null)
             {
-                BaeGameRoom2.Instance.OnUserGameItemChanged(m_listGameItem);
+                m_GameItems[i] = item;
+
+                if (BaeGameRoom2.Instance.GetUserEntityID() == m_nID)
+                {
+                    BaeGameRoom2.Instance.OnUserGameItemChanged(m_GameItems);
+                }
+
+                return;
             }
         }
     }
 
     public void OnUseGameItem(int nID)
     {
-        GameItem found = m_listGameItem.Find(x => x.GetID() == nID);
-
-        if (found == null)
+        GameItem target = null;
+        for (int i = 0; i < m_GameItems.Length; ++i)
         {
-            Debug.LogError("[OnUseGameItem] found is null! nID : " + nID);
+            if (m_GameItems[i] != null && m_GameItems[i].GetID() == nID)
+            {
+                target = m_GameItems[i];
+                m_GameItems[i] = null;
+                break;
+            }
+        }
+
+        if (target == null)
+        {
+            Debug.LogError("[OnUseGameItem] target is null! nID : " + nID);
             return;
+        }
+
+        if (BaeGameRoom2.Instance.GetUserEntityID() == m_nID)
+        {
+            BaeGameRoom2.Instance.OnUserGameItemChanged(m_GameItems);
         }
 
         //  To Do : process use game item
         //  ...
-        Debug.Log("[OnUseGameItem] MasterDataID : " + found.GetMasterDataID());
-
-        m_listGameItem.Remove(found);
-
-        if (BaeGameRoom2.Instance.GetUserEntityID() == m_nID)
-        {
-            BaeGameRoom2.Instance.OnUserGameItemChanged(m_listGameItem);
-        }
+        Debug.Log("[OnUseGameItem] MasterDataID : " + target.GetMasterDataID());
     }
 }

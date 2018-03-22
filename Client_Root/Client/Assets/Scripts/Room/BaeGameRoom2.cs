@@ -737,18 +737,11 @@ public class BaeGameRoom2 : IGameRoom
         m_lbMovePoint.text = string.Format("x{0}", (int)status.m_fMovePoint);
     }
 
-    public void OnUserGameItemChanged(List<GameItem> listGameItem)
+    public void OnUserGameItemChanged(GameItem[] gameItems)
     {
         for (int i = 0; i < m_GameItemButtons.Length; ++i)
         {
-            if (listGameItem.Count > i)
-            {
-                m_GameItemButtons[i].SetData(listGameItem[i]);
-            }
-            else
-            {
-                m_GameItemButtons[i].SetData(null);
-            }
+            m_GameItemButtons[i].SetData(gameItems[i]);
         }
     }
 #endregion
