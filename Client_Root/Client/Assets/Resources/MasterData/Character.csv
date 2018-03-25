@@ -1,14 +1,4 @@
 ID,Name,ClassName,SkillIDs,BehaviorIDs,HP,MP,MaximumSpeed,MPChargeRate (MP/°Å¸®),Size,ModelResID,Height,Default_Y,DefaultBehaviorID
-0,MisterBae,Character,"0,1,2","0,1,2,3,4,7,15,16",3,3,5,0.01,0.5,MisterBae,3,0,0
-1,Flower1,Character,,"0,5",3,3,1,0.01,1,Flower1,3,0,0
-2,DummyCharacter1,Character,,"0,1",3,3,10,0.01,3,DummyCharacter1,3,0,
-3,DummyCharacter2,Character,,"0,8",3,3,5,0.01,1,DummyCharacter2,3,0,0
-4,Blob,Character,,"0,9",3,3,2,0.01,0.7,Blob,0.7,0,0
-5,QueenMamboRabbit,Character,,"0,10",3,3,5,0.01,0.5,QueenMamboRabbit,1.4,0,0
-6,Yeti,Character,,"0,1",3,3,4,0.01,1,Yeti,1.5,0,0
-7,Golem,Character,,"0,1,7,15,16",3,3,3,0.01,0.7,Golem,1.1,0,0
-8,IceGolem,Character,,"0,1",3,3,4,0.01,0.8,IceGolem,1.7,0,0
-9,Cockatrice,Character,,"0,1,7,15,16",3,3,3,0.01,0.5,Cockatrice,0.9,0,0
-10,IceQueenMaid,Character,,"0,1,12",3,3,3,0.01,0.4,IceQueenMaid,0.8,0,0
-11,SkullArcher,Character,,"0,13",3,3,3,0.01,0.4,SkullArcher,1,0,0
-12,MamboRabbit,Character,,"0,14",3,3,3,0.01,0.5,MamboRabbit,0.7,0,0
+0,MisterBae,Character,"0,1,2","0,1,2,3,4",3,3,5,0.01,0.5,MisterBae,3,0,0
+1,Golem,Character,,"0,1,2,3,4",3,3,3,0.01,0.7,Golem,1.1,0,0
+2,Cockatrice,Character,,"0,1,2,3,4",3,3,3,0.01,0.5,Cockatrice,0.9,0,0

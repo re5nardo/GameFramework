@@ -27,9 +27,9 @@ public abstract class IEntity : PooledComponent
         List<IBehavior> listBehavior = GetActivatedBehaviors();
         listBehavior.Sort(delegate(IBehavior x, IBehavior y)
         {
-            if (x.GetMasterDataID() == BehaviorID.ROTATION && y.GetMasterDataID() == BehaviorID.ROTATION) return 0;
-            else if (x.GetMasterDataID() == BehaviorID.ROTATION) return 1;
-            else if (y.GetMasterDataID() == BehaviorID.ROTATION) return -1;
+            if (x.GetMasterDataID() == MasterDataDefine.BehaviorID.ROTATION && y.GetMasterDataID() == MasterDataDefine.BehaviorID.ROTATION) return 0;
+            else if (x.GetMasterDataID() == MasterDataDefine.BehaviorID.ROTATION) return 1;
+            else if (y.GetMasterDataID() == MasterDataDefine.BehaviorID.ROTATION) return -1;
             else return 0;
         });
 

@@ -42,7 +42,7 @@ public abstract class IBehavior : ITickUpdatable
 
         if (masterData.m_strName != "Idle")
         {
-            IBehavior idle = m_Entity.GetBehavior(BehaviorID.IDLE);
+            IBehavior idle = m_Entity.GetBehavior(MasterDataDefine.BehaviorID.IDLE);
 
             if (idle != null && idle.IsActivated())
             {

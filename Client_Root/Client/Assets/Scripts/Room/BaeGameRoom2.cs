@@ -320,8 +320,8 @@ public class BaeGameRoom2 : IGameRoom
                     if (!character.IsAlive() || character.HasCoreState(CoreState.CoreState_Faint))
                         continue;
 
-                    character.GetBehavior(BehaviorID.ROTATION).StartTick(m_nTick, rotation.m_vec3Rotation);
-                    character.GetBehavior(BehaviorID.MOVE).StartTick(m_nTick);
+                    character.GetBehavior(MasterDataDefine.BehaviorID.ROTATION).StartTick(m_nTick, rotation.m_vec3Rotation);
+                    character.GetBehavior(MasterDataDefine.BehaviorID.MOVE).StartTick(m_nTick);
                 }
                 else if (input.GetPlayerInputType() == FBS.PlayerInputType.Position)
                 {
@@ -332,7 +332,7 @@ public class BaeGameRoom2 : IGameRoom
                     if (!character.IsAlive() || character.HasCoreState(CoreState.CoreState_Faint))
                         continue;
 
-                    character.GetBehavior(BehaviorID.JUMP).StartTick(m_nTick);
+                    character.GetBehavior(MasterDataDefine.BehaviorID.JUMP).StartTick(m_nTick);
                 }
                 else if (input.GetPlayerInputType() == FBS.PlayerInputType.GameItem)
                 {
@@ -721,7 +721,7 @@ public class BaeGameRoom2 : IGameRoom
         if (nKilledEntityID == m_nUserEntityID)
         {
             MasterData.Behavior behaviorMasterData = null;
-            MasterDataManager.Instance.GetData<MasterData.Behavior>(BehaviorID.DIE, ref behaviorMasterData);
+            MasterDataManager.Instance.GetData<MasterData.Behavior>(MasterDataDefine.BehaviorID.DIE, ref behaviorMasterData);
 
             //  Die Effect On
             m_goGreyCover.SetActive(true);

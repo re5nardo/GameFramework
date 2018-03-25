@@ -158,7 +158,7 @@ public class Character : IEntity
 
         if (m_CurrentStatus.m_nHP <= 0)
         {
-            IBehavior dieBehavior = GetBehavior(BehaviorID.DIE);
+            IBehavior dieBehavior = GetBehavior(MasterDataDefine.BehaviorID.DIE);
 
             dieBehavior.StartTick(nTick);
             dieBehavior.UpdateTick(nTick);
@@ -254,8 +254,34 @@ public class Character : IEntity
             BaeGameRoom2.Instance.OnUserGameItemChanged(m_GameItems);
         }
 
-        //  To Do : process use game item
-        //  ...
-        Debug.Log("[OnUseGameItem] MasterDataID : " + target.GetMasterDataID());
+        if (target.GetMasterDataID() == 0)
+        {
+            //  Super
+
+        }
+        else if (target.GetMasterDataID() == 1)
+        {
+            //  Fire
+        }
+        else if (target.GetMasterDataID() == 2)
+        {
+            //  Water
+        }
+        else if (target.GetMasterDataID() == 3)
+        {
+            //  Earth
+        }
+        else if (target.GetMasterDataID() == 4)
+        {
+            //  Wind
+        }
+        else if (target.GetMasterDataID() == 5)
+        {
+            //  Metal
+        }
+        else if (target.GetMasterDataID() == 6)
+        {
+            //  Thunder
+        }
     }
 }

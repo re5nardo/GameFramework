@@ -69,8 +69,8 @@ namespace Behavior
                                 fTargetAngle = 0;   //  dummy
                             }
 
-                            projectile.GetBehavior(BehaviorID.MOVE).StartTick(nUpdateTick);
-                            projectile.GetBehavior(BehaviorID.MOVE).UpdateTick(nUpdateTick);
+                            projectile.GetBehavior(MasterDataDefine.BehaviorID.MOVE).StartTick(nUpdateTick);
+                            projectile.GetBehavior(MasterDataDefine.BehaviorID.MOVE).UpdateTick(nUpdateTick);
                         }
                     }
                     else if (action.m_strID == "Fire")

@@ -621,7 +621,7 @@ public class BaeGameRoom : IGameRoom
         if (nKilledEntityID == m_nUserEntityID)
         {
             MasterData.Behavior behaviorMasterData = null;
-            MasterDataManager.Instance.GetData<MasterData.Behavior>(BehaviorID.DIE, ref behaviorMasterData);
+            MasterDataManager.Instance.GetData<MasterData.Behavior>(MasterDataDefine.BehaviorID.DIE, ref behaviorMasterData);
 
             //  Die Effect On
             m_goGreyCover.SetActive(true);

@@ -154,7 +154,7 @@ void BaeGameRoom2::PrepareGame()
 	for (int i = 0; i < m_vecMatchedPlayerKey.size(); ++i)
 	{
 		int nPlayerIndex = GetPlayerIndexByPlayerKey(m_vecMatchedPlayerKey[i]);
-		int dummyCharacterMasterDataID = rand() % 2 == 0 ? 0 : rand() % 2 == 0 ? 7 : 9;		//	Temp..rand
+		int dummyCharacterMasterDataID = rand() % 2 == 0 ? 0 : rand() % 2 == 0 ? 1 : 2;		//	Temp..rand
 		int nEntityID = 0;
 
 		MasterData::Character* pMasterCharacter = NULL;
