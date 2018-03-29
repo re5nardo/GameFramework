@@ -13,6 +13,7 @@ public class Character : IEntity
     private Role m_Role = Role.Challenger;
 
     //    protected List<ISkill> m_listSkill;
+    private Dictionary<int,int> m_dicGameItemEffect = new Dictionary<int,int>();
     private GameItem[] m_GameItems = new GameItem[2];
 
     protected CharacterStatus m_OriginalStatus;
@@ -45,6 +46,11 @@ public class Character : IEntity
         //        {
         //            Factory.Instance.CreateBehavior(this, nSkillID);
         //        }
+
+        foreach(KeyValuePair<int, int> kv in masterCharacter.m_dicGameItemEffect)
+        {
+            m_dicGameItemEffect.Add(kv.Key, kv.Value);
+        }
 
         foreach(int nBehaviorID in masterCharacter.m_listBehaviorID)
         {
@@ -254,15 +260,10 @@ public class Character : IEntity
             BaeGameRoom2.Instance.OnUserGameItemChanged(m_GameItems);
         }
 
-
-
-        MasterData.Character masterCharacter = null;
-        MasterDataManager.Instance.GetData<MasterData.Character>(m_nMasterDataID, ref masterCharacter);
-
-        int nEffectID = masterCharacter.m_dicGameItemEffect[target.GetMasterDataID()];
+        int nGameItemEffectID = m_dicGameItemEffect[target.GetMasterDataID()];
 
         MasterData.GameItemEffect masterGameItemEffect = null;
-        MasterDataManager.Instance.GetData<MasterData.GameItemEffect>(nEffectID, ref masterGameItemEffect);
+        MasterDataManager.Instance.GetData<MasterData.GameItemEffect>(nGameItemEffectID, ref masterGameItemEffect);
 
         Debug.Log("GameItemEffect type : " + masterGameItemEffect.m_Type);
 
