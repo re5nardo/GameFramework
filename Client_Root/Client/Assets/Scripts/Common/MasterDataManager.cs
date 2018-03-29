@@ -20,6 +20,7 @@ public class MasterDataManager : MonoSingleton<MasterDataManager>
         SetState();
         SetProjectile();
         SetGameItem();
+        SetGameItemEffect();
     }
 
     private void SetCharacter()
@@ -103,6 +104,20 @@ public class MasterDataManager : MonoSingleton<MasterDataManager>
             gameItem.SetData(listData[row]);
 
             m_dicData[typeof(MasterData.GameItem)][gameItem.m_nID] = gameItem;
+        }
+    }
+
+    private void SetGameItemEffect()
+    {
+        m_dicData[typeof(MasterData.GameItemEffect)] = new Dictionary<int, IMasterData>();
+
+        List<List<string>> listData = Util.ReadCSV("MasterData/GameItemEffect");
+        for (int row = 1; row < listData.Count; ++row)
+        {
+            MasterData.GameItemEffect gameItemEffect = new MasterData.GameItemEffect();
+            gameItemEffect.SetData(listData[row]);
+
+            m_dicData[typeof(MasterData.GameItemEffect)][gameItemEffect.m_nID] = gameItemEffect;
         }
     }
 

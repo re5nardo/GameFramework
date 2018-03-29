@@ -6,7 +6,7 @@ namespace MasterData
     {
         public string m_strName;
         public string m_strClassName;
-        public List<int> m_listSkillID = new List<int>();
+        public Dictionary<int,int> m_dicGameItemEffect = new Dictionary<int,int>();
         public List<int> m_listBehaviorID = new List<int>();
         public int m_nHP;
         public int m_nMP;
@@ -20,7 +20,23 @@ namespace MasterData
             Util.Convert(data[0], ref m_nID);
             m_strName = data[1];
             m_strClassName = data[2];
-            Util.Parse(data[3], ',', m_listSkillID);
+
+            List<string> listTemp = new List<string>();
+            Util.Parse(data[3], ',', listTemp);
+            foreach(string text in listTemp)
+            {
+                List<string> listTemp2 = new List<string>();
+                Util.Parse(text, ':', listTemp2);
+
+                int nGameItemID = 0;
+                int nGameItemEffectID = 0;
+
+                Util.Convert(listTemp2[0], ref nGameItemID);
+                Util.Convert(listTemp2[1], ref nGameItemEffectID);
+
+                m_dicGameItemEffect.Add(nGameItemID, nGameItemEffectID);
+            }
+
             Util.Parse(data[4], ',', m_listBehaviorID);
             Util.Convert(data[5], ref m_nHP);
             Util.Convert(data[6], ref m_nMP);

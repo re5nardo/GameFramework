@@ -49,6 +49,7 @@ public class BaeGameRoom2 : IGameRoom
     private Dictionary<int, int> m_dicEntityPlayer = new Dictionary<int, int>();      //  key : EntityID, value : PlayerIndex
     private List<MovingObject> m_listMovingObject = new List<MovingObject>();
     private List<ICharacterAI> m_listDisturber = new List<ICharacterAI>();
+    private List<MagicObject> m_listMagicObject = new List<MagicObject>();
 
     private List<PlayerRankInfo> m_listPlayerRankInfo = new List<PlayerRankInfo>();
 
@@ -381,6 +382,14 @@ public class BaeGameRoom2 : IGameRoom
         }
 
         m_GameItemManager.UpdateTick(m_nTick);
+
+        //  Copy values because m_listMagicObject can be modified during iterating
+        MagicObject[] magicObjects = new MagicObject[m_listMagicObject.Count];
+        m_listMagicObject.CopyTo(magicObjects, 0);
+        foreach(MagicObject magicObject in magicObjects)
+        {
+            magicObject.UpdateTick(m_nTick);
+        }
     }
 
     private void LateUpdateWorld()
@@ -411,6 +420,7 @@ public class BaeGameRoom2 : IGameRoom
         m_dicEntityPlayer.Clear();
         m_listMovingObject.Clear();
         m_listDisturber.Clear();
+        m_listMagicObject.Clear();
 
         m_listPlayerRankInfo.Clear();
     }
@@ -501,6 +511,19 @@ public class BaeGameRoom2 : IGameRoom
         projectile.Initialize(nEntityID, nMasterDataID);
 
         m_dicEntity[nEntityID] = projectile;
+    }
+
+    public void CreateMagicObject(int nMasterDataID, ref MagicObject magicObject, int nCreatorID)
+    {
+        magicObject = Factory.Instance.CreateMagicObject();
+        magicObject.Initialize(0, nMasterDataID);
+
+        m_listMagicObject.Add(magicObject);
+    }
+
+    public void DestroyMagicObject(MagicObject magicObject)
+    {
+        m_listMagicObject.Remove(magicObject);
     }
 
     public void GetPlayersHeight(ref float fTop, ref float fBottom)

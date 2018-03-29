@@ -86,6 +86,14 @@ public class Factory : MonoSingleton<Factory>
         return gameItem;
     }
 
+    public MagicObject CreateMagicObject()
+    {
+        GameObject goMagicObject = ObjectPool.Instance.GetGameObject("ItemModel/GameItem");
+        MagicObject magicObject = goMagicObject.GetComponent<MagicObject>();
+
+        return magicObject;
+    }
+
     //CharacterAI*  CreateCharacterAI(BaeGameRoom* pGameRoom, int nID, int nMasterDataID);
 //    public Projectile     CreateProjectile(BaeGameRoom* pGameRoom, int nProjectorID, int nID, int nMasterDataID);
 //    public Item           CreateItem(BaeGameRoom* pGameRoom, long long lTime, int nID, int nMasterDataID);

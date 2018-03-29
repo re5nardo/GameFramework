@@ -254,34 +254,24 @@ public class Character : IEntity
             BaeGameRoom2.Instance.OnUserGameItemChanged(m_GameItems);
         }
 
-        if (target.GetMasterDataID() == 0)
-        {
-            //  Super
 
-        }
-        else if (target.GetMasterDataID() == 1)
+
+        MasterData.Character masterCharacter = null;
+        MasterDataManager.Instance.GetData<MasterData.Character>(m_nMasterDataID, ref masterCharacter);
+
+        int nEffectID = masterCharacter.m_dicGameItemEffect[target.GetMasterDataID()];
+
+        MasterData.GameItemEffect masterGameItemEffect = null;
+        MasterDataManager.Instance.GetData<MasterData.GameItemEffect>(nEffectID, ref masterGameItemEffect);
+
+        Debug.Log("GameItemEffect type : " + masterGameItemEffect.m_Type);
+
+        if (masterGameItemEffect.m_Type == MasterData.GameItemEffect.Type.Behavior)
         {
-            //  Fire
-        }
-        else if (target.GetMasterDataID() == 2)
-        {
-            //  Water
-        }
-        else if (target.GetMasterDataID() == 3)
-        {
-            //  Earth
-        }
-        else if (target.GetMasterDataID() == 4)
-        {
-            //  Wind
-        }
-        else if (target.GetMasterDataID() == 5)
-        {
-            //  Metal
-        }
-        else if (target.GetMasterDataID() == 6)
-        {
-            //  Thunder
+            MasterData.Behavior masterBehavior = null;
+            MasterDataManager.Instance.GetData<MasterData.Behavior>(masterGameItemEffect.m_nTargetID, ref masterBehavior);
+
+            Debug.Log("masterBehavior.m_strName : " + masterBehavior.m_strName);
         }
     }
 }
