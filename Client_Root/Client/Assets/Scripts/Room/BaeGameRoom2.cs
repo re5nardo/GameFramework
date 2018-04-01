@@ -49,7 +49,7 @@ public class BaeGameRoom2 : IGameRoom
     private Dictionary<int, int> m_dicEntityPlayer = new Dictionary<int, int>();      //  key : EntityID, value : PlayerIndex
     private List<MovingObject> m_listMovingObject = new List<MovingObject>();
     private List<ICharacterAI> m_listDisturber = new List<ICharacterAI>();
-    private List<MagicObject> m_listMagicObject = new List<MagicObject>();
+    private List<IMagic> m_listMagic = new List<IMagic>();
 
     private List<PlayerRankInfo> m_listPlayerRankInfo = new List<PlayerRankInfo>();
 
@@ -383,12 +383,12 @@ public class BaeGameRoom2 : IGameRoom
 
         m_GameItemManager.UpdateTick(m_nTick);
 
-        //  Copy values because m_listMagicObject can be modified during iterating
-        MagicObject[] magicObjects = new MagicObject[m_listMagicObject.Count];
-        m_listMagicObject.CopyTo(magicObjects, 0);
-        foreach(MagicObject magicObject in magicObjects)
+        //  Copy values because m_listMagic can be modified during iterating
+        IMagic[] magics = new IMagic[m_listMagic.Count];
+        m_listMagic.CopyTo(magics, 0);
+        foreach(IMagic magic in magics)
         {
-            magicObject.UpdateTick(m_nTick);
+            magic.UpdateTick(m_nTick);
         }
     }
 
@@ -420,7 +420,7 @@ public class BaeGameRoom2 : IGameRoom
         m_dicEntityPlayer.Clear();
         m_listMovingObject.Clear();
         m_listDisturber.Clear();
-        m_listMagicObject.Clear();
+        m_listMagic.Clear();
 
         m_listPlayerRankInfo.Clear();
     }
@@ -513,17 +513,17 @@ public class BaeGameRoom2 : IGameRoom
         m_dicEntity[nEntityID] = projectile;
     }
 
-    public void CreateMagicObject(int nMasterDataID, ref MagicObject magicObject, int nCreatorID)
+    public void CreateMagic(int nMasterDataID, ref IMagic magic, int nCasterID)
     {
-        magicObject = Factory.Instance.CreateMagicObject();
-        magicObject.Initialize(0, nMasterDataID);
+        magic = Factory.Instance.CreateMagic();
+        magic.Initialize(nCasterID, nMasterDataID, m_fTickInterval);
 
-        m_listMagicObject.Add(magicObject);
+        m_listMagic.Add(magic);
     }
 
-    public void DestroyMagicObject(MagicObject magicObject)
+    public void DestroyMagic(IMagic magic)
     {
-        m_listMagicObject.Remove(magicObject);
+        m_listMagic.Remove(magic);
     }
 
     public void GetPlayersHeight(ref float fTop, ref float fBottom)
@@ -674,10 +674,7 @@ public class BaeGameRoom2 : IGameRoom
     private void OnRotationControllerHold(Vector2 vec2Direction)
     {
         if (vec2Direction == Vector2.zero)
-        {
-            Debug.LogWarning("[OnRotationControllerHold] vec2Direction is zero!");
             return;
-        }
 
         if (!GetUserCharacter().IsAlive())
             return;

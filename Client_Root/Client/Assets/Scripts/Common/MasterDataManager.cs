@@ -21,6 +21,7 @@ public class MasterDataManager : MonoSingleton<MasterDataManager>
         SetProjectile();
         SetGameItem();
         SetGameItemEffect();
+        SetMagic();
     }
 
     private void SetCharacter()
@@ -118,6 +119,20 @@ public class MasterDataManager : MonoSingleton<MasterDataManager>
             gameItemEffect.SetData(listData[row]);
 
             m_dicData[typeof(MasterData.GameItemEffect)][gameItemEffect.m_nID] = gameItemEffect;
+        }
+    }
+
+    private void SetMagic()
+    {
+        m_dicData[typeof(MasterData.Magic)] = new Dictionary<int, IMasterData>();
+
+        List<List<string>> listData = Util.ReadCSV("MasterData/Magic");
+        for (int row = 1; row < listData.Count; ++row)
+        {
+            MasterData.Magic magic = new MasterData.Magic();
+            magic.SetData(listData[row]);
+
+            m_dicData[typeof(MasterData.Magic)][magic.m_nID] = magic;
         }
     }
 

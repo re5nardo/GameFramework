@@ -265,14 +265,11 @@ public class Character : IEntity
         MasterData.GameItemEffect masterGameItemEffect = null;
         MasterDataManager.Instance.GetData<MasterData.GameItemEffect>(nGameItemEffectID, ref masterGameItemEffect);
 
-        Debug.Log("GameItemEffect type : " + masterGameItemEffect.m_Type);
-
         if (masterGameItemEffect.m_Type == MasterData.GameItemEffect.Type.Behavior)
         {
-            MasterData.Behavior masterBehavior = null;
-            MasterDataManager.Instance.GetData<MasterData.Behavior>(masterGameItemEffect.m_nTargetID, ref masterBehavior);
-
-            Debug.Log("masterBehavior.m_strName : " + masterBehavior.m_strName);
+            IBehavior targetBehavior = GetBehavior(masterGameItemEffect.m_nTargetID);
+            targetBehavior.StartTick(BaeGameRoom2.Instance.GetCurrentTick());
+            targetBehavior.UpdateTick(BaeGameRoom2.Instance.GetCurrentTick());
         }
     }
 }

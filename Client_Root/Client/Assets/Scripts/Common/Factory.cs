@@ -15,25 +15,25 @@ public class Factory : MonoSingleton<Factory>
 
         string strClassName = masterData.m_strClassName;
 
-        if (masterData.m_strName == "Move")
+        if (masterData.m_strClassName == "Move")
         {
             return new Behavior.Move();
         }
-        else if (masterData.m_strName == "Rotation")
+        else if (masterData.m_strClassName == "Rotation")
         {
             return new Behavior.Rotation();
         }
-        else if (masterData.m_strName == "Idle")
+        else if (masterData.m_strClassName == "Idle")
         {
             return new Behavior.Idle();
         }
-        else if (masterData.m_strName == "Jump")
+        else if (masterData.m_strClassName == "Jump")
         {
             return new Behavior.Jump();
         }
-        else if (masterData.m_strName == "BlobFire")
+        else if (masterData.m_strClassName == "Cast")
         {
-            return new Behavior.Fire();
+            return new Behavior.Cast();
         }
 
         return null;
@@ -86,12 +86,12 @@ public class Factory : MonoSingleton<Factory>
         return gameItem;
     }
 
-    public MagicObject CreateMagicObject()
+    public IMagic CreateMagic()
     {
-        GameObject goMagicObject = ObjectPool.Instance.GetGameObject("ItemModel/GameItem");
-        MagicObject magicObject = goMagicObject.GetComponent<MagicObject>();
+        GameObject goMagic = ObjectPool.Instance.GetGameObject("ItemModel/GameItem");
+        IMagic magic = goMagic.GetComponent<IMagic>();
 
-        return magicObject;
+        return magic;
     }
 
     //CharacterAI*  CreateCharacterAI(BaeGameRoom* pGameRoom, int nID, int nMasterDataID);
