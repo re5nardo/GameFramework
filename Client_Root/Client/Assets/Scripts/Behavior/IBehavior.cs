@@ -4,6 +4,7 @@ public abstract class IBehavior : ITickUpdatable
 {
     protected float m_fTickInterval = 0;
     protected int m_nStartTick = -1;
+    protected int m_nEndTick = -1;
 
     protected int m_nMasterDataID = -1;
     protected IEntity m_Entity;
@@ -26,6 +27,14 @@ public abstract class IBehavior : ITickUpdatable
     public virtual void StartTick(int nStartTick, params object[] param)
     {
         m_nStartTick = nStartTick;
+        if (m_fLength == -1)
+        {
+            m_nEndTick = -1;
+        }
+        else
+        {
+            m_nEndTick = nStartTick + (int)(m_fLength / m_fTickInterval) - 1;
+        }
 
         if (m_bActivated)
             return;

@@ -4,10 +4,10 @@ ID,Name,ClassName,Length,StringParams,AnimationName,Actions
 2,Die,Die,10,,Die,
 3,Rotation,Rotation,-1,,,
 4,Jump,Jump,-1,,,
-5,Meteor,Cast,1.4,,Cast,Cast:0.2
-6,WaterJail,Cast,1.4,,Cast,Cast:0.2
-7,Shield,Cast,1.4,,Cast,Cast:0.2
-8,Boost,Cast,1.4,,Cast,Cast:0.2
-9,Weight,Cast,1.4,,Cast,Cast:0.2
-10,Thunder,Cast,1.4,,Cast,Cast:0.2
-11,Super,Cast,1.4,,Cast,Cast:0.2
+5,Meteor,Cast,1.4,,Cast,Cast:0.2:0
+6,WaterJail,Cast,1.4,,Cast,Cast:0.2:1
+7,Shield,Cast,1.4,,Cast,Cast:0.2:2
+8,Boost,Cast,1.4,,Cast,Cast:0.2:3
+9,Weight,Cast,1.4,,Cast,Cast:0.2:4
+10,Thunder,Cast,1.4,,Cast,Cast:0.2:5
+11,Super,Cast,1.4,,Cast,Cast:0.2:6

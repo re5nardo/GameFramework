@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Magic
 {
-    public class Meteor : IMagic
+    public class Weight : IMagic
     {
         public override void Initialize(int nCasterID, int nMasterDataID, float fTickInterval)
         {
@@ -20,7 +20,7 @@ namespace Magic
 
         protected override void UpdateBody(int nUpdateTick)
         {
-            Debug.Log("Meteor");
+            Debug.Log("Weight");
 
             if (m_nEndTick != -1 && nUpdateTick == m_nEndTick)
             {

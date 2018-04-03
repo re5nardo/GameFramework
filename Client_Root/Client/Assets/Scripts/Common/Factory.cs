@@ -13,8 +13,6 @@ public class Factory : MonoSingleton<Factory>
         MasterData.Behavior masterData = null;
         MasterDataManager.Instance.GetData<MasterData.Behavior>(nMasterDataID, ref masterData);
 
-        string strClassName = masterData.m_strClassName;
-
         if (masterData.m_strClassName == "Move")
         {
             return new Behavior.Move();
@@ -43,8 +41,6 @@ public class Factory : MonoSingleton<Factory>
     {
         MasterData.State masterData = null;
         MasterDataManager.Instance.GetData<MasterData.State>(nMasterDataID, ref masterData);
-
-        string strClassName = masterData.m_strClassName;
 
         if (masterData.m_strClassName == "ChallengerDisturbing")
         {
@@ -86,12 +82,41 @@ public class Factory : MonoSingleton<Factory>
         return gameItem;
     }
 
-    public IMagic CreateMagic()
+    public IMagic CreateMagic(int nMasterDataID)
     {
-        GameObject goMagic = ObjectPool.Instance.GetGameObject("ItemModel/GameItem");
-        IMagic magic = goMagic.GetComponent<IMagic>();
+        MasterData.Magic masterData = null;
+        MasterDataManager.Instance.GetData<MasterData.Magic>(nMasterDataID, ref masterData);
 
-        return magic;
+        if (masterData.m_strClassName == "Meteor")
+        {
+            return new Magic.Meteor();
+        }
+        else if (masterData.m_strClassName == "WaterJail")
+        {
+            return new Magic.WaterJail();
+        }
+        else if (masterData.m_strClassName == "Shield")
+        {
+            return new Magic.Shield();
+        }
+        else if (masterData.m_strClassName == "Boost")
+        {
+            return new Magic.Boost();
+        }
+        else if (masterData.m_strClassName == "Weight")
+        {
+            return new Magic.Weight();
+        }
+        else if (masterData.m_strClassName == "Thunder")
+        {
+            return new Magic.Thunder();
+        }
+        else if (masterData.m_strClassName == "Super")
+        {
+            return new Magic.Super();
+        }
+
+        return null;
     }
 
     //CharacterAI*  CreateCharacterAI(BaeGameRoom* pGameRoom, int nID, int nMasterDataID);

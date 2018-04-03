@@ -6,8 +6,6 @@ namespace Behavior
 {
     public class Cast : IBehavior
     {
-        private int m_nEndTick = 0;
-
         public override void Initialize(IEntity entity, int nMasterDataID, float fTickInterval)
         {
             m_Entity = entity;
@@ -20,8 +18,6 @@ namespace Behavior
             m_fLength = masterBehavior.m_fLength;
             m_strStringParams = masterBehavior.m_strStringParams;
             m_listAction = masterBehavior.m_listAction;
-
-            m_nEndTick = (int)(m_fLength / m_fTickInterval) - 1;
         }
 
         protected override void UpdateBody(int nUpdateTick)
@@ -34,12 +30,19 @@ namespace Behavior
                 {
                     if (action.m_strID == "Cast")
                     {
-                        
+                        int nMagicID = 0;
+                        Util.Convert(action.m_listParams[0], ref nMagicID);
+
+                        IMagic magic = null;
+                        BaeGameRoom2.Instance.CreateMagic(nMagicID, ref magic, m_Entity.GetID());
+
+                        magic.StartTick(nUpdateTick);
+                        magic.UpdateTick(nUpdateTick);
                     }
                 }
             }
 
-            if (nUpdateTick == m_nEndTick + m_nStartTick)
+            if (m_nEndTick != -1 && nUpdateTick == m_nEndTick)
             {
                 Stop();
             }

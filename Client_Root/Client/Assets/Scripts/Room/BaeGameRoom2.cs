@@ -515,7 +515,7 @@ public class BaeGameRoom2 : IGameRoom
 
     public void CreateMagic(int nMasterDataID, ref IMagic magic, int nCasterID)
     {
-        magic = Factory.Instance.CreateMagic();
+        magic = Factory.Instance.CreateMagic(nMasterDataID);
         magic.Initialize(nCasterID, nMasterDataID, m_fTickInterval);
 
         m_listMagic.Add(magic);
