@@ -492,10 +492,14 @@ public class BaeGameRoom2 : IGameRoom
         return m_fTickInterval;
     }
 
-    public void CreateCharacter(int nMasterDataID, ref int nEntityID, ref Character character, Character.Role role, CharacterStatus status)
+    public void CreateCharacter(int nMasterDataID, ref int nEntityID, ref Character character, Character.Role role, CharacterStatus status, bool bUser)
     {
         nEntityID = m_nEntitySequence++;
-
+        if (bUser)
+        {
+            m_nUserEntityID = nEntityID;
+        }
+            
         character = Factory.Instance.CreateCharacter(nMasterDataID);
         character.Initialize(nEntityID, nMasterDataID, role);
         character.InitStatus(status);
@@ -587,15 +591,13 @@ public class BaeGameRoom2 : IGameRoom
             {
                 int nEntityID = 0;
                 Character character = null;
-                CreateCharacter(player.MasterDataID, ref nEntityID, ref character, Character.Role.Challenger, new CharacterStatus(player.Status));
+                CreateCharacter(player.MasterDataID, ref nEntityID, ref character, Character.Role.Challenger, new CharacterStatus(player.Status), player.PlayerIndex == m_nUserPlayerIndex);
 
                 m_dicPlayerEntity[player.PlayerIndex] = nEntityID;
                 m_dicEntityPlayer[nEntityID] = player.PlayerIndex;
 
                 if (player.PlayerIndex == m_nUserPlayerIndex)
                 {
-                    m_nUserEntityID = nEntityID;
-
                     m_CameraController.SetTarget(character.GetModelTransform());
                     m_CameraController.StartFollowTarget();
 

@@ -6,6 +6,7 @@ public class EntityUI : PooledComponent
 {
     private GameObject m_goModel = null;
     private Animation m_animModel = null;
+    private GameObject m_goNicknameUI = null;
 
     private Transform m_trModel = null;
     private Rigidbody m_ModelRigidbody = null;
@@ -49,6 +50,9 @@ public class EntityUI : PooledComponent
         m_ModelRigidbody = m_goModel.GetComponent<Rigidbody>();
         m_TickBasedAnimationPlayer = m_goModel.GetComponent<TickBasedAnimationPlayer>();
         m_TickBasedAnimationPlayer.SetTickInterval(BaeGameRoom2.Instance.GetTickInterval());
+
+        m_goNicknameUI = ObjectPool.Instance.GetGameObject("UI/NicknameUI");
+        m_goNicknameUI.GetComponent<NicknameUI>().SetData(m_goModel.transform, "Entity" + nID.ToString(), BaeGameRoom2.Instance.GetUserEntityID() == nID ? Color.green : Color.blue);
     }
 
     public float GetAnimationClipLegth(string strClipName)
