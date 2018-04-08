@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace State
 {
-    public class Faint : IState
+    public class Shield : IState
     {
         public override void Initialize(IEntity entity, int nMasterDataID, float fTickInterval)
         {
@@ -17,21 +17,7 @@ namespace State
 
             m_fLength = masterState.m_fLength;
 
-            foreach(string coreState in masterState.m_listCoreState)
-            {
-                if (coreState == "Invincible")
-                {
-                    m_listCoreState.Add(CoreState.CoreState_Invincible);
-                }
-                else if (coreState == "ChallengerDisturbing")
-                {
-                    m_listCoreState.Add(CoreState.CoreState_ChallengerDisturbing);
-                }
-                else if (coreState == "Faint")
-                {
-                    m_listCoreState.Add(CoreState.CoreState_Faint);
-                }
-            }
+            m_listCoreState.Add(CoreState.CoreState_Invincible);
         }
 
         protected override void UpdateBody(int nUpdateTick)

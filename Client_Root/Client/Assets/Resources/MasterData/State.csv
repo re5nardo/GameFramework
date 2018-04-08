@@ -1,7 +1,6 @@
 ID,Name,ClassName,Length,StringParams,CoreStates,DoubleParam1,DoubleParam2,AnimationName,FXName
-0,OverHeat,Acceleration,10,,,"1, 2, 3, 4, 5, 6, 7, 8, 9, 10","1, 1, 1, 1, 1, -1, -1, -1, -1, -1",,
-1,ElectronicShield,Shield,5,,,,,,
-2,Fade,FireBehavior,5,,,,,,
-3,RespawnInvincible,General,5,,Invincible,,,,
-4,ChallengerDisturbing,ChallengerDisturbing,-1,,ChallengerDisturbing,,,,
-5,Faint,Faint,5,,Faint,,,Die,
+0,Boost,Boost,7,,,"1, 2, 3, 4, 5, 6, 7, 8, 9, 10","1, 1, 1, 1, 1, -1, -1, -1, -1, -1",,
+1,Shield,Shield,3,,Invincible,,,,
+2,RespawnInvincible,General,5,,Invincible,,,,
+3,ChallengerDisturbing,ChallengerDisturbing,-1,,ChallengerDisturbing,,,,
+4,Faint,Faint,5,,Faint,,,Die,

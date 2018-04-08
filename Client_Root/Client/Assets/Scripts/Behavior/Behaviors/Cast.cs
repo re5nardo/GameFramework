@@ -33,8 +33,9 @@ namespace Behavior
                         int nMagicID = 0;
                         Util.Convert(action.m_listParams[0], ref nMagicID);
 
+                        int nEntityID = 0;
                         IMagic magic = null;
-                        BaeGameRoom2.Instance.CreateMagic(nMagicID, ref magic, m_Entity.GetID());
+                        BaeGameRoom2.Instance.CreateMagic(nMagicID, ref nEntityID, ref magic, m_Entity.GetID());
 
                         magic.StartTick(nUpdateTick);
                         magic.UpdateTick(nUpdateTick);

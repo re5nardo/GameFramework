@@ -6,8 +6,6 @@ namespace State
 {
     public class General : IState
     {
-        private int m_nLifespan;
-
         public override void Initialize(IEntity entity, int nMasterDataID, float fTickInterval)
         {
             m_Entity = entity;
@@ -34,20 +32,11 @@ namespace State
                     m_listCoreState.Add(CoreState.CoreState_Faint);
                 }
             }
-
-            if (m_fLength == -1)
-            {
-                m_nLifespan = -1;
-            }
-            else
-            {
-                m_nLifespan = (int)(m_fLength / m_fTickInterval);
-            }
         }
 
         protected override void UpdateBody(int nUpdateTick)
         {
-            if (m_nLifespan != -1 && nUpdateTick == m_nStartTick + m_nLifespan)
+            if (m_nEndTick != -1 && nUpdateTick == m_nEndTick)
             {
                 m_Entity.RemoveState(m_nMasterDataID, nUpdateTick);
             }

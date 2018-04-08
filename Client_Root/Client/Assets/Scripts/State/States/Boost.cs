@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace State
 {
-    public class Faint : IState
+    public class Boost : IState
     {
         public override void Initialize(IEntity entity, int nMasterDataID, float fTickInterval)
         {
@@ -16,28 +16,21 @@ namespace State
             MasterDataManager.Instance.GetData<MasterData.State>(nMasterDataID, ref masterState);
 
             m_fLength = masterState.m_fLength;
-
-            foreach(string coreState in masterState.m_listCoreState)
-            {
-                if (coreState == "Invincible")
-                {
-                    m_listCoreState.Add(CoreState.CoreState_Invincible);
-                }
-                else if (coreState == "ChallengerDisturbing")
-                {
-                    m_listCoreState.Add(CoreState.CoreState_ChallengerDisturbing);
-                }
-                else if (coreState == "Faint")
-                {
-                    m_listCoreState.Add(CoreState.CoreState_Faint);
-                }
-            }
         }
 
         protected override void UpdateBody(int nUpdateTick)
         {
+            Character character = m_Entity as Character;
+
+            if (nUpdateTick == m_nStartTick)
+            {
+                character.PlusMoveSpeed(5);
+            }
+
             if (m_nEndTick != -1 && nUpdateTick == m_nEndTick)
             {
+                character.MinusMoveSpeed(5);
+
                 m_Entity.RemoveState(m_nMasterDataID, nUpdateTick);
             }
         }

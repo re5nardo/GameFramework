@@ -50,6 +50,7 @@ public class BaeGameRoom2 : IGameRoom
     private List<MovingObject> m_listMovingObject = new List<MovingObject>();
     private List<ICharacterAI> m_listDisturber = new List<ICharacterAI>();
     private List<IMagic> m_listMagic = new List<IMagic>();
+    private List<MagicObject> m_listMagicObject = new List<MagicObject>();
 
     private List<PlayerRankInfo> m_listPlayerRankInfo = new List<PlayerRankInfo>();
 
@@ -390,6 +391,14 @@ public class BaeGameRoom2 : IGameRoom
         {
             magic.UpdateTick(m_nTick);
         }
+
+        //  Copy values because m_listMagicObject can be modified during iterating
+        MagicObject[] magicObjects = new MagicObject[m_listMagicObject.Count];
+        m_listMagicObject.CopyTo(magicObjects, 0);
+        foreach(MagicObject magicObject in magicObjects)
+        {
+            magicObject.UpdateTick(m_nTick);
+        }
     }
 
     private void LateUpdateWorld()
@@ -421,6 +430,7 @@ public class BaeGameRoom2 : IGameRoom
         m_listMovingObject.Clear();
         m_listDisturber.Clear();
         m_listMagic.Clear();
+        m_listMagicObject.Clear();
 
         m_listPlayerRankInfo.Clear();
     }
@@ -477,6 +487,14 @@ public class BaeGameRoom2 : IGameRoom
         return (Character)m_dicEntity[m_nUserEntityID];
     }
 
+    public Character GetCharacter(int nID)
+    {
+        if (!m_dicEntity.ContainsKey(nID))
+            return null;
+
+        return (Character)m_dicEntity[nID];
+    }
+
     public void AddCharacterStatusChangeGameEvent(float fEventTime, int nEntityID, string strStatusField, string strReason, float fValue)
     {
 
@@ -517,10 +535,12 @@ public class BaeGameRoom2 : IGameRoom
         m_dicEntity[nEntityID] = projectile;
     }
 
-    public void CreateMagic(int nMasterDataID, ref IMagic magic, int nCasterID)
+    public void CreateMagic(int nMasterDataID, ref int nEntityID, ref IMagic magic, int nCasterID)
     {
+        nEntityID = m_nEntitySequence++;
+
         magic = Factory.Instance.CreateMagic(nMasterDataID);
-        magic.Initialize(nCasterID, nMasterDataID, m_fTickInterval);
+        magic.Initialize(nCasterID, nEntityID, nMasterDataID, m_fTickInterval);
 
         m_listMagic.Add(magic);
     }
@@ -528,6 +548,21 @@ public class BaeGameRoom2 : IGameRoom
     public void DestroyMagic(IMagic magic)
     {
         m_listMagic.Remove(magic);
+    }
+
+    public void CreateMagicObject(int nMasterDataID, ref int nEntityID, ref MagicObject magicObject, int nCasterID, int nMagicID)
+    {
+        nEntityID = m_nEntitySequence++;
+
+        magicObject = Factory.Instance.CreateMagicObject(nMasterDataID);
+        magicObject.Initialize(nCasterID, nMagicID, nEntityID, nMasterDataID, m_fTickInterval);
+
+        m_listMagicObject.Add(magicObject);
+    }
+
+    public void DestroyMagicObject(MagicObject magicObject)
+    {
+        m_listMagicObject.Remove(magicObject);
     }
 
     public void GetPlayersHeight(ref float fTop, ref float fBottom)

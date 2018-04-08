@@ -8,9 +8,10 @@ namespace Magic
     {
         private ParticleSystem m_ParticleSystem = null;
 
-        public override void Initialize(int nCasterID, int nMasterDataID, float fTickInterval)
+        public override void Initialize(int nCasterID, int nID, int nMasterDataID, float fTickInterval)
         {
             m_nCasterID = nCasterID;
+            m_nID = nID;
             m_nMasterDataID = nMasterDataID;
             m_fTickInterval = fTickInterval;
 
@@ -26,9 +27,9 @@ namespace Magic
             {
                 GameObject goParticle = ObjectPool.Instance.GetGameObject("Effect/Cell_06");
 
-                Character user = BaeGameRoom2.Instance.GetUserCharacter();
+                Character caster = BaeGameRoom2.Instance.GetCharacter(m_nCasterID);
 
-                goParticle.transform.SetParent(user.GetModelTransform());
+                goParticle.transform.SetParent(caster.GetModelTransform());
                 goParticle.transform.localPosition = Vector3.zero;
                 goParticle.transform.localRotation = Quaternion.identity;
                 goParticle.transform.localScale = Vector3.one;
@@ -36,6 +37,14 @@ namespace Magic
                 m_ParticleSystem = goParticle.GetComponent<ParticleSystem>();
 
                 m_ParticleSystem.Simulate(m_fTickInterval, true, true, true);
+
+                IState state = Factory.Instance.CreateState(MasterDataDefine.StateID.SHIELD);
+                state.Initialize(caster, MasterDataDefine.StateID.SHIELD, BaeGameRoom2.Instance.GetTickInterval());
+
+                caster.AddState(state, nUpdateTick);
+
+                state.StartTick(nUpdateTick);
+                state.UpdateTick(nUpdateTick);
             }
             else
             {

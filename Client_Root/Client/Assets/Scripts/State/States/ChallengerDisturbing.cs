@@ -54,7 +54,7 @@ namespace State
                 m_dicDisturbingInfo.Remove(key);
             }
 
-            if (m_fLength != -1 && fTime >= m_fLength)
+            if (m_nEndTick != -1 && nUpdateTick == m_nEndTick)
             {
                 m_Entity.RemoveState(m_nMasterDataID, nUpdateTick);
             }

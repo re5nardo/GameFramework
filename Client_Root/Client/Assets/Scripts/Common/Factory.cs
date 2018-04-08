@@ -54,6 +54,14 @@ public class Factory : MonoSingleton<Factory>
         {
             return ObjectPool.instance.GetObject<State.General>();
         }
+        else if (masterData.m_strClassName == "Boost")
+        {
+            return ObjectPool.instance.GetObject<State.Boost>();
+        }
+        else if (masterData.m_strClassName == "Shield")
+        {
+            return ObjectPool.instance.GetObject<State.Shield>();
+        }
 
         return null;
     }
@@ -116,6 +124,11 @@ public class Factory : MonoSingleton<Factory>
             return new Magic.Super();
         }
 
+        return null;
+    }
+
+    public MagicObject CreateMagicObject(int nMasterDataID)
+    {
         return null;
     }
 

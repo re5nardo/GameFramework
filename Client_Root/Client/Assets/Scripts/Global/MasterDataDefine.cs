@@ -15,4 +15,13 @@ namespace MasterDataDefine
         public const int ROTATION = 3;
         public const int JUMP = 4;
     }
+
+    public class StateID
+    {
+        public const int BOOST = 0;
+        public const int SHIELD = 1;
+        public const int RESPAWN_INVINCIBLE = 2;
+        public const int CHALLENGER_DISTURBING = 3;
+        public const int FAINT = 4;
+    }
 }

@@ -53,8 +53,8 @@ public class MovingObject : IMonoTickUpdatable
             if (!character.IsAlive() || character.HasCoreState(CoreState.CoreState_Invincible))
                 return;
             
-            IState state = Factory.Instance.CreateState(StateID.FAINT);
-            state.Initialize(character, StateID.FAINT, BaeGameRoom2.Instance.GetTickInterval());
+            IState state = Factory.Instance.CreateState(MasterDataDefine.StateID.FAINT);
+            state.Initialize(character, MasterDataDefine.StateID.FAINT, BaeGameRoom2.Instance.GetTickInterval());
 
             character.AddState(state, BaeGameRoom2.Instance.GetCurrentTick());
 
@@ -72,8 +72,8 @@ public class MovingObject : IMonoTickUpdatable
             if (!character.IsAlive() || character.HasCoreState(CoreState.CoreState_Invincible))
                 return;
 
-            IState state = Factory.Instance.CreateState(StateID.FAINT);
-            state.Initialize(character, StateID.FAINT, BaeGameRoom2.Instance.GetTickInterval());
+            IState state = Factory.Instance.CreateState(MasterDataDefine.StateID.FAINT);
+            state.Initialize(character, MasterDataDefine.StateID.FAINT, BaeGameRoom2.Instance.GetTickInterval());
 
             character.AddState(state, BaeGameRoom2.Instance.GetCurrentTick());
 

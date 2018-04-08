@@ -175,8 +175,8 @@ public class Character : IEntity
     {
         m_CurrentStatus.m_nHP = m_OriginalStatus.m_nHP;
 
-        IState state = Factory.Instance.CreateState(/*StateID.RespawnInvincible*/1);
-        state.Initialize(this, 1, BaeGameRoom2.Instance.GetTickInterval());
+        IState state = Factory.Instance.CreateState(MasterDataDefine.StateID.RESPAWN_INVINCIBLE);
+        state.Initialize(this, MasterDataDefine.StateID.RESPAWN_INVINCIBLE, BaeGameRoom2.Instance.GetTickInterval());
 
         AddState(state, nTick);
 

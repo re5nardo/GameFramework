@@ -6,9 +6,10 @@ namespace Magic
 {
     public class WaterJail : IMagic
     {
-        public override void Initialize(int nCasterID, int nMasterDataID, float fTickInterval)
+        public override void Initialize(int nCasterID, int nID, int nMasterDataID, float fTickInterval)
         {
             m_nCasterID = nCasterID;
+            m_nID = nID;
             m_nMasterDataID = nMasterDataID;
             m_fTickInterval = fTickInterval;
 
