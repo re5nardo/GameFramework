@@ -33,6 +33,10 @@ public class Factory : MonoSingleton<Factory>
         {
             return new Behavior.Cast();
         }
+        else if (masterData.m_strClassName == "Die")
+        {
+            return new Behavior.Die();
+        }
 
         return null;
     }

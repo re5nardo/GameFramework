@@ -78,6 +78,11 @@ namespace Behavior
                     }
                 }
             }
+
+            if (m_nEndTick != -1 && nUpdateTick == m_nEndTick)
+            {
+                Stop();
+            }
         }
     }
 }

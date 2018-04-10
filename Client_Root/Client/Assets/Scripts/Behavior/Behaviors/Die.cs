@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Behavior
 {
-    public class Jump : IBehavior
+    public class Die : IBehavior
     {
         public override void Initialize(IEntity entity, int nMasterDataID, float fTickInterval)
         {
@@ -22,16 +22,16 @@ namespace Behavior
 
         protected override void UpdateBody(int nUpdateTick)
         {
-            if (nUpdateTick == m_nStartTick)
+            if (m_nEndTick != -1 && nUpdateTick == m_nEndTick)
             {
+                Stop();
+
+//                BaeGameRoom2.Instance.CharacterDieEnd(m_Entity.GetID());
+
                 Character character = m_Entity as Character;
 
-                character.Jump();
-
-                Stop();
+                character.OnRespawn(nUpdateTick);
             }
-
-//            Stop(); //  next tick stop..? 시작과 같은 틱에 종료..?(괜찮나..? 개념적으로 맞는지 고민해보자)
         }
     }
 }

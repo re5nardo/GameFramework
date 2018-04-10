@@ -112,11 +112,6 @@ public class Character : IEntity
         }
 
         Move(m_vec3Velocity * BaeGameRoom2.Instance.GetTickInterval());
-
-        if (m_vec3Velocity.y > 0)
-        {
-            Jump();
-        }
     }
 
     //    public ISkill* GetSkill(int nID);
@@ -164,10 +159,27 @@ public class Character : IEntity
 
         if (m_CurrentStatus.m_nHP <= 0)
         {
-            IBehavior dieBehavior = GetBehavior(MasterDataDefine.BehaviorID.DIE);
+            List<IBehavior> listActivatedBehavior = GetActivatedBehaviors();
+            foreach(IBehavior behavior in listActivatedBehavior)
+            {
+                behavior.Stop();
+            }
 
+            //  Die behavior
+            IBehavior dieBehavior = GetBehavior(MasterDataDefine.BehaviorID.DIE);
             dieBehavior.StartTick(nTick);
             dieBehavior.UpdateTick(nTick);
+
+            //  Faint state
+            IState state = Factory.Instance.CreateState(MasterDataDefine.StateID.FAINT);
+            state.Initialize(this, MasterDataDefine.StateID.FAINT, BaeGameRoom2.Instance.GetTickInterval());
+
+            AddState(state, nTick);
+
+            state.StartTick(nTick);
+            state.UpdateTick(nTick);
+
+            BaeGameRoom2.Instance.OnPlayerDie(m_nID, nAttackingEntityID);
         }
     }
 
@@ -182,6 +194,8 @@ public class Character : IEntity
 
         state.StartTick(nTick);
         state.UpdateTick(nTick);
+
+        BaeGameRoom2.Instance.OnPlayerRespawn(m_nID);
     }
 
     public void OnMoved(float fDistance, long lTime)

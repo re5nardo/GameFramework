@@ -12,6 +12,13 @@ namespace Behavior
             m_Entity = entity;
             m_nMasterDataID = nMasterDataID;
             m_fTickInterval = fTickInterval;
+
+            MasterData.Behavior masterBehavior = null;
+            MasterDataManager.Instance.GetData<MasterData.Behavior>(nMasterDataID, ref masterBehavior);
+
+            m_fLength = masterBehavior.m_fLength;
+            m_strStringParams = masterBehavior.m_strStringParams;
+            m_listAction = masterBehavior.m_listAction;
         }
 
         public override void StartTick(int nStartTick, params object[] param)

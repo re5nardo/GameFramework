@@ -787,6 +787,17 @@ public class BaeGameRoom2 : IGameRoom
         }
     }
 
+    public void OnPlayerRespawn(int nEntityID)
+    {
+        if (nEntityID == m_nUserEntityID)
+        {
+            //  Die effect off
+            m_goGreyCover.SetActive(false);
+            m_UICountTimer.Stop();
+            m_UICountTimer.Hide();
+        }
+    }
+
     public void OnUserStatusChanged(CharacterStatus status)
     {
         m_lbHP.text = string.Format("x{0}", status.m_nHP);

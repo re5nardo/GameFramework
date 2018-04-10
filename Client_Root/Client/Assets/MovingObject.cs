@@ -52,14 +52,10 @@ public class MovingObject : IMonoTickUpdatable
 
             if (!character.IsAlive() || character.HasCoreState(CoreState.CoreState_Invincible))
                 return;
-            
-            IState state = Factory.Instance.CreateState(MasterDataDefine.StateID.FAINT);
-            state.Initialize(character, MasterDataDefine.StateID.FAINT, BaeGameRoom2.Instance.GetTickInterval());
 
-            character.AddState(state, BaeGameRoom2.Instance.GetCurrentTick());
+//            BaeGameRoom2.Instance.EntityAttack(-1, character.GetID(), 1);
 
-            state.StartTick(BaeGameRoom2.Instance.GetCurrentTick());
-            state.UpdateTick(BaeGameRoom2.Instance.GetCurrentTick());
+            character.OnAttacked(-1, 1, BaeGameRoom2.Instance.GetCurrentTick());
         }
     }
 
@@ -72,13 +68,9 @@ public class MovingObject : IMonoTickUpdatable
             if (!character.IsAlive() || character.HasCoreState(CoreState.CoreState_Invincible))
                 return;
 
-            IState state = Factory.Instance.CreateState(MasterDataDefine.StateID.FAINT);
-            state.Initialize(character, MasterDataDefine.StateID.FAINT, BaeGameRoom2.Instance.GetTickInterval());
+//            BaeGameRoom2.Instance.EntityAttack(-1, character.GetID(), 1);
 
-            character.AddState(state, BaeGameRoom2.Instance.GetCurrentTick());
-
-            state.StartTick(BaeGameRoom2.Instance.GetCurrentTick());
-            state.UpdateTick(BaeGameRoom2.Instance.GetCurrentTick());
+            character.OnAttacked(-1, 1, BaeGameRoom2.Instance.GetCurrentTick());
         }
     }
 }
