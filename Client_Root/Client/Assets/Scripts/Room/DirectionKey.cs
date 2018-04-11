@@ -3,7 +3,7 @@ using System.Collections;
 
 public class DirectionKey : MonoBehaviour
 {
-    public Vector2Handler onHold = null;
+    [HideInInspector] public Vector2Handler onHold = null;
 
     private Transform m_trDirectionKey = null;
 

@@ -8,8 +8,7 @@ public class GameItemButton : MonoBehaviour
     [SerializeField] private UISprite m_sprBlackCover = null;
     [SerializeField] private UILabel m_lbName = null;
 
-    [HideInInspector]
-    public GameItemHandler onClicked;
+    [HideInInspector] public GameItemHandler onClicked;
     private GameItem m_GameItem;
 
     public void SetData(GameItem gameItem)

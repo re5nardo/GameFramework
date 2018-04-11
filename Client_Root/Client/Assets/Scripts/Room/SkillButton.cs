@@ -8,9 +8,9 @@ public class SkillButton : MonoBehaviour
     [SerializeField] private UISprite m_sprBlackCover = null;
     [SerializeField] private UILabel m_lbName = null;               //  Temp
 
-    public IntHandler onClicked;
-    public IntHandler onPressed;
-    public IntHandler onReleased;
+    [HideInInspector] public IntHandler onClicked;
+    [HideInInspector] public IntHandler onPressed;
+    [HideInInspector] public IntHandler onReleased;
 
     private int m_nSkillID = -1;
 

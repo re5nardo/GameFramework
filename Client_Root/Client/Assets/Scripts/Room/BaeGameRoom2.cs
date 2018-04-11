@@ -14,6 +14,7 @@ public class BaeGameRoom2 : IGameRoom
     [SerializeField] private UICountTimer           m_UICountTimer = null;
     [SerializeField] private GameObject             m_goGreyCover = null;
     [SerializeField] private DirectionKey           m_RotationController = null;
+    [SerializeField] private InputController        m_JumpController = null;
     [SerializeField] private UILabel                m_lbHP = null;
     [SerializeField] private UILabel                m_lbMP = null;
     [SerializeField] private UILabel                m_lbMovePoint = null;
@@ -113,6 +114,8 @@ public class BaeGameRoom2 : IGameRoom
             gameItemButton.onClicked = OnGameItemButtonClicked;
         }
 
+        m_JumpController.onReleased = OnJumpButtonClicked;
+
         RoomNetwork.Instance.ConnectToServer(Config.Instance.GetRoomServerIP(), Config.Instance.GetRoomServerPort(), OnConnected, OnRecvMessage);
     }
 
@@ -150,6 +153,8 @@ public class BaeGameRoom2 : IGameRoom
         {
             gameItemButton.onClicked = null;
         }
+
+        m_JumpController.onReleased = null;
 
         Application.targetFrameRate = m_nOldFrameRate;
         Physics.gravity = m_vec3OldGravity;
@@ -751,8 +756,8 @@ public class BaeGameRoom2 : IGameRoom
 
         RoomNetwork.Instance.Send(inputToR);
     }
-
-    public void OnJumpButtonClicked()
+        
+    private void OnJumpButtonClicked(float fTime)
     {
         if (!GetUserCharacter().IsAlive())
             return;
@@ -773,8 +778,6 @@ public class BaeGameRoom2 : IGameRoom
 #region Game Event Handler
     public void OnPlayerDie(int nKilledEntityID, int nKillerEntityID)
     {
-        Debug.Log(string.Format("{0}이 {1}을 처치했습니다.", nKillerEntityID, nKilledEntityID));
-
         if (nKilledEntityID == m_nUserEntityID)
         {
             MasterData.Behavior behaviorMasterData = null;
