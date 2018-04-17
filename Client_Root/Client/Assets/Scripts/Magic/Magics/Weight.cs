@@ -17,11 +17,48 @@ namespace Magic
             MasterDataManager.Instance.GetData<MasterData.Magic>(nMasterDataID, ref masterMagic);
 
             m_fLength = masterMagic.m_fLength;
+            m_listAction = masterMagic.m_listAction;
         }
 
         protected override void UpdateBody(int nUpdateTick)
         {
-            Debug.Log("Weight");
+            if (m_nStartTick == nUpdateTick)
+            {
+                foreach (MasterData.Magic.Action action in m_listAction)
+                {
+                    int nTick = (int)(action.m_fTime / m_fTickInterval);
+
+                    if (nUpdateTick == nTick + m_nStartTick)
+                    {
+                        if (action.m_strID == "MagicObject")
+                        {
+                            int nMagicObjectID = 0;
+                            Util.Convert(action.m_listParams[0], ref nMagicObjectID);
+
+                            int nEntityID = 0;
+                            IMagicObject magicObject = null;
+                            BaeGameRoom2.Instance.CreateMagicObject(nMagicObjectID, ref nEntityID, ref magicObject, m_nCasterID, m_nID);
+
+                            Character caster = BaeGameRoom2.Instance.GetCharacter(m_nCasterID);
+                            caster.GetPosition();
+
+                            Rigidbody rigidbody = magicObject.GetRigidbody();
+                            rigidbody.isKinematic = true;
+
+                            GameObject goMagicObjectModel = magicObject.GetModel();
+
+                            goMagicObjectModel.transform.position = caster.GetPosition() + new Vector3(0, -3, 0);
+                            goMagicObjectModel.transform.rotation = Quaternion.identity;
+                            goMagicObjectModel.transform.localScale = Vector3.one;
+
+                            rigidbody.isKinematic = false;
+
+                            magicObject.StartTick(nUpdateTick);
+                            magicObject.UpdateTick(nUpdateTick);
+                        }
+                    }
+                }
+            }
 
             if (m_nEndTick != -1 && nUpdateTick == m_nEndTick)
             {

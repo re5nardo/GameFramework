@@ -131,8 +131,16 @@ public class Factory : MonoSingleton<Factory>
         return null;
     }
 
-    public MagicObject CreateMagicObject(int nMasterDataID)
+    public IMagicObject CreateMagicObject(int nMasterDataID)
     {
+        MasterData.MagicObject masterData = null;
+        MasterDataManager.Instance.GetData<MasterData.MagicObject>(nMasterDataID, ref masterData);
+
+        if (masterData.m_strClassName == "WeightObject")
+        {
+            return new MagicObject.WeightObject();
+        }
+
         return null;
     }
 

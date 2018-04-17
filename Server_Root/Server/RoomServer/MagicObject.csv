@@ -1,0 +1,4 @@
+ID,Name,ClassName,Length,ModelResID
+0,MeteorObject,MeteorObject,5,MeteorObject
+1,WaterJailObject,WaterJailObject,7,WaterJailObject
+2,Weight,WeightObject,7,WeightObject

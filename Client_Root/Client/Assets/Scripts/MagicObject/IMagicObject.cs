@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class MagicObject : ITickUpdatable
+public abstract class IMagicObject : ITickUpdatable
 {
     protected int m_nCasterID = -1;
     protected int m_nMagicID = -1;
@@ -12,6 +12,10 @@ public abstract class MagicObject : ITickUpdatable
     protected int m_nStartTick = -1;
     protected int m_nEndTick = -1;
     protected float m_fLength;
+
+    protected GameObject m_goModel = null;
+    protected Transform m_trModel = null;
+    protected Rigidbody m_ModelRigidbody = null;
 
     public abstract void Initialize(int nCasterID, int nMagicID, int nID, int nMasterDataID, float fTickInterval);
 
@@ -26,5 +30,15 @@ public abstract class MagicObject : ITickUpdatable
         {
             m_nEndTick = nStartTick + (int)(m_fLength / m_fTickInterval) - 1;
         }
+    }
+
+    public Rigidbody GetRigidbody()
+    {
+        return m_ModelRigidbody;
+    }
+
+    public GameObject GetModel()
+    {
+        return m_goModel;
     }
 }

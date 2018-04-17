@@ -19,7 +19,7 @@ public class MovingObject : IMonoTickUpdatable
     {
         m_trMine = transform;
 
-        m_trMine.localScale = new Vector3(Random.Range(1, 10), Random.Range(1, 10), Random.Range(1, 10));
+        m_trMine.localScale = new Vector3(Random.Range(1, 10), Random.Range(1, 4), Random.Range(1, 10));
 
         m_vec3Start = new Vector3(Random.Range(40, 45), Random.Range(20, 1000), 0);
         m_vec3End = new Vector3(-m_vec3Start.x, m_vec3Start.y, m_vec3Start.z);

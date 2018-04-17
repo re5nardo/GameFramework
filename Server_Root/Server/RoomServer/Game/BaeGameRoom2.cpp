@@ -159,7 +159,7 @@ void BaeGameRoom2::PrepareGame()
 
 		MasterData::Character* pMasterCharacter = NULL;
 		MasterDataManager::Instance()->GetData<MasterData::Character>(dummyCharacterMasterDataID, pMasterCharacter);
-		FBS::Data::CharacterStatus status(pMasterCharacter->m_nHP, pMasterCharacter->m_nHP, pMasterCharacter->m_nMP, pMasterCharacter->m_nMP, pMasterCharacter->m_fMaximumSpeed, 0, pMasterCharacter->m_fMPChargeRate, 0);
+		FBS::Data::CharacterStatus status(pMasterCharacter->m_nHP, pMasterCharacter->m_nHP, pMasterCharacter->m_nMP, pMasterCharacter->m_nMP, pMasterCharacter->m_fMaximumSpeed, pMasterCharacter->m_fMaximumSpeed, pMasterCharacter->m_fMPChargeRate, 0);
 
 		FBS::PlayerInfo playerInfo(nPlayerIndex, dummyCharacterMasterDataID, nEntityID, status);
 		m_vecPlayerInfo.push_back(playerInfo);

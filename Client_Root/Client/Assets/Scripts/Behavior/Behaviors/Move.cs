@@ -24,7 +24,7 @@ namespace Behavior
         {
             if (nUpdateTick == m_nStartTick)
             {
-                Vector3 offset = m_Entity.GetForward().normalized * 5/*m_pEntity.GetSpeed()*/;
+                Vector3 offset = m_Entity.GetForward().normalized * m_Entity.GetSpeed();
 
                 m_Entity.m_vec3Velocity.x = offset.x;
                 m_Entity.m_vec3Velocity.z = offset.z;

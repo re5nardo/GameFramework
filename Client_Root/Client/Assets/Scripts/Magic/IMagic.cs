@@ -11,6 +11,7 @@ public abstract class IMagic : ITickUpdatable
     protected int m_nStartTick = -1;
     protected int m_nEndTick = -1;
     protected float m_fLength;
+    protected List<MasterData.Magic.Action> m_listAction;
 
     public abstract void Initialize(int nCasterID, int nID, int nMasterDataID, float fTickInterval);
 

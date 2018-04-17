@@ -51,7 +51,7 @@ public class BaeGameRoom2 : IGameRoom
     private List<MovingObject> m_listMovingObject = new List<MovingObject>();
     private List<ICharacterAI> m_listDisturber = new List<ICharacterAI>();
     private List<IMagic> m_listMagic = new List<IMagic>();
-    private List<MagicObject> m_listMagicObject = new List<MagicObject>();
+    private List<IMagicObject> m_listMagicObject = new List<IMagicObject>();
 
     private List<PlayerRankInfo> m_listPlayerRankInfo = new List<PlayerRankInfo>();
 
@@ -398,9 +398,9 @@ public class BaeGameRoom2 : IGameRoom
         }
 
         //  Copy values because m_listMagicObject can be modified during iterating
-        MagicObject[] magicObjects = new MagicObject[m_listMagicObject.Count];
+        IMagicObject[] magicObjects = new IMagicObject[m_listMagicObject.Count];
         m_listMagicObject.CopyTo(magicObjects, 0);
-        foreach(MagicObject magicObject in magicObjects)
+        foreach(IMagicObject magicObject in magicObjects)
         {
             magicObject.UpdateTick(m_nTick);
         }
@@ -555,7 +555,7 @@ public class BaeGameRoom2 : IGameRoom
         m_listMagic.Remove(magic);
     }
 
-    public void CreateMagicObject(int nMasterDataID, ref int nEntityID, ref MagicObject magicObject, int nCasterID, int nMagicID)
+    public void CreateMagicObject(int nMasterDataID, ref int nEntityID, ref IMagicObject magicObject, int nCasterID, int nMagicID)
     {
         nEntityID = m_nEntitySequence++;
 
@@ -565,7 +565,7 @@ public class BaeGameRoom2 : IGameRoom
         m_listMagicObject.Add(magicObject);
     }
 
-    public void DestroyMagicObject(MagicObject magicObject)
+    public void DestroyMagicObject(IMagicObject magicObject)
     {
         m_listMagicObject.Remove(magicObject);
     }

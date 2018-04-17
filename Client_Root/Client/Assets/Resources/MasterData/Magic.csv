@@ -1,8 +1,8 @@
-ID,Name,ClassName,Length,ModelResID
-0,Meteor,Meteor,3,Meteor
-1,WaterJail,WaterJail,-1,WaterJail
-2,Shield,Shield,1,Shield
-3,Boost,Boost,1,Boost
-4,Weight,Weight,0,Weight
-5,Thunder,Thunder,2,Thunder
-6,Super,Super,1,Super
+ID,Name,ClassName,Length,ModelResID,Actions
+0,Meteor,Meteor,3,Meteor,
+1,WaterJail,WaterJail,-1,WaterJail,
+2,Shield,Shield,1,Shield,
+3,Boost,Boost,1,Boost,
+4,Weight,Weight,0,Weight,MagicObject:0:2
+5,Thunder,Thunder,2,Thunder,
+6,Super,Super,1,Super,
