@@ -17,6 +17,8 @@ namespace Magic
             MasterDataManager.Instance.GetData<MasterData.Magic>(nMasterDataID, ref masterMagic);
 
             m_fLength = masterMagic.m_fLength;
+            m_listAction = masterMagic.m_listAction;
+            m_TargetType = masterMagic.m_TargetType;
         }
 
         protected override void UpdateBody(int nUpdateTick)

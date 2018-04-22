@@ -12,6 +12,7 @@ public abstract class IMagic : ITickUpdatable
     protected int m_nEndTick = -1;
     protected float m_fLength;
     protected List<MasterData.Magic.Action> m_listAction;
+    protected Magic.TargetType m_TargetType;
 
     public abstract void Initialize(int nCasterID, int nID, int nMasterDataID, float fTickInterval);
 
@@ -26,5 +27,21 @@ public abstract class IMagic : ITickUpdatable
         {
             m_nEndTick = nStartTick + (int)(m_fLength / m_fTickInterval) - 1;
         }
+    }
+
+    public Magic.TargetType GetTargetType()
+    {
+        return m_TargetType;
+    }
+}
+
+namespace Magic
+{
+    public enum TargetType
+    {
+        None,
+        JustHigher,
+        Self,
+        AllButSelf
     }
 }

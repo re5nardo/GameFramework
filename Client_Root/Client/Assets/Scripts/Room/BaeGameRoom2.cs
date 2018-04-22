@@ -55,6 +55,8 @@ public class BaeGameRoom2 : IGameRoom
 
     private List<PlayerRankInfo> m_listPlayerRankInfo = new List<PlayerRankInfo>();
 
+    private List<Character> m_listPlayerCharacter = new List<Character>();
+
 #region Room Logic
     private void Update()
     {
@@ -281,23 +283,13 @@ public class BaeGameRoom2 : IGameRoom
         return a.GetCurrentHeight().CompareTo(b.GetCurrentHeight());
     }
 
-    private float GetUserRank()
+    private int GetUserRank()
     {
-        float fUserHeight = GetUserCharacter().GetCurrentHeight();
-        int nRank = 1;
+        UpdatePlayerRank();
 
-        foreach(int nID in m_dicPlayerEntity.Values)
-        {
-            Character character = m_dicEntity[nID] as Character;
+        int nCount = m_listPlayerCharacter.FindAll(x => x.GetCurrentHeight() > GetUserCharacter().GetCurrentHeight()).Count;
 
-            if (character.GetID() == GetUserEntityID())
-                continue;
-
-            if (character.GetCurrentHeight() > fUserHeight)
-                nRank++;
-        }
-
-        return nRank;
+        return nCount + 1;
     }
 
     private void Draw()
@@ -587,6 +579,40 @@ public class BaeGameRoom2 : IGameRoom
 
         fTop = fTempTop;
         fBottom = fTempBottom;
+    }
+
+    public int GetJustHigherRankPlayerEntityID(int nEntityID)
+    {
+        UpdatePlayerRank();
+
+        float fHeight = GetCharacter(nEntityID).GetCurrentHeight();
+
+        Character found = m_listPlayerCharacter.FindLast(x => x.GetCurrentHeight() > fHeight);
+
+        if (found == null)
+        {
+            return -1;
+        }
+
+        return found.GetID();
+    }
+
+    private void UpdatePlayerRank()
+    {
+        m_listPlayerCharacter.Clear();
+
+        foreach (int nID in m_dicPlayerEntity.Values)
+        {
+            Character character = m_dicEntity[nID] as Character;
+            m_listPlayerCharacter.Add(character);
+        }
+
+        m_listPlayerCharacter.Sort(CompareHeight);
+    }
+
+    private int CompareHeight(Character a, Character b)
+    {
+        return a.GetCurrentHeight().CompareTo(b.GetCurrentHeight());
     }
 
     private void SetRemainTime(float fRemainTime)

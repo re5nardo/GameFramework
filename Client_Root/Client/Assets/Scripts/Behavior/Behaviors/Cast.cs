@@ -37,8 +37,24 @@ namespace Behavior
                         IMagic magic = null;
                         BaeGameRoom2.Instance.CreateMagic(nMagicID, ref nEntityID, ref magic, m_Entity.GetID());
 
-                        magic.StartTick(nUpdateTick);
-                        magic.UpdateTick(nUpdateTick);
+                        if (magic.GetTargetType() == Magic.TargetType.JustHigher)
+                        {
+                            int nTargetID = BaeGameRoom2.Instance.GetJustHigherRankPlayerEntityID(m_Entity.GetID());
+
+                            if (nTargetID == -1)
+                            {
+                                BaeGameRoom2.Instance.DestroyMagic(magic);
+                                return;
+                            }
+                            
+                            magic.StartTick(nUpdateTick, nTargetID);
+                            magic.UpdateTick(nUpdateTick);
+                        }
+                        else
+                        {
+                            magic.StartTick(nUpdateTick);
+                            magic.UpdateTick(nUpdateTick);
+                        }
                     }
                 }
             }

@@ -16,6 +16,7 @@ namespace MasterData
         public float m_fLength;
         public string m_strModelResName;
         public List<MasterData.Magic.Action> m_listAction = new List<Action>();
+        public global::Magic.TargetType m_TargetType;
 
         public override void SetData(List<string> data)
         {
@@ -47,6 +48,8 @@ namespace MasterData
                     m_listAction.Add(action);
                 }
             }
+
+            Util.Convert(data[6], ref m_TargetType);
         }
     }
 }
