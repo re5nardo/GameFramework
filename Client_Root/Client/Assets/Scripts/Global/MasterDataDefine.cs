@@ -23,5 +23,6 @@ namespace MasterDataDefine
         public const int RESPAWN_INVINCIBLE = 2;
         public const int CHALLENGER_DISTURBING = 3;
         public const int FAINT = 4;
+		public const int FLICKER = 5;
     }
 }

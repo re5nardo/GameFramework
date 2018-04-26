@@ -1,8 +1,8 @@
 ID,Name,ClassName,Length,ModelResID,Actions,TargetType
-0,Meteor,Meteor,3,Meteor,,None
-1,WaterJail,WaterJail,-1,WaterJail,,JustHigher
+0,Meteor,Meteor,1.5,Meteor,"MagicObject:0.3:0:40:13:0:-1:0:0:20,MagicObject:0.6:0:-40:8:0:1:0:0:25,MagicObject:0.7:0:-40:12:0:1:0:0:20,MagicObject:1.0:0:40:10:0:-1:0:0:25,MagicObject:1.1:0:40:7:0:-1:0:0:20",None
+1,WaterJail,WaterJail,0,WaterJail,MagicObject:0:1:3:3:0,JustHigher
 2,Shield,Shield,1,Shield,,Self
 3,Boost,Boost,1,Boost,,Self
-4,Weight,Weight,0,Weight,MagicObject:0:2,None
+4,Weight,Weight,0,Weight,MagicObject:0:2:0:-3:0,None
 5,Thunder,Thunder,2,Thunder,,JustHigher
-6,Super,Super,1,Super,,AllButSelf
+6,Super,Super,0,Super,AddState:0:5,AllButSelf

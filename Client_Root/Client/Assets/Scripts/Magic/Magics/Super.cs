@@ -23,7 +23,38 @@ namespace Magic
 
         protected override void UpdateBody(int nUpdateTick)
         {
-            Debug.Log("Super");
+			foreach (MasterData.Magic.Action action in m_listAction)
+            {
+                int nTick = (int)(action.m_fTime / m_fTickInterval);
+
+                if (nUpdateTick == nTick + m_nStartTick)
+                {
+                    if (action.m_strID == "AddState")
+                    {
+                        int nStateID = 0;
+						Util.Convert(action.m_listParams[0], ref nStateID);
+
+						if(m_TargetType == TargetType.AllButSelf)
+						{
+							List<Character> listCharacter = BaeGameRoom2.Instance.GetAllCharacters();
+
+							foreach(Character character in listCharacter)
+							{
+								if(character.GetID() == m_nCasterID)
+									continue;
+
+								IState state = Factory.Instance.CreateState(nStateID);
+								state.Initialize(character, nStateID, BaeGameRoom2.Instance.GetTickInterval());
+
+								character.AddState(state, nUpdateTick);
+
+				                state.StartTick(nUpdateTick);
+				                state.UpdateTick(nUpdateTick);
+							}
+						}
+                    }
+                }
+            }
 
             if (m_nEndTick != -1 && nUpdateTick == m_nEndTick)
             {

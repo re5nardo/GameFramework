@@ -99,7 +99,7 @@ public class BaeGameRoom2 : IGameRoom
         {
             OnClicked(Vector3.zero);
         }
-    }
+        }
 
     private void Start()
     {
@@ -492,6 +492,19 @@ public class BaeGameRoom2 : IGameRoom
         return (Character)m_dicEntity[nID];
     }
 
+	public List<Character> GetAllCharacters()
+    {
+		List<Character> listCharacter = new List<Character>();
+
+		foreach (int nID in m_dicPlayerEntity.Values)
+        {
+            Character character = m_dicEntity[nID] as Character;
+			listCharacter.Add(character);
+        }
+
+		return listCharacter;
+    }
+
     public void AddCharacterStatusChangeGameEvent(float fEventTime, int nEntityID, string strStatusField, string strReason, float fValue)
     {
 
@@ -710,7 +723,7 @@ public class BaeGameRoom2 : IGameRoom
         }
 
         m_nServerTick = msg.m_nTick;
-    }
+		}
 
     private void OnGameEndToC(GameEndToC msg)
     {

@@ -23,40 +23,38 @@ namespace Magic
 
         protected override void UpdateBody(int nUpdateTick)
         {
-            if (m_nStartTick == nUpdateTick)
+			foreach (MasterData.Magic.Action action in m_listAction)
             {
-                foreach (MasterData.Magic.Action action in m_listAction)
+                int nTick = (int)(action.m_fTime / m_fTickInterval);
+
+                if (nUpdateTick == nTick + m_nStartTick)
                 {
-                    int nTick = (int)(action.m_fTime / m_fTickInterval);
-
-                    if (nUpdateTick == nTick + m_nStartTick)
+                    if (action.m_strID == "MagicObject")
                     {
-                        if (action.m_strID == "MagicObject")
-                        {
-                            int nMagicObjectID = 0;
-                            Util.Convert(action.m_listParams[0], ref nMagicObjectID);
+                        int nMagicObjectID = 0;
+                        Util.Convert(action.m_listParams[0], ref nMagicObjectID);
 
-                            int nEntityID = 0;
-                            IMagicObject magicObject = null;
-                            BaeGameRoom2.Instance.CreateMagicObject(nMagicObjectID, ref nEntityID, ref magicObject, m_nCasterID, m_nID);
+                        int nEntityID = 0;
+                        IMagicObject magicObject = null;
+                        BaeGameRoom2.Instance.CreateMagicObject(nMagicObjectID, ref nEntityID, ref magicObject, m_nCasterID, m_nID);
 
-                            Character caster = BaeGameRoom2.Instance.GetCharacter(m_nCasterID);
-                            caster.GetPosition();
+						Vector3 vec3Offset = new Vector3(float.Parse(action.m_listParams[1]), float.Parse(action.m_listParams[2]), float.Parse(action.m_listParams[3]));
 
-                            Rigidbody rigidbody = magicObject.GetRigidbody();
-                            rigidbody.isKinematic = true;
+                        Character caster = BaeGameRoom2.Instance.GetCharacter(m_nCasterID);
 
-                            GameObject goMagicObjectModel = magicObject.GetModel();
+                        Rigidbody rigidbody = magicObject.GetRigidbody();
+                        rigidbody.isKinematic = true;
 
-                            goMagicObjectModel.transform.position = caster.GetPosition() + new Vector3(0, -3, 0);
-                            goMagicObjectModel.transform.rotation = Quaternion.identity;
-                            goMagicObjectModel.transform.localScale = Vector3.one;
+                        GameObject goMagicObjectModel = magicObject.GetModel();
 
-                            rigidbody.isKinematic = false;
+						goMagicObjectModel.transform.position = caster.GetPosition() + vec3Offset;
+                        goMagicObjectModel.transform.rotation = Quaternion.identity;
+                        goMagicObjectModel.transform.localScale = Vector3.one;
 
-                            magicObject.StartTick(nUpdateTick);
-                            magicObject.UpdateTick(nUpdateTick);
-                        }
+                        rigidbody.isKinematic = false;
+
+                        magicObject.StartTick(nUpdateTick);
+                        magicObject.UpdateTick(nUpdateTick);
                     }
                 }
             }

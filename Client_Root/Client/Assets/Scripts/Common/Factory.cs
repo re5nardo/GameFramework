@@ -66,6 +66,10 @@ public class Factory : MonoSingleton<Factory>
         {
             return ObjectPool.instance.GetObject<State.Shield>();
         }
+		else if (masterData.m_strClassName == "Flicker")
+        {
+            return ObjectPool.instance.GetObject<State.Flicker>();
+        }
 
         return null;
     }
@@ -139,6 +143,14 @@ public class Factory : MonoSingleton<Factory>
         if (masterData.m_strClassName == "WeightObject")
         {
             return new MagicObject.WeightObject();
+        }
+		else if (masterData.m_strClassName == "MeteorObject")
+        {
+            return new MagicObject.MeteorObject();
+        }
+		else if (masterData.m_strClassName == "WaterJailObject")
+        {
+            return new MagicObject.WaterJailObject();
         }
 
         return null;

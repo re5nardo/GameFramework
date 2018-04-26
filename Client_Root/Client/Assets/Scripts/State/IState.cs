@@ -14,6 +14,7 @@ public abstract class IState : ITickUpdatable, IPooledObject
     protected int m_nMasterDataID = -1;
 
     protected float m_fLength;
+	protected string m_strFxName;
     protected List<CoreState> m_listCoreState = new List<CoreState>();
 
     protected IEntity m_Entity;
