@@ -100,11 +100,7 @@ public class EntityUI : PooledComponent
 
     public void Jump()
     {
-//        m_ModelRigidbody.AddForce((Vector3.up + m_trModel.forward.normalized).normalized * 300);
-
-//        m_ModelRigidbody.AddForce(Vector3.up * 200);
-
-        m_ModelRigidbody.AddForce(m_ModelRigidbody.mass * -Physics.gravity * 30);
+		m_ModelRigidbody.AddForce(m_ModelRigidbody.mass * -Physics.gravity * 0.75f, ForceMode.Impulse);
     }
 
     public bool IsGrounded()
@@ -114,31 +110,26 @@ public class EntityUI : PooledComponent
 //        return m_CharacterController.isGrounded;
     }
 
-    //  Local position
     public Vector3 GetPosition()
     {
-        return m_trModel.localPosition;
+		return m_ModelRigidbody.position;
     }
 
-    //  Local position
     public void SetPosition(Vector3 vec3Position)
     {
-        m_trModel.localPosition = vec3Position;
+		m_ModelRigidbody.MovePosition(vec3Position);
     }
 
-    //  Local rotation
     public Vector3 GetRotation()
     {
-        return m_trModel.localRotation.eulerAngles;
+		return m_ModelRigidbody.rotation.eulerAngles;
     }
 
-    //  Local rotation
     public void SetRotation(Vector3 vec3Rotation)
     {
-        m_trModel.localRotation = Quaternion.Euler(vec3Rotation);
+		m_ModelRigidbody.MoveRotation(Quaternion.Euler(vec3Rotation));
     }
 
-    //  Local rotation
     public Vector3 GetForward()
     {
         return m_trModel.forward;

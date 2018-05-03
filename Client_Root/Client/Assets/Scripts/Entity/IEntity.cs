@@ -4,8 +4,6 @@ using System.Collections;
 
 public abstract class IEntity : PooledComponent
 {
-    public Vector3 m_vec3Velocity = Vector3.zero;
-
     protected int m_nID = -1;
     protected int m_nMasterDataID = -1;
     protected int m_nDefaultBehaviorID;

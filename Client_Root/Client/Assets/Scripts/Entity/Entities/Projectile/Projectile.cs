@@ -59,7 +59,5 @@ public class Projectile : IEntity
         {
             GetBehavior(m_nDefaultBehaviorID).StartTick(nUpdateTick);
         }
-
-        Move(m_vec3Velocity * BaeGameRoom2.Instance.GetTickInterval());
     }
 }
