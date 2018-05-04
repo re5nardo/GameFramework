@@ -15,6 +15,10 @@ public class MovingObject : IMonoTickUpdatable
     private float m_fTickInterval;
     private int m_nStartTick = -1;
 
+	private Vector3 m_vec3SavedPosition;
+	private Vector3 m_vec3SavedRotation;
+	private Vector3 m_vec3SavedScale;
+
     public void Initialize()
     {
         m_trMine = transform;
@@ -28,6 +32,8 @@ public class MovingObject : IMonoTickUpdatable
 
         m_fExpectedTime = (m_vec3End - m_vec3Start).magnitude / m_fSpeed;
         m_fTickInterval = BaeGameRoom2.Instance.GetTickInterval();
+
+		m_bPredictPlay = true;
     }
 
     public void StartTick(int nSTartTick)
@@ -46,6 +52,9 @@ public class MovingObject : IMonoTickUpdatable
 
     private void OnCollisionEnter(Collision collisionInfo)
     {
+		if(BaeGameRoom2.Instance.IsPredictMode())
+    		return;
+
         if (collisionInfo.gameObject.layer == GameObjectLayer.CHARACTER)
         {
             Character character = collisionInfo.gameObject.GetComponentInParent<Character>();
@@ -61,6 +70,9 @@ public class MovingObject : IMonoTickUpdatable
 
     private void OnTriggerEnter(Collider colliderInfo)
     {
+		if(BaeGameRoom2.Instance.IsPredictMode())
+    		return;
+
         if (colliderInfo.gameObject.layer == GameObjectLayer.CHARACTER)
         {
             Character character = colliderInfo.gameObject.GetComponentInParent<Character>();
@@ -73,4 +85,18 @@ public class MovingObject : IMonoTickUpdatable
             character.OnAttacked(-1, 1, BaeGameRoom2.Instance.GetCurrentTick());
         }
     }
+
+	public void Save()
+	{
+		m_vec3SavedPosition = m_trMine.localPosition;
+		m_vec3SavedRotation = m_trMine.localRotation.eulerAngles;
+		m_vec3SavedScale = m_trMine.localScale;
+	}
+
+	public void Restore()
+	{
+		m_trMine.localPosition = m_vec3SavedPosition;
+		m_trMine.localRotation = Quaternion.Euler(m_vec3SavedRotation);
+		m_trMine.localScale = m_vec3SavedScale;
+	}
 }

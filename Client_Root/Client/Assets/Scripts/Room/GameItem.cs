@@ -26,6 +26,10 @@ public class GameItem : IMonoTickUpdatable
     private Vector3 m_vec3End;
     private float m_fSpeed;
 
+	private Vector3 m_vec3SavedPosition;
+	private Vector3 m_vec3SavedRotation;
+	private Vector3 m_vec3SavedScale;
+
 //    public void OnUsed()
 //    {
 //    }
@@ -83,6 +87,8 @@ public class GameItem : IMonoTickUpdatable
         m_goModel.transform.SetParent(transform);
         m_goModel.transform.position = m_vec3Start;
         m_goModel.GetComponent<CollisionReporter>().onTriggerEnter = OnTriggerEnter;
+
+		m_bPredictPlay = true;
     }
 
     public void StartTick(int nStartTick)
@@ -92,6 +98,9 @@ public class GameItem : IMonoTickUpdatable
 
     private void OnTriggerEnter(Collider collider)
     {
+    	if(BaeGameRoom2.Instance.IsPredictMode())
+    		return;
+
         if (collider.gameObject.layer == GameObjectLayer.CHARACTER)
         {
             Character character = collider.gameObject.GetComponentInParent<Character>();
@@ -113,4 +122,18 @@ public class GameItem : IMonoTickUpdatable
             }
         }
     }
+
+	public void Save()
+	{
+		m_vec3SavedPosition = m_goModel.transform.localPosition;
+		m_vec3SavedRotation = m_goModel.transform.localRotation.eulerAngles;
+		m_vec3SavedScale = m_goModel.transform.localScale;
+	}
+
+	public void Restore()
+	{
+		m_goModel.transform.localPosition = m_vec3SavedPosition;
+		m_goModel.transform.localRotation = Quaternion.Euler(m_vec3SavedRotation);
+		m_goModel.transform.localScale = m_vec3SavedScale;
+	}
 }

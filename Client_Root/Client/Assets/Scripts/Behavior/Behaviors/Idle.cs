@@ -18,6 +18,8 @@ namespace Behavior
             m_fLength = masterBehavior.m_fLength;
             m_strStringParams = masterBehavior.m_strStringParams;
             m_listAction = masterBehavior.m_listAction;
+
+			m_bPredictPlay = true;
         }
 
         protected override void UpdateBody(int nUpdateTick)

@@ -172,4 +172,14 @@ public abstract class IEntity : PooledComponent
     {
         m_EntityUI.Stop(strAnimation);
     }
+
+	public void Save()
+	{
+		m_EntityUI.Save();
+	}
+
+	public void Restore()
+	{
+		m_EntityUI.Restore();
+	}
 }

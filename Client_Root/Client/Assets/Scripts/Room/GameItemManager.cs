@@ -45,4 +45,20 @@ public class GameItemManager : IMonoTickUpdatable
     {
         m_listGameItem.Remove(gameItem);
     }
+
+	public void Save()
+	{
+		foreach(GameItem gameItem in m_listGameItem)
+        {
+			gameItem.Save();
+        }
+	}
+
+	public void Restore()
+	{
+		foreach(GameItem gameItem in m_listGameItem)
+        {
+			gameItem.Restore();
+        }
+	}
 }

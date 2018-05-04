@@ -19,6 +19,8 @@ namespace Behavior
             m_fLength = masterBehavior.m_fLength;
             m_strStringParams = masterBehavior.m_strStringParams;
             m_listAction = masterBehavior.m_listAction;
+
+			m_bPredictPlay = true;
         }
 
         public override void StartTick(int nStartTick, params object[] param)

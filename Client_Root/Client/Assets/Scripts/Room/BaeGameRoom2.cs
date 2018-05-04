@@ -30,7 +30,7 @@ public class BaeGameRoom2 : IGameRoom
         }
     }
 
-    private const float TOUCH_PERCEPTION_TIME = 0.2f;
+	private const int LATENCY_DEVIATION_LIMIT = 20;		//	ms
 
     private int m_nOldFrameRate = 0;
     private Vector3 m_vec3OldGravity;
@@ -56,6 +56,11 @@ public class BaeGameRoom2 : IGameRoom
     private List<PlayerRankInfo> m_listPlayerRankInfo = new List<PlayerRankInfo>();
 
     private List<Character> m_listPlayerCharacter = new List<Character>();
+
+	private bool m_bPredictMode = false;
+	private int m_nPredictStartTick = 0;
+	private System.DateTime m_PredictStartTime = System.DateTime.Now;
+	private System.DateTime m_LastProcessTime = System.DateTime.Now;
 
 #region Room Logic
     private void Update()
@@ -133,12 +138,14 @@ public class BaeGameRoom2 : IGameRoom
             return;
         }
 
-        EnterRoomToR msgToR = new EnterRoomToR ();
+		EnterRoomToR msgToR = ObjectPool.Instance.GetObject<EnterRoomToR>();
         msgToR.m_strPlayerKey = SystemInfo.deviceUniqueIdentifier;
         msgToR.m_nAuthKey = 0;
         msgToR.m_nMatchID = 0;
 
         RoomNetwork.Instance.Send(msgToR);
+
+//		ObjectPool.Instance.ReturnObject(msgToR);
     }
 
     private void OnDestroy()
@@ -186,28 +193,88 @@ public class BaeGameRoom2 : IGameRoom
             disturber.StartTick(0);
         }
 
-        yield return new WaitForSeconds(TOUCH_PERCEPTION_TIME); //  Fill buffer
-
         while (true)
         {
-            while(m_nTick > m_nServerTick)  //  정상적인 상황 X (네트워크 지연 또는 순단 등등에 의해 버퍼가 비어버린 상황)
+        	if(m_bPredictMode)
             {
-                yield return new WaitForSeconds(TOUCH_PERCEPTION_TIME); //  Fill buffer
+				//	Stop predict mode
+				if(m_nPredictStartTick <= m_nServerTick)
+				{
+					m_bPredictMode = false;
+					m_nTick = m_nPredictStartTick;
+
+					//	Restore data
+					foreach(MovingObject mObj in m_listMovingObject)
+            		{
+			            mObj.Restore();
+            		}
+
+					foreach(IEntity entity in m_dicEntity)
+            		{
+						entity.Restore();
+            		}
+
+					m_GameItemManager.Restore();
+            	}
+        	}
+        	else
+            {
+				if(m_nTick > m_nServerTick)
+				{
+					//	Start predict mode
+					if((System.DateTime.Now -  m_LastProcessTime).TotalMilliseconds > m_fTickInterval * 1000 + LATENCY_DEVIATION_LIMIT)
+					{
+						m_bPredictMode = true;
+						m_nPredictStartTick = m_nTick;
+						m_PredictStartTime = System.DateTime.Now;
+
+						//	Save data
+						foreach(MovingObject mObj in m_listMovingObject)
+				        {
+				            mObj.Save();
+				        }
+
+						//  Copy values because m_dicEntity can be modified during iterating
+						foreach(IEntity entity in m_dicEntity)
+				        {
+				            entity.Save();
+				        }
+
+						m_GameItemManager.Save();
+					}
+					else
+					{
+						yield return null;
+						continue;
+					}
+				}
+        	}
+
+            int nCountToProcess = 0;
+            if(m_bPredictMode)
+            {
+				int nCount = (int)((System.DateTime.Now - m_PredictStartTime).TotalSeconds / m_fTickInterval);
+
+				nCountToProcess = nCount - (m_nTick - m_nPredictStartTick);
+            }
+            else
+            {
+				nCountToProcess = m_nServerTick - m_nTick + 1;
             }
 
-            int nCountToProcess = 1;
-            if (m_nServerTick - m_nTick >= 40)
-            {
-                nCountToProcess = 10;
-            }
-            else if (m_nServerTick - m_nTick >= 20)
-            {
-                nCountToProcess = 4;
-            }
-            else if (m_nServerTick - m_nTick >= 3)
-            {
-                nCountToProcess = 2;
-            }
+
+//			if (m_nServerTick - m_nTick >= 40)
+//            {
+//                nCountToProcess = 10;
+//            }
+//			else if (m_nServerTick - m_nTick >= 20)
+//            {
+//                nCountToProcess = 4;  
+//            }
+//			else if (m_nServerTick - m_nTick >= 3)
+//            {
+//                nCountToProcess = 2;
+//            }
 
             for (int i = 0; i < nCountToProcess; ++i)
             {
@@ -229,11 +296,15 @@ public class BaeGameRoom2 : IGameRoom
 
                     RoomNetwork.Instance.Send(resultToR);
 
+//					ObjectPool.Instance.ReturnObject(resultToR);
+
                     yield break;
                 }
 
                 m_nTick++;
             }
+
+			m_LastProcessTime = System.DateTime.Now;
 
             yield return new WaitForSeconds(m_fTickInterval);
         }
@@ -456,10 +527,12 @@ public class BaeGameRoom2 : IGameRoom
 
         SetDisturber();
 
-        PreparationStateToR preparationStateToR = new PreparationStateToR();
+		PreparationStateToR preparationStateToR = ObjectPool.Instance.GetObject<PreparationStateToR>();
         preparationStateToR.m_fState = 1.0f;
 
         RoomNetwork.Instance.Send(preparationStateToR);
+
+//		ObjectPool.Instance.ReturnObject(preparationStateToR);
     }
 
     public override float GetElapsedTime()
@@ -520,6 +593,11 @@ public class BaeGameRoom2 : IGameRoom
     {
         return m_fTickInterval;
     }
+
+	public bool IsPredictMode()
+	{
+		return m_bPredictMode;
+	}
 
     public void CreateCharacter(int nMasterDataID, ref int nEntityID, ref Character character, Character.Role role, CharacterStatus status, bool bUser)
     {
@@ -751,6 +829,9 @@ public class BaeGameRoom2 : IGameRoom
         inputToR.m_Data = position.Serialize();
 
         RoomNetwork.Instance.Send(inputToR);
+
+//		ObjectPool.Instance.ReturnObject(position);
+//		ObjectPool.Instance.ReturnObject(inputToR);
     }
 
     private void OnRotationControllerHold(Vector2 vec2Direction)
@@ -778,6 +859,9 @@ public class BaeGameRoom2 : IGameRoom
         inputToR.m_Data = rotation.Serialize();
 
         RoomNetwork.Instance.Send(inputToR);
+
+//		ObjectPool.Instance.ReturnObject(rotation);
+//		ObjectPool.Instance.ReturnObject(inputToR);
     }
 
     private void OnGameItemButtonClicked(GameItem gameItem)
@@ -795,6 +879,9 @@ public class BaeGameRoom2 : IGameRoom
         inputToR.m_Data = inputGameItem.Serialize();
 
         RoomNetwork.Instance.Send(inputToR);
+
+//		ObjectPool.Instance.ReturnObject(inputGameItem);
+//		ObjectPool.Instance.ReturnObject(inputToR);
     }
         
     private void OnJumpButtonClicked(float fTime)
@@ -812,6 +899,9 @@ public class BaeGameRoom2 : IGameRoom
         inputToR.m_Data = position.Serialize();
 
         RoomNetwork.Instance.Send(inputToR);
+
+//		ObjectPool.Instance.ReturnObject(position);
+//		ObjectPool.Instance.ReturnObject(inputToR);
     }
 #endregion
 

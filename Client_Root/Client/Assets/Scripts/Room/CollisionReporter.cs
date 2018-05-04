@@ -9,6 +9,9 @@ public class CollisionReporter : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
+		if(BaeGameRoom2.Instance.IsPredictMode())
+    		return;
+
         if (onCollisionEnter != null)
         {
             onCollisionEnter(collision);
@@ -17,6 +20,9 @@ public class CollisionReporter : MonoBehaviour
 
     private void OnTriggerEnter(Collider collider)
     {
+		if(BaeGameRoom2.Instance.IsPredictMode())
+    		return;
+
         if (onTriggerEnter != null)
         {
             onTriggerEnter(collider);

@@ -58,6 +58,8 @@ public abstract class IState : ITickUpdatable, IPooledObject
 
     public virtual void OnCollision(IEntity other, int nTick)
     {
+		if(BaeGameRoom2.Instance.IsPredictMode())
+    		return;
     }
 
     public virtual void OnUsed()

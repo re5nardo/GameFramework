@@ -9,8 +9,13 @@ public class EntityUI : PooledComponent
     private GameObject m_goNicknameUI = null;
 
     private Transform m_trModel = null;
-    private Rigidbody m_ModelRigidbody = null;
+	private Rigidbody m_ModelRigidbody = null;
     private TickBasedAnimationPlayer m_TickBasedAnimationPlayer = null;
+
+	private Vector3 m_vec3SavedPosition;
+	private Vector3 m_vec3SavedRotation;
+	private Vector3 m_vec3SavedRigidbodyVelocity;
+	private Vector3 m_vec3SavedRigidbodyAngularVelocity;
 
     public void Initialize(FBS.Data.EntityType entityType, int nID, int nMasterDataID)
     {
@@ -168,4 +173,20 @@ public class EntityUI : PooledComponent
     {
         m_TickBasedAnimationPlayer.Draw(nTick);
     }
+
+	public void Save()
+	{
+		m_vec3SavedPosition = m_ModelRigidbody.position;
+		m_vec3SavedRotation = m_ModelRigidbody.rotation.eulerAngles;
+		m_vec3SavedRigidbodyVelocity = m_ModelRigidbody.velocity;
+		m_vec3SavedRigidbodyAngularVelocity = m_ModelRigidbody.angularVelocity;
+	}
+
+	public void Restore()
+	{
+		m_ModelRigidbody.MovePosition(m_vec3SavedPosition);
+		m_ModelRigidbody.MoveRotation(Quaternion.Euler(m_vec3SavedRotation));
+		m_ModelRigidbody.velocity = m_vec3SavedRigidbodyVelocity;
+		m_ModelRigidbody.angularVelocity = m_vec3SavedRigidbodyAngularVelocity;
+	}
 }

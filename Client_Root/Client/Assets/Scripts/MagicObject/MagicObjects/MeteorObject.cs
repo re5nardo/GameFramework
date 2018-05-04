@@ -62,6 +62,9 @@ namespace MagicObject
 
         private void OnCollisionEnter(Collision collisionInfo)
         {
+			if(BaeGameRoom2.Instance.IsPredictMode())
+    			return;
+
             if (collisionInfo.gameObject.layer == GameObjectLayer.CHARACTER)
             {
                 Character character = collisionInfo.gameObject.GetComponentInParent<Character>();
@@ -75,6 +78,9 @@ namespace MagicObject
 
         private void OnTriggerEnter(Collider colliderInfo)
         {
+			if(BaeGameRoom2.Instance.IsPredictMode())
+    			return;
+
             if (colliderInfo.gameObject.layer == GameObjectLayer.CHARACTER)
             {
                 Character character = colliderInfo.gameObject.GetComponentInParent<Character>();
