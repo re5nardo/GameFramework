@@ -209,7 +209,7 @@ public class BaeGameRoom2 : IGameRoom
 			            mObj.Restore();
             		}
 
-					foreach(IEntity entity in m_dicEntity)
+					foreach(IEntity entity in m_dicEntity.Values)
             		{
 						entity.Restore();
             		}
@@ -235,7 +235,7 @@ public class BaeGameRoom2 : IGameRoom
 				        }
 
 						//  Copy values because m_dicEntity can be modified during iterating
-						foreach(IEntity entity in m_dicEntity)
+						foreach(IEntity entity in m_dicEntity.Values)
 				        {
 				            entity.Save();
 				        }
