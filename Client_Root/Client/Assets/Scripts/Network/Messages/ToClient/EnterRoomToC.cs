@@ -24,8 +24,7 @@ public class EnterRoomToC : IMessage
         FBS.EnterRoomToC.StartPlayersVector(m_Builder, m_listPlayerInfo.Count);
         foreach(FBS.PlayerInfo playerInfo in m_listPlayerInfo)
         {
-            FBS.PlayerInfo.CreatePlayerInfo(m_Builder, playerInfo.PlayerIndex, playerInfo.MasterDataID, playerInfo.EntityID, playerInfo.Status.MaximumHP, playerInfo.Status.HP,
-                playerInfo.Status.MaximumMP, playerInfo.Status.MP, playerInfo.Status.MaximumSpeed, playerInfo.Status.Speed, playerInfo.Status.MPChargeRate, playerInfo.Status.MovePoint);
+            FBS.PlayerInfo.CreatePlayerInfo(m_Builder, playerInfo.PlayerIndex, playerInfo.MasterDataID, playerInfo.EntityID);
         }
         var players = m_Builder.EndVector();
 

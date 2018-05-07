@@ -70,8 +70,6 @@ void BaeGameRoom2::Loop()
 	{
 		m_lLastUpdateTime = GetElapsedTime();
 
-		ProcessInput();
-
 		SendTickInfo();
 
 		if (m_nTick == m_nEndTick)
@@ -89,41 +87,6 @@ void BaeGameRoom2::Loop()
 		if (TIME_STEP > lTickProcessTime)
 			Sleep(TIME_STEP - lTickProcessTime);
 	}
-}
-
-void BaeGameRoom2::ProcessInput()
-{
-	m_LockPlayerInput.lock();
-
-	vector<pair<int, pair<long long, IMessage*>>> vecPlayerInput;
-	for (map<int, list<pair<long long, IMessage*>>>::iterator it = m_mapPlayerInput.begin(); it != m_mapPlayerInput.end(); ++it)
-	{
-		for (list<pair<long long, IMessage*>>::iterator iter = it->second.begin(); iter != it->second.end(); ++iter)
-		{
-			vecPlayerInput.push_back(make_pair(it->first, *iter));
-		}
-	}
-	m_mapPlayerInput.clear();
-
-	auto cmp = [](pair<int, pair<long long, IMessage*>> a, pair<int, pair<long long, IMessage*>> b)
-	{
-		return a.second.first < b.second.first;
-	};
-	sort(vecPlayerInput.begin(), vecPlayerInput.end(), cmp);
-
-
-	for (vector<pair<int, pair<long long, IMessage*>>>::iterator it = vecPlayerInput.begin(); it != vecPlayerInput.end(); ++it)
-	{
-		delete it->second.second;
-	}
-	vecPlayerInput.clear();
-
-	m_LockPlayerInput.unlock();
-}
-
-void BaeGameRoom2::SendWorldInfo()
-{
-	
 }
 
 void BaeGameRoom2::SendTickInfo()
@@ -159,9 +122,8 @@ void BaeGameRoom2::PrepareGame()
 
 		MasterData::Character* pMasterCharacter = NULL;
 		MasterDataManager::Instance()->GetData<MasterData::Character>(dummyCharacterMasterDataID, pMasterCharacter);
-		FBS::Data::CharacterStatus status(pMasterCharacter->m_nHP, pMasterCharacter->m_nHP, pMasterCharacter->m_nMP, pMasterCharacter->m_nMP, pMasterCharacter->m_fMaximumSpeed, pMasterCharacter->m_fMaximumSpeed, pMasterCharacter->m_fMPChargeRate, 0);
 
-		FBS::PlayerInfo playerInfo(nPlayerIndex, dummyCharacterMasterDataID, nEntityID, status);
+		FBS::PlayerInfo playerInfo(nPlayerIndex, dummyCharacterMasterDataID, nEntityID);
 		m_vecPlayerInfo.push_back(playerInfo);
 	}
 
@@ -200,16 +162,13 @@ void BaeGameRoom2::Reset()
 	m_lLastUpdateTime = 0;
 	m_vecPlayerInfo.clear();
 
-	m_bPlaying = false;
-
-	for (map<int, list<pair<long long, IMessage*>>>::iterator it = m_mapPlayerInput.begin(); it != m_mapPlayerInput.end(); ++it)
+	for (list<IPlayerInput*>::iterator it = m_listPlayerInput.begin(); it != m_listPlayerInput.end(); ++it)
 	{
-		for (list<pair<long long, IMessage*>>::iterator iter = it->second.begin(); iter != it->second.end(); ++iter)
-		{
-			delete iter->second;
-		}
+		delete *it;
 	}
-	m_mapPlayerInput.clear();
+	m_listPlayerInput.clear();
+
+	m_bPlaying = false;
 }
 
 void BaeGameRoom2::SendToAllUsers(IMessage* pMsg, string strExclusionKey, bool bDelete)
@@ -233,18 +192,6 @@ void BaeGameRoom2::OnRecvMessage(unsigned int socket, IMessage* pMsg)
 	else if (pMsg->GetID() == PreparationStateToR::MESSAGE_ID)
 	{
 		OnPreparationStateToR((PreparationStateToR*)pMsg, socket);
-	}
-	if (pMsg->GetID() == GameInputSkillToR::MESSAGE_ID)
-	{
-		OnGameInputSkillToR((GameInputSkillToR*)pMsg, socket);
-	}
-	else if (pMsg->GetID() == GameInputMoveToR::MESSAGE_ID)
-	{
-		OnGameInputMoveToR((GameInputMoveToR*)pMsg, socket);
-	}
-	else if (pMsg->GetID() == GameInputRotationToR::MESSAGE_ID)
-	{
-		OnGameInputRotationToR((GameInputRotationToR*)pMsg, socket);
 	}
 	else if (pMsg->GetID() == PlayerInputToR::MESSAGE_ID)
 	{
@@ -308,89 +255,14 @@ void BaeGameRoom2::OnPreparationStateToR(PreparationStateToR* pMsg, unsigned int
 	}
 }
 
-void BaeGameRoom2::OnGameInputSkillToR(GameInputSkillToR* pMsg, unsigned int socket)
-{
-	m_LockPlayerInput.lock();
-
-	if (m_mapPlayerInput.count(pMsg->m_nPlayerIndex) > 0)
-	{
-		list<pair<long long, IMessage*>>* pInputs = &m_mapPlayerInput[pMsg->m_nPlayerIndex];
-
-		list<pair<long long, IMessage*>>::iterator found = find_if(pInputs->begin(), pInputs->end(), [&](pair<long long, IMessage*>& item) { return item.second->GetID() == pMsg->GetID(); });
-
-		if (found != pInputs->end())
-		{
-			delete found->second;
-
-			found->first = GetElapsedTime();
-			found->second = pMsg->Clone();
-		}
-		else
-		{
-			pInputs->push_back(make_pair(GetElapsedTime(), pMsg->Clone()));
-		}
-	}
-	else
-	{
-		m_mapPlayerInput[pMsg->m_nPlayerIndex].push_back(make_pair(GetElapsedTime(), pMsg->Clone()));
-	}
-
-	m_LockPlayerInput.unlock();
-}
-
-void BaeGameRoom2::OnGameInputMoveToR(GameInputMoveToR* pMsg, unsigned int socket)
-{
-	m_LockPlayerInput.lock();
-
-	if (m_mapPlayerInput.count(pMsg->m_nPlayerIndex) > 0)
-	{
-		list<pair<long long, IMessage*>>* pInputs = &m_mapPlayerInput[pMsg->m_nPlayerIndex];
-
-		pInputs->push_back(make_pair(GetElapsedTime(), pMsg->Clone()));
-	}
-	else
-	{
-		m_mapPlayerInput[pMsg->m_nPlayerIndex].push_back(make_pair(GetElapsedTime(), pMsg->Clone()));
-	}
-
-	m_LockPlayerInput.unlock();
-}
-
-void BaeGameRoom2::OnGameInputRotationToR(GameInputRotationToR* pMsg, unsigned int socket)
-{
-	m_LockPlayerInput.lock();
-
-	if (m_mapPlayerInput.count(pMsg->m_nPlayerIndex) > 0)
-	{
-		list<pair<long long, IMessage*>>* pInputs = &m_mapPlayerInput[pMsg->m_nPlayerIndex];
-
-		list<pair<long long, IMessage*>>::iterator found = find_if(pInputs->begin(), pInputs->end(), [&](pair<long long, IMessage*>& item) { return item.second->GetID() == pMsg->GetID(); });
-
-		if (found != pInputs->end())
-		{
-			delete found->second;
-
-			found->first = GetElapsedTime();
-			found->second = pMsg->Clone();
-		}
-		else
-		{
-			pInputs->push_back(make_pair(GetElapsedTime(), pMsg->Clone()));
-		}
-	}
-	else
-	{
-		m_mapPlayerInput[pMsg->m_nPlayerIndex].push_back(make_pair(GetElapsedTime(), pMsg->Clone()));
-	}
-
-	m_LockPlayerInput.unlock();
-}
-
 void BaeGameRoom2::OnPlayerInputToR(PlayerInputToR* pMsg, unsigned int socket)
 {
 	m_LockPlayerInput.lock();
 
-	m_listPlayerInput.push_back(pMsg->m_PlayerInput->Clone());
+	if (m_listPlayerInput.size() == 0)
+	{
+		m_listPlayerInput.push_back(pMsg->m_PlayerInput->Clone());
+	}
 
 	m_LockPlayerInput.unlock();
 }

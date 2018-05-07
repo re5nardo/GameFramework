@@ -12,20 +12,9 @@ public sealed class PlayerInfo : Struct {
   public int PlayerIndex { get { return bb.GetInt(bb_pos + 0); } }
   public int MasterDataID { get { return bb.GetInt(bb_pos + 4); } }
   public int EntityID { get { return bb.GetInt(bb_pos + 8); } }
-  public FBS.Data.CharacterStatus Status { get { return GetStatus(new FBS.Data.CharacterStatus()); } }
-  public FBS.Data.CharacterStatus GetStatus(FBS.Data.CharacterStatus obj) { return obj.__init(bb_pos + 12, bb); }
 
-  public static Offset<PlayerInfo> CreatePlayerInfo(FlatBufferBuilder builder, int PlayerIndex, int MasterDataID, int EntityID, int Status_MaximumHP, int Status_HP, int Status_MaximumMP, int Status_MP, float Status_MaximumSpeed, float Status_Speed, float Status_MPChargeRate, float Status_MovePoint) {
-    builder.Prep(4, 44);
-    builder.Prep(4, 32);
-    builder.PutFloat(Status_MovePoint);
-    builder.PutFloat(Status_MPChargeRate);
-    builder.PutFloat(Status_Speed);
-    builder.PutFloat(Status_MaximumSpeed);
-    builder.PutInt(Status_MP);
-    builder.PutInt(Status_MaximumMP);
-    builder.PutInt(Status_HP);
-    builder.PutInt(Status_MaximumHP);
+  public static Offset<PlayerInfo> CreatePlayerInfo(FlatBufferBuilder builder, int PlayerIndex, int MasterDataID, int EntityID) {
+    builder.Prep(4, 12);
     builder.PutInt(EntityID);
     builder.PutInt(MasterDataID);
     builder.PutInt(PlayerIndex);

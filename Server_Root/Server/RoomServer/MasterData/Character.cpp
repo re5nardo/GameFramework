@@ -23,9 +23,11 @@ namespace MasterData
 		m_nMP = atoi(data[6].c_str());
 		m_fMaximumSpeed = atof(data[7].c_str());
 		m_fMPChargeRate = atof(data[8].c_str());
-		m_fSize = atof(data[9].c_str());
-		m_fHeight = atof(data[11].c_str());
-		m_fDefault_Y = atof(data[12].c_str());
-		m_nDefaultBehaviorID = atoi(data[13].c_str());
+		m_nJumpCount = atoi(data[9].c_str());
+		m_fJumpRegenerationTime = atof(data[10].c_str());
+		m_fSize = atof(data[11].c_str());
+		m_fHeight = atof(data[13].c_str());
+		m_fDefault_Y = atof(data[14].c_str());
+		m_nDefaultBehaviorID = atoi(data[15].c_str());
 	}
 }

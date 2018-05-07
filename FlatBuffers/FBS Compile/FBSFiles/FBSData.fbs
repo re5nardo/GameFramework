@@ -14,18 +14,6 @@ enum EntityType:byte
 	Item,
 }
 
-struct CharacterStatus
-{
-	MaximumHP:int;
-	HP:int;
-	MaximumMP:int;
-	MP:int;
-	MaximumSpeed:float;
-	Speed:float;
-	MPChargeRate:float;
-	MovePoint:float;
-}
-
 struct PlayerRankInfo
 {
 	PlayerIndex:int;

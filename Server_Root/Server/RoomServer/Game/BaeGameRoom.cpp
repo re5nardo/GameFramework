@@ -381,16 +381,15 @@ void BaeGameRoom::PrepareGame()
 		
 		MasterData::Character* pMasterCharacter = NULL;
 		MasterDataManager::Instance()->GetData<MasterData::Character>(dummyCharacterMasterDataID, pMasterCharacter);
-		FBS::Data::CharacterStatus status(pMasterCharacter->m_nHP, pMasterCharacter->m_nHP, pMasterCharacter->m_nMP, pMasterCharacter->m_nMP, pMasterCharacter->m_fMaximumSpeed, 0, pMasterCharacter->m_fMPChargeRate, 0);
 
 		Character* pCharacter = NULL;
-		CreateCharacter(dummyCharacterMasterDataID, &nEntityID, &pCharacter, Character::Role::Challenger, CharacterStatus(status));
+		CreateCharacter(dummyCharacterMasterDataID, &nEntityID, &pCharacter, Character::Role::Challenger, CharacterStatus());
 
 		m_mapPlayerEntity[nPlayerIndex] = nEntityID;
 		m_mapEntityPlayer[nEntityID] = nPlayerIndex;
 		m_mapCharacterSpeedVariationData[nPlayerIndex] = CharacterSpeedVariationData(dummyCharacterMasterDataID);
 
-		FBS::PlayerInfo playerInfo(nPlayerIndex, dummyCharacterMasterDataID, nEntityID, status);
+		FBS::PlayerInfo playerInfo(nPlayerIndex, dummyCharacterMasterDataID, nEntityID);
 		m_vecPlayerInfo.push_back(playerInfo);
 	}
 }

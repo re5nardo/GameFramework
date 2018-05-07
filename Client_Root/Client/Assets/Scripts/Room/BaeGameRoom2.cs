@@ -400,10 +400,10 @@ public class BaeGameRoom2 : IGameRoom
 
                     Character character = m_dicEntity[position.m_nEntityID] as Character;
 
-                    if (!character.IsAlive() || character.HasCoreState(CoreState.CoreState_Faint))
+                    if (!character.IsJumpable())
                         continue;
 
-                    character.GetBehavior(MasterDataDefine.BehaviorID.JUMP).StartTick(m_nTick);
+                    character.OnUseJump(m_nTick);
                 }
                 else if (input.GetPlayerInputType() == FBS.PlayerInputType.GameItem)
                 {
@@ -749,7 +749,7 @@ public class BaeGameRoom2 : IGameRoom
             {
                 int nEntityID = 0;
                 Character character = null;
-                CreateCharacter(player.MasterDataID, ref nEntityID, ref character, Character.Role.Challenger, new CharacterStatus(player.Status), player.PlayerIndex == m_nUserPlayerIndex);
+                CreateCharacter(player.MasterDataID, ref nEntityID, ref character, Character.Role.Challenger, new CharacterStatus(), player.PlayerIndex == m_nUserPlayerIndex);
 
                 m_dicPlayerEntity[player.PlayerIndex] = nEntityID;
                 m_dicEntityPlayer[nEntityID] = player.PlayerIndex;
@@ -761,9 +761,9 @@ public class BaeGameRoom2 : IGameRoom
 
                     //m_SkillController.SetSkills(new List<int>(){0, 1, 2});
 
-                    m_lbHP.text = string.Format("x{0}", player.Status.HP);
-                    m_lbMP.text = string.Format("x{0}", player.Status.MP);
-                    m_lbMovePoint.text = string.Format("x{0}", player.Status.MovePoint);
+//                    m_lbHP.text = string.Format("x{0}", player.Status.HP);
+//                    m_lbMP.text = string.Format("x{0}", player.Status.MP);
+//                    m_lbMovePoint.text = string.Format("x{0}", player.Status.MovePoint);
                 }
             }
 
@@ -886,7 +886,7 @@ public class BaeGameRoom2 : IGameRoom
         
     private void OnJumpButtonClicked(float fTime)
     {
-        if (!GetUserCharacter().IsAlive())
+        if (!GetUserCharacter().IsJumpable())
             return;
 
         PlayerInputToR inputToR = ObjectPool.Instance.GetObject<PlayerInputToR>();
@@ -944,6 +944,11 @@ public class BaeGameRoom2 : IGameRoom
         {
             m_GameItemButtons[i].SetData(gameItems[i]);
         }
+    }
+
+    public void OnUserJumpCountChanged(int nRemain, int nMax)
+    {
+        m_lbNotice.text = string.Format("Jump Count {0} / {1}", nRemain, nMax);
     }
 #endregion
 }

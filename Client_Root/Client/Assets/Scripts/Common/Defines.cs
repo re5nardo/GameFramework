@@ -24,3 +24,10 @@ public class GameObjectLayer
 {
     public const int CHARACTER = 9;
 }
+
+public enum CoreState
+{
+    CoreState_Invincible = 0,
+    CoreState_ChallengerDisturbing,
+    CoreState_Faint,
+};

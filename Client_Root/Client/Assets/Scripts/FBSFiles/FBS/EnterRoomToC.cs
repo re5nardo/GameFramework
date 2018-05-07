@@ -14,7 +14,7 @@ public sealed class EnterRoomToC : Table {
   public int Result { get { int o = __offset(4); return o != 0 ? bb.GetInt(o + bb_pos) : (int)0; } }
   public int UserPlayerIndex { get { int o = __offset(6); return o != 0 ? bb.GetInt(o + bb_pos) : (int)0; } }
   public PlayerInfo GetPlayers(int j) { return GetPlayers(new PlayerInfo(), j); }
-  public PlayerInfo GetPlayers(PlayerInfo obj, int j) { int o = __offset(8); return o != 0 ? obj.__init(__vector(o) + j * 44, bb) : null; }
+  public PlayerInfo GetPlayers(PlayerInfo obj, int j) { int o = __offset(8); return o != 0 ? obj.__init(__vector(o) + j * 12, bb) : null; }
   public int PlayersLength { get { int o = __offset(8); return o != 0 ? __vector_len(o) : 0; } }
 
   public static Offset<EnterRoomToC> CreateEnterRoomToC(FlatBufferBuilder builder,
@@ -32,7 +32,7 @@ public sealed class EnterRoomToC : Table {
   public static void AddResult(FlatBufferBuilder builder, int Result) { builder.AddInt(0, Result, 0); }
   public static void AddUserPlayerIndex(FlatBufferBuilder builder, int UserPlayerIndex) { builder.AddInt(1, UserPlayerIndex, 0); }
   public static void AddPlayers(FlatBufferBuilder builder, VectorOffset PlayersOffset) { builder.AddOffset(2, PlayersOffset.Value, 0); }
-  public static void StartPlayersVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(44, numElems, 4); }
+  public static void StartPlayersVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(12, numElems, 4); }
   public static Offset<EnterRoomToC> EndEnterRoomToC(FlatBufferBuilder builder) {
     int o = builder.EndObject();
     return new Offset<EnterRoomToC>(o);

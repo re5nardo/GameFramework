@@ -25,7 +25,7 @@ void GolemAI::UpdateBody(long long lUpdateTime)
 		MasterData::Character* pMasterCharacter = NULL;
 		MasterDataManager::Instance()->GetData<MasterData::Character>(m_nMasterDataID, pMasterCharacter);
 
-		CharacterStatus status(pMasterCharacter->m_nHP, pMasterCharacter->m_nHP, pMasterCharacter->m_nMP, pMasterCharacter->m_nMP, pMasterCharacter->m_fMaximumSpeed, 0, pMasterCharacter->m_fMPChargeRate, 0);
+		CharacterStatus status(pMasterCharacter->m_nHP, pMasterCharacter->m_nHP, pMasterCharacter->m_nMP, pMasterCharacter->m_nMP, pMasterCharacter->m_fMaximumSpeed, 0, pMasterCharacter->m_fMPChargeRate, pMasterCharacter->m_nJumpCount, pMasterCharacter->m_nJumpCount, pMasterCharacter->m_fJumpRegenerationTime, 0);
 
 		m_pGameRoom->CreateCharacter(m_nMasterDataID, NULL, &m_pCharacter, Character::Role::Disturber, status);
 		m_pCharacter->SetPosition(m_vec3Position);

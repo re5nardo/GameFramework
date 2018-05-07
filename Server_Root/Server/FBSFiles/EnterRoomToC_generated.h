@@ -5,8 +5,6 @@
 
 #include "flatbuffers/flatbuffers.h"
 
-#include "FBSData_generated.h"
-
 namespace FBS {
 
 struct PlayerInfo;
@@ -18,20 +16,18 @@ MANUALLY_ALIGNED_STRUCT(4) PlayerInfo FLATBUFFERS_FINAL_CLASS {
   int32_t PlayerIndex_;
   int32_t MasterDataID_;
   int32_t EntityID_;
-  FBS::Data::CharacterStatus Status_;
 
  public:
   PlayerInfo() { memset(this, 0, sizeof(PlayerInfo)); }
   PlayerInfo(const PlayerInfo &_o) { memcpy(this, &_o, sizeof(PlayerInfo)); }
-  PlayerInfo(int32_t _PlayerIndex, int32_t _MasterDataID, int32_t _EntityID, const FBS::Data::CharacterStatus &_Status)
-    : PlayerIndex_(flatbuffers::EndianScalar(_PlayerIndex)), MasterDataID_(flatbuffers::EndianScalar(_MasterDataID)), EntityID_(flatbuffers::EndianScalar(_EntityID)), Status_(_Status) { }
+  PlayerInfo(int32_t _PlayerIndex, int32_t _MasterDataID, int32_t _EntityID)
+    : PlayerIndex_(flatbuffers::EndianScalar(_PlayerIndex)), MasterDataID_(flatbuffers::EndianScalar(_MasterDataID)), EntityID_(flatbuffers::EndianScalar(_EntityID)) { }
 
   int32_t PlayerIndex() const { return flatbuffers::EndianScalar(PlayerIndex_); }
   int32_t MasterDataID() const { return flatbuffers::EndianScalar(MasterDataID_); }
   int32_t EntityID() const { return flatbuffers::EndianScalar(EntityID_); }
-  const FBS::Data::CharacterStatus &Status() const { return Status_; }
 };
-STRUCT_END(PlayerInfo, 44);
+STRUCT_END(PlayerInfo, 12);
 
 struct EnterRoomToC FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   enum {

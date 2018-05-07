@@ -4,18 +4,7 @@ using UnityEngine;
 
 public struct CharacterStatus
 {
-    public CharacterStatus(FBS.Data.CharacterStatus status)
-    {
-        m_nMaximumHP = status.MaximumHP;
-        m_nHP = status.HP;
-        m_nMaximumMP = status.MaximumMP;
-        m_nMP = status.MP;
-        m_fMaximumSpeed = status.MaximumSpeed;
-        m_fSpeed = status.Speed;
-        m_fMPChargeRate = status.MPChargeRate;
-        m_fMovePoint = status.MovePoint;
-    }
-    public CharacterStatus(int nMaximumHP, int nHP, int nMaximumMP, int nMP, float fMaximumSpeed, float fSpeed, float fMPChargeRate, float fMovePoint)
+    public CharacterStatus(int nMaximumHP, int nHP, int nMaximumMP, int nMP, float fMaximumSpeed, float fSpeed, float fMPChargeRate, int nMaximumJumpCount, int nJumpCount, float fJumpRegenerationTime, float fMovePoint)
     {
         m_nMaximumHP = nMaximumHP;
         m_nHP = nHP;
@@ -24,6 +13,9 @@ public struct CharacterStatus
         m_fMaximumSpeed = fMaximumSpeed;
         m_fSpeed = fSpeed;
         m_fMPChargeRate = fMPChargeRate;
+        m_nMaximumJumpCount = nMaximumJumpCount;
+        m_nJumpCount = nJumpCount;
+        m_fJumpRegenerationTime = fJumpRegenerationTime;
         m_fMovePoint = fMovePoint;
     }
 
@@ -34,12 +26,8 @@ public struct CharacterStatus
     public float m_fMaximumSpeed;
     public float m_fSpeed;
     public float m_fMPChargeRate;
+    public int m_nMaximumJumpCount;
+    public int m_nJumpCount;
+    public float m_fJumpRegenerationTime;
     public float m_fMovePoint;
 }
-
-public enum CoreState
-{
-    CoreState_Invincible = 0,
-    CoreState_ChallengerDisturbing,
-    CoreState_Faint,
-};

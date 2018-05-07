@@ -19,6 +19,12 @@ public class Character : IEntity
     protected CharacterStatus m_OriginalStatus;
     protected CharacterStatus m_CurrentStatus;
 
+    private int m_nJumpRemainCount;
+    private int m_nJumpMaxCount;
+    private float m_fJumpRegenerationTime;
+    private int m_nRegenerationTickInterval = 0;
+    private int m_nRegenerationTick = 0;
+
     public float m_fSpeedPercent = 100;
 
     private float m_fBestHeight = 0;
@@ -67,6 +73,16 @@ public class Character : IEntity
             m_listBehavior.Add(behavior);
         }
 
+        m_nJumpRemainCount = masterCharacter.m_nJumpCount;
+        m_nJumpMaxCount = masterCharacter.m_nJumpCount;
+        m_fJumpRegenerationTime = masterCharacter.m_fJumpRegenerationTime;
+        m_nRegenerationTickInterval = (int)(m_fJumpRegenerationTime / BaeGameRoom2.Instance.GetTickInterval());
+
+        if (BaeGameRoom2.Instance.GetUserEntityID() == m_nID)
+        {
+            BaeGameRoom2.Instance.OnUserJumpCountChanged(m_nJumpRemainCount, m_nJumpMaxCount);
+        }
+
         GameObject goEntityUI = ObjectPool.Instance.GetGameObject("CharacterModel/EntityUI");
         goEntityUI.transform.parent = gameObject.transform;
 
@@ -110,6 +126,22 @@ public class Character : IEntity
         {
             GetBehavior(m_nDefaultBehaviorID).StartTick(nUpdateTick);
         }
+
+        if (m_nJumpRemainCount < m_nJumpMaxCount)
+        {
+            m_nRegenerationTick++;
+
+            if (m_nRegenerationTick == m_nRegenerationTickInterval)
+            {
+                m_nJumpRemainCount++;
+                m_nRegenerationTick = 0;
+
+                if (BaeGameRoom2.Instance.GetUserEntityID() == m_nID)
+                {
+                    BaeGameRoom2.Instance.OnUserJumpCountChanged(m_nJumpRemainCount, m_nJumpMaxCount);
+                }
+            }
+        }
     }
 
     //    public ISkill* GetSkill(int nID);
@@ -146,6 +178,18 @@ public class Character : IEntity
     public void MinusMoveSpeed(float fValue)
     {
         m_CurrentStatus.m_fSpeed -= fValue;
+    }
+
+    public void OnUseJump(int nTick)
+    {
+        m_nJumpRemainCount--;
+
+        if (BaeGameRoom2.Instance.GetUserEntityID() == m_nID)
+        {
+            BaeGameRoom2.Instance.OnUserJumpCountChanged(m_nJumpRemainCount, m_nJumpMaxCount);
+        }
+
+        GetBehavior(MasterDataDefine.BehaviorID.JUMP).StartTick(nTick);
     }
 
     public void OnAttacked(int nAttackingEntityID, int nDamage, int nTick)
@@ -218,6 +262,11 @@ public class Character : IEntity
     public bool IsAlive()
     {
         return m_CurrentStatus.m_nHP > 0;
+    }
+
+    public bool IsJumpable()
+    {
+        return IsAlive() && !HasCoreState(CoreState.CoreState_Faint) &&  m_nJumpRemainCount > 0;
     }
 
     public float GetCurrentHeight()

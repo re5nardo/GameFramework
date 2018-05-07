@@ -508,7 +508,11 @@ public class BaeGameRoom : IGameRoom
 //                character.Initialize(player.EntityID, player.MasterDataID);
 
 //                character.Initialize(FBS.Data.EntityType.Character, player.EntityID, player.MasterDataID);
-                character.InitStatus(new CharacterStatus(player.Status));
+
+
+
+
+                character.InitStatus(new CharacterStatus());
                 m_dicEntity[player.EntityID] = character;
 
                 if (player.PlayerIndex == m_nUserPlayerIndex)
@@ -520,9 +524,9 @@ public class BaeGameRoom : IGameRoom
 
                     //m_SkillController.SetSkills(new List<int>(){0, 1, 2});
 
-                    m_lbHP.text = string.Format("x{0}", player.Status.HP);
-                    m_lbMP.text = string.Format("x{0}", player.Status.MP);
-                    m_lbMovePoint.text = string.Format("x{0}", player.Status.MovePoint);
+//                    m_lbHP.text = string.Format("x{0}", player.Status.HP);
+//                    m_lbMP.text = string.Format("x{0}", player.Status.MP);
+//                    m_lbMovePoint.text = string.Format("x{0}", player.Status.MovePoint);
                 }
             }
 

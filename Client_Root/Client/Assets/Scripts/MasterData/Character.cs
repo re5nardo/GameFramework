@@ -12,6 +12,8 @@ namespace MasterData
         public int m_nMP;
         public float m_fMaximumSpeed;
         public float m_fMPChargeRate;
+        public int m_nJumpCount;
+        public float m_fJumpRegenerationTime;
         public float m_fSize;
         public string m_strModelResName;
 
@@ -42,8 +44,10 @@ namespace MasterData
             Util.Convert(data[6], ref m_nMP);
             Util.Convert(data[7], ref m_fMaximumSpeed);
             Util.Convert(data[8], ref m_fMPChargeRate);
-            Util.Convert(data[9], ref m_fSize);
-            m_strModelResName = data[10];
+            Util.Convert(data[9], ref m_nJumpCount);
+            Util.Convert(data[10], ref m_fJumpRegenerationTime);
+            Util.Convert(data[11], ref m_fSize);
+            m_strModelResName = data[12];
         }
     }
 }

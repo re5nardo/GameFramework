@@ -17,12 +17,8 @@
 
 
 class IMessage;
-class CreateRoomToR;
 class EnterRoomToR;
 class PreparationStateToR;
-class GameInputSkillToR;
-class GameInputMoveToR;
-class GameInputRotationToR;
 class PlayerInputToR;
 class IPlayerInput;
 class GameResultToR;
@@ -49,7 +45,6 @@ private:
 	map<int, float>					m_mapPlayerIndexPreparationState;		//	key : PlayerIndex, value : PreparationState
 
 private:
-	map<int, list<pair<long long, IMessage*>>>	m_mapPlayerInput;		//	key : PlayerIndex, value : List<Time, Input Message>
 	list<IPlayerInput*> m_listPlayerInput;
 
 private:
@@ -78,9 +73,6 @@ private:
 	//	Protocol Handler
 	void OnEnterRoomToR(EnterRoomToR* pMsg, unsigned int socket);
 	void OnPreparationStateToR(PreparationStateToR* pMsg, unsigned int socket);
-	void OnGameInputSkillToR(GameInputSkillToR* pMsg, unsigned int socket);
-	void OnGameInputMoveToR(GameInputMoveToR* pMsg, unsigned int socket);
-	void OnGameInputRotationToR(GameInputRotationToR* pMsg, unsigned int socket);
 	void OnPlayerInputToR(PlayerInputToR* pMsg, unsigned int socket);
 	void OnGameResultToR(GameResultToR* pMsg, unsigned int socket);
 
@@ -99,10 +91,8 @@ public:
 private:
 	void Loop();
 	void ProcessInput();
-	void SendWorldInfo();
 	void SendTickInfo();
 
 private:
 	static unsigned int __stdcall LoopThreadStart(void* param);
 };
-
