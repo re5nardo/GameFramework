@@ -19,11 +19,8 @@ public class Character : IEntity
     protected CharacterStatus m_OriginalStatus;
     protected CharacterStatus m_CurrentStatus;
 
-    private int m_nJumpRemainCount;
-    private int m_nJumpMaxCount;
-    private float m_fJumpRegenerationTime;
-    private int m_nRegenerationTickInterval = 0;
-    private int m_nRegenerationTick = 0;
+    private int m_nJumpRegenerationTickInterval = 0;
+    private int m_nJumpRegenerationTick = 0;
 
     public float m_fSpeedPercent = 100;
 
@@ -44,6 +41,9 @@ public class Character : IEntity
         m_nID = nID;
         m_nMasterDataID = nMasterDataID;
         m_Role = (Role)param[0];
+		InitStatus((CharacterStatus)param[1]);
+
+		m_nJumpRegenerationTickInterval = (int)(m_CurrentStatus.m_fJumpRegenerationTime / BaeGameRoom2.Instance.GetTickInterval());
 
         MasterData.Character masterCharacter = null;
         MasterDataManager.Instance.GetData<MasterData.Character>(m_nMasterDataID, ref masterCharacter);
@@ -71,16 +71,6 @@ public class Character : IEntity
             behavior.Initialize(this, nBehaviorID, BaeGameRoom2.Instance.GetTickInterval());
 
             m_listBehavior.Add(behavior);
-        }
-
-        m_nJumpRemainCount = masterCharacter.m_nJumpCount;
-        m_nJumpMaxCount = masterCharacter.m_nJumpCount;
-        m_fJumpRegenerationTime = masterCharacter.m_fJumpRegenerationTime;
-        m_nRegenerationTickInterval = (int)(m_fJumpRegenerationTime / BaeGameRoom2.Instance.GetTickInterval());
-
-        if (BaeGameRoom2.Instance.GetUserEntityID() == m_nID)
-        {
-            BaeGameRoom2.Instance.OnUserJumpCountChanged(m_nJumpRemainCount, m_nJumpMaxCount);
         }
 
         GameObject goEntityUI = ObjectPool.Instance.GetGameObject("CharacterModel/EntityUI");
@@ -119,28 +109,27 @@ public class Character : IEntity
     {
         m_fBestHeight = Mathf.Max(m_fBestHeight, GetCurrentHeight());   //  Timing correct?
 
+		if (m_CurrentStatus.m_nJumpCount < m_CurrentStatus.m_nMaximumJumpCount)
+        {
+			m_nJumpRegenerationTick++;
+
+			if (m_nJumpRegenerationTick == m_nJumpRegenerationTickInterval)
+            {
+				m_CurrentStatus.m_nJumpCount++;
+				m_nJumpRegenerationTick = 0;
+            }
+        }
+        else
+        {
+			m_nJumpRegenerationTick = 0;
+        }
+
         if (HasCoreState(CoreState.CoreState_Faint))
             return;
 
         if (m_nDefaultBehaviorID != -1 && !IsBehavioring() && GetBehavior(m_nDefaultBehaviorID) != null && IsAlive())
         {
             GetBehavior(m_nDefaultBehaviorID).StartTick(nUpdateTick);
-        }
-
-        if (m_nJumpRemainCount < m_nJumpMaxCount)
-        {
-            m_nRegenerationTick++;
-
-            if (m_nRegenerationTick == m_nRegenerationTickInterval)
-            {
-                m_nJumpRemainCount++;
-                m_nRegenerationTick = 0;
-
-                if (BaeGameRoom2.Instance.GetUserEntityID() == m_nID)
-                {
-                    BaeGameRoom2.Instance.OnUserJumpCountChanged(m_nJumpRemainCount, m_nJumpMaxCount);
-                }
-            }
         }
     }
 
@@ -149,7 +138,7 @@ public class Character : IEntity
     //    public List<ISkill*> GetActivatedSkills();
     //    public bool IsSkilling();
 
-    public void InitStatus(CharacterStatus status)
+	private void InitStatus(CharacterStatus status)
     {
         m_OriginalStatus = status;
         m_CurrentStatus = status;
@@ -180,14 +169,22 @@ public class Character : IEntity
         m_CurrentStatus.m_fSpeed -= fValue;
     }
 
-    public void OnUseJump(int nTick)
+	public int GetJumpCount()
     {
-        m_nJumpRemainCount--;
+        return m_CurrentStatus.m_nJumpCount;
+    }
 
-        if (BaeGameRoom2.Instance.GetUserEntityID() == m_nID)
-        {
-            BaeGameRoom2.Instance.OnUserJumpCountChanged(m_nJumpRemainCount, m_nJumpMaxCount);
-        }
+	public int GetMaximumJumpCount()
+    {
+        return m_CurrentStatus.m_nMaximumJumpCount;
+    }
+
+    public void OnJump(int nTick)
+    {
+		if (!IsJumpable())
+            return;
+
+		m_CurrentStatus.m_nJumpCount--;
 
         GetBehavior(MasterDataDefine.BehaviorID.JUMP).StartTick(nTick);
     }
@@ -266,7 +263,7 @@ public class Character : IEntity
 
     public bool IsJumpable()
     {
-        return IsAlive() && !HasCoreState(CoreState.CoreState_Faint) &&  m_nJumpRemainCount > 0;
+		return IsAlive() && !HasCoreState(CoreState.CoreState_Faint) &&  m_CurrentStatus.m_nJumpCount > 0;
     }
 
     public float GetCurrentHeight()

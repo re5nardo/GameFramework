@@ -512,7 +512,7 @@ public class BaeGameRoom : IGameRoom
 
 
 
-                character.InitStatus(new CharacterStatus());
+//                character.InitStatus(new CharacterStatus());
                 m_dicEntity[player.EntityID] = character;
 
                 if (player.PlayerIndex == m_nUserPlayerIndex)

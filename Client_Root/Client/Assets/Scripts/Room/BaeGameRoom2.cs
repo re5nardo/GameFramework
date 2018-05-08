@@ -234,7 +234,6 @@ public class BaeGameRoom2 : IGameRoom
 				            mObj.Save();
 				        }
 
-						//  Copy values because m_dicEntity can be modified during iterating
 						foreach(IEntity entity in m_dicEntity.Values)
 				        {
 				            entity.Save();
@@ -284,10 +283,9 @@ public class BaeGameRoom2 : IGameRoom
 
                 LateUpdateWorld();
 
-                //  optional?
-                Draw();
-
                 Physics.Simulate(m_fTickInterval);
+
+                Draw();		//  optional?
 
                 if (m_nTick == m_nEndTick)
                 {
@@ -374,6 +372,8 @@ public class BaeGameRoom2 : IGameRoom
         m_lbInfo.text = string.Format("{0} / {1}\n현재 높이 : {2}m\n최고 높이 : {3}m", GetUserRank(), m_dicPlayerEntity.Count, (int)GetUserCharacter().GetCurrentHeight(), (int)GetUserCharacter().GetBestHeight());
 
         SetRemainTime((m_nEndTick - m_nTick) * m_fTickInterval);
+
+		SetJumpCount(GetUserCharacter().GetJumpCount(), GetUserCharacter().GetMaximumJumpCount());
     }
 
     private void ProcessInput()
@@ -403,7 +403,7 @@ public class BaeGameRoom2 : IGameRoom
                     if (!character.IsJumpable())
                         continue;
 
-                    character.OnUseJump(m_nTick);
+					character.OnJump(m_nTick);
                 }
                 else if (input.GetPlayerInputType() == FBS.PlayerInputType.GameItem)
                 {
@@ -608,8 +608,7 @@ public class BaeGameRoom2 : IGameRoom
         }
             
         character = Factory.Instance.CreateCharacter(nMasterDataID);
-        character.Initialize(nEntityID, nMasterDataID, role);
-        character.InitStatus(status);
+		character.Initialize(nEntityID, nMasterDataID, role, status);
 
         m_dicEntity[nEntityID] = character;
     }
@@ -714,6 +713,11 @@ public class BaeGameRoom2 : IGameRoom
 
         m_lbTime.text = string.Format("{0}:{1:000}", sec, milliSec);
     }
+
+	private void SetJumpCount(int nRemain, int nMax)
+    {
+		m_lbNotice.text = string.Format("Jump Count {0} / {1}", nRemain, nMax);
+    }
 #endregion
 
 #region Network Message Handler
@@ -749,7 +753,13 @@ public class BaeGameRoom2 : IGameRoom
             {
                 int nEntityID = 0;
                 Character character = null;
-                CreateCharacter(player.MasterDataID, ref nEntityID, ref character, Character.Role.Challenger, new CharacterStatus(), player.PlayerIndex == m_nUserPlayerIndex);
+
+				MasterData.Character masterCharacter = null;
+				MasterDataManager.Instance.GetData<MasterData.Character>(player.MasterDataID, ref masterCharacter);
+
+				CharacterStatus status = new CharacterStatus(masterCharacter.m_nHP, masterCharacter.m_nHP, masterCharacter.m_nMP, masterCharacter.m_nMP, masterCharacter.m_fMaximumSpeed, masterCharacter.m_fMaximumSpeed, masterCharacter.m_fMPChargeRate, masterCharacter.m_nJumpCount, masterCharacter.m_nJumpCount, masterCharacter.m_fJumpRegenerationTime, 0);
+
+				CreateCharacter(player.MasterDataID, ref nEntityID, ref character, Character.Role.Challenger, status, player.PlayerIndex == m_nUserPlayerIndex);
 
                 m_dicPlayerEntity[player.PlayerIndex] = nEntityID;
                 m_dicEntityPlayer[nEntityID] = player.PlayerIndex;
@@ -944,11 +954,6 @@ public class BaeGameRoom2 : IGameRoom
         {
             m_GameItemButtons[i].SetData(gameItems[i]);
         }
-    }
-
-    public void OnUserJumpCountChanged(int nRemain, int nMax)
-    {
-        m_lbNotice.text = string.Format("Jump Count {0} / {1}", nRemain, nMax);
     }
 #endregion
 }
