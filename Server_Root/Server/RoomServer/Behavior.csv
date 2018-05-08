@@ -1,7 +1,7 @@
 ID,Name,ClassName,Length,StringParams,AnimationName,Actions
 0,Idle,Idle,-1,,Idle,
 1,Move,Move,-1,,Move,
-2,Die,Die,10,,Die,
+2,Die,Die,7,,Die,
 3,Rotation,Rotation,-1,,,
 4,Jump,Jump,-1,,,
 5,Meteor,Cast,1.4,,Cast,Cast:0.2:0

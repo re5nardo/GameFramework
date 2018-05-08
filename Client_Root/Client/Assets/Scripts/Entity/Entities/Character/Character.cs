@@ -209,22 +209,13 @@ public class Character : IEntity
             dieBehavior.StartTick(nTick);
             dieBehavior.UpdateTick(nTick);
 
-            //  Faint state
-            IState state = Factory.Instance.CreateState(MasterDataDefine.StateID.FAINT);
-            state.Initialize(this, MasterDataDefine.StateID.FAINT, BaeGameRoom2.Instance.GetTickInterval());
-
-            AddState(state, nTick);
-
-            state.StartTick(nTick);
-            state.UpdateTick(nTick);
-
             BaeGameRoom2.Instance.OnPlayerDie(m_nID, nAttackingEntityID);
         }
     }
 
     public void OnRespawn(int nTick)
     {
-        m_CurrentStatus.m_nHP = m_OriginalStatus.m_nHP;
+        m_CurrentStatus.m_nHP = m_CurrentStatus.m_nMaximumHP;
 
         IState state = Factory.Instance.CreateState(MasterDataDefine.StateID.RESPAWN_INVINCIBLE);
         state.Initialize(this, MasterDataDefine.StateID.RESPAWN_INVINCIBLE, BaeGameRoom2.Instance.GetTickInterval());
