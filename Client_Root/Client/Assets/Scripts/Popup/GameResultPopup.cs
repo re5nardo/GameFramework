@@ -5,8 +5,8 @@ using UnityEngine.SceneManagement;
 
 public class GameResultPopup : PopupBase
 {
-    [SerializeField] UILabel[] m_RankInfos = null;
-    [SerializeField] BasicButton m_BtnGoToLobby = null;
+	[SerializeField] private UILabel[] m_RankInfos = null;
+	[SerializeField] private BasicButton m_BtnGoToLobby = null;
 
     private void Awake()
     {
