@@ -12,9 +12,9 @@ public class CameraController : MonoBehaviour
     [SerializeField] private UIToggle m_toggleFollowTarget = null;
 
     [Header("[Default Value]")]
-    [SerializeField] private float m_fDefaultRotation_Y = 0;
-    [SerializeField] private float m_fDefaultRotation_X = 45;
-    [SerializeField] private float m_fDefaultZoomValue = 5;
+	[SerializeField] private float m_fDefaultRotation_Y = 0;
+    [SerializeField] private float m_fDefaultRotation_X = 10;
+    [SerializeField] private float m_fDefaultZoomValue = -30;
     [SerializeField] private float m_fDefaultMoveSensitivity = 1;
     [SerializeField] private float m_fDefaultRotationSensitivity = 1;
 

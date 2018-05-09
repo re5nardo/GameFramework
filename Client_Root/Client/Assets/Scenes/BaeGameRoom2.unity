@@ -617,8 +617,8 @@ MonoBehaviour:
   m_DirectionKey: {fileID: 1609242141}
   m_toggleFollowTarget: {fileID: 1130292235}
   m_fDefaultRotation_Y: 0
-  m_fDefaultRotation_X: 45
-  m_fDefaultZoomValue: 5
+  m_fDefaultRotation_X: 10
+  m_fDefaultZoomValue: -30
   m_fDefaultMoveSensitivity: 1
   m_fDefaultRotationSensitivity: 1
 --- !u!4 &204341072
