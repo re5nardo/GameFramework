@@ -174,7 +174,7 @@ public class BaeGameRoom2 : IGameRoom
     //  should save client.version to meta file ( for checking compatibility)
     private IEnumerator Loop()
     {
-        for (int i = 0; i < 100; ++i)
+        for (int i = 0; i < 150; ++i)
         {
             MovingObject movingObject = ObjectPool.Instance.GetGameObject("MovingObject").GetComponent<MovingObject>();
 
@@ -372,8 +372,6 @@ public class BaeGameRoom2 : IGameRoom
         m_lbInfo.text = string.Format("{0} / {1}\n현재 높이 : {2}m\n최고 높이 : {3}m", GetUserRank(), m_dicPlayerEntity.Count, (int)GetUserCharacter().GetCurrentHeight(), (int)GetUserCharacter().GetBestHeight());
 
         SetRemainTime((m_nEndTick - m_nTick) * m_fTickInterval);
-
-		SetJumpCount(GetUserCharacter().GetJumpCount(), GetUserCharacter().GetMaximumJumpCount());
     }
 
     private void ProcessInput()
@@ -566,6 +564,14 @@ public class BaeGameRoom2 : IGameRoom
         return (Character)m_dicEntity[nID];
     }
 
+	public IEntity GetEntity(int nID)
+    {
+        if (!m_dicEntity.ContainsKey(nID))
+            return null;
+
+        return m_dicEntity[nID];
+    }
+
 	public List<Character> GetAllCharacters()
     {
 		List<Character> listCharacter = new List<Character>();
@@ -608,9 +614,10 @@ public class BaeGameRoom2 : IGameRoom
         }
             
         character = Factory.Instance.CreateCharacter(nMasterDataID);
-		character.Initialize(nEntityID, nMasterDataID, role, status);
 
-        m_dicEntity[nEntityID] = character;
+		m_dicEntity[nEntityID] = character;
+
+		character.Initialize(nEntityID, nMasterDataID, role, status);
     }
 
     public void CreateProjectile(int nMasterDataID, ref int nEntityID, ref Projectile projectile, int nCreatorID)
@@ -712,11 +719,6 @@ public class BaeGameRoom2 : IGameRoom
         int milliSec = (int)((fRemainTime - sec) * 1000);
 
         m_lbTime.text = string.Format("{0}:{1:000}", sec, milliSec);
-    }
-
-	private void SetJumpCount(int nRemain, int nMax)
-    {
-		m_lbNotice.text = string.Format("Jump Count {0} / {1}", nRemain, nMax);
     }
 #endregion
 

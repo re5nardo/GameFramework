@@ -7,6 +7,7 @@ public class EntityUI : PooledComponent
     private GameObject m_goModel = null;
     private Animation m_animModel = null;
     private GameObject m_goNicknameUI = null;
+	private GameObject m_goJumpGaugeUI = null;
 
     private Transform m_trModel = null;
 	private Rigidbody m_ModelRigidbody = null;
@@ -58,6 +59,12 @@ public class EntityUI : PooledComponent
 
         m_goNicknameUI = ObjectPool.Instance.GetGameObject("UI/NicknameUI");
         m_goNicknameUI.GetComponent<NicknameUI>().SetData(m_goModel.transform, "Entity" + nID.ToString(), BaeGameRoom2.Instance.GetUserEntityID() == nID ? Color.green : Color.blue);
+
+		if(BaeGameRoom2.Instance.GetUserEntityID() == nID)
+		{
+			m_goJumpGaugeUI = ObjectPool.Instance.GetGameObject("UI/JumpGaugeUI");
+			m_goJumpGaugeUI.GetComponent<JumpGaugeUI>().SetData(BaeGameRoom2.Instance.GetCharacter(nID), new Vector3(0, -13, 0));
+		}
     }
 
     public float GetAnimationClipLegth(string strClipName)
@@ -161,6 +168,18 @@ public class EntityUI : PooledComponent
         {
             ObjectPool.Instance.ReturnGameObject(m_goModel);
             m_goModel = null;
+        }
+
+		if (m_goNicknameUI != null)
+        {
+			ObjectPool.Instance.ReturnGameObject(m_goNicknameUI);
+			m_goNicknameUI = null;
+        }
+
+		if (m_goJumpGaugeUI != null)
+        {
+			ObjectPool.Instance.ReturnGameObject(m_goJumpGaugeUI);
+			m_goJumpGaugeUI = null;
         }
     }
 

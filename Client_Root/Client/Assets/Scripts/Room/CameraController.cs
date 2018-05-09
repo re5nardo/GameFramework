@@ -133,7 +133,9 @@ public class CameraController : MonoBehaviour
     private void LateUpdate()
     {
         if(m_bFollow)
-            m_trCameraController.position = m_trTarget.position;
+        {
+			m_trCameraController.position = new Vector3(0, m_trTarget.position.y, 0);
+        }
     }
 #endregion
 
