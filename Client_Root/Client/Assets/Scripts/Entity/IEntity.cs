@@ -130,9 +130,9 @@ public abstract class IEntity : PooledComponent
         return m_listState;
     }
 
-    public void AddState(IState pState, int nTick)
+    public void AddState(IState state, int nTick)
     {
-        m_listState.Add(pState);
+		m_listState.Add(state);
     }
 
     public void RemoveState(int nMasterDataID, int nTick)

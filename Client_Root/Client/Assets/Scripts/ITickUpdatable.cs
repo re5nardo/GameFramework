@@ -18,10 +18,16 @@ public abstract class ITickUpdatable
 		}
 		else
 		{
-			UpdateBody(nUpdateTick);
+			m_nLastUpdateTick = nUpdateTick;
 
-        	m_nLastUpdateTick = nUpdateTick;
+			UpdateBody(nUpdateTick);
     	}
+    }
+
+    protected void ClearTick()
+    {
+		m_nLastUpdateTick = -1;
+    	m_bPredictPlay = false;
     }
 
     protected abstract void UpdateBody(int nUpdateTick);

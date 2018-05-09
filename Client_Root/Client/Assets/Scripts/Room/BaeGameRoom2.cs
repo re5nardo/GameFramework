@@ -200,6 +200,8 @@ public class BaeGameRoom2 : IGameRoom
 				//	Stop predict mode
 				if(m_nPredictStartTick <= m_nServerTick)
 				{
+					Debug.LogWarning("[Normal Mode] m_nTick : " + m_nTick);
+
 					m_bPredictMode = false;
 					m_nTick = m_nPredictStartTick;
 
@@ -224,6 +226,8 @@ public class BaeGameRoom2 : IGameRoom
 					//	Start predict mode
 					if((System.DateTime.Now -  m_LastProcessTime).TotalMilliseconds > m_fTickInterval * 1000 + LATENCY_DEVIATION_LIMIT)
 					{
+						Debug.LogWarning("[Predict Mode] m_nTick : " + m_nTick);
+
 						m_bPredictMode = true;
 						m_nPredictStartTick = m_nTick;
 						m_PredictStartTime = System.DateTime.Now;

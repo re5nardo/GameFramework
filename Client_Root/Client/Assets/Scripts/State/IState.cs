@@ -68,5 +68,6 @@ public abstract class IState : ITickUpdatable, IPooledObject
 
     public virtual void OnReturned()
     {
+		ClearTick();
     }
 };
