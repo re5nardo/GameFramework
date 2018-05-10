@@ -115,8 +115,6 @@ public class EntityUI : PooledComponent
 		m_ModelRigidbody.velocity = new Vector3(m_ModelRigidbody.velocity.x, 0, m_ModelRigidbody.velocity.z);
 
 		m_ModelRigidbody.AddForce(m_ModelRigidbody.mass * -Physics.gravity * 1.2f, ForceMode.Impulse);
-
-//		m_ModelRigidbody.AddForce(m_ModelRigidbody.mass * vec3Force, ForceMode.Force);
     }
 
     public bool IsGrounded()
