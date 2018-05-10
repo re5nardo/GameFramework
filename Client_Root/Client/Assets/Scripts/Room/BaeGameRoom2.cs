@@ -112,7 +112,7 @@ public class BaeGameRoom2 : IGameRoom
 //        Application.targetFrameRate = 30;
 
         m_vec3OldGravity = Physics.gravity;
-        Physics.gravity *= 2;
+        Physics.gravity *= 4;
 
         m_RotationController.onHold += OnRotationControllerHold;
 
@@ -174,7 +174,7 @@ public class BaeGameRoom2 : IGameRoom
     //  should save client.version to meta file ( for checking compatibility)
     private IEnumerator Loop()
     {
-        for (int i = 0; i < 150; ++i)
+        for (int i = 0; i < 200; ++i)
         {
             MovingObject movingObject = ObjectPool.Instance.GetGameObject("MovingObject").GetComponent<MovingObject>();
 
@@ -291,7 +291,7 @@ public class BaeGameRoom2 : IGameRoom
 
                 Draw();		//  optional?
 
-                if (m_nTick == m_nEndTick)
+				if (m_nTick == m_nEndTick && !m_bPredictMode)
                 {
                     GameResultToR resultToR = ObjectPool.Instance.GetObject<GameResultToR>();
                     resultToR.m_listPlayerRankInfo = GetPlayerRankInfos();

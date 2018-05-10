@@ -23,11 +23,19 @@ public class MovingObject : IMonoTickUpdatable
     {
         m_trMine = transform;
 
-        m_trMine.localScale = new Vector3(Random.Range(1, 10), Random.Range(1, 4), Random.Range(1, 10));
+        m_trMine.localScale = new Vector3(Random.Range(2, 4), Random.Range(2, 3), Random.Range(2, 3));
 
-        m_vec3Start = new Vector3(Random.Range(40, 45), Random.Range(20, 1000), 0);
+        m_vec3Start = new Vector3(Random.Range(35, 36), Random.Range(20, 1000), 0);
         m_vec3End = new Vector3(-m_vec3Start.x, m_vec3Start.y, m_vec3Start.z);
-        m_fSpeed = Random.Range(10, 40);
+
+		if(Random.Range(0, 2) == 0)
+		{
+			Vector3 temp = m_vec3Start;
+			m_vec3Start = m_vec3End;
+			m_vec3End = temp;
+		}
+
+        m_fSpeed = Random.Range(10, 25);
         m_fInitValue = Random.Range(0f, 1f);
 
         m_fExpectedTime = (m_vec3End - m_vec3Start).magnitude / m_fSpeed;

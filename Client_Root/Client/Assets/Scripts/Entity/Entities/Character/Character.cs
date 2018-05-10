@@ -124,6 +124,12 @@ public class Character : IEntity
 			m_nJumpRegenerationTick = 0;
         }
 
+		Vector3 vec3Velocity = GetVelocity();
+		if(vec3Velocity.y < -20)
+        {
+			SetVelocity(new Vector3(vec3Velocity.x, -20, vec3Velocity.z));
+        }
+
         if (HasCoreState(CoreState.CoreState_Faint))
             return;
 

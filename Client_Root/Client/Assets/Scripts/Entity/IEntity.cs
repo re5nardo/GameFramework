@@ -67,12 +67,22 @@ public abstract class IEntity : PooledComponent
 
     public void Jump()
     {
-        m_EntityUI.Jump();
+		m_EntityUI.Jump();
     }
 
     public bool IsGrounded()
     {
         return m_EntityUI.IsGrounded();
+    }
+
+	public Vector3 GetVelocity()
+    {
+        return m_EntityUI.GetVelocity();
+    }
+
+	public void SetVelocity(Vector3 vec3Velocity)
+    {
+		m_EntityUI.SetVelocity(vec3Velocity);
     }
 
     public Vector3 GetPosition()

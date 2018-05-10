@@ -110,9 +110,13 @@ public class EntityUI : PooledComponent
         m_ModelRigidbody.MovePosition(m_ModelRigidbody.position + move);
     }
 
-    public void Jump()
+	public void Jump()
     {
-		m_ModelRigidbody.AddForce(m_ModelRigidbody.mass * -Physics.gravity * 0.6f, ForceMode.Impulse);
+		m_ModelRigidbody.velocity = new Vector3(m_ModelRigidbody.velocity.x, 0, m_ModelRigidbody.velocity.z);
+
+		m_ModelRigidbody.AddForce(m_ModelRigidbody.mass * -Physics.gravity * 1.2f, ForceMode.Impulse);
+
+//		m_ModelRigidbody.AddForce(m_ModelRigidbody.mass * vec3Force, ForceMode.Force);
     }
 
     public bool IsGrounded()
@@ -120,6 +124,16 @@ public class EntityUI : PooledComponent
         return true;
 
 //        return m_CharacterController.isGrounded;
+    }
+
+	public Vector3 GetVelocity()
+    {
+		return m_ModelRigidbody.velocity;
+    }
+
+	public void SetVelocity(Vector3 vec3Velocity)
+    {
+		m_ModelRigidbody.velocity = vec3Velocity;
     }
 
     public Vector3 GetPosition()
