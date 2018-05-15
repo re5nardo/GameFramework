@@ -43,7 +43,7 @@ public class Character : IEntity
         m_Role = (Role)param[0];
 		InitStatus((CharacterStatus)param[1]);
 
-		m_nJumpRegenerationTickInterval = (int)(m_CurrentStatus.m_fJumpRegenerationTime / BaeGameRoom2.Instance.GetTickInterval());
+		m_nJumpRegenerationTickInterval = (int)(m_CurrentStatus.m_fJumpRegenerationTime / IGameRoom.Instance.GetTickInterval());
 
         MasterData.Character masterCharacter = null;
         MasterDataManager.Instance.GetData<MasterData.Character>(m_nMasterDataID, ref masterCharacter);
@@ -68,7 +68,7 @@ public class Character : IEntity
                 continue;
             }
 
-            behavior.Initialize(this, nBehaviorID, BaeGameRoom2.Instance.GetTickInterval());
+			behavior.Initialize(this, nBehaviorID, IGameRoom.Instance.GetTickInterval());
 
             m_listBehavior.Add(behavior);
         }
@@ -215,7 +215,7 @@ public class Character : IEntity
             dieBehavior.StartTick(nTick);
             dieBehavior.UpdateTick(nTick);
 
-            BaeGameRoom2.Instance.OnPlayerDie(m_nID, nAttackingEntityID);
+			IGameRoom.Instance.OnPlayerDie(m_nID, nAttackingEntityID);
         }
     }
 
@@ -224,14 +224,14 @@ public class Character : IEntity
         m_CurrentStatus.m_nHP = m_CurrentStatus.m_nMaximumHP;
 
         IState state = Factory.Instance.CreateState(MasterDataDefine.StateID.RESPAWN_INVINCIBLE);
-        state.Initialize(this, MasterDataDefine.StateID.RESPAWN_INVINCIBLE, BaeGameRoom2.Instance.GetTickInterval());
+		state.Initialize(this, MasterDataDefine.StateID.RESPAWN_INVINCIBLE, IGameRoom.Instance.GetTickInterval());
 
         AddState(state, nTick);
 
         state.StartTick(nTick);
         state.UpdateTick(nTick);
 
-        BaeGameRoom2.Instance.OnPlayerRespawn(m_nID);
+		IGameRoom.Instance.OnPlayerRespawn(m_nID);
     }
 
     public void OnMoved(float fDistance, long lTime)
@@ -281,9 +281,9 @@ public class Character : IEntity
             {
                 m_GameItems[i] = item;
 
-                if (BaeGameRoom2.Instance.GetUserEntityID() == m_nID)
+				if (IGameRoom.Instance.GetUserEntityID() == m_nID)
                 {
-                    BaeGameRoom2.Instance.OnUserGameItemChanged(m_GameItems);
+					IGameRoom.Instance.OnUserGameItemChanged(m_GameItems);
                 }
 
                 return;
@@ -310,9 +310,9 @@ public class Character : IEntity
             return;
         }
 
-        if (BaeGameRoom2.Instance.GetUserEntityID() == m_nID)
+		if (IGameRoom.Instance.GetUserEntityID() == m_nID)
         {
-            BaeGameRoom2.Instance.OnUserGameItemChanged(m_GameItems);
+			IGameRoom.Instance.OnUserGameItemChanged(m_GameItems);
         }
 
         int nGameItemEffectID = m_dicGameItemEffect[target.GetMasterDataID()];
@@ -323,8 +323,8 @@ public class Character : IEntity
         if (masterGameItemEffect.m_Type == MasterData.GameItemEffect.Type.Behavior)
         {
             IBehavior targetBehavior = GetBehavior(masterGameItemEffect.m_nTargetID);
-            targetBehavior.StartTick(BaeGameRoom2.Instance.GetCurrentTick());
-            targetBehavior.UpdateTick(BaeGameRoom2.Instance.GetCurrentTick());
+			targetBehavior.StartTick(IGameRoom.Instance.GetCurrentTick());
+			targetBehavior.UpdateTick(IGameRoom.Instance.GetCurrentTick());
         }
     }
 }

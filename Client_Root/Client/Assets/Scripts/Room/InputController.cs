@@ -11,14 +11,14 @@ public class InputController : MonoBehaviour
 #region Event Handler
     public void OnPressed()
     {
-        m_nPressedTick = BaeGameRoom2.Instance.GetCurrentTick();
+		m_nPressedTick = IGameRoom.Instance.GetCurrentTick();
     }
 
     public void OnReleased()
     {
-        int nCurrentTick = BaeGameRoom2.Instance.GetCurrentTick();
+		int nCurrentTick = IGameRoom.Instance.GetCurrentTick();
 
-        float fPressedTime = (nCurrentTick - m_nPressedTick) * BaeGameRoom2.Instance.GetTickInterval();
+		float fPressedTime = (nCurrentTick - m_nPressedTick) * IGameRoom.Instance.GetTickInterval();
 
         if (onReleased != null)
         {

@@ -83,7 +83,7 @@ public abstract class IBehavior : ITickUpdatable
 
     public void OnCollision(IEntity pOther, long lTime)
     {
-		if(BaeGameRoom2.Instance.IsPredictMode())
+		if(IGameRoom.Instance.IsPredictMode())
     		return;
     }
 }

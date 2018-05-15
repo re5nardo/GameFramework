@@ -24,7 +24,10 @@ public abstract class IGameRoom : MonoSingleton<IGameRoom>
     protected System.DateTime m_StartTime = System.DateTime.Now;
 	protected System.DateTime m_LastProcessTime = System.DateTime.Now;
 
+	protected bool m_bPredictMode = false;
+
 #region Game Logic
+	public abstract GameType GetGameType();
     protected abstract void Init();
 	protected abstract void Clear();
 	protected abstract IEnumerator PrepareGame();
@@ -32,7 +35,6 @@ public abstract class IGameRoom : MonoSingleton<IGameRoom>
 	protected abstract void PreProcess();
 	protected abstract bool ShouldWaitForProcess();
 	protected abstract int GetCountToProcess();
-	protected abstract bool IsGameEnd();
 	protected abstract void OnGameEnd();
 
 	protected void StartGame()
@@ -172,6 +174,11 @@ public abstract class IGameRoom : MonoSingleton<IGameRoom>
         }
     }
 
+	protected virtual bool IsGameEnd()
+	{
+		return m_nTick == m_nEndTick && !m_bPredictMode;
+	}
+
     protected virtual void ResetGame()
     {
         m_nUserPlayerIndex = -1;
@@ -244,6 +251,11 @@ public abstract class IGameRoom : MonoSingleton<IGameRoom>
     {
         return m_fTickInterval;
     }
+
+	public bool IsPredictMode()
+	{
+		return m_bPredictMode;
+	}
 
     public void CreateCharacter(int nMasterDataID, ref int nEntityID, ref Character character, Character.Role role, CharacterStatus status, bool bUser)
     {

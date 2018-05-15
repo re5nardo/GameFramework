@@ -25,10 +25,10 @@ namespace Magic
         {
             if (m_nStartTick == nUpdateTick)
             {
-                Character caster = BaeGameRoom2.Instance.GetCharacter(m_nCasterID);
+				Character caster = IGameRoom.Instance.GetCharacter(m_nCasterID);
 
                 IState state = Factory.Instance.CreateState(MasterDataDefine.StateID.BOOST);
-                state.Initialize(caster, MasterDataDefine.StateID.BOOST, BaeGameRoom2.Instance.GetTickInterval());
+				state.Initialize(caster, MasterDataDefine.StateID.BOOST, IGameRoom.Instance.GetTickInterval());
 
                 caster.AddState(state, nUpdateTick);
 
@@ -38,7 +38,7 @@ namespace Magic
 
             if (m_nEndTick != -1 && nUpdateTick == m_nEndTick)
             {
-                BaeGameRoom2.Instance.DestroyMagic(this);
+				IGameRoom.Instance.DestroyMagic(this);
             }
         }
     }

@@ -42,13 +42,13 @@ namespace MagicObject
                     m_ModelRigidbody = null;
                 }
 
-                BaeGameRoom2.Instance.DestroyMagicObject(this);
+				IGameRoom.Instance.DestroyMagicObject(this);
             }
         }
 
         private void OnCollisionEnter(Collision collisionInfo)
         {
-			if(BaeGameRoom2.Instance.IsPredictMode())
+			if(IGameRoom.Instance.IsPredictMode())
     			return;
 
             if (collisionInfo.gameObject.layer == GameObjectLayer.CHARACTER)
@@ -58,13 +58,13 @@ namespace MagicObject
                 if (!character.IsAlive() || character.HasCoreState(CoreState.CoreState_Invincible) || character.GetID() == m_nCasterID)
                     return;
 
-                character.OnAttacked(m_nCasterID, 1, BaeGameRoom2.Instance.GetCurrentTick());
+				character.OnAttacked(m_nCasterID, 1, IGameRoom.Instance.GetCurrentTick());
             }
         }
 
         private void OnTriggerEnter(Collider colliderInfo)
         {
-			if(BaeGameRoom2.Instance.IsPredictMode())
+			if(IGameRoom.Instance.IsPredictMode())
     			return;
 
             if (colliderInfo.gameObject.layer == GameObjectLayer.CHARACTER)
@@ -74,7 +74,7 @@ namespace MagicObject
                 if (!character.IsAlive() || character.HasCoreState(CoreState.CoreState_Invincible) || character.GetID() == m_nCasterID)
                     return;
 
-                character.OnAttacked(m_nCasterID, 1, BaeGameRoom2.Instance.GetCurrentTick());
+				character.OnAttacked(m_nCasterID, 1, IGameRoom.Instance.GetCurrentTick());
             }
         }
     }

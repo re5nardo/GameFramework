@@ -9,7 +9,7 @@ public abstract class ITickUpdatable
         if (m_nLastUpdateTick >= nUpdateTick)
             return;
         
-		if(BaeGameRoom2.Instance.IsPredictMode())
+		if(IGameRoom.Instance.IsPredictMode())
 		{
 			if(m_bPredictPlay)
 			{

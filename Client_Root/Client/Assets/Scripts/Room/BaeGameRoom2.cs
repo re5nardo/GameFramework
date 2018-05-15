@@ -42,7 +42,6 @@ public class BaeGameRoom2 : IGameRoom
 
     private List<Character> m_listPlayerCharacter = new List<Character>();
 
-	private bool m_bPredictMode = false;
 	private int m_nPredictStartTick = 0;
 	private System.DateTime m_PredictStartTime = System.DateTime.Now;
 
@@ -219,6 +218,11 @@ public class BaeGameRoom2 : IGameRoom
         return nCount + 1;
     }
 
+	public override GameType GetGameType()
+	{
+		return GameType.GameType_Multi;
+	}
+
 	protected override void PreProcess()
     {
     }
@@ -368,11 +372,6 @@ public class BaeGameRoom2 : IGameRoom
 		return nCountToProcess;
 	}
 
-	protected override bool IsGameEnd()
-	{
-		return m_nTick == m_nEndTick && !m_bPredictMode;
-	}
-
 	protected override void OnGameEnd()
 	{
 		GameResultToR resultToR = ObjectPool.Instance.GetObject<GameResultToR>();
@@ -381,11 +380,6 @@ public class BaeGameRoom2 : IGameRoom
         RoomNetwork.Instance.Send(resultToR);
 
 //		ObjectPool.Instance.ReturnObject(resultToR);
-	}
-
-	public bool IsPredictMode()
-	{
-		return m_bPredictMode;
 	}
 
     public int GetJustHigherRankPlayerEntityID(int nEntityID)

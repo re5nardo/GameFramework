@@ -35,15 +35,22 @@ namespace Behavior
 
                         int nEntityID = 0;
                         IMagic magic = null;
-                        BaeGameRoom2.Instance.CreateMagic(nMagicID, ref nEntityID, ref magic, m_Entity.GetID());
+						IGameRoom.Instance.CreateMagic(nMagicID, ref nEntityID, ref magic, m_Entity.GetID());
 
-                        if (magic.GetTargetType() == Magic.TargetType.JustHigher)
+						if (magic.GetTargetType() == Magic.TargetType.JustHigher)
                         {
-                            int nTargetID = BaeGameRoom2.Instance.GetJustHigherRankPlayerEntityID(m_Entity.GetID());
+							if(IGameRoom.Instance.GetGameType() != GameType.GameType_Multi)
+							{
+								IGameRoom.Instance.DestroyMagic(magic);
+                                return;
+                            }
+
+							//	BaeGameRoom2 is multi game base class
+							int nTargetID = BaeGameRoom2.Instance.GetJustHigherRankPlayerEntityID(m_Entity.GetID());
 
                             if (nTargetID == -1)
                             {
-                                BaeGameRoom2.Instance.DestroyMagic(magic);
+								IGameRoom.Instance.DestroyMagic(magic);
                                 return;
                             }
                             

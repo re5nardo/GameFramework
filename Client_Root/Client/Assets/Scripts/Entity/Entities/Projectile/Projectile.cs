@@ -32,7 +32,7 @@ public class Projectile : IEntity
                 continue;
             }
 
-            behavior.Initialize(this, nBehaviorID, BaeGameRoom2.Instance.GetTickInterval());
+			behavior.Initialize(this, nBehaviorID, IGameRoom.Instance.GetTickInterval());
 
             m_listBehavior.Add(behavior);
         }

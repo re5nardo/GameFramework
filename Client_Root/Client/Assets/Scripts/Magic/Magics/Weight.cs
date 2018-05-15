@@ -36,11 +36,11 @@ namespace Magic
 
                         int nEntityID = 0;
                         IMagicObject magicObject = null;
-                        BaeGameRoom2.Instance.CreateMagicObject(nMagicObjectID, ref nEntityID, ref magicObject, m_nCasterID, m_nID);
+						IGameRoom.Instance.CreateMagicObject(nMagicObjectID, ref nEntityID, ref magicObject, m_nCasterID, m_nID);
 
 						Vector3 vec3Offset = new Vector3(float.Parse(action.m_listParams[1]), float.Parse(action.m_listParams[2]), float.Parse(action.m_listParams[3]));
 
-                        Character caster = BaeGameRoom2.Instance.GetCharacter(m_nCasterID);
+						Character caster = IGameRoom.Instance.GetCharacter(m_nCasterID);
 
                         Rigidbody rigidbody = magicObject.GetRigidbody();
                         rigidbody.isKinematic = true;
@@ -61,7 +61,7 @@ namespace Magic
 
             if (m_nEndTick != -1 && nUpdateTick == m_nEndTick)
             {
-                BaeGameRoom2.Instance.DestroyMagic(this);
+				IGameRoom.Instance.DestroyMagic(this);
             }
         }
     }

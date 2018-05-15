@@ -55,15 +55,15 @@ public class EntityUI : PooledComponent
         m_trModel = m_goModel.transform;
         m_ModelRigidbody = m_goModel.GetComponent<Rigidbody>();
         m_TickBasedAnimationPlayer = m_goModel.GetComponent<TickBasedAnimationPlayer>();
-        m_TickBasedAnimationPlayer.SetTickInterval(BaeGameRoom2.Instance.GetTickInterval());
+		m_TickBasedAnimationPlayer.SetTickInterval(IGameRoom.Instance.GetTickInterval());
 
         m_goNicknameUI = ObjectPool.Instance.GetGameObject("UI/NicknameUI");
-        m_goNicknameUI.GetComponent<NicknameUI>().SetData(m_goModel.transform, "Entity" + nID.ToString(), BaeGameRoom2.Instance.GetUserEntityID() == nID ? Color.green : Color.blue);
+		m_goNicknameUI.GetComponent<NicknameUI>().SetData(m_goModel.transform, "Entity" + nID.ToString(), IGameRoom.Instance.GetUserEntityID() == nID ? Color.green : Color.blue);
 
-		if(BaeGameRoom2.Instance.GetUserEntityID() == nID)
+		if(IGameRoom.Instance.GetUserEntityID() == nID)
 		{
 			m_goJumpGaugeUI = ObjectPool.Instance.GetGameObject("UI/JumpGaugeUI");
-			m_goJumpGaugeUI.GetComponent<JumpGaugeUI>().SetData(BaeGameRoom2.Instance.GetCharacter(nID), new Vector3(0, -13, 0));
+			m_goJumpGaugeUI.GetComponent<JumpGaugeUI>().SetData(IGameRoom.Instance.GetCharacter(nID), new Vector3(0, -13, 0));
 		}
     }
 

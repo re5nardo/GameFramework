@@ -39,7 +39,7 @@ public class MovingObject : IMonoTickUpdatable
         m_fInitValue = Random.Range(0f, 1f);
 
         m_fExpectedTime = (m_vec3End - m_vec3Start).magnitude / m_fSpeed;
-        m_fTickInterval = BaeGameRoom2.Instance.GetTickInterval();
+		m_fTickInterval = IGameRoom.Instance.GetTickInterval();
 
 		m_bPredictPlay = true;
     }
@@ -60,7 +60,7 @@ public class MovingObject : IMonoTickUpdatable
 
     private void OnCollisionEnter(Collision collisionInfo)
     {
-		if(BaeGameRoom2.Instance.IsPredictMode())
+		if(IGameRoom.Instance.IsPredictMode())
     		return;
 
         if (collisionInfo.gameObject.layer == GameObjectLayer.CHARACTER)
@@ -72,13 +72,13 @@ public class MovingObject : IMonoTickUpdatable
 
 //            BaeGameRoom2.Instance.EntityAttack(-1, character.GetID(), 1);
 
-            character.OnAttacked(-1, 1, BaeGameRoom2.Instance.GetCurrentTick());
+			character.OnAttacked(-1, 1, IGameRoom.Instance.GetCurrentTick());
         }
     }
 
     private void OnTriggerEnter(Collider colliderInfo)
     {
-		if(BaeGameRoom2.Instance.IsPredictMode())
+		if(IGameRoom.Instance.IsPredictMode())
     		return;
 
         if (colliderInfo.gameObject.layer == GameObjectLayer.CHARACTER)
@@ -90,7 +90,7 @@ public class MovingObject : IMonoTickUpdatable
 
 //            BaeGameRoom2.Instance.EntityAttack(-1, character.GetID(), 1);
 
-            character.OnAttacked(-1, 1, BaeGameRoom2.Instance.GetCurrentTick());
+			character.OnAttacked(-1, 1, IGameRoom.Instance.GetCurrentTick());
         }
     }
 

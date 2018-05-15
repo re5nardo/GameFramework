@@ -98,7 +98,7 @@ public class GameItem : IMonoTickUpdatable
 
     private void OnTriggerEnter(Collider collider)
     {
-    	if(BaeGameRoom2.Instance.IsPredictMode())
+		if(IGameRoom.Instance.IsPredictMode())
     		return;
 
         if (collider.gameObject.layer == GameObjectLayer.CHARACTER)

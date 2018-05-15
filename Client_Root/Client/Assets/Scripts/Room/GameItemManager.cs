@@ -32,12 +32,12 @@ public class GameItemManager : IMonoTickUpdatable
         m_listGameItem.Add(gameItem);
 
         float fTop = 0, fBottom = 0;
-        BaeGameRoom2.Instance.GetPlayersHeight(ref fTop, ref fBottom);
+		IGameRoom.Instance.GetPlayersHeight(ref fTop, ref fBottom);
 
         Vector3 vec3Start = new Vector3(Random.Range(0, 100) % 2 == 0 ? 45 : -45, Random.Range(fBottom, fTop), 0);
         Vector3 vec3End = new Vector3(-vec3Start.x, vec3Start.y, vec3Start.z);
 
-        gameItem.Initialize(this, m_nGameItemSequence++, Random.Range(MasterDataDefine.GameItem.FirstID, MasterDataDefine.GameItem.LastID + 1), BaeGameRoom2.Instance.GetTickInterval(), vec3Start, vec3End, Random.Range(3, 10));
+		gameItem.Initialize(this, m_nGameItemSequence++, Random.Range(MasterDataDefine.GameItem.FirstID, MasterDataDefine.GameItem.LastID + 1), IGameRoom.Instance.GetTickInterval(), vec3Start, vec3End, Random.Range(3, 10));
         gameItem.StartTick(nTick);
     }
 

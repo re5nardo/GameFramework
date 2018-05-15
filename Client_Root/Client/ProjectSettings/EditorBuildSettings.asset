@@ -12,9 +12,6 @@ EditorBuildSettings:
     path: Assets/Scenes/Lobby.unity
     guid: 066af87dbe1e7094f99f7b50d2745a92
   - enabled: 1
-    path: Assets/Scenes/BaeGameRoom.unity
-    guid: 8a5c74f0a0279b64b9c76c6cc91b0c4f
-  - enabled: 1
     path: Assets/Scenes/BaeGameRoom2.unity
     guid: dac5c4828f21331499a71436e910cbbd
   - enabled: 1
@@ -23,3 +20,6 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Maps/TestMap3.unity
     guid: e7a30e7dda63ae54194c2a855bae38a5
+  - enabled: 1
+    path: Assets/Scenes/BaeGameRoom_Single.unity
+    guid: be14b4a1ca366e14eae67955b2643a2a

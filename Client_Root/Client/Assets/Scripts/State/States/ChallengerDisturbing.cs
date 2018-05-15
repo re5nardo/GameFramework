@@ -62,7 +62,7 @@ namespace State
 
         public override void OnCollision(IEntity other, int nTick)
         {
-			if(BaeGameRoom2.Instance.IsPredictMode())
+			if(IGameRoom.Instance.IsPredictMode())
     			return;
         }
     }

@@ -31,3 +31,9 @@ public enum CoreState
     CoreState_ChallengerDisturbing,
     CoreState_Faint,
 };
+
+public enum GameType
+{
+	GameType_Single = 0,
+	GameType_Multi,
+};

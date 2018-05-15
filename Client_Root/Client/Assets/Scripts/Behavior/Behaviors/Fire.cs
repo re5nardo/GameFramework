@@ -41,7 +41,7 @@ namespace Behavior
                             int nProjectileMasterDataID = int.Parse(action.m_listParams[0]);
                             Projectile projectile = null;
 
-                            BaeGameRoom2.Instance.CreateProjectile(nProjectileMasterDataID, ref nEntityID, ref projectile, m_Entity.GetID());
+							IGameRoom.Instance.CreateProjectile(nProjectileMasterDataID, ref nEntityID, ref projectile, m_Entity.GetID());
                             projectile.SetPosition(m_Entity.GetPosition());
 
                             if (m_Entity.GetEntityType() == FBS.Data.EntityType.Character)
@@ -50,7 +50,7 @@ namespace Behavior
                                 if (character.GetRole() == Character.Role.Disturber)
                                 {
                                     IState state = Factory.Instance.CreateState(4);
-                                    state.Initialize(projectile, 4, BaeGameRoom2.Instance.GetTickInterval());
+									state.Initialize(projectile, 4, IGameRoom.Instance.GetTickInterval());
 
                                     projectile.AddState(state, nUpdateTick);
 

@@ -31,7 +31,7 @@ public class BlobAI : ICharacterAI
 
             CharacterStatus status = new CharacterStatus(masterCharacter.m_nHP, masterCharacter.m_nHP, masterCharacter.m_nMP, masterCharacter.m_nMP, masterCharacter.m_fMaximumSpeed, 0, masterCharacter.m_fMPChargeRate, masterCharacter.m_nJumpCount, masterCharacter.m_nJumpCount, masterCharacter.m_fJumpRegenerationTime, 0);
 
-            BaeGameRoom2.Instance.CreateCharacter(m_nMasterDataID, ref nEntityID, ref m_character, Character.Role.Disturber, status, false);
+			IGameRoom.Instance.CreateCharacter(m_nMasterDataID, ref nEntityID, ref m_character, Character.Role.Disturber, status, false);
         }
 
         if (m_character != null)

@@ -36,7 +36,7 @@ namespace Magic
 
 						if(m_TargetType == TargetType.AllButSelf)
 						{
-							List<Character> listCharacter = BaeGameRoom2.Instance.GetAllCharacters();
+							List<Character> listCharacter = IGameRoom.Instance.GetAllCharacters();
 
 							foreach(Character character in listCharacter)
 							{
@@ -44,7 +44,7 @@ namespace Magic
 									continue;
 
 								IState state = Factory.Instance.CreateState(nStateID);
-								state.Initialize(character, nStateID, BaeGameRoom2.Instance.GetTickInterval());
+								state.Initialize(character, nStateID, IGameRoom.Instance.GetTickInterval());
 
 								character.AddState(state, nUpdateTick);
 
@@ -58,7 +58,7 @@ namespace Magic
 
             if (m_nEndTick != -1 && nUpdateTick == m_nEndTick)
             {
-                BaeGameRoom2.Instance.DestroyMagic(this);
+				IGameRoom.Instance.DestroyMagic(this);
             }
         }
     }

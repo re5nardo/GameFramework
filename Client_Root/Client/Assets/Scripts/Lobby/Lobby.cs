@@ -35,7 +35,7 @@ public class Lobby : MonoBehaviour
 #region Event Handler
 	public void OnSingleGameBtnClicked()
     {
-		Debug.Log("OnSingleGameBtnClicked");
+		SceneManager.LoadScene("BaeGameRoom_Single");
     }
 
 	public void OnMultiGameBtnClicked()

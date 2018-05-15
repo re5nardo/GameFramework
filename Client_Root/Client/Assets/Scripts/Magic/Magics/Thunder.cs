@@ -34,17 +34,17 @@ namespace Magic
         {
             if (m_nStartTick == nUpdateTick)
             {
-                Character target = BaeGameRoom2.Instance.GetCharacter(m_nTargetID);
+				Character target = IGameRoom.Instance.GetCharacter(m_nTargetID);
 
                 if (!target.IsAlive() || target.HasCoreState(CoreState.CoreState_Invincible))
                     return;
 
-                target.OnAttacked(m_nCasterID, 1, BaeGameRoom2.Instance.GetCurrentTick());
+				target.OnAttacked(m_nCasterID, 1, IGameRoom.Instance.GetCurrentTick());
             }
 
             if (m_nEndTick != -1 && nUpdateTick == m_nEndTick)
             {
-                BaeGameRoom2.Instance.DestroyMagic(this);
+				IGameRoom.Instance.DestroyMagic(this);
             }
         }
     }

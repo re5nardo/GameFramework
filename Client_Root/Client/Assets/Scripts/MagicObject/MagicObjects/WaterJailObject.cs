@@ -40,7 +40,7 @@ namespace MagicObject
 
         protected override void UpdateBody(int nUpdateTick)
         {
-			Character target = BaeGameRoom2.Instance.GetCharacter(m_nTargetID);
+			Character target = IGameRoom.Instance.GetCharacter(m_nTargetID);
 
 			Vector3 vec3Offset = (target.GetPosition() - m_trModel.position).normalized * 10;
 
@@ -57,13 +57,13 @@ namespace MagicObject
                     m_ModelRigidbody = null;
                 }
 
-                BaeGameRoom2.Instance.DestroyMagicObject(this);
+				IGameRoom.Instance.DestroyMagicObject(this);
             }
         }
 
         private void OnCollisionEnter(Collision collisionInfo)
         {
-			if(BaeGameRoom2.Instance.IsPredictMode())
+			if(IGameRoom.Instance.IsPredictMode())
     			return;
 
             if (collisionInfo.gameObject.layer == GameObjectLayer.CHARACTER)
@@ -82,7 +82,7 @@ namespace MagicObject
                     m_ModelRigidbody = null;
                 }
 
-                BaeGameRoom2.Instance.DestroyMagicObject(this);
+				IGameRoom.Instance.DestroyMagicObject(this);
 
                 //	Add Jail State
 //                character.OnAttacked(m_nCasterID, 1, BaeGameRoom2.Instance.GetCurrentTick());
@@ -91,7 +91,7 @@ namespace MagicObject
 
         private void OnTriggerEnter(Collider colliderInfo)
         {
-			if(BaeGameRoom2.Instance.IsPredictMode())
+			if(IGameRoom.Instance.IsPredictMode())
     			return;
 
             if (colliderInfo.gameObject.layer == GameObjectLayer.CHARACTER)
@@ -110,7 +110,7 @@ namespace MagicObject
                     m_ModelRigidbody = null;
                 }
 
-                BaeGameRoom2.Instance.DestroyMagicObject(this);
+				IGameRoom.Instance.DestroyMagicObject(this);
 
 				//	Add Jail State
 //                character.OnAttacked(m_nCasterID, 1, BaeGameRoom2.Instance.GetCurrentTick());
