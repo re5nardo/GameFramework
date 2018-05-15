@@ -239,17 +239,17 @@ public class Character : IEntity
         int nBonusPoint = 100;
         float fMovePoint = fDistance * m_CurrentStatus.m_fMPChargeRate * 100;
         m_CurrentStatus.m_fMovePoint += fMovePoint;
-        BaeGameRoom2.Instance.AddCharacterStatusChangeGameEvent(lTime / 1000.0f, m_nID, "MovePoint", "Move", fMovePoint);
+//        BaeGameRoom2.Instance.AddCharacterStatusChangeGameEvent(lTime / 1000.0f, m_nID, "MovePoint", "Move", fMovePoint);
 
         if (m_CurrentStatus.m_fMovePoint >= nBonusPoint)
         {
             int nGetCount = (int)(m_CurrentStatus.m_fMovePoint / (float)nBonusPoint);
 
             m_CurrentStatus.m_fMovePoint -= (nGetCount * nBonusPoint);
-            BaeGameRoom2.Instance.AddCharacterStatusChangeGameEvent(lTime / 1000.0f, m_nID, "MovePoint", "Transfer", -nGetCount * nBonusPoint);
+//            BaeGameRoom2.Instance.AddCharacterStatusChangeGameEvent(lTime / 1000.0f, m_nID, "MovePoint", "Transfer", -nGetCount * nBonusPoint);
 
             m_CurrentStatus.m_nMP += nGetCount;
-            BaeGameRoom2.Instance.AddCharacterStatusChangeGameEvent(lTime / 1000.0f, m_nID, "MP", "MovePoint", nGetCount);
+//            BaeGameRoom2.Instance.AddCharacterStatusChangeGameEvent(lTime / 1000.0f, m_nID, "MP", "MovePoint", nGetCount);
         }
     }
 

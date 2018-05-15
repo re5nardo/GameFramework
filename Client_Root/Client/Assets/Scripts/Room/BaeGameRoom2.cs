@@ -34,24 +34,9 @@ public class BaeGameRoom2 : IGameRoom
 
     private int m_nOldFrameRate = 0;
     private Vector3 m_vec3OldGravity;
-    private int m_nUserPlayerIndex = -1;
-    private int m_nUserEntityID = -1;
-    private float m_fElapsedTime = 0;       //  not used..
-    private int m_nEntitySequence = 0;
 
-    private float m_fTickInterval = 0.025f;
-    private int m_nTick = 0;
-    private int m_nEndTick = 0;
-    private int m_nServerTick = -1;
-    private Dictionary<int, List<IPlayerInput>> m_dicPlayerInput = new Dictionary<int, List<IPlayerInput>>();
-    private Dictionary<int, IEntity> m_dicEntity = new Dictionary<int, IEntity>();
-
-    private Dictionary<int, int> m_dicPlayerEntity = new Dictionary<int, int>();      //  key : PlayerIndex, value : EntityID
-    private Dictionary<int, int> m_dicEntityPlayer = new Dictionary<int, int>();      //  key : EntityID, value : PlayerIndex
     private List<MovingObject> m_listMovingObject = new List<MovingObject>();
     private List<ICharacterAI> m_listDisturber = new List<ICharacterAI>();
-    private List<IMagic> m_listMagic = new List<IMagic>();
-    private List<IMagicObject> m_listMagicObject = new List<IMagicObject>();
 
     private List<PlayerRankInfo> m_listPlayerRankInfo = new List<PlayerRankInfo>();
 
@@ -60,9 +45,20 @@ public class BaeGameRoom2 : IGameRoom
 	private bool m_bPredictMode = false;
 	private int m_nPredictStartTick = 0;
 	private System.DateTime m_PredictStartTime = System.DateTime.Now;
-	private System.DateTime m_LastProcessTime = System.DateTime.Now;
 
 #region Room Logic
+	private void Start()
+	{
+		Init();
+
+		RoomNetwork.Instance.ConnectToServer(Config.Instance.GetRoomServerIP(), Config.Instance.GetRoomServerPort(), OnConnected, OnRecvMessage);
+	}
+
+	private void OnDestroy()
+	{
+		Clear();
+	}
+
     private void Update()
     {
         if (GetUserCharacter() == null || !GetUserCharacter().IsAlive())
@@ -104,11 +100,11 @@ public class BaeGameRoom2 : IGameRoom
         {
             OnClicked(Vector3.zero);
         }
-        }
+    }
 
-    private void Start()
-    {
-        m_nOldFrameRate = Application.targetFrameRate;
+	protected override void Init()
+	{
+		m_nOldFrameRate = Application.targetFrameRate;
 //        Application.targetFrameRate = 30;
 
         m_vec3OldGravity = Physics.gravity;
@@ -122,9 +118,28 @@ public class BaeGameRoom2 : IGameRoom
         }
 
         m_JumpController.onReleased = OnJumpButtonClicked;
+	}
 
-        RoomNetwork.Instance.ConnectToServer(Config.Instance.GetRoomServerIP(), Config.Instance.GetRoomServerPort(), OnConnected, OnRecvMessage);
-    }
+	protected override void Clear()
+	{
+		if (RoomNetwork.GetInstance() != null)
+        {
+            RoomNetwork.Instance.RemoveConnectHandler(OnConnected);
+            RoomNetwork.Instance.RemoveRecvMessageHandler(OnRecvMessage);
+        }
+
+        m_RotationController.onHold -= OnRotationControllerHold;
+
+        foreach(GameItemButton gameItemButton in m_GameItemButtons)
+        {
+            gameItemButton.onClicked = null;
+        }
+
+        m_JumpController.onReleased = null;
+
+        Application.targetFrameRate = m_nOldFrameRate;
+        Physics.gravity = m_vec3OldGravity;
+	}
 
     private void OnConnected(bool bResult)
     {
@@ -147,171 +162,9 @@ public class BaeGameRoom2 : IGameRoom
 
 //		ObjectPool.Instance.ReturnObject(msgToR);
     }
-
-    private void OnDestroy()
-    {
-        if (RoomNetwork.GetInstance() != null)
-        {
-            RoomNetwork.Instance.RemoveConnectHandler(OnConnected);
-            RoomNetwork.Instance.RemoveRecvMessageHandler(OnRecvMessage);
-        }
-
-        m_RotationController.onHold -= OnRotationControllerHold;
-
-        foreach(GameItemButton gameItemButton in m_GameItemButtons)
-        {
-            gameItemButton.onClicked = null;
-        }
-
-        m_JumpController.onReleased = null;
-
-        Application.targetFrameRate = m_nOldFrameRate;
-        Physics.gravity = m_vec3OldGravity;
-    }
 #endregion
 
 #region Game Logic
-    //  should save client.version to meta file ( for checking compatibility)
-    private IEnumerator Loop()
-    {
-        for (int i = 0; i < 200; ++i)
-        {
-            MovingObject movingObject = ObjectPool.Instance.GetGameObject("MovingObject").GetComponent<MovingObject>();
-
-            movingObject.Initialize();
-            m_listMovingObject.Add(movingObject);
-        }
-
-        foreach(MovingObject mObj in m_listMovingObject)
-        {
-            mObj.StartTick(0);
-        }
-
-        foreach(ICharacterAI disturber in m_listDisturber)
-        {
-            disturber.Initialize(4, m_fTickInterval);
-            disturber.StartTick(0);
-        }
-
-        while (true)
-        {
-        	if(m_bPredictMode)
-            {
-				//	Stop predict mode
-				if(m_nPredictStartTick <= m_nServerTick)
-				{
-					Debug.LogWarning("[Normal Mode] m_nTick : " + m_nTick);
-
-					m_bPredictMode = false;
-					m_nTick = m_nPredictStartTick;
-
-					//	Restore data
-					foreach(MovingObject mObj in m_listMovingObject)
-            		{
-			            mObj.Restore();
-            		}
-
-					foreach(IEntity entity in m_dicEntity.Values)
-            		{
-						entity.Restore();
-            		}
-
-					m_GameItemManager.Restore();
-            	}
-        	}
-        	else
-            {
-				if(m_nTick > m_nServerTick)
-				{
-					//	Start predict mode
-					if((System.DateTime.Now -  m_LastProcessTime).TotalMilliseconds > m_fTickInterval * 1000 + LATENCY_DEVIATION_LIMIT)
-					{
-						Debug.LogWarning("[Predict Mode] m_nTick : " + m_nTick);
-
-						m_bPredictMode = true;
-						m_nPredictStartTick = m_nTick;
-						m_PredictStartTime = System.DateTime.Now;
-
-						//	Save data
-						foreach(MovingObject mObj in m_listMovingObject)
-				        {
-				            mObj.Save();
-				        }
-
-						foreach(IEntity entity in m_dicEntity.Values)
-				        {
-				            entity.Save();
-				        }
-
-						m_GameItemManager.Save();
-					}
-					else
-					{
-						yield return null;
-						continue;
-					}
-				}
-        	}
-
-            int nCountToProcess = 0;
-            if(m_bPredictMode)
-            {
-				int nCount = (int)((System.DateTime.Now - m_PredictStartTime).TotalSeconds / m_fTickInterval);
-
-				nCountToProcess = nCount - (m_nTick - m_nPredictStartTick);
-            }
-            else
-            {
-				nCountToProcess = m_nServerTick - m_nTick + 1;
-            }
-
-
-//			if (m_nServerTick - m_nTick >= 40)
-//            {
-//                nCountToProcess = 10;
-//            }
-//			else if (m_nServerTick - m_nTick >= 20)
-//            {
-//                nCountToProcess = 4;  
-//            }
-//			else if (m_nServerTick - m_nTick >= 3)
-//            {
-//                nCountToProcess = 2;
-//            }
-
-            for (int i = 0; i < nCountToProcess; ++i)
-            {
-                ProcessInput();
-
-                UpdateWorld();
-
-                LateUpdateWorld();
-
-                Physics.Simulate(m_fTickInterval);
-
-                Draw();		//  optional?
-
-				if (m_nTick == m_nEndTick && !m_bPredictMode)
-                {
-                    GameResultToR resultToR = ObjectPool.Instance.GetObject<GameResultToR>();
-                    resultToR.m_listPlayerRankInfo = GetPlayerRankInfos();
-
-                    RoomNetwork.Instance.Send(resultToR);
-
-//					ObjectPool.Instance.ReturnObject(resultToR);
-
-                    yield break;
-                }
-
-                m_nTick++;
-            }
-
-			m_LastProcessTime = System.DateTime.Now;
-
-            yield return new WaitForSeconds(m_fTickInterval);
-        }
-    }
-
     private List<PlayerRankInfo> GetPlayerRankInfos()
     {
         List<Character> listRetire = new List<Character>();
@@ -366,63 +219,82 @@ public class BaeGameRoom2 : IGameRoom
         return nCount + 1;
     }
 
-    private void Draw()
+	protected override void PreProcess()
     {
-        foreach (IEntity entity in m_dicEntity.Values)
+    }
+
+	protected override bool ShouldWaitForProcess()
+	{
+		if(m_bPredictMode)
         {
-            entity.Draw(m_nTick);
-        }
+			//	Stop predict mode
+			if(m_nPredictStartTick <= m_nProcessibleTick)
+			{
+				Debug.LogWarning("[Normal Mode] m_nTick : " + m_nTick);
+
+				m_bPredictMode = false;
+				m_nTick = m_nPredictStartTick;
+
+				//	Restore data
+				foreach(MovingObject mObj in m_listMovingObject)
+        		{
+		            mObj.Restore();
+        		}
+
+				foreach(IEntity entity in m_dicEntity.Values)
+        		{
+					entity.Restore();
+        		}
+
+				m_GameItemManager.Restore();
+        	}
+    	}
+    	else
+        {
+			if(m_nTick > m_nProcessibleTick)
+			{
+				//	Start predict mode
+				if((System.DateTime.Now -  m_LastProcessTime).TotalMilliseconds > m_fTickInterval * 1000 + LATENCY_DEVIATION_LIMIT)
+				{
+					Debug.LogWarning("[Predict Mode] m_nTick : " + m_nTick);
+
+					m_bPredictMode = true;
+					m_nPredictStartTick = m_nTick;
+					m_PredictStartTime = System.DateTime.Now;
+
+					//	Save data
+					foreach(MovingObject mObj in m_listMovingObject)
+			        {
+			            mObj.Save();
+			        }
+
+					foreach(IEntity entity in m_dicEntity.Values)
+			        {
+			            entity.Save();
+			        }
+
+					m_GameItemManager.Save();
+				}
+				else
+				{
+                    return true;
+				}
+			}
+    	}
+
+    	return false;
+	}
+
+	protected override void Draw()
+    {
+        base.Draw();
 
         m_lbInfo.text = string.Format("{0} / {1}\n현재 높이 : {2}m\n최고 높이 : {3}m", GetUserRank(), m_dicPlayerEntity.Count, (int)GetUserCharacter().GetCurrentHeight(), (int)GetUserCharacter().GetBestHeight());
 
         SetRemainTime((m_nEndTick - m_nTick) * m_fTickInterval);
     }
 
-    private void ProcessInput()
-    {
-        if (m_dicPlayerInput.ContainsKey(m_nTick))
-        {
-            foreach (IPlayerInput input in m_dicPlayerInput[m_nTick])
-            {
-                if (input.GetPlayerInputType() == FBS.PlayerInputType.Rotation)
-                {
-                    PlayerInput.Rotation rotation = input as PlayerInput.Rotation;
-
-                    Character character = m_dicEntity[rotation.m_nEntityID] as Character;
-
-                    if (!character.IsAlive() || character.HasCoreState(CoreState.CoreState_Faint))
-                        continue;
-
-                    character.GetBehavior(MasterDataDefine.BehaviorID.ROTATION).StartTick(m_nTick, rotation.m_vec3Rotation);
-                    character.GetBehavior(MasterDataDefine.BehaviorID.MOVE).StartTick(m_nTick);
-                }
-                else if (input.GetPlayerInputType() == FBS.PlayerInputType.Position)
-                {
-                    PlayerInput.Position position = input as PlayerInput.Position;
-
-                    Character character = m_dicEntity[position.m_nEntityID] as Character;
-
-                    if (!character.IsJumpable())
-                        continue;
-
-					character.OnJump(m_nTick);
-                }
-                else if (input.GetPlayerInputType() == FBS.PlayerInputType.GameItem)
-                {
-                    PlayerInput.GameItem gameItem = input as PlayerInput.GameItem;
-
-                    Character character = m_dicEntity[m_dicPlayerEntity[gameItem.m_nPlayerIndex]] as Character;
-
-                    if (!character.IsAlive())
-                        continue;
-                    
-                    character.OnUseGameItem(gameItem.m_nGameItemID);
-                }
-            }
-        }
-    }
-
-    private void UpdateWorld()
+	protected override void UpdateWorld()
     {
         foreach(MovingObject mObj in m_listMovingObject)
         {
@@ -434,24 +306,7 @@ public class BaeGameRoom2 : IGameRoom
             disturber.UpdateTick(m_nTick);
         }
 
-        //  Copy values because m_dicEntity can be modified during iterating
-        IEntity[] entities = new IEntity[m_dicEntity.Values.Count];
-        m_dicEntity.Values.CopyTo(entities, 0);
-        foreach(IEntity entity in entities)
-        {
-            //  !entity.isalive() return;
-
-            entity.UpdateStates(m_nTick);
-        }
-
-        entities = new IEntity[m_dicEntity.Values.Count];
-        m_dicEntity.Values.CopyTo(entities, 0);
-        foreach(IEntity entity in entities)
-        {
-            //  !entity.isalive() return;
-
-            entity.UpdateBehaviors(m_nTick);
-        }
+       base.UpdateWorld();
 
         m_GameItemManager.UpdateTick(m_nTick);
 
@@ -472,62 +327,21 @@ public class BaeGameRoom2 : IGameRoom
         }
     }
 
-    private void LateUpdateWorld()
+	protected override void ResetGame()
     {
-        //  Copy values because m_dicEntity can be modified during iterating
-        IEntity[] entities = new IEntity[m_dicEntity.Values.Count];
-        m_dicEntity.Values.CopyTo(entities, 0);
-        foreach(IEntity entity in entities)
-        {
-            //  !entity.isalive() return;
+		base.ResetGame();
 
-            entity.LateUpdateWorld(m_nTick);
-        }
-    }
-
-    private void ResetGame()
-    {
-        m_nUserPlayerIndex = -1;
-        m_nUserEntityID = -1;
-        m_fElapsedTime = 0;
-
-        m_fTickInterval = 0.025f;
-        m_nTick = 0;
-        m_nServerTick = -1;
-        m_dicPlayerInput.Clear();
-        m_dicEntity.Clear();
-        m_dicPlayerEntity.Clear();
-        m_dicEntityPlayer.Clear();
         m_listMovingObject.Clear();
         m_listDisturber.Clear();
-        m_listMagic.Clear();
-        m_listMagicObject.Clear();
-
         m_listPlayerRankInfo.Clear();
     }
 
-    private void SetDisturber()
-    {
-
-//        BlobAI blobAI = new BlobAI();
-//        blobAI.Initialize(4);
-//
-//        m_listDisturber.Add(blobAI);
-    }
-
-    private void StartGame()
-    {
-        StartCoroutine(Loop());
-    }
-
-    private IEnumerator PrepareGame()
+	protected override IEnumerator PrepareGame()
     {
         //  prefare for game
         yield return SceneManager.LoadSceneAsync("TestMap3"/*temp.. always TestMap*/, LoadSceneMode.Additive);
 
         m_InputManager.Work(100, 500/*temp.. always 200, 200*/, m_CameraMain, OnClicked);
-
-        SetDisturber();
 
 		PreparationStateToR preparationStateToR = ObjectPool.Instance.GetObject<PreparationStateToR>();
         preparationStateToR.m_fState = 1.0f;
@@ -537,151 +351,42 @@ public class BaeGameRoom2 : IGameRoom
 //		ObjectPool.Instance.ReturnObject(preparationStateToR);
     }
 
-    public override float GetElapsedTime()
-    {
-        return m_fElapsedTime;
-    }
-
-    public override int GetUserPlayerIndex()
-    {
-        return m_nUserPlayerIndex;
-    }
-
-    public int GetUserEntityID()
-    {
-        return m_nUserEntityID;
-    }
-
-    public Character GetUserCharacter()
-    {
-        if (!m_dicEntity.ContainsKey(m_nUserEntityID))
-            return null;
-
-        return (Character)m_dicEntity[m_nUserEntityID];
-    }
-
-    public Character GetCharacter(int nID)
-    {
-        if (!m_dicEntity.ContainsKey(nID))
-            return null;
-
-        return (Character)m_dicEntity[nID];
-    }
-
-	public IEntity GetEntity(int nID)
-    {
-        if (!m_dicEntity.ContainsKey(nID))
-            return null;
-
-        return m_dicEntity[nID];
-    }
-
-	public List<Character> GetAllCharacters()
-    {
-		List<Character> listCharacter = new List<Character>();
-
-		foreach (int nID in m_dicPlayerEntity.Values)
+	protected override int GetCountToProcess()
+	{
+		int nCountToProcess = 0;
+        if(m_bPredictMode)
         {
-            Character character = m_dicEntity[nID] as Character;
-			listCharacter.Add(character);
+			int nCount = (int)((System.DateTime.Now - m_PredictStartTime).TotalSeconds / m_fTickInterval);
+
+			nCountToProcess = nCount - (m_nTick - m_nPredictStartTick);
+        }
+        else
+        {
+			nCountToProcess = m_nProcessibleTick - m_nTick + 1;
         }
 
-		return listCharacter;
-    }
+		return nCountToProcess;
+	}
 
-    public void AddCharacterStatusChangeGameEvent(float fEventTime, int nEntityID, string strStatusField, string strReason, float fValue)
-    {
+	protected override bool IsGameEnd()
+	{
+		return m_nTick == m_nEndTick && !m_bPredictMode;
+	}
 
-    }
+	protected override void OnGameEnd()
+	{
+		GameResultToR resultToR = ObjectPool.Instance.GetObject<GameResultToR>();
+        resultToR.m_listPlayerRankInfo = GetPlayerRankInfos();
 
-    public int GetCurrentTick()
-    {
-        return m_nTick;
-    }
+        RoomNetwork.Instance.Send(resultToR);
 
-    public float GetTickInterval()
-    {
-        return m_fTickInterval;
-    }
+//		ObjectPool.Instance.ReturnObject(resultToR);
+	}
 
 	public bool IsPredictMode()
 	{
 		return m_bPredictMode;
 	}
-
-    public void CreateCharacter(int nMasterDataID, ref int nEntityID, ref Character character, Character.Role role, CharacterStatus status, bool bUser)
-    {
-        nEntityID = m_nEntitySequence++;
-        if (bUser)
-        {
-            m_nUserEntityID = nEntityID;
-        }
-            
-        character = Factory.Instance.CreateCharacter(nMasterDataID);
-
-		m_dicEntity[nEntityID] = character;
-
-		character.Initialize(nEntityID, nMasterDataID, role, status);
-    }
-
-    public void CreateProjectile(int nMasterDataID, ref int nEntityID, ref Projectile projectile, int nCreatorID)
-    {
-        nEntityID = m_nEntitySequence++;
-
-        projectile = Factory.Instance.CreateProjectile(nMasterDataID);
-        projectile.Initialize(nEntityID, nMasterDataID);
-
-        m_dicEntity[nEntityID] = projectile;
-    }
-
-    public void CreateMagic(int nMasterDataID, ref int nEntityID, ref IMagic magic, int nCasterID)
-    {
-        nEntityID = m_nEntitySequence++;
-
-        magic = Factory.Instance.CreateMagic(nMasterDataID);
-        magic.Initialize(nCasterID, nEntityID, nMasterDataID, m_fTickInterval);
-
-        m_listMagic.Add(magic);
-    }
-
-    public void DestroyMagic(IMagic magic)
-    {
-        m_listMagic.Remove(magic);
-    }
-
-    public void CreateMagicObject(int nMasterDataID, ref int nEntityID, ref IMagicObject magicObject, int nCasterID, int nMagicID)
-    {
-        nEntityID = m_nEntitySequence++;
-
-        magicObject = Factory.Instance.CreateMagicObject(nMasterDataID);
-        magicObject.Initialize(nCasterID, nMagicID, nEntityID, nMasterDataID, m_fTickInterval);
-
-        m_listMagicObject.Add(magicObject);
-    }
-
-    public void DestroyMagicObject(IMagicObject magicObject)
-    {
-        m_listMagicObject.Remove(magicObject);
-    }
-
-    public void GetPlayersHeight(ref float fTop, ref float fBottom)
-    {
-        float fTempTop = float.MinValue;
-        float fTempBottom = float.MaxValue;
-
-        foreach(int nEntityID in m_dicPlayerEntity.Values)
-        {
-            IEntity player = m_dicEntity[nEntityID];
-
-            float fHeight = player.GetPosition().y;
-
-            fTempTop = Mathf.Max(fTempTop, fHeight);
-            fTempBottom = Mathf.Min(fTempBottom, fHeight);
-        }
-
-        fTop = fTempTop;
-        fBottom = fTempBottom;
-    }
 
     public int GetJustHigherRankPlayerEntityID(int nEntityID)
     {
@@ -802,6 +507,25 @@ public class BaeGameRoom2 : IGameRoom
 
         SetRemainTime(msg.m_nTimeLimit);
 
+		for (int i = 0; i < 200; ++i)
+        {
+            MovingObject movingObject = ObjectPool.Instance.GetGameObject("MovingObject").GetComponent<MovingObject>();
+
+            movingObject.Initialize();
+            m_listMovingObject.Add(movingObject);
+        }
+
+        foreach(MovingObject mObj in m_listMovingObject)
+        {
+            mObj.StartTick(0);
+        }
+
+        foreach(ICharacterAI disturber in m_listDisturber)
+        {
+            disturber.Initialize(4, m_fTickInterval);
+            disturber.StartTick(0);
+        }
+
         StartGame();
     }
 
@@ -817,8 +541,8 @@ public class BaeGameRoom2 : IGameRoom
             m_dicPlayerInput[msg.m_nTick].AddRange(msg.m_listPlayerInput);
         }
 
-        m_nServerTick = msg.m_nTick;
-		}
+		m_nProcessibleTick = msg.m_nTick;
+	}
 
     private void OnGameEndToC(GameEndToC msg)
     {
@@ -922,7 +646,7 @@ public class BaeGameRoom2 : IGameRoom
 #endregion
 
 #region Game Event Handler
-    public void OnPlayerDie(int nKilledEntityID, int nKillerEntityID)
+    public override void OnPlayerDie(int nKilledEntityID, int nKillerEntityID)
     {
         if (nKilledEntityID == m_nUserEntityID)
         {
@@ -936,7 +660,7 @@ public class BaeGameRoom2 : IGameRoom
         }
     }
 
-    public void OnPlayerRespawn(int nEntityID)
+    public override void OnPlayerRespawn(int nEntityID)
     {
         if (nEntityID == m_nUserEntityID)
         {
@@ -947,14 +671,14 @@ public class BaeGameRoom2 : IGameRoom
         }
     }
 
-    public void OnUserStatusChanged(CharacterStatus status)
+    public override void OnUserStatusChanged(CharacterStatus status)
     {
         m_lbHP.text = string.Format("x{0}", status.m_nHP);
         m_lbMP.text = string.Format("x{0}", status.m_nMP);
         m_lbMovePoint.text = string.Format("x{0}", (int)status.m_fMovePoint);
     }
 
-    public void OnUserGameItemChanged(GameItem[] gameItems)
+    public override void OnUserGameItemChanged(GameItem[] gameItems)
     {
         for (int i = 0; i < m_GameItemButtons.Length; ++i)
         {
