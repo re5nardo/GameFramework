@@ -17,7 +17,6 @@ public class Lobby : MonoBehaviour
             if (msg.m_nResult == 0)
             {
                 //  Go to GameRoom
-                //SceneManager.LoadScene("BaeGameRoom");
                 SceneManager.LoadScene("BaeGameRoom2");
             }
             else
@@ -33,12 +32,17 @@ public class Lobby : MonoBehaviour
             Network.Instance.RemoveRecvMessageHandler(OnRecvMessage);
     }
 
-    #region Event Handler
-    public void OnNormalGameBtnClicked()
+#region Event Handler
+	public void OnSingleGameBtnClicked()
+    {
+		Debug.Log("OnSingleGameBtnClicked");
+    }
+
+	public void OnMultiGameBtnClicked()
     {
         SelectNormalGameToL msgToL = new SelectNormalGameToL ();
 
         Network.Instance.Send(msgToL);
     }
-    #endregion
+#endregion
 }
