@@ -4,22 +4,22 @@ using UnityEngine;
 
 public class MovingObject : IMonoTickUpdatable
 {
-    private Vector3 m_vec3Start;
-    private Vector3 m_vec3End;
-    private float m_fSpeed;
-    private float m_fInitValue;
+	protected Vector3 m_vec3Start;
+	protected Vector3 m_vec3End;
+	protected float m_fSpeed;
+	protected float m_fInitValue;
     private List<Rigidbody> m_dicCollision = new List<Rigidbody>();
-    private Transform m_trMine;
+    protected Transform m_trMine;
     private float m_fElapsedTime;
-    private float m_fExpectedTime;
-    private float m_fTickInterval;
+	protected float m_fExpectedTime;
+	protected float m_fTickInterval;
     private int m_nStartTick = -1;
 
 	private Vector3 m_vec3SavedPosition;
 	private Vector3 m_vec3SavedRotation;
 	private Vector3 m_vec3SavedScale;
 
-    public void Initialize()
+    public virtual void Initialize()
     {
         m_trMine = transform;
 
@@ -58,7 +58,7 @@ public class MovingObject : IMonoTickUpdatable
         m_trMine.position = Vector3.Lerp(m_vec3Start, m_vec3End, fTime / m_fExpectedTime);
     }
 
-    private void OnCollisionEnter(Collision collisionInfo)
+	protected void OnCollisionEnter(Collision collisionInfo)
     {
 		if(IGameRoom.Instance.IsPredictMode())
     		return;
@@ -76,7 +76,7 @@ public class MovingObject : IMonoTickUpdatable
         }
     }
 
-    private void OnTriggerEnter(Collider colliderInfo)
+	protected void OnTriggerEnter(Collider colliderInfo)
     {
 		if(IGameRoom.Instance.IsPredictMode())
     		return;

@@ -27,27 +27,27 @@ public class SingleGameResultPopup : PopupBase
 
 		if(fCurrentHeight >= 1000)
 		{
-			strGrade = "Perfect!";
+			strGrade = "당신의 피지컬은 페이커급 입니다.";
 		}
 		else if(fCurrentHeight >= 800)
 		{
-			strGrade = "Great!";
+			strGrade = "당신의 피지컬은 상위 10% 입니다.";
 		}
 		else if(fCurrentHeight >= 600)
 		{
-			strGrade = "Good!";
+			strGrade = "당신의 피지컬은 상위 35% 입니다.";
 		}
 		else if(fCurrentHeight >= 400)
 		{
-			strGrade = "Not bad!";
+			strGrade = "당신의 피지컬은 하위 60% 입니다.";
 		}
 		else if(fCurrentHeight >= 200)
 		{
-			strGrade = "Bad..";
+			strGrade = "당신의 피지컬은 하위 80% 입니다.";
 		}
 		else
 		{
-			strGrade = "Too bad.....";
+			strGrade = "당신의 피지컬은 하위 98% 입니다.";
 		}
 
 		m_lbText.text = string.Format("[000000][ff0000]{0}[-]\n\n최종 높이 : {1}m\n\n최고 높이 : {2}m[-]", strGrade, fCurrentHeight, fBestHeight);

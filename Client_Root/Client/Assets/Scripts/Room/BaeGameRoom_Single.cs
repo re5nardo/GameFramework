@@ -225,7 +225,7 @@ public class BaeGameRoom_Single : IGameRoom
 
 	protected override IEnumerator PrepareGame()
     {
-        //  prefare for game
+        //  prepare for game
         yield return SceneManager.LoadSceneAsync("TestMap3"/*temp.. always TestMap*/, LoadSceneMode.Additive);
 
         m_InputManager.Work(100, 500/*temp.. always 200, 200*/, m_CameraMain, OnClicked);
@@ -241,9 +241,19 @@ public class BaeGameRoom_Single : IGameRoom
 
         SetRemainTime(nTimeLimit);
 
-        for (int i = 0; i < 200; ++i)
+		for (int i = 0; i < 200; ++i)
         {
-            MovingObject movingObject = ObjectPool.Instance.GetGameObject("MovingObject").GetComponent<MovingObject>();
+        	string strObject = "";
+        	if(Random.Range(0, 8) == 0)
+        	{
+				strObject = "Meteor_Fast";
+        	}
+        	else
+        	{
+				strObject = "Meteor_Slow";
+        	}
+
+			MovingObject movingObject = ObjectPool.Instance.GetGameObject(strObject).GetComponent<MovingObject>();
 
             movingObject.Initialize();
             m_listMovingObject.Add(movingObject);
