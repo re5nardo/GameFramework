@@ -23,21 +23,24 @@ namespace MasterData
             m_strName = data[1];
             m_strClassName = data[2];
 
-            List<string> listTemp = new List<string>();
-            Util.Parse(data[3], ',', listTemp);
-            foreach(string text in listTemp)
-            {
-                List<string> listTemp2 = new List<string>();
-                Util.Parse(text, ':', listTemp2);
+			if(data[3] != "")
+			{
+				List<string> listTemp = new List<string>();
+	            Util.Parse(data[3], ',', listTemp);
+	            foreach(string text in listTemp)
+	            {
+	                List<string> listTemp2 = new List<string>();
+	                Util.Parse(text, ':', listTemp2);
 
-                int nGameItemID = 0;
-                int nGameItemEffectID = 0;
+	                int nGameItemID = 0;
+	                int nGameItemEffectID = 0;
 
-                Util.Convert(listTemp2[0], ref nGameItemID);
-                Util.Convert(listTemp2[1], ref nGameItemEffectID);
+	                Util.Convert(listTemp2[0], ref nGameItemID);
+	                Util.Convert(listTemp2[1], ref nGameItemEffectID);
 
-                m_dicGameItemEffect.Add(nGameItemID, nGameItemEffectID);
-            }
+	                m_dicGameItemEffect.Add(nGameItemID, nGameItemEffectID);
+	            }
+			}
 
             Util.Parse(data[4], ',', m_listBehaviorID);
             Util.Convert(data[5], ref m_nHP);
