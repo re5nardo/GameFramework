@@ -6,8 +6,8 @@ namespace GameFramework
 {
     public abstract class Grid
     {
-        private Dictionary<Vector2Int, Cell> m_Cells = new Dictionary<Vector2Int, Cell>();
-        private Dictionary<int, Vector2Int> m_EntityIDCellPosition = new Dictionary<int, Vector2Int>();
+        protected Dictionary<Vector2Int, Cell> m_Cells = new Dictionary<Vector2Int, Cell>();
+        protected Dictionary<int, Vector2Int> m_EntityIDCellPosition = new Dictionary<int, Vector2Int>();
 
         private int m_nCellSize = 10;
 

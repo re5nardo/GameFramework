@@ -6,6 +6,9 @@ namespace GameFramework
 {
     public abstract class TickUpdater : MonoBehaviour
     {
+        private event Action<int> onTick = null;
+        private event Action<int> onTickEnd = null;
+
         private int currentTick = 0;
         public int CurrentTick
         {
@@ -26,11 +29,11 @@ namespace GameFramework
 
         private IEnumerator TickLoop()
         {
-            while(true)
+            while (true)
             {
                 var start = DateTime.Now;
 
-                Tick();
+                onTick?.Invoke(currentTick);
 
                 var elapsed = (DateTime.Now - start).TotalSeconds;
 
@@ -41,14 +44,18 @@ namespace GameFramework
 
                 yield return new WaitForSeconds((float)(tickInterval - elapsed));
 
+                onTickEnd?.Invoke(currentTick);
+
                 currentTick++;
             }
         }
 
-        protected virtual void Initialize()
+        public void Initialize(float tickInterval, Action<int> onTick, Action<int> onTickEnd)
         {
-        }
+            this.tickInterval = tickInterval;
 
-        protected abstract void Tick();
+            this.onTick = onTick;
+            this.onTickEnd = onTickEnd;
+        }
     }
 }
