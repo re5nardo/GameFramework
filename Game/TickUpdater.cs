@@ -4,7 +4,7 @@ using System;
 
 namespace GameFramework
 {
-    public abstract class TickUpdater : MonoBehaviour
+    public class TickUpdater : MonoBehaviour
     {
         private event Action<int> onTick = null;
         private event Action<int> onTickEnd = null;
