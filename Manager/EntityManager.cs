@@ -15,7 +15,6 @@ namespace GameFramework
         {
             m_nEntitySequence = 0;
             m_dicEntity.Clear();
-            m_PositionGrid.Clear();
         }
 
         public int GenerateEntityID()
