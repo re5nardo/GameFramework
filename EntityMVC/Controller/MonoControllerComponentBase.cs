@@ -1,25 +1,27 @@
-﻿using GameFramework;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class MonoControllerComponentBase : MonoBehaviour, IControllerComponent
+namespace GameFramework
 {
-	public IEntity Entity { get; private set; }
+    public class MonoControllerComponentBase : MonoBehaviour, IControllerComponent
+    {
+        public IEntity Entity { get; private set; }
 
-	public virtual void OnCommand(ICommand command)
-	{
-	}
+        public virtual void OnCommand(ICommand command)
+        {
+        }
 
-	public virtual void OnAttached(IEntity entity)
-	{
-		Entity = entity;
-	}
+        public virtual void OnAttached(IEntity entity)
+        {
+            Entity = entity;
+        }
 
-	public virtual void OnDetached()
-	{
-		Entity = null;
-	}
+        public virtual void OnDetached()
+        {
+            Entity = null;
+        }
 
-	public virtual void Initialize(params object[] param)
-	{
-	}
+        public virtual void Initialize(params object[] param)
+        {
+        }
+    }
 }
