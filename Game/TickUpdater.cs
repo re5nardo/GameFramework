@@ -21,8 +21,15 @@ namespace GameFramework
             get { return tickInterval; }
         }
 
-        public void Run()
+        private bool isSync = false;
+        public int SyncTick { get; set; }
+
+        private float tolerance;
+
+        public void Run(int tick = 0)
         {
+            currentTick = tick;
+
             StopCoroutine("TickLoop");
             StartCoroutine("TickLoop");
         }
@@ -35,27 +42,96 @@ namespace GameFramework
 
                 onTick?.Invoke(currentTick);
 
-                var elapsed = (DateTime.Now - start).TotalSeconds;
+                onTickEnd?.Invoke(currentTick);
+
+                float elapsed = (float)(DateTime.Now - start).TotalSeconds;
 
                 if (elapsed > tickInterval)
                 {
-                    Debug.LogWarning("elapsed is bigger than tickInterval!, elapsed : " + elapsed);
+                    Debug.LogError("elapsed is bigger than tickInterval!, elapsed : " + elapsed);
+                    yield break;
                 }
 
-                yield return new WaitForSeconds((float)(tickInterval - elapsed));
+                if (isSync)
+                {
+                    if (SyncTick <= currentTick)    //  +- buffer??
+                    {
+                        yield return new WaitUntil(() => SyncTick > currentTick);
+                    }
+                    else if (SyncTick - currentTick > (int)(tolerance / tickInterval))
+                    {
+                        //  No wait
+                    }
+                    else
+                    {
+                        while (true)
+                        {
+                            float nextTime = elapsed + (1f / Application.targetFrameRate);
 
-                onTickEnd?.Invoke(currentTick);
+                            if (nextTime > tickInterval)
+                            {
+                                float nextGap = nextTime - tickInterval;
+                                float currentGap = tickInterval - elapsed;
+
+                                if (nextGap > currentGap)
+                                {
+                                    break;
+                                }
+
+                                yield return null;
+
+                                elapsed += Time.deltaTime;
+                            }
+                            else
+                            {
+                                yield return null;
+
+                                elapsed += Time.deltaTime;
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    while (true)
+                    {
+                        float nextTime = elapsed + (1f / Application.targetFrameRate);
+
+                        if (nextTime > tickInterval)
+                        {
+                            float nextGap = nextTime - tickInterval;
+                            float currentGap = tickInterval - elapsed;
+
+                            if (nextGap > currentGap)
+                            {
+                                //  No wait
+                                break;
+                            }
+
+                            yield return null;
+
+                            elapsed += Time.deltaTime;
+                        }
+                        else
+                        {
+                            yield return null;
+
+                            elapsed += Time.deltaTime;
+                        }
+                    }
+                }
 
                 currentTick++;
             }
         }
 
-        public void Initialize(float tickInterval, Action<int> onTick, Action<int> onTickEnd)
+        public void Initialize(float tickInterval, bool isSync, Action<int> onTick, Action<int> onTickEnd, float tolerance = 0.2f)
         {
             this.tickInterval = tickInterval;
-
+            this.isSync = isSync;
             this.onTick = onTick;
             this.onTickEnd = onTickEnd;
+            this.tolerance = tolerance;
         }
     }
 }
