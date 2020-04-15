@@ -66,7 +66,7 @@ namespace GameFramework
                     {
                         while (true)
                         {
-                            float nextTime = elapsed + (1f / Application.targetFrameRate);
+                            float nextTime = elapsed + Time.deltaTime;
 
                             if (nextTime > tickInterval)
                             {
@@ -95,7 +95,7 @@ namespace GameFramework
                 {
                     while (true)
                     {
-                        float nextTime = elapsed + (1f / Application.targetFrameRate);
+                        float nextTime = elapsed + Time.deltaTime;
 
                         if (nextTime > tickInterval)
                         {
