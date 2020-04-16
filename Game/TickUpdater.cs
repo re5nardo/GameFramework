@@ -25,10 +25,14 @@ namespace GameFramework
         public int SyncTick { get; set; }
 
         private float tolerance;
+        private float elapsedTime = 0;
+
+        private int initTick = 0;
 
         public void Run(int tick = 0)
         {
-            currentTick = tick;
+            initTick = currentTick = tick;
+            elapsedTime = 0;
 
             StopCoroutine("TickLoop");
             StartCoroutine("TickLoop");
@@ -38,91 +42,49 @@ namespace GameFramework
         {
             while (true)
             {
-                var start = DateTime.Now;
+                int count = GetCountToProcess();
 
-                onTick?.Invoke(currentTick);
-
-                onTickEnd?.Invoke(currentTick);
-
-                float elapsed = (float)(DateTime.Now - start).TotalSeconds;
-
-                if (elapsed > tickInterval)
+                for (int i = 0; i < count; ++i)
                 {
-                    Debug.LogError("elapsed is bigger than tickInterval!, elapsed : " + elapsed);
-                    yield break;
+                    TickBody();
                 }
 
-                if (isSync)
-                {
-                    if (SyncTick <= currentTick)    //  +- buffer??
-                    {
-                        yield return new WaitUntil(() => SyncTick > currentTick);
-                    }
-                    else if (SyncTick - currentTick > (int)(tolerance / tickInterval))
-                    {
-                        //  No wait
-                    }
-                    else
-                    {
-                        while (true)
-                        {
-                            float nextTime = elapsed + Time.deltaTime;
+                yield return null;
 
-                            if (nextTime > tickInterval)
-                            {
-                                float nextGap = nextTime - tickInterval;
-                                float currentGap = tickInterval - elapsed;
-
-                                if (nextGap > currentGap)
-                                {
-                                    break;
-                                }
-
-                                yield return null;
-
-                                elapsed += Time.deltaTime;
-                            }
-                            else
-                            {
-                                yield return null;
-
-                                elapsed += Time.deltaTime;
-                            }
-                        }
-                    }
-                }
-                else
-                {
-                    while (true)
-                    {
-                        float nextTime = elapsed + Time.deltaTime;
-
-                        if (nextTime > tickInterval)
-                        {
-                            float nextGap = nextTime - tickInterval;
-                            float currentGap = tickInterval - elapsed;
-
-                            if (nextGap > currentGap)
-                            {
-                                //  No wait
-                                break;
-                            }
-
-                            yield return null;
-
-                            elapsed += Time.deltaTime;
-                        }
-                        else
-                        {
-                            yield return null;
-
-                            elapsed += Time.deltaTime;
-                        }
-                    }
-                }
-
-                currentTick++;
+                elapsedTime += Time.deltaTime;
             }
+        }
+
+        private int GetCountToProcess()
+        {
+            int count = 0;
+            int gap = GetProcessibleTick() - currentTick;
+            int toleranceTick = (int)(tolerance / TickInterval);
+
+            if (gap > toleranceTick)
+            {
+                count = 2;
+            }
+            else if (gap > 0)
+            {
+                count = 1;
+            }
+
+            return count;
+        }
+
+        private int GetProcessibleTick()
+        {
+            return isSync ? SyncTick : (int)(elapsedTime / TickInterval) + initTick;
+        }
+
+        private void TickBody()
+        {
+            onTick?.Invoke(currentTick);
+
+            onTickEnd?.Invoke(currentTick);
+
+            currentTick++;
         }
 
         public void Initialize(float tickInterval, bool isSync, Action<int> onTick, Action<int> onTickEnd, float tolerance = 0.2f)
