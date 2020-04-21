@@ -21,5 +21,13 @@ namespace GameFramework
         {
             return instance != null;
         }
+
+        public static void Instantiate()
+        {
+            if (instance == null)
+            {
+                instance = new T();
+            }
+        }
     }
 }

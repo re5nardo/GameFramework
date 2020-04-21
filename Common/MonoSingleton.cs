@@ -37,5 +37,15 @@ namespace GameFramework
         {
             return instance != null;
         }
+
+        public static void Instantiate()
+        {
+            if (instance == null)
+            {
+                GameObject goSingleton = new GameObject(typeof(T).Name + "Singleton");
+
+                instance = (T)goSingleton.AddComponent(typeof(T));
+            }
+        }
     }
 }
