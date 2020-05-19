@@ -26,13 +26,12 @@ namespace GameFramework
 
         private float tolerance;
         private float elapsedTime = 0;
-
-        private int initTick = 0;
+        private float speed = 1f;
 
         public void Run(int tick = 0)
         {
-            initTick = currentTick = tick;
-            elapsedTime = 0;
+            currentTick = tick;
+            elapsedTime = tick * TickInterval;
 
             StopCoroutine("TickLoop");
             StartCoroutine("TickLoop");
@@ -42,8 +41,7 @@ namespace GameFramework
         {
             while (true)
             {
-                int count = GetCountToProcess();
-
+                int count = GetProcessibleTick() - CurrentTick;
                 for (int i = 0; i < count; ++i)
                 {
                     TickBody();
@@ -51,31 +49,47 @@ namespace GameFramework
 
                 yield return null;
 
-                elapsedTime += Time.deltaTime;
+                AdjustSpeed();
+
+                elapsedTime += (Time.deltaTime * speed);
             }
         }
 
-        private int GetCountToProcess()
+        private void AdjustSpeed()
         {
-            int count = 0;
-            int gap = GetProcessibleTick() - currentTick;
-            int toleranceTick = (int)(tolerance / TickInterval);
-
-            if (gap > toleranceTick)
+            if (isSync)
             {
-                count = 2;
-            }
-            else if (gap > 0)
-            {
-                count = 1;
-            }
+                int toleranceTick = (int)(tolerance / TickInterval);
+                int gap = SyncTick - currentTick;
 
-            return count;
+                if (gap > toleranceTick)
+                {
+                    speed = 2f;
+                }
+                else if (gap > 0)
+                {
+                    speed = 1;
+                }
+                else
+                {
+                    speed = 0;
+                }
+            }
+            else
+            {
+                speed = 1f;
+            }
         }
 
         private int GetProcessibleTick()
         {
-            return isSync ? SyncTick : (int)(elapsedTime / TickInterval) + initTick;
+            int processibleTick = (int)(elapsedTime / TickInterval);
+            if (isSync)
+            {
+                processibleTick = Mathf.Min(processibleTick, SyncTick);
+            }
+
+            return processibleTick;
         }
 
         private void TickBody()
