@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Collections;
 
 namespace GameFramework
 {
@@ -13,13 +14,20 @@ namespace GameFramework
 
         protected TickUpdater tickUpdater = null;
 
-        public abstract void Initialize();
+        public abstract IEnumerator Initialize();
+        protected virtual void Clear() {}
 
         public void Run(int tick = 0)
         {
             Current = this;
 
+            OnBeforeRun();
+
             tickUpdater.Run(tick);
+        }
+
+        protected virtual void OnBeforeRun()
+        {
         }
 
         protected virtual void OnDestroy()
@@ -28,6 +36,8 @@ namespace GameFramework
             {
                 Current = null;
             }
+
+            Clear();
         }
 
         public void SetSyncTick(int tick)
