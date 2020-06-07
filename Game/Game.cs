@@ -5,7 +5,7 @@ namespace GameFramework
 {
     public abstract class Game : MonoBehaviour
     {
-        public static Game Current { get; private set; }
+        public static Game Current { get; protected set; }
 
         public int CurrentTick { get { return tickUpdater.CurrentTick; } }
         public int SyncTick { get { return tickUpdater.SyncTick; } }
@@ -19,8 +19,6 @@ namespace GameFramework
 
         public void Run(int tick = 0)
         {
-            Current = this;
-
             OnBeforeRun();
 
             tickUpdater.Run(tick);
