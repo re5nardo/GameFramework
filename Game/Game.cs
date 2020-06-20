@@ -11,9 +11,11 @@ namespace GameFramework
         public int SyncTick { get { return tickUpdater.SyncTick; } }
         public float TickInterval { get { return tickUpdater.TickInterval; } }
         public float GameTime { get { return tickUpdater.CurrentTick * tickUpdater.TickInterval; } }
+        public bool Initialized { get { return initialized; } }
 
         protected TickUpdater tickUpdater = null;
-
+        protected bool initialized = false;
+        
         public abstract IEnumerator Initialize();
         protected virtual void Clear() {}
 
