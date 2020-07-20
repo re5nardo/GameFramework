@@ -24,7 +24,6 @@ namespace GameFramework
         private bool isSync = false;
         public int SyncTick { get; set; }
 
-        private float tolerance;
         private float elapsedTime = 0;
         private float speed = 1f;
 
@@ -59,20 +58,24 @@ namespace GameFramework
         {
             if (isSync)
             {
-                int toleranceTick = (int)(tolerance / TickInterval);
                 int gap = SyncTick - currentTick;
+                float gapTime = gap * TickInterval;
 
-                if (gap > toleranceTick)
+                if (gapTime > 0.2f)
                 {
-                    speed = 2f;
+                    speed = 1.5f;
                 }
-                else if (gap > 0)
+                else if (gapTime > 0.1f)
                 {
-                    speed = 1;
+                    speed = 1.2f;
+                }
+                else if (gapTime > 0.05f)
+                {
+                    speed = 1f;
                 }
                 else
                 {
-                    speed = 0;
+                    speed = 0.7f;
                 }
             }
             else
@@ -101,13 +104,12 @@ namespace GameFramework
             currentTick++;
         }
 
-        public void Initialize(float tickInterval, bool isSync, Action<int> onTick, Action<int> onTickEnd, float tolerance = 0.2f)
+        public void Initialize(float tickInterval, bool isSync, Action<int> onTick, Action<int> onTickEnd)
         {
             this.tickInterval = tickInterval;
             this.isSync = isSync;
             this.onTick = onTick;
             this.onTickEnd = onTickEnd;
-            this.tolerance = tolerance;
         }
     }
 }
