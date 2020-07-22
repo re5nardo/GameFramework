@@ -58,8 +58,7 @@ namespace GameFramework
         {
             if (isSync)
             {
-                int gap = SyncTick - currentTick;
-                float gapTime = gap * TickInterval;
+                float gapTime = (SyncTick - CurrentTick) * TickInterval;
 
                 if (gapTime > 0.2f)
                 {
@@ -73,9 +72,13 @@ namespace GameFramework
                 {
                     speed = 1f;
                 }
-                else
+                else if (gapTime > 0)
                 {
                     speed = 0.7f;
+                }
+                else
+                {
+                    speed = 0.5f;
                 }
             }
             else
@@ -89,7 +92,8 @@ namespace GameFramework
             int processibleTick = (int)(elapsedTime / TickInterval);
             if (isSync)
             {
-                processibleTick = Mathf.Min(processibleTick, SyncTick);
+                //processibleTick = Mathf.Min(processibleTick, SyncTick);
+                processibleTick = (int)(elapsedTime / TickInterval);
             }
 
             return processibleTick;
