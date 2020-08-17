@@ -10,7 +10,7 @@ namespace GameFramework
         public int CurrentTick { get { return tickUpdater.CurrentTick; } }
         public int SyncTick { get { return tickUpdater.SyncTick; } }
         public float TickInterval { get { return tickUpdater.TickInterval; } }
-        public float GameTime { get { return tickUpdater.CurrentTick * tickUpdater.TickInterval; } }
+        public float GameTime { get { return tickUpdater.ElapsedTime; } }
         public bool Initialized { get { return initialized; } }
 
         protected TickUpdater tickUpdater = null;

@@ -10,21 +10,17 @@ namespace GameFramework
         private event Action<int> onTickEnd = null;
 
         private int currentTick = 0;
-        public int CurrentTick
-        {
-            get { return currentTick; }
-        }
+        public int CurrentTick => currentTick;
 
         protected float tickInterval = 1 / 30f;   //  sec
-        public float TickInterval
-        {
-            get { return tickInterval; }
-        }
+        public float TickInterval => tickInterval;
+
+        private float elapsedTime = 0;
+        public float ElapsedTime => elapsedTime;
 
         private bool isSync = false;
         public int SyncTick { get; set; }
-
-        private float elapsedTime = 0;
+        
         private float speed = 1f;
 
         public void Run(int tick = 0)
@@ -68,11 +64,11 @@ namespace GameFramework
                 {
                     speed = 1.2f;
                 }
-                else if (gapTime > 0.05f)
+                else if (gapTime > 0)
                 {
                     speed = 1f;
                 }
-                else if (gapTime > 0)
+                else if (gapTime > -0.1f)
                 {
                     speed = 0.7f;
                 }
@@ -92,8 +88,8 @@ namespace GameFramework
             int processibleTick = (int)(elapsedTime / TickInterval);
             if (isSync)
             {
-                //processibleTick = Mathf.Min(processibleTick, SyncTick);
-                processibleTick = (int)(elapsedTime / TickInterval);
+                //processibleTick = Mathf.Min(processibleTick, SyncTick);       1. SyncTick틱을 대기하거나
+                processibleTick = (int)(elapsedTime / TickInterval);        //  2. 먼저 Tick을 수행하거나,
             }
 
             return processibleTick;
