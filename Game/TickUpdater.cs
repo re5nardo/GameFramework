@@ -9,24 +9,20 @@ namespace GameFramework
         private event Action<int> onTick = null;
         private event Action<int> onTickEnd = null;
 
-        private int currentTick = 0;
-        public int CurrentTick => currentTick;
-
-        protected float tickInterval = 1 / 30f;   //  sec
-        public float TickInterval => tickInterval;
-
-        private float elapsedTime = 0;
-        public float ElapsedTime => elapsedTime;
+        public int CurrentTick { get; private set; }
+        public float TickInterval { get; private set; } = 1 / 30f;      //  sec
+        public float ElapsedTime { get; private set; }                  //  sec
 
         private bool isSync = false;
         public int SyncTick { get; set; }
         
-        private float speed = 1f;
+        private float speed = 1;
+        private float timeOffset = 0;   //  시간 gap (네트워크 Latency등등)을 보상하기 위한 값 (sec)
 
         public void Run(int tick = 0)
         {
-            currentTick = tick;
-            elapsedTime = tick * TickInterval;
+            CurrentTick = tick;
+            ElapsedTime = tick * TickInterval + timeOffset;
 
             StopCoroutine("TickLoop");
             StartCoroutine("TickLoop");
@@ -46,7 +42,7 @@ namespace GameFramework
 
                 AdjustSpeed();
 
-                elapsedTime += (Time.deltaTime * speed);
+                ElapsedTime += (Time.deltaTime * speed);
             }
         }
 
@@ -54,42 +50,42 @@ namespace GameFramework
         {
             if (isSync)
             {
-                float gapTime = (SyncTick - CurrentTick) * TickInterval;
+                float syncTime = SyncTick * TickInterval + timeOffset;
+                float gapTime = syncTime - ElapsedTime;    //  서버 타임 - 클라 타임 (gapTime이 양수면 서버가 더 빠른 상태, gapTime이 음수면 클라가 더 빠른 상태)
 
-                if (gapTime > 0.2f)
+                if (gapTime < -0.12f)       
                 {
-                    speed = 1.5f;
+                    speed = 0.01f;
                 }
-                else if (gapTime > 0.1f)
+                else if (gapTime > 0.12f)
                 {
-                    speed = 1.2f;
-                }
-                else if (gapTime > 0)
-                {
-                    speed = 1f;
-                }
-                else if (gapTime > -0.1f)
-                {
-                    speed = 0.7f;
+                    speed = (syncTime - ElapsedTime) / Time.deltaTime;
                 }
                 else
                 {
-                    speed = 0.5f;
+                    if (gapTime < 0)
+                    {
+                        speed = Mathf.SmoothStep(0, 1, (gapTime + 0.12f) / 0.12f);  //  -0.12 ~ 0 
+                    }
+                    else
+                    {
+                        speed = Mathf.SmoothStep(2, 1, 1 - gapTime / 0.12f);        //  0 ~ 0.12
+                    }
                 }
             }
             else
             {
-                speed = 1f;
+                speed = 1;
             }
         }
 
         private int GetProcessibleTick()
         {
-            int processibleTick = (int)(elapsedTime / TickInterval);
+            int processibleTick = Mathf.RoundToInt(ElapsedTime / TickInterval);
             if (isSync)
             {
-                //processibleTick = Mathf.Min(processibleTick, SyncTick);       1. SyncTick틱을 대기하거나
-                processibleTick = (int)(elapsedTime / TickInterval);        //  2. 먼저 Tick을 수행하거나,
+                //processibleTick = Mathf.Min(processibleTick, SyncTick);                   1. SyncTick틱을 대기하거나
+                processibleTick = Mathf.RoundToInt(ElapsedTime / TickInterval);        //   2. 먼저 Tick을 수행하거나,
             }
 
             return processibleTick;
@@ -97,17 +93,18 @@ namespace GameFramework
 
         private void TickBody()
         {
-            onTick?.Invoke(currentTick);
+            onTick?.Invoke(CurrentTick);
 
-            onTickEnd?.Invoke(currentTick);
+            onTickEnd?.Invoke(CurrentTick);
 
-            currentTick++;
+            CurrentTick++;
         }
 
-        public void Initialize(float tickInterval, bool isSync, Action<int> onTick, Action<int> onTickEnd)
+        public void Initialize(float tickInterval, bool isSync, float timeOffset, Action<int> onTick, Action<int> onTickEnd)
         {
-            this.tickInterval = tickInterval;
+            this.TickInterval = tickInterval;
             this.isSync = isSync;
+            this.timeOffset = timeOffset;
             this.onTick = onTick;
             this.onTickEnd = onTickEnd;
         }
