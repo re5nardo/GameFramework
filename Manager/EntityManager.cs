@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using System;
+using System.Linq;
 
 namespace GameFramework
 {
@@ -59,7 +60,19 @@ namespace GameFramework
                 return m_dicEntity[nEntityID];
             }
 
+            Debug.LogWarning($"There is no entity, nEntityID : {nEntityID}");
             return null;
+        }
+
+        public T GetEntity<T>(int nEntityID) where T : IEntity
+        {
+            if (m_dicEntity.ContainsKey(nEntityID))
+            {
+                return (T)m_dicEntity[nEntityID];
+            }
+
+            Debug.LogWarning($"There is no entity, nEntityID : {nEntityID}");
+            return default;
         }
 
         public List<IEntity> GetEntities(Vector3 vec3Position, float fRadius, List<Predicate<IEntity>> conditions)
@@ -67,14 +80,29 @@ namespace GameFramework
             return m_PositionGrid.GetEntities(vec3Position, fRadius, conditions);
         }
 
+        public List<T> GetEntities<T>(Vector3 vec3Position, float fRadius, List<Predicate<IEntity>> conditions) where T : IEntity
+        {
+            return m_PositionGrid.GetEntities(vec3Position, fRadius, conditions).Cast<T>().ToList();
+        }
+
         public List<IEntity> GetEntities(Transform trTarget, float fFieldOfViewAngle, float fRadius, List<System.Predicate<IEntity>> conditions)
         {
             return m_PositionGrid.GetEntities(trTarget, fFieldOfViewAngle, fRadius, conditions);
         }
 
+        public List<T> GetEntities<T>(Transform trTarget, float fFieldOfViewAngle, float fRadius, List<System.Predicate<IEntity>> conditions) where T : IEntity
+        {
+            return m_PositionGrid.GetEntities(trTarget, fFieldOfViewAngle, fRadius, conditions).Cast<T>().ToList();
+        }
+
         public List<IEntity> GetAllEntities()
         {
             return new List<IEntity>(m_dicEntity.Values);
+        }
+
+        public List<T> GetAllEntities<T>() where T : IEntity
+        {
+            return m_dicEntity.Values.Cast<T>().ToList();
         }
 
         public HashSet<Cell> GetCells(Vector2Int vec2Center, float fRadius, bool bMakeCell = false)

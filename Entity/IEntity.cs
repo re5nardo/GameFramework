@@ -4,7 +4,7 @@ using System;
 
 namespace GameFramework
 {
-    public interface IEntity : ITickable
+    public interface IEntity
     {
         int EntityID { get; }
         Vector3 Position { get; set; }
