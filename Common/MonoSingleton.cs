@@ -13,7 +13,7 @@ namespace GameFramework
                 {
                     GameObject goSingleton = new GameObject(typeof(T).Name + "Singleton");
 
-                    instance = (T)goSingleton.AddComponent(typeof(T));
+                    instance = goSingleton.AddComponent<T>();
                 }
 
                 return instance;
@@ -44,7 +44,7 @@ namespace GameFramework
             {
                 GameObject goSingleton = new GameObject(typeof(T).Name + "Singleton");
 
-                instance = (T)goSingleton.AddComponent(typeof(T));
+                instance = goSingleton.AddComponent<T>();
             }
         }
     }
