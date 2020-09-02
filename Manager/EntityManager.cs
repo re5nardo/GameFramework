@@ -105,6 +105,11 @@ namespace GameFramework
             return m_dicEntity.Values.Cast<T>().ToList();
         }
 
+        public HashSet<int> GetAllEntityIDs()
+        {
+            return new HashSet<int>(m_dicEntity.Keys);
+        }
+
         public HashSet<Cell> GetCells(Vector2Int vec2Center, float fRadius, bool bMakeCell = false)
         {
             return m_PositionGrid.GetCells(vec2Center, fRadius, bMakeCell);
