@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System;
 
 namespace GameFramework
 {
@@ -8,6 +9,41 @@ namespace GameFramework
         public string Id { get; set; }
 
         public List<ISnap> snaps = new List<ISnap>();
+
+        public bool EqualsCore(ISnap snap)
+        {
+            CompositeSnap other = snap as CompositeSnap;
+
+            if (other == null) return false;
+            if (other.Id != Id) return false;
+            if (other.snaps.Count != snaps.Count) return false;
+            for (int i = 0; i < other.snaps.Count; ++i)
+            {
+                if (!other.snaps[i].EqualsCore(snaps[i])) return false;
+            }
+
+            return true;
+        }
+
+        public bool EqualsValue(ISnap snap)
+        {
+            CompositeSnap other = snap as CompositeSnap;
+
+            if (other == null) return false;
+            if (other.Id != Id) return false;
+            if (other.snaps.Count != snaps.Count) return false;
+            for (int i = 0; i < other.snaps.Count; ++i)
+            {
+                if (!other.snaps[i].EqualsValue(snaps[i])) return false;
+            }
+
+            return true;
+        }
+
+        public ISnap Set(ISynchronizable synchronizable)
+        {
+            throw new NotImplementedException();
+        }
 
         public ISnap Clone()
         {
@@ -20,20 +56,9 @@ namespace GameFramework
             return clone;
         }
 
-        public bool EqualsMeaningfully(ISnap snap)
+        public override string ToString()
         {
-            CompositeSnap other = snap as CompositeSnap;
-
-            if (other == null) return false;
-
-            if (other.Id != Id) return false;
-            if (other.snaps.Count != snaps.Count) return false;
-            for (int i = 0; i < other.snaps.Count; ++i)
-            {
-                if (!other.snaps[i].EqualsMeaningfully(snaps[i])) return false;
-            }
-
-            return true;
+            return $"[Tick {Tick}][CompositeSnap] Id : {Id}";
         }
     }
 }

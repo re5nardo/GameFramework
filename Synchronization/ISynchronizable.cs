@@ -8,21 +8,16 @@ namespace GameFramework
         bool Enable { get; set; }
         bool EnableInHierarchy { get; }
 
-        int WaitingInterval { get; }
-        ISnap LastSendSnap { get; }
-
-        bool HasMeaningfulChange { get; }
+        bool HasCoreChange { get; }
 
         bool IsDirty { get; }
         void SetDirty();
 
-        bool IsValidToSend { get; }
-
         ISnap GetSnap();
 
-        void SendSynchronization(bool checkCondition = true);
+        void UpdateSynchronizable();
+        void SendSynchronization();
         void OnReceiveSynchronization(ISnap snap);
-
         void Reconcile(ISnap snap);
     }
 }
