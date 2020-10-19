@@ -18,6 +18,5 @@ namespace GameFramework
         void UpdateSynchronizable();
         void SendSynchronization();
         void OnReceiveSynchronization(ISnap snap);
-        void Reconcile(ISnap snap);
     }
 }
