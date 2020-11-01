@@ -1,5 +1,9 @@
 ﻿
-public interface IPoolable
+namespace GameFramework
 {
-    void Clear();
+    public interface IPoolable
+    {
+        void Clear();
+    }
+
 }
