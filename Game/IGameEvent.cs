@@ -3,7 +3,7 @@ namespace GameFramework
 {
     public interface IGameEvent
     {
-        int seq { get; }
-        int tick { get; set; }
+        int Seq { get; }
+        int Tick { get; set; }
     }
 }
