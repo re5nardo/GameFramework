@@ -12,8 +12,7 @@ namespace GameFramework
 
         public virtual void OnCommand(ICommand command)
         {
-            Action<ICommand> handler = null;
-            if (commandHandlers.TryGetValue(command.GetType(), out handler))
+            if (commandHandlers.TryGetValue(command.GetType(), out Action<ICommand> handler))
             {
                 handler?.Invoke(command);
             }

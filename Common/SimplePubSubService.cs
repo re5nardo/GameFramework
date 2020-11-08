@@ -11,8 +11,7 @@ namespace GameFramework
 
         public void Publish(T key, U value)
         {
-            List<Action<U>> subscribers = null;
-            if (allSubscribers.TryGetValue(key, out subscribers))
+            if (allSubscribers.TryGetValue(key, out List<Action<U>> subscribers))
             {
                 subscribers.ForEach(subscriber => subscriber?.Invoke(value));
             }
