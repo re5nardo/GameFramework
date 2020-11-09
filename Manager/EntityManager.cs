@@ -55,9 +55,9 @@ namespace GameFramework
 
         public IEntity GetEntity(int nEntityID)
         {
-            if (m_dicEntity.ContainsKey(nEntityID))
+            if (m_dicEntity.TryGetValue(nEntityID, out IEntity entity))
             {
-                return m_dicEntity[nEntityID];
+                return entity;
             }
 
             Debug.LogWarning($"There is no entity, nEntityID : {nEntityID}");
@@ -66,9 +66,9 @@ namespace GameFramework
 
         public T GetEntity<T>(int nEntityID) where T : IEntity
         {
-            if (m_dicEntity.ContainsKey(nEntityID))
+            if (m_dicEntity.TryGetValue(nEntityID, out IEntity entity))
             {
-                return (T)m_dicEntity[nEntityID];
+                return (T)entity;
             }
 
             Debug.LogWarning($"There is no entity, nEntityID : {nEntityID}");
