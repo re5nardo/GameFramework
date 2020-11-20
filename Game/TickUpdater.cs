@@ -81,11 +81,11 @@ namespace GameFramework
 
         private int GetProcessibleTick()
         {
-            int processibleTick = Mathf.RoundToInt(ElapsedTime / TickInterval);
+            int processibleTick = (int)(ElapsedTime / TickInterval);
             if (isSync)
             {
                 //processibleTick = Mathf.Min(processibleTick, SyncTick);                   1. SyncTick틱을 대기하거나
-                processibleTick = Mathf.RoundToInt(ElapsedTime / TickInterval);        //   2. 먼저 Tick을 수행하거나,
+                processibleTick = (int)(ElapsedTime / TickInterval);        //   2. 먼저 Tick을 수행하거나,
             }
 
             return processibleTick;
