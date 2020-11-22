@@ -61,16 +61,13 @@ namespace GameFramework
                 {
                     speed = (syncTime - ElapsedTime) / Time.deltaTime;
                 }
+                else if (Mathf.Abs(gapTime) < 0.066f)
+                {
+                    speed = 1;
+                }
                 else
                 {
-                    if (gapTime < 0)
-                    {
-                        speed = Mathf.SmoothStep(0, 1, (gapTime + 0.12f) / 0.12f);  //  -0.12 ~ 0 
-                    }
-                    else
-                    {
-                        speed = Mathf.SmoothStep(2, 1, 1 - gapTime / 0.12f);        //  0 ~ 0.12
-                    }
+                    speed = (0.5f + gapTime) / 0.5f;
                 }
             }
             else
