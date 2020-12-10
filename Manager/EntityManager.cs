@@ -68,7 +68,12 @@ namespace GameFramework
         {
             if (m_dicEntity.TryGetValue(nEntityID, out IEntity entity))
             {
-                return (T)entity;
+                if (entity is T target)
+                {
+                    return target;
+                }
+
+                return default;
             }
 
             Debug.LogWarning($"There is no entity, nEntityID : {nEntityID}");
