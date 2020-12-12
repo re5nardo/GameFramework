@@ -33,7 +33,15 @@ namespace GameFramework
             }
         }
 
-        public static bool IsInstantiated() //  IsInstance?
+        protected virtual void OnDestroy()
+        {
+            if (instance == this)
+            {
+                instance = null;
+            }
+        }
+
+        public static bool HasInstance()
         {
             return instance != null;
         }

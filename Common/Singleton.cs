@@ -17,7 +17,7 @@ namespace GameFramework
             }
         }
 
-        public static bool IsInstantiated()
+        public static bool HasInstance()
         {
             return instance != null;
         }
