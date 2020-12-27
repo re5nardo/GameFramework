@@ -5,8 +5,6 @@ namespace GameFramework
 {
     public abstract class Game : MonoBehaviour
     {
-        [SerializeField] protected TickUpdater tickUpdater = null;
-
         public static Game Current { get; protected set; } = null;
 
         public int CurrentTick => tickUpdater.CurrentTick;
@@ -14,7 +12,9 @@ namespace GameFramework
         public float TickInterval => tickUpdater.TickInterval;
         public float GameTime => tickUpdater.ElapsedTime;
         public bool Initialized { get; protected set; } = false;
-        
+
+        protected TickUpdater tickUpdater = null;
+
         public abstract IEnumerator Initialize();
         protected virtual void Clear() {}
 
