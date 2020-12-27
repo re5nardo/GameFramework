@@ -5,29 +5,22 @@ namespace GameFramework
 {
     public abstract class Game : MonoBehaviour
     {
-        public static Game Current { get; protected set; }
+        [SerializeField] protected TickUpdater tickUpdater = null;
 
-        public int CurrentTick { get { return tickUpdater.CurrentTick; } }
-        public int SyncTick { get { return tickUpdater.SyncTick; } }
-        public float TickInterval { get { return tickUpdater.TickInterval; } }
-        public float GameTime { get { return tickUpdater.ElapsedTime; } }
-        public bool Initialized { get { return initialized; } }
+        public static Game Current { get; protected set; } = null;
 
-        protected TickUpdater tickUpdater = null;
-        protected bool initialized = false;
+        public int CurrentTick => tickUpdater.CurrentTick;
+        public int SyncTick => tickUpdater.SyncTick;
+        public float TickInterval => tickUpdater.TickInterval;
+        public float GameTime => tickUpdater.ElapsedTime;
+        public bool Initialized { get; protected set; } = false;
         
         public abstract IEnumerator Initialize();
         protected virtual void Clear() {}
 
-        public void Run(int tick = 0)
+        private void Awake()
         {
-            OnBeforeRun();
-
-            tickUpdater.Run(tick);
-        }
-
-        protected virtual void OnBeforeRun()
-        {
+            Current = this;
         }
 
         protected virtual void OnDestroy()
@@ -38,6 +31,17 @@ namespace GameFramework
             }
 
             Clear();
+        }
+
+        public void Run(int tick = 0)
+        {
+            OnBeforeRun();
+
+            tickUpdater.Run(tick);
+        }
+
+        protected virtual void OnBeforeRun()
+        {
         }
 
         public void SetSyncTick(int tick)
