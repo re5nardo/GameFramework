@@ -10,7 +10,7 @@ namespace GameFramework
             {
                 if (instance == null)
                 {
-                    instance = new T();
+                    Instantiate();
                 }
 
                 return instance;

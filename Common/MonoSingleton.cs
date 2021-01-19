@@ -4,6 +4,8 @@ namespace GameFramework
 {
     public class MonoSingleton<T> : MonoBehaviour where T : MonoSingleton<T>
     {
+        [SerializeField] private bool overriding = false;
+
         protected static T instance = null;
         public static T Instance
         {
@@ -11,9 +13,7 @@ namespace GameFramework
             {
                 if (instance == null)
                 {
-                    GameObject goSingleton = new GameObject(typeof(T).Name + "Singleton");
-
-                    instance = goSingleton.AddComponent<T>();
+                    Instantiate();
                 }
 
                 return instance;
@@ -28,8 +28,17 @@ namespace GameFramework
             }
             else
             {
-                Debug.LogWarning("There is already MonoSingleton, so delete this");
-                DestroyImmediate(this);
+                if (overriding)
+                {
+                    Debug.LogWarning("Destroy old singleton instance!");
+                    DestroyImmediate(instance);
+                    instance = (T)this;
+                }
+                else
+                {
+                    Debug.LogWarning("Destroy new singleton instance!");
+                    DestroyImmediate(this);
+                }
             }
         }
 
