@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Reflection;
 
 namespace GameFramework
 {
@@ -57,7 +58,17 @@ namespace GameFramework
 
         public static void Instantiate()
         {
-            if (instance == null)
+            if (instance != null)
+            {
+                return;
+            }
+
+            var factoryMethod = typeof(T).GetMethod("CreateInstance", BindingFlags.Public | BindingFlags.Static);
+            if (factoryMethod != null)
+            {
+                instance = factoryMethod.Invoke(null, null) as T;
+            }
+            else
             {
                 GameObject goSingleton = new GameObject(typeof(T).Name + "Singleton");
 
