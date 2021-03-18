@@ -8,7 +8,7 @@ namespace GameFramework
         public abstract class MonoStateBase : MonoBehaviour, IState
         {
             public IFiniteStateMachine FSM => gameObject.GetOrAddComponent<MonoStateMachineBase>();
-            public bool IsValid => FSM.CurrentState.Equals(this);
+            public virtual bool IsValid => FSM.CurrentState.Equals(this);
 
             public virtual void Enter()
             {
