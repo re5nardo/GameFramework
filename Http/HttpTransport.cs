@@ -45,6 +45,16 @@ namespace GameFramework
         {
             Instance.StartCoroutine(Instance.PutRoutine(uri, bodyData, requestHeaders, onResult, onError));
         }
+
+        public static void Delete(string uri, Dictionary<string, string> requestHeaders = null, Action<byte[]> onResult = null, Action<string> onError = null)
+        {
+            Instance.StartCoroutine(Instance.DeleteRoutine(uri, requestHeaders, onResult, onError));
+        }
+
+        public static void Delete(string uri, Dictionary<string, string> requestHeaders = null, Action<string> onResult = null, Action<string> onError = null)
+        {
+            Instance.StartCoroutine(Instance.DeleteRoutine(uri, requestHeaders, onResult, onError));
+        }
         #endregion
     }
 }

@@ -102,6 +102,19 @@ namespace GameFramework
                         }
                     );
                     break;
+
+                case UnityWebRequest.kHttpVerbDELETE:
+                    HttpTransport.Delete(reqContainer.fullUri, reqContainer.requestHeaders,
+                        result =>
+                        {
+                            Instance.OnResponse(result, reqContainer);
+                        },
+                        error =>
+                        {
+                            Instance.OnError(error, reqContainer);
+                        }
+                    );
+                    break;
             }
         }
 
