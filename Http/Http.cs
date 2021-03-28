@@ -150,7 +150,7 @@ namespace GameFramework
         {
             reqContainer.jsonResponse = jsonResponse;
             reqContainer.deserializeResult();
-            reqContainer.successCallback?.Invoke();
+            reqContainer.successCallback();
         }
 
         private void OnError(string error, HttpRequestContainer reqContainer)
