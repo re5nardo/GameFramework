@@ -62,8 +62,6 @@ namespace GameFramework
 
                 yield return www.SendWebRequest();
 
-                UnityWebRequest ww = www;
-
                 if (www.result != UnityWebRequest.Result.Success)
                 {
                     Debug.LogError(www.error);
@@ -71,9 +69,9 @@ namespace GameFramework
                 }
                 else
                 {
+                    string response = "";
                     try
                     {
-                        string response = "";
                         if (www.GetResponseHeader("Content-Encoding") == "gzip")
                         {
                             using (var memoryStream = new MemoryStream(www.downloadHandler.data))
@@ -91,13 +89,14 @@ namespace GameFramework
                         {
                             response = www.downloadHandler.text;
                         }
-
-                        onResult?.Invoke(response);
                     }
                     catch (Exception e)
                     {
                         onError?.Invoke(e.Message);
+                        yield break;
                     }
+
+                    onResult?.Invoke(response);
                 }
             }
         }
