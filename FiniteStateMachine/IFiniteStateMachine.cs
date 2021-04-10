@@ -14,7 +14,7 @@ namespace GameFramework
         public interface IState
         {
             IFiniteStateMachine FSM { get; }
-            bool IsValid { get; }
+            bool IsCurrent { get; }
 
             void Enter();
             void Execute();

@@ -8,7 +8,7 @@ namespace GameFramework
         public abstract class MonoStateBase : MonoBehaviour, IState
         {
             public IFiniteStateMachine FSM => gameObject.GetOrAddComponent<MonoStateMachineBase>();
-            public virtual bool IsValid => FSM.CurrentState.Equals(this);
+            public virtual bool IsCurrent => FSM.CurrentState.Equals(this);
 
             public virtual void Enter()
             {
@@ -23,6 +23,14 @@ namespace GameFramework
             }
 
             public abstract IState GetNext<I>(I input) where I : Enum;
+
+            private void OnDestroy()
+            {
+                if (IsCurrent)
+                {
+                    Exit();
+                }
+            }
         }
     }
 }
