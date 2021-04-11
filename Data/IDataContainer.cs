@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System;
 
 namespace GameFramework
 {
@@ -7,6 +8,8 @@ namespace GameFramework
         List<IDataComponent> DataComponentList { get; }
 
         T Get<T>() where T : IDataComponent;
+        IDataComponent Get(Type type);
+
         void OnUpdate(IDataSource source);
     }
 }
