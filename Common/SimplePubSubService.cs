@@ -13,7 +13,11 @@ namespace GameFramework
         {
             if (allSubscribers.TryGetValue(key, out List<Action<U>> subscribers))
             {
-                subscribers.ForEach(subscriber => subscriber?.Invoke(value));
+                for (int i = subscribers.Count - 1; i >= 0; i = Mathf.Min(i - 1, subscribers.Count - 1))
+                {
+                    var subscriber = subscribers[i];
+                    subscriber?.Invoke(value);
+                }
             }
         }
 
