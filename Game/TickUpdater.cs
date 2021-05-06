@@ -53,17 +53,17 @@ namespace GameFramework
                 float syncTime = SyncTick * TickInterval + timeOffset;
                 float gapTime = syncTime - ElapsedTime;    //  서버 타임 - 클라 타임 (gapTime이 양수면 서버가 더 빠른 상태, gapTime이 음수면 클라가 더 빠른 상태)
 
-                if (gapTime < -0.12f)       
+                if (gapTime < -0.1f)
                 {
                     speed = 0.01f;
                 }
-                else if (gapTime > 0.12f)
+                else if (gapTime > 0.1f)
                 {
-                    speed = (syncTime - ElapsedTime) / Time.deltaTime;
+                    speed = gapTime / Time.deltaTime;
                 }
                 else
                 {
-                    float offset = 3 * Mathf.Pow(10 * gapTime, 7) + 0.1f * gapTime;
+                    float offset = 2 * Mathf.Pow(10 * gapTime, 3);
                     speed = 1 + offset;
                 }
             }
