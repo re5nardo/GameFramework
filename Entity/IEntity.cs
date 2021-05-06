@@ -15,8 +15,8 @@ namespace GameFramework
         T AttachComponent<T>(T component) where T : IComponent;
         T DetachComponent<T>(T component) where T : IComponent;
 
-        T GetComponent<T>() where T : IComponent;
-        List<T> GetComponents<T>() where T : IComponent;
+        T GetEntityComponent<T>() where T : IComponent;
+        List<T> GetEntityComponents<T>() where T : IComponent;
 
         void SendCommandToAll(ICommand command);
         void SendCommand(ICommand command, List<Type> cullings);
