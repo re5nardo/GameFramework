@@ -14,7 +14,18 @@ namespace GameFramework
         public float ElapsedTime { get; private set; }                  //  sec
 
         private bool isSync = false;
-        public int SyncTick { get; set; }
+
+        private int syncTick;
+        public int SyncTick
+        {
+            get => syncTick;
+            set
+            {
+                syncTick = value;
+
+                AdjustSpeed();
+            }
+        }
         
         private float speed = 1;
         private float timeOffset = 0;   //  시간 gap (네트워크 Latency등등)을 보상하기 위한 값 (sec)
@@ -40,8 +51,6 @@ namespace GameFramework
 
                 yield return null;
 
-                AdjustSpeed();
-
                 ElapsedTime += (Time.deltaTime * speed);
             }
         }
@@ -53,19 +62,9 @@ namespace GameFramework
                 float syncTime = SyncTick * TickInterval + timeOffset;
                 float gapTime = syncTime - ElapsedTime;    //  서버 타임 - 클라 타임 (gapTime이 양수면 서버가 더 빠른 상태, gapTime이 음수면 클라가 더 빠른 상태)
 
-                if (gapTime < -0.1f)
-                {
-                    speed = 0.01f;
-                }
-                else if (gapTime > 0.1f)
-                {
-                    speed = gapTime / Time.deltaTime;
-                }
-                else
-                {
-                    float offset = 2 * Mathf.Pow(10 * gapTime, 3);
-                    speed = 1 + offset;
-                }
+                float adjustTime = 1;    //  sec
+
+                speed = Mathf.Max(0.01f, (adjustTime + gapTime) / adjustTime);
             }
             else
             {
