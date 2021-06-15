@@ -63,6 +63,15 @@ namespace GameFramework
                 float gapTime = syncTime - ElapsedTime;    //  서버 타임 - 클라 타임 (gapTime이 양수면 서버가 더 빠른 상태, gapTime이 음수면 클라가 더 빠른 상태)
 
                 speed = 1 + 0.2f * Mathf.Pow(gapTime, 3);
+
+                if (speed > 10)
+                {
+                    speed = 10;
+                }
+                else if (speed < 0.1f)
+                {
+                    speed = 0.1f;
+                }
             }
             else
             {
