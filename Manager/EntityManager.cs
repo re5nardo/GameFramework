@@ -36,7 +36,7 @@ namespace GameFramework
             return localEntitySequence--;
         }
 
-        public void RegisterEntity(IEntity entity)
+        public virtual void RegisterEntity(IEntity entity)
         {
             if (dicEntity.ContainsKey(entity.EntityID))
             {
@@ -54,7 +54,7 @@ namespace GameFramework
             return dicEntity.ContainsKey(nEntityID);
         }
 
-        public void UnregisterEntity(int nEntityID)
+        public virtual void UnregisterEntity(int nEntityID)
         {
             if (!dicEntity.ContainsKey(nEntityID))
             {
