@@ -10,7 +10,7 @@ namespace GameFramework
             public abstract IState InitState { get; }
             public IState CurrentState { get; protected set; }
 
-            protected void StartStateMachine()
+            public void StartStateMachine()
             {
                 CurrentState = InitState;
                 CurrentState.Enter();
