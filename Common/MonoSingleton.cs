@@ -1,11 +1,13 @@
 ﻿using UnityEngine;
 using System.Reflection;
+using System.Linq;
 
 namespace GameFramework
 {
     public class MonoSingleton<T> : MonoBehaviour where T : MonoSingleton<T>
     {
         [SerializeField] private bool overriding = false;
+        public bool Overriding => overriding;
 
         protected static T instance = null;
         public static T Instance
@@ -26,20 +28,24 @@ namespace GameFramework
             if (instance == null)
             {
                 instance = (T)this;
+                return;
+            }
+
+            if (instance == this)
+            {
+                return;
+            }
+
+            if (overriding)
+            {
+                Debug.LogWarning("Destroy old singleton instance!");
+                DestroyImmediate(instance);
+                instance = (T)this;
             }
             else
             {
-                if (overriding)
-                {
-                    Debug.LogWarning("Destroy old singleton instance!");
-                    DestroyImmediate(instance);
-                    instance = (T)this;
-                }
-                else
-                {
-                    Debug.LogWarning("Destroy new singleton instance!");
-                    DestroyImmediate(this);
-                }
+                Debug.LogWarning("Destroy new singleton instance!");
+                DestroyImmediate(this);
             }
         }
 
@@ -60,6 +66,14 @@ namespace GameFramework
         {
             if (instance != null)
             {
+                return;
+            }
+
+            var candidates = GameObject.FindObjectsOfType<T>(true).ToList();
+            var target = candidates?.Find(x => x.Overriding);
+            if (target != null)
+            {
+                instance = target;
                 return;
             }
 
