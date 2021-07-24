@@ -11,7 +11,7 @@ namespace GameFramework
 
         public int CurrentTick { get; private set; }
         public float TickInterval { get; private set; } = 1 / 30f;      //  sec
-        public float ElapsedTime { get; private set; }                  //  sec
+        public float ElapsedTime { get; protected set; }                //  sec
 
         private bool isSync = false;
 
@@ -33,10 +33,21 @@ namespace GameFramework
         public void Run(int tick = 0)
         {
             CurrentTick = tick;
-            ElapsedTime = tick * TickInterval + timeOffset;
+
+            OnInitElapsedTime();
 
             StopCoroutine("TickLoop");
             StartCoroutine("TickLoop");
+        }
+
+        protected virtual void OnInitElapsedTime()
+        {
+            ElapsedTime = CurrentTick * TickInterval + timeOffset;
+        }
+
+        protected virtual void OnUpdateElapsedTime()
+        {
+            ElapsedTime += (Time.deltaTime * speed);
         }
 
         private IEnumerator TickLoop()
@@ -51,7 +62,7 @@ namespace GameFramework
 
                 yield return null;
 
-                ElapsedTime += (Time.deltaTime * speed);
+                OnUpdateElapsedTime();
             }
         }
 

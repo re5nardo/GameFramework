@@ -14,8 +14,6 @@ namespace GameFramework
             {
                 if (forceUpdate || cachedScriptableObjects == null)
                 {
-                    var name = typeof(T).Name;
-
                     var scriptableObjects = Resources.LoadAll<T>($"ScriptableObject/{typeof(T).Name}") as T[];
 
                     cachedScriptableObjects = scriptableObjects;
