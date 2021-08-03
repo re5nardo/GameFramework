@@ -8,8 +8,9 @@ namespace GameFramework
     {
         private event Action<int> onTick = null;
         private event Action<int> onTickEnd = null;
+        private event Action<float> onUpdateElapsedTime = null;
 
-        public int CurrentTick { get; private set; }
+        public int CurrentTick { get; private set; } = -1;
         public float TickInterval { get; private set; } = 1 / 30f;      //  sec
         public float ElapsedTime { get; protected set; }                //  sec
 
@@ -62,7 +63,11 @@ namespace GameFramework
 
                 yield return null;
 
+                var prevTime = ElapsedTime;
+
                 OnUpdateElapsedTime();
+
+                onUpdateElapsedTime?.Invoke(ElapsedTime - prevTime);
             }
         }
 
@@ -111,13 +116,14 @@ namespace GameFramework
             CurrentTick++;
         }
 
-        public void Initialize(float tickInterval, bool isSync, float timeOffset, Action<int> onTick, Action<int> onTickEnd)
+        public void Initialize(float tickInterval, bool isSync, float timeOffset, Action<int> onTick, Action<int> onTickEnd, Action<float> onUpdateElapsedTime)
         {
             this.TickInterval = tickInterval;
             this.isSync = isSync;
             this.timeOffset = timeOffset;
             this.onTick = onTick;
             this.onTickEnd = onTickEnd;
+            this.onUpdateElapsedTime = onUpdateElapsedTime;
         }
     }
 }
