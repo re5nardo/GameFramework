@@ -10,7 +10,7 @@ namespace GameFramework
         private event Action<int> onTickEnd = null;
         private event Action<float> onUpdateElapsedTime = null;
 
-        public int CurrentTick { get; private set; } = -1;
+        public int CurrentTick { get; private set; } = 0;
         public float TickInterval { get; private set; } = 1 / 30f;      //  sec
         public float ElapsedTime { get; protected set; }                //  sec
 
@@ -53,11 +53,15 @@ namespace GameFramework
 
         private IEnumerator TickLoop()
         {
+            TickBody();
+
             while (true)
             {
-                int count = GetProcessibleTick() - CurrentTick;
-                for (int i = 0; i < count; ++i)
+                int processibleTick = GetProcessibleTick();
+                while (CurrentTick < processibleTick)
                 {
+                    CurrentTick++;
+
                     TickBody();
                 }
 
@@ -112,8 +116,6 @@ namespace GameFramework
             onTick?.Invoke(CurrentTick);
 
             onTickEnd?.Invoke(CurrentTick);
-
-            CurrentTick++;
         }
 
         public void Initialize(float tickInterval, bool isSync, float timeOffset, Action<int> onTick, Action<int> onTickEnd, Action<float> onUpdateElapsedTime)
