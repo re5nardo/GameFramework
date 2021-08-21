@@ -53,15 +53,11 @@ namespace GameFramework
 
         private IEnumerator TickLoop()
         {
-            TickBody();
-
             while (true)
             {
                 int processibleTick = GetProcessibleTick();
                 while (CurrentTick < processibleTick)
                 {
-                    CurrentTick++;
-
                     TickBody();
                 }
 
@@ -116,6 +112,8 @@ namespace GameFramework
             onTick?.Invoke(CurrentTick);
 
             onTickEnd?.Invoke(CurrentTick);
+
+            CurrentTick++;
         }
 
         public void Initialize(float tickInterval, bool isSync, float timeOffset, Action<int> onTick, Action<int> onTickEnd, Action<float> onUpdateElapsedTime)
