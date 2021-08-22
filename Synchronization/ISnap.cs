@@ -8,7 +8,6 @@ namespace GameFramework
         bool EqualsCore(ISnap snap);
         bool EqualsValue(ISnap snap);
 
-        ISnap Set(ISynchronizable synchronizable);
         ISnap Clone();
     }
 }

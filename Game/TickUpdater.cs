@@ -56,7 +56,7 @@ namespace GameFramework
             while (true)
             {
                 int processibleTick = GetProcessibleTick();
-                while (CurrentTick < processibleTick)
+                while (CurrentTick <= processibleTick)
                 {
                     TickBody();
                 }
