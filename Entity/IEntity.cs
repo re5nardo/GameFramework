@@ -12,11 +12,11 @@ namespace GameFramework
         Vector3 Velocity { get; set; }
         Vector3 AngularVelocity { get; set; }
 
-        T AttachComponent<T>(T component) where T : IComponent;
-        T DetachComponent<T>(T component) where T : IComponent;
+        T AttachEntityComponent<T>(T entityComponent) where T : IEntityComponent;
+        T DetachEntityComponent<T>(T entityComponent) where T : IEntityComponent;
 
-        T GetEntityComponent<T>() where T : IComponent;
-        List<T> GetEntityComponents<T>() where T : IComponent;
+        T GetEntityComponent<T>() where T : IEntityComponent;
+        List<T> GetEntityComponents<T>() where T : IEntityComponent;
 
         void SendCommandToAll(ICommand command);
         void SendCommand(ICommand command, List<Type> cullings);

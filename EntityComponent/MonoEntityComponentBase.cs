@@ -4,7 +4,7 @@ using System;
 
 namespace GameFramework
 {
-    public class MonoComponentBase : MonoBehaviour, IComponent
+    public class MonoEntityComponentBase : MonoBehaviour, IEntityComponent
     {
         public IEntity Entity { get; private set; }
 

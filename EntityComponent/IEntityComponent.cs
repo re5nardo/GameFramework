@@ -1,7 +1,7 @@
 ﻿
 namespace GameFramework
 {
-    public interface IComponent
+    public interface IEntityComponent
     {
         IEntity Entity { get; }
 

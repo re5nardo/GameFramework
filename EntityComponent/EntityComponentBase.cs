@@ -4,7 +4,7 @@ using System;
 
 namespace GameFramework
 {
-    public class ComponentBase : IComponent
+    public class EntityComponentBase : IEntityComponent
     {
         public IEntity Entity { get; private set; }
 
