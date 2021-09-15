@@ -54,39 +54,5 @@ namespace Entity
 
             return found.Cast<T>().ToList();
         }
-
-        public void SendCommandToAll(ICommand command)
-        {
-            List<IEntityComponent> temp = new List<IEntityComponent>(entityComponents);
-
-            foreach (var entityComponent in temp)
-            {
-                if (!entityComponents.Contains(entityComponent))
-                    continue;
-
-                entityComponent.OnCommand(command);
-            }
-        }
-
-        public void SendCommand(ICommand command, List<Type> cullings)
-        {
-            List<IEntityComponent> temp = new List<IEntityComponent>(entityComponents);
-
-            foreach (var entityComponent in temp)
-            {
-                if (!entityComponents.Contains(entityComponent))
-                    continue;
-
-                if (cullings.Exists(x => x.IsAssignableFrom(entityComponent.GetType())))
-                {
-                    entityComponent.OnCommand(command);
-                }
-            }
-        }
-
-        public void SendCommandToViews(ICommand command)
-        {
-            SendCommand(command, new List<Type> { typeof(ViewComponentBase), typeof(MonoViewComponentBase) });
-        }
     }
 }

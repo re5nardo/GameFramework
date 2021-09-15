@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
-using System;
 
 namespace GameFramework
 {
@@ -17,8 +16,5 @@ namespace GameFramework
 
         T GetEntityComponent<T>() where T : IEntityComponent;
         List<T> GetEntityComponents<T>() where T : IEntityComponent;
-
-        void SendCommandToAll(ICommand command);
-        void SendCommand(ICommand command, List<Type> cullings);
     }
 }
