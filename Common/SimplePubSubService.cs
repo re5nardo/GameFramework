@@ -5,40 +5,47 @@ using System;
 
 namespace GameFramework
 {
-    public class SimplePubSubService<T, U>
+    public class SimplePubSubService
     {
-        private Dictionary<T, List<Action<U>>> allSubscribers = new Dictionary<T, List<Action<U>>>();
+        private Dictionary<Type, object> allSubscribers = new Dictionary<Type, object>();
 
-        public void Publish(T key, U value)
+        public void Publish<T>(T value)
         {
-            if (allSubscribers.TryGetValue(key, out List<Action<U>> subscribers))
+            if (allSubscribers.TryGetValue(typeof(T), out var subscribers))
             {
-                for (int i = subscribers.Count - 1; i >= 0; i = Mathf.Min(i - 1, subscribers.Count - 1))
+                var subscriberList = (GenericHandlerList<T>)subscribers;
+
+                for (int i = subscriberList.handlers.Count - 1; i >= 0; i = Mathf.Min(i - 1, subscriberList.handlers.Count - 1))
                 {
-                    var subscriber = subscribers[i];
+                    var subscriber = subscriberList.handlers[i];
                     subscriber?.Invoke(value);
                 }
             }
         }
 
-        public void AddSubscriber(T key, Action<U> subscriber)
+        public void AddSubscriber<T>(Action<T> subscriber)
         {
-            if (!allSubscribers.ContainsKey(key))
+            if (!allSubscribers.ContainsKey(typeof(T)))
             {
-                allSubscribers.Add(key, new List<Action<U>>());
+                allSubscribers.Add(typeof(T), new GenericHandlerList<T>());
             }
 
-            allSubscribers[key].Add(subscriber);
+            ((GenericHandlerList<T>)allSubscribers[typeof(T)]).handlers.Add(subscriber);
         }
 
-        public void RemoveSubscriber(T key, Action<U> subscriber)
+        public void RemoveSubscriber<T>(Action<T> subscriber)
         {
-            allSubscribers[key].Remove(subscriber);
+            ((GenericHandlerList<T>)allSubscribers[typeof(T)]).handlers.Remove(subscriber);
         }
 
         public void Clear()
         {
             allSubscribers.Clear();
         }
+    }
+
+    class GenericHandlerList<T>
+    {
+        public List<Action<T>> handlers = new List<Action<T>>();
     }
 }
