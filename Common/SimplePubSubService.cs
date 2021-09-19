@@ -11,15 +11,16 @@ namespace GameFramework
 
         public void Publish<T>(T value)
         {
-            if (allSubscribers.TryGetValue(typeof(T), out var subscribers))
-            {
-                var subscriberList = (GenericHandlerList<T>)subscribers;
+            Publish(typeof(T), value);
+        }
 
-                for (int i = subscriberList.handlers.Count - 1; i >= 0; i = Mathf.Min(i - 1, subscriberList.handlers.Count - 1))
-                {
-                    var subscriber = subscriberList.handlers[i];
-                    subscriber?.Invoke(value);
-                }
+        public void Publish(Type type, object value)
+        {
+            if (allSubscribers.TryGetValue(type, out var subscribers))
+            {
+                var subscriberList = (IGenericHandlerList)subscribers;
+
+                subscriberList.InvokeAll(value);
             }
         }
 
@@ -44,8 +45,22 @@ namespace GameFramework
         }
     }
 
-    class GenericHandlerList<T>
+    class GenericHandlerList<T> : IGenericHandlerList
     {
         public List<Action<T>> handlers = new List<Action<T>>();
+
+        public void InvokeAll(object value)
+        {
+            for (int i = handlers.Count - 1; i >= 0; i = Mathf.Min(i - 1, handlers.Count - 1))
+            {
+                var handler = handlers[i];
+                handler?.Invoke((T)value);
+            }
+        }
+    }
+
+    interface IGenericHandlerList
+    {
+        void InvokeAll(object value);
     }
 }
