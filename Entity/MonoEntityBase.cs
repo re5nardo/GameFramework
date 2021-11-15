@@ -17,11 +17,16 @@ namespace Entity
         public virtual Vector3 Velocity { get; set; }
         public virtual Vector3 AngularVelocity { get; set; }
 
+        public T AttachEntityComponent<T>() where T : Component, IEntityComponent
+        {
+            return AttachEntityComponent(gameObject.AddComponent<T>());
+        }
+
         public T AttachEntityComponent<T>(T entityComponent) where T : IEntityComponent
         {
             entityComponents.Add(entityComponent);
 
-            entityComponent.OnAttached(this);
+            entityComponent.Attach(this);
 
             return entityComponent;
         }
@@ -30,7 +35,7 @@ namespace Entity
         {
             entityComponents.Remove(entityComponent);
 
-            entityComponent.OnDetached();
+            entityComponent.Detach();
 
             return entityComponent;
         }

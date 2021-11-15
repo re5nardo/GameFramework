@@ -5,7 +5,7 @@ namespace GameFramework
     {
         IEntity Entity { get; }
 
-        void OnAttached(IEntity entity);
-        void OnDetached();
+        void Attach(IEntity entity);
+        void Detach();
     }
 }

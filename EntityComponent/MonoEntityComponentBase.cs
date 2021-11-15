@@ -8,14 +8,21 @@ namespace GameFramework
     {
         public IEntity Entity { get; private set; }
 
-        public virtual void OnAttached(IEntity entity)
+        public void Attach(IEntity entity)
         {
             Entity = entity;
+
+            OnAttached(entity);
         }
 
-        public virtual void OnDetached()
+        public void Detach()
         {
+            OnDetached();
+
             Entity = null;
         }
+
+        protected virtual void OnAttached(IEntity entity) { }
+        protected virtual void OnDetached() { }
     }
 }
