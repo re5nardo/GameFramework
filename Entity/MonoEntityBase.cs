@@ -17,6 +17,11 @@ namespace Entity
         public virtual Vector3 Velocity { get; set; }
         public virtual Vector3 AngularVelocity { get; set; }
 
+        public IEntityComponent AttachEntityComponent(string typeName)
+        {
+            return AttachEntityComponent(gameObject.AddComponent(Type.GetType(typeName)) as IEntityComponent);
+        }
+
         public T AttachEntityComponent<T>() where T : Component, IEntityComponent
         {
             return AttachEntityComponent(gameObject.AddComponent<T>());
