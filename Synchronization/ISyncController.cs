@@ -13,6 +13,6 @@ namespace GameFramework
 
         void Sync(T value);
         void OnSync(T value);
-        void OnSyncDataEntry(SyncDataEntry value);
+        void OnSync(SyncDataEntry value);
     }
 }
