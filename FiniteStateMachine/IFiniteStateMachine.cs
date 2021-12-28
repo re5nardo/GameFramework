@@ -9,6 +9,7 @@ namespace GameFramework
             IState InitState { get; }
             IState CurrentState { get; }
             IState MoveNext<I>(I input) where I : Enum;    //  인풋값에 따라 상태 전이
+            void OnStateChange();
         }
 
         public interface IState

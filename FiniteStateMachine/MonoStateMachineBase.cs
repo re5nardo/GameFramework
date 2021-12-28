@@ -34,10 +34,14 @@ namespace GameFramework
 
                 CurrentState = next;
 
+                OnStateChange();
+
                 CurrentState.Enter();
 
                 return CurrentState;
             }
+
+            public virtual void OnStateChange() { }
         }
     }
 }

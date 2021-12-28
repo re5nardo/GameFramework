@@ -5,14 +5,12 @@ namespace GameFramework
     [Serializable]
     public struct SyncControllerData
     {
-        public string type;
-        public int entityId;
+        public string controllerId;
         public string ownerId;
         
-        public SyncControllerData(string type, int entityId, string ownerId)
+        public SyncControllerData(string controllerId, string ownerId)
         {
-            this.type = type;
-            this.entityId = entityId;
+            this.controllerId = controllerId;
             this.ownerId = ownerId;
         }
     }

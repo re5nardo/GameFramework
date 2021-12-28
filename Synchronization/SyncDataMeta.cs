@@ -6,17 +6,15 @@ namespace GameFramework
     public struct SyncDataMeta
     {
         public int tick;
-        public string type;
         public string userId;
-        public int entityId;
+        public string controllerId;
         public byte[] hash;
 
-        public SyncDataMeta(int tick, string type, string userId, int entityId, byte[] hash)
+        public SyncDataMeta(int tick, string userId, string controllerId, byte[] hash)
         {
             this.tick = tick;
-            this.type = type;
             this.userId = userId;
-            this.entityId = entityId;
+            this.controllerId = controllerId;
             this.hash = hash;
         }
     }
