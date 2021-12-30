@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 
 namespace GameFramework
 {
@@ -8,7 +9,7 @@ namespace GameFramework
         {
             IState InitState { get; }
             IState CurrentState { get; }
-            IState MoveNext<I>(I input) where I : Enum;    //  인풋값에 따라 상태 전이
+            void MoveNext<I>(I input) where I : Enum;    //  인풋값에 따라 상태 전이
             void OnStateChange();
         }
 
@@ -17,9 +18,9 @@ namespace GameFramework
             IFiniteStateMachine FSM { get; }
             bool IsCurrent { get; }
 
-            void Enter();
-            void Execute();
-            void Exit();
+            void OnEnter();
+            IEnumerator OnExecute();
+            void OnExit();
 
             IState GetNext<I>(I input) where I : Enum; //  인풋값에 의한 다음 상태 값 반환
         }

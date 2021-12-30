@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System;
+using System.Collections;
 
 namespace GameFramework
 {
@@ -10,17 +11,14 @@ namespace GameFramework
             public IFiniteStateMachine FSM => gameObject.GetOrAddComponent<MonoStateMachineBase>();
             public virtual bool IsCurrent => FSM.CurrentState.Equals(this);
 
-            public virtual void Enter()
+            public virtual void OnEnter() { }
+
+            public virtual IEnumerator OnExecute()
             {
+                yield break;
             }
 
-            public virtual void Execute()
-            {
-            }
-
-            public virtual void Exit()
-            {
-            }
+            public virtual void OnExit() { }
 
             public abstract IState GetNext<I>(I input) where I : Enum;
 
@@ -28,7 +26,7 @@ namespace GameFramework
             {
                 if (IsCurrent)
                 {
-                    Exit();
+                    OnExit();
                 }
             }
         }

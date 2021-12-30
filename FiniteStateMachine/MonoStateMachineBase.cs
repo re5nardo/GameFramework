@@ -13,32 +13,26 @@ namespace GameFramework
             public void StartStateMachine()
             {
                 CurrentState = InitState;
-                CurrentState.Enter();
+                CurrentState.OnEnter();
             }
 
-            private void Update()
-            {
-                CurrentState?.Execute();
-            }
-
-            public IState MoveNext<I>(I input) where I : Enum
+            public void MoveNext<I>(I input) where I : Enum
             {
                 var next = CurrentState.GetNext(input);
 
                 if (CurrentState == next)
                 {
-                    return CurrentState;
+                    return;
                 }
 
-                CurrentState.Exit();
+                StopAllCoroutines();
+                CurrentState.OnExit();
 
                 CurrentState = next;
-
                 OnStateChange();
 
-                CurrentState.Enter();
-
-                return CurrentState;
+                CurrentState.OnEnter();
+                StartCoroutine(CurrentState.OnExecute());
             }
 
             public virtual void OnStateChange() { }
