@@ -1,7 +1,7 @@
 
 namespace GameFramework
 {
-    public interface ISyncController<T> where T : ISyncData
+    public interface ISyncControllerBase
     {
         string ControllerId { get; }
         string OwnerId { get; }
@@ -10,17 +10,21 @@ namespace GameFramework
         SyncScope SyncScope { get; }
 
         void SetDirty();
-
-        T GetSyncData();
+        
         SyncDataEntry GetSyncDataEntry();
         SyncControllerData GetSyncControllerData();
 
-        void Sync(T value);
-
-        void OnSync(T value);
         void OnSync(SyncDataEntry value);
 
         void OnInitialize();
         void OnFinalize();
+    }
+
+    public interface ISyncController<T> : ISyncControllerBase where T : ISyncData
+    {
+        T GetSyncData();
+
+        void Sync(T value);
+        void OnSync(T value);
     }
 }
