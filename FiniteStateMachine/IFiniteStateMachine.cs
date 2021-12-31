@@ -18,6 +18,9 @@ namespace GameFramework
             IFiniteStateMachine FSM { get; }
             bool IsCurrent { get; }
 
+            void Enter();
+            void Exit();
+
             void OnEnter();
             IEnumerator OnExecute();
             void OnExit();

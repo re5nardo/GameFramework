@@ -11,6 +11,18 @@ namespace GameFramework
             public IFiniteStateMachine FSM => gameObject.GetOrAddComponent<MonoStateMachineBase>();
             public virtual bool IsCurrent => FSM.CurrentState.Equals(this);
 
+            public void Enter()
+            {
+                OnEnter();
+                StartCoroutine("OnExecute");
+            }
+
+            public void Exit()
+            {
+                StopCoroutine("OnExecute");
+                OnExit();
+            }
+
             public virtual void OnEnter() { }
 
             public virtual IEnumerator OnExecute()

@@ -13,7 +13,7 @@ namespace GameFramework
             public void StartStateMachine()
             {
                 CurrentState = InitState;
-                CurrentState.OnEnter();
+                CurrentState.Enter();
             }
 
             public void MoveNext<I>(I input) where I : Enum
@@ -25,14 +25,12 @@ namespace GameFramework
                     return;
                 }
 
-                StopAllCoroutines();
-                CurrentState.OnExit();
+                CurrentState.Exit();
 
                 CurrentState = next;
                 OnStateChange();
 
-                CurrentState.OnEnter();
-                StartCoroutine(CurrentState.OnExecute());
+                CurrentState.Enter();
             }
 
             public virtual void OnStateChange() { }
