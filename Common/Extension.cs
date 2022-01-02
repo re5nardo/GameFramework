@@ -40,5 +40,22 @@ namespace GameFramework
         {
             return new Vector3(vector.x, 0, vector.z);
         }
+
+        public static T TryEnumParse<T>(this string value, T defaultValue)
+        {
+            try
+            {
+                return (T)Enum.Parse(typeof(T), value);
+            }
+            catch (InvalidCastException)
+            {
+                return defaultValue;
+            }
+            catch (Exception e)
+            {
+                UnityEngine.Debug.LogError("Enum cast failed with unknown error: " + e.Message);
+                return defaultValue;
+            }
+        }
     }
 }
