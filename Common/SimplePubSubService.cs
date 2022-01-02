@@ -40,9 +40,12 @@ namespace GameFramework
 
         public void RemoveSubscriber<T>(Action<T> subscriber)
         {
-            var handler = ((GenericHandlerList<T>)allSubscribers[typeof(T)]).handlers.Find(x => x.Equals(subscriber));
+            if (allSubscribers.TryGetValue(typeof(T), out var value))
+            {
+                var genericHandlerList = (GenericHandlerList<T>)value;
 
-            ((GenericHandlerList<T>)allSubscribers[typeof(T)]).handlers.Remove(handler);
+                genericHandlerList.Remove(subscriber);
+            }
         }
 
         public void Clear()
@@ -62,6 +65,13 @@ namespace GameFramework
                 var handler = handlers[i];
                 handler?.Invoke((T)value);
             }
+        }
+
+        public void Remove(Action<T> value)
+        {
+            var handler = handlers.Find(x => x.Equals(value));
+
+            handlers.Remove(handler);
         }
     }
 

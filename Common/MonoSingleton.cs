@@ -1,10 +1,16 @@
 ﻿using UnityEngine;
 using System.Reflection;
 using System.Linq;
+using System;
 
 namespace GameFramework
 {
-    public class MonoSingleton<T> : MonoBehaviour where T : MonoSingleton<T>
+    public class MonoSingletonBase : MonoBehaviour
+    {
+        public static Func<bool> condition;
+    }
+
+    public class MonoSingleton<T> : MonoSingletonBase where T : MonoSingleton<T>
     {
         [SerializeField] private bool overriding = false;
         public bool Overriding => overriding;
@@ -65,6 +71,11 @@ namespace GameFramework
         public static void Instantiate()
         {
             if (instance != null)
+            {
+                return;
+            }
+
+            if (condition != null && condition.Invoke() == false)
             {
                 return;
             }
