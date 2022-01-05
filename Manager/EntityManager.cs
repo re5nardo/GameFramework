@@ -120,7 +120,7 @@ namespace GameFramework
 
         public List<T> GetAllEntities<T>() where T : IEntity
         {
-            return dicEntity.Values.Cast<T>().ToList();
+            return new List<T>(dicEntity.Values.Where(x => x is T).Cast<T>());
         }
 
         public HashSet<int> GetAllEntityIDs()
