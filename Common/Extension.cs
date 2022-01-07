@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
 namespace GameFramework
 {
@@ -56,6 +57,11 @@ namespace GameFramework
                 UnityEngine.Debug.LogError("Enum cast failed with unknown error: " + e.Message);
                 return defaultValue;
             }
+        }
+
+        public static UnityWebRequestAwaiter GetAwaiter(this UnityWebRequestAsyncOperation asyncOp)
+        {
+            return new UnityWebRequestAwaiter(asyncOp);
         }
     }
 }
