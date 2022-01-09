@@ -1,14 +1,10 @@
 ﻿using UnityEngine;
 using System.Reflection;
 using System.Linq;
-using System;
 
 namespace GameFramework
 {
-    public class MonoSingletonBase : MonoBehaviour
-    {
-        public static Func<bool> condition;
-    }
+    public class MonoSingletonBase : MonoBehaviour { }
 
     public class MonoSingleton<T> : MonoSingletonBase where T : MonoSingleton<T>
     {
@@ -71,11 +67,6 @@ namespace GameFramework
         public static void Instantiate()
         {
             if (instance != null)
-            {
-                return;
-            }
-
-            if (condition != null && condition.Invoke() == false)
             {
                 return;
             }
