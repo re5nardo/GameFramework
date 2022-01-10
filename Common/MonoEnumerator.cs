@@ -6,9 +6,9 @@ public abstract class MonoEnumerator : MonoBehaviour, IEnumerator
 {
     public object Current { get; protected set; }
 
-    protected bool isDone;
+    private bool isDone;
 
-    protected bool isSuccess;
+    private bool isSuccess;
     public bool IsSuccess
     {
         get => isSuccess;

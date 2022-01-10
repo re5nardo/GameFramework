@@ -42,6 +42,11 @@ namespace GameFramework
             return new Vector3(vector.x, 0, vector.z);
         }
 
+        public static T Parse<T>(this string value)
+        {
+            return (T)Enum.Parse(typeof(T), value);
+        }
+
         public static T TryEnumParse<T>(this string value, T defaultValue)
         {
             try
