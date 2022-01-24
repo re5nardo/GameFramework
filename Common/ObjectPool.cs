@@ -1,43 +1,17 @@
 ﻿using System.Collections.Generic;
-using GameFramework;
 using System;
 using UnityEngine;
 
-public class ObjectPool : Singleton<ObjectPool>
+namespace GameFramework
 {
-    private Dictionary<Type, InternalObjectPool> objectPools = new Dictionary<Type, InternalObjectPool>();
-
-    public T GetObject<T>() where T : IPoolObject
+    public class ObjectPool : MonoSingleton<ObjectPool>
     {
-        return (T)GetObject(typeof(T));
-    }
+        private Dictionary<Type, InternalObjectPool> objectPools = new Dictionary<Type, InternalObjectPool>();
 
-    public IPoolObject GetObject(Type type)
-    {
-        if (!objectPools.ContainsKey(type))
+        private void Start()
         {
-            objectPools[type] = new InternalObjectPool();
+            DontDestroyOnLoad(this);
         }
-
-        return objectPools[type].GetObject(type);
-    }
-
-    public void ReturnObject(IPoolObject obj)
-    {
-        if (objectPools.TryGetValue(obj.GetType(), out var internalObjectPool))
-        {
-            internalObjectPool.ReturnObject(obj);
-        }
-        else
-        {
-            Debug.LogWarning($"Returned object is invalid! Type: {obj.GetType()}");
-        }
-    }
-
-    class InternalObjectPool
-    {
-        private Queue<IPoolObject> pool = new Queue<IPoolObject>();
-        private LinkedList<IPoolObject> beingUsed = new LinkedList<IPoolObject>();
 
         public T GetObject<T>() where T : IPoolObject
         {
@@ -46,45 +20,73 @@ public class ObjectPool : Singleton<ObjectPool>
 
         public IPoolObject GetObject(Type type)
         {
-            if (!typeof(IPoolObject).IsAssignableFrom(type))
+            if (!objectPools.ContainsKey(type))
             {
-                Debug.LogError($"The type is invalid! Type: {type}");
-                return null;
+                objectPools[type] = new InternalObjectPool();
             }
 
-            IPoolObject target = pool.Count > 0 ? pool.Dequeue() : CreatePoolObject(type);
-
-            if (target is Component component)
-            {
-                component.gameObject.SetActive(true);
-            }
-
-            beingUsed.AddLast(target);
-            return target;
+            return objectPools[type].GetObject(type);
         }
 
         public void ReturnObject(IPoolObject obj)
         {
-            obj.Clear();
-
-            if (obj is Component component)
+            if (objectPools.TryGetValue(obj.GetType(), out var internalObjectPool))
             {
-                component.gameObject.SetActive(false);
-            }
-
-            beingUsed.Remove(obj);
-            pool.Enqueue(obj);
-        }
-
-        private IPoolObject CreatePoolObject(Type type)
-        {
-            if (typeof(Component).IsAssignableFrom(type))
-            {
-                return new GameObject().AddComponent(type) as IPoolObject;
+                internalObjectPool.ReturnObject(obj);
             }
             else
             {
-                return Activator.CreateInstance(type) as IPoolObject;
+                Debug.LogWarning($"Returned object is invalid! Type: {obj.GetType()}");
+            }
+        }
+
+        class InternalObjectPool
+        {
+            private Queue<IPoolObject> pool = new Queue<IPoolObject>();
+            private LinkedList<IPoolObject> beingUsed = new LinkedList<IPoolObject>();
+
+            public IPoolObject GetObject(Type type)
+            {
+                if (!typeof(IPoolObject).IsAssignableFrom(type))
+                {
+                    Debug.LogError($"The type is invalid! Type: {type}");
+                    return null;
+                }
+
+                IPoolObject target = pool.Count > 0 ? pool.Dequeue() : CreatePoolObject(type);
+
+                if (target is Component component)
+                {
+                    component.gameObject.SetActive(true);
+                }
+
+                beingUsed.AddLast(target);
+                return target;
+            }
+
+            public void ReturnObject(IPoolObject obj)
+            {
+                obj.Clear();
+
+                if (obj is Component component)
+                {
+                    component.gameObject.SetActive(false);
+                }
+
+                beingUsed.Remove(obj);
+                pool.Enqueue(obj);
+            }
+
+            private IPoolObject CreatePoolObject(Type type)
+            {
+                if (typeof(Component).IsAssignableFrom(type))
+                {
+                    return new GameObject().AddComponent(type) as IPoolObject;
+                }
+                else
+                {
+                    return Activator.CreateInstance(type) as IPoolObject;
+                }
             }
         }
     }
