@@ -1,9 +1,8 @@
 ﻿
 namespace GameFramework
 {
-    public interface IPoolable
+    public interface IPoolObject
     {
         void Clear();
     }
-
 }
