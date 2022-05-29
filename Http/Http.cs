@@ -20,6 +20,7 @@ namespace GameFramework
             sb.Append(apiSettings.scheme).Append("://")
                 .Append(apiSettings.host).Append(":")
                 .Append(apiSettings.port)
+                .Append("/")
                 .Append(apiCall);
 
             bool firstParam = true;
