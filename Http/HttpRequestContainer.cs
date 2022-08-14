@@ -69,7 +69,13 @@ namespace GameFramework
 
         private TResponse OnDeserializeResponse(string json)
         {
-            return JsonUtility.FromJson<TResponse>(json);
+            var response = JsonUtility.FromJson<TResponse>(json);
+            if (response is IPostDeserialize postDeserialize)
+            {
+                postDeserialize.OnPostDeserialize(json);
+            }
+
+            return response;
         }
     }
 }
