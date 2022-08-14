@@ -2,9 +2,8 @@
 using UnityEngine;
 using System;
 using System.Linq;
-using GameFramework;
 
-namespace Entity
+namespace GameFramework
 {
 	public class MonoEntityBase : MonoBehaviour, IEntity
 	{

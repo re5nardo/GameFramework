@@ -5,28 +5,31 @@ using System.Runtime.CompilerServices;
 using System;
 using UnityEngine.Networking;
 
-public class UnityWebRequestAwaiter : INotifyCompletion
+namespace GameFramework
 {
-    private UnityWebRequestAsyncOperation asyncOp;
-    private Action continuation;
-
-    public UnityWebRequestAwaiter(UnityWebRequestAsyncOperation asyncOp)
+    public class UnityWebRequestAwaiter : INotifyCompletion
     {
-        this.asyncOp = asyncOp;
-        asyncOp.completed += OnRequestCompleted;
-    }
+        private UnityWebRequestAsyncOperation asyncOp;
+        private Action continuation;
 
-    public bool IsCompleted { get { return asyncOp.isDone; } }
+        public UnityWebRequestAwaiter(UnityWebRequestAsyncOperation asyncOp)
+        {
+            this.asyncOp = asyncOp;
+            asyncOp.completed += OnRequestCompleted;
+        }
 
-    public void GetResult() { }
+        public bool IsCompleted { get { return asyncOp.isDone; } }
 
-    public void OnCompleted(Action continuation)
-    {
-        this.continuation = continuation;
-    }
+        public void GetResult() { }
 
-    private void OnRequestCompleted(AsyncOperation obj)
-    {
-        continuation();
+        public void OnCompleted(Action continuation)
+        {
+            this.continuation = continuation;
+        }
+
+        private void OnRequestCompleted(AsyncOperation obj)
+        {
+            continuation();
+        }
     }
 }
