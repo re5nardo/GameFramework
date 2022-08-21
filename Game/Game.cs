@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Threading.Tasks;
 
 namespace GameFramework
 {
@@ -15,7 +16,7 @@ namespace GameFramework
 
         protected TickUpdater tickUpdater = null;
 
-        public abstract IEnumerator Initialize();
+        public abstract Task Initialize();
         protected virtual void Clear() {}
 
         private void Awake()
