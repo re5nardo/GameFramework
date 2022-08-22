@@ -14,9 +14,7 @@ namespace GameFramework
             {
                 if (forceUpdate || cachedScriptableObjects == null)
                 {
-                    var scriptableObjects = Resources.LoadAll<T>($"ScriptableObject/{typeof(T).Name}") as T[];
-
-                    cachedScriptableObjects = scriptableObjects;
+                    cachedScriptableObjects = Resources.LoadAll<T>($"ScriptableObject/{typeof(T).Name}");
                 }
 
                 return cachedScriptableObjects;
@@ -24,21 +22,13 @@ namespace GameFramework
             catch (Exception e)
             {
                 Debug.LogError(e.Message);
-                return null;
+                return default;
             }
         }
 
         public static T Get(string name = "", bool forceUpdate = false)
         {
-            try
-            {
-                return string.IsNullOrEmpty(name) ? GetAll(forceUpdate).First() : GetAll(forceUpdate).First(x => x.name == name);
-            }
-            catch (Exception e)
-            {
-                Debug.LogError(e.Message);
-                return null;
-            }
+            return string.IsNullOrEmpty(name) ? GetAll(forceUpdate).First() : GetAll(forceUpdate).First(x => x.name == name);
         }
 
         public static T Get(Func<T, bool> predicate, bool forceUpdate = false)
@@ -50,7 +40,7 @@ namespace GameFramework
             catch (Exception e)
             {
                 Debug.LogError(e.Message);
-                return null;
+                return default;
             }
         }
     }
