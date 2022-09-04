@@ -60,11 +60,11 @@ namespace GameFramework
 
         public void InvokeAll(object value)
         {
-            for (int i = handlers.Count - 1; i >= 0; i = Mathf.Min(i - 1, handlers.Count - 1))
+            var origin = new List<GenericHandler<T>>(handlers);
+            origin?.ForEach(handler =>
             {
-                var handler = handlers[i];
                 handler?.Invoke((T)value);
-            }
+            });
         }
 
         public void Remove(Action<T> value)
