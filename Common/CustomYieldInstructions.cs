@@ -7,7 +7,7 @@ namespace GameFramework
 {
     public sealed class WaitForDone : CustomYieldInstruction
     {
-        public override bool keepWaiting => elapsedTime < timeout && !predicate();
+        public override bool keepWaiting => !WaitForDoneProcess();
 
         private Func<bool> predicate;
         private float timeout;
@@ -19,6 +19,11 @@ namespace GameFramework
             this.predicate = predicate;
             this.timeout = timeout;
             this.startTime = Time.time;
+        }
+
+        private bool WaitForDoneProcess()
+        {
+            return elapsedTime >= timeout || predicate();
         }
     }
 }
