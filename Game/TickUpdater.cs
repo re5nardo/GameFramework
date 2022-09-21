@@ -8,11 +8,11 @@ namespace GameFramework
     {
         private event Action<int> onTick = null;
         private event Action<int> onTickEnd = null;
-        private event Action<float> onUpdateElapsedTime = null;
+        private event Action<double> onUpdateElapsedTime = null;
 
         public int CurrentTick { get; private set; } = 0;
-        public float TickInterval { get; private set; } = 1 / 30f;      //  sec
-        public float ElapsedTime { get; protected set; }                //  sec
+        public double TickInterval { get; private set; } = 1 / 30f;      //  sec
+        public double ElapsedTime { get; protected set; }                //  sec
 
         private bool isSync = false;
 
@@ -29,7 +29,7 @@ namespace GameFramework
         }
         
         private float speed = 1;
-        private float timeOffset = 0;   //  시간 gap (네트워크 Latency등등)을 보상하기 위한 값 (sec)
+        private double timeOffset = 0;   //  시간 gap (네트워크 Latency등등)을 보상하기 위한 값 (sec)
 
         public void Run(int tick = 0)
         {
@@ -75,10 +75,10 @@ namespace GameFramework
         {
             if (isSync)
             {
-                float syncTime = SyncTick * TickInterval + timeOffset;
-                float gapTime = syncTime - ElapsedTime;    //  서버 타임 - 클라 타임 (gapTime이 양수면 서버가 더 빠른 상태, gapTime이 음수면 클라가 더 빠른 상태)
+                double syncTime = SyncTick * TickInterval + timeOffset;
+                double gapTime = syncTime - ElapsedTime;    //  서버 타임 - 클라 타임 (gapTime이 양수면 서버가 더 빠른 상태, gapTime이 음수면 클라가 더 빠른 상태)
 
-                speed = 1 + 0.4f * Mathf.Pow(gapTime, 3);
+                speed = 1 + 0.4f * Mathf.Pow((float)gapTime, 3);
 
                 if (speed > 10)
                 {
@@ -116,7 +116,7 @@ namespace GameFramework
             CurrentTick++;
         }
 
-        public void Initialize(float tickInterval, bool isSync, float timeOffset, Action<int> onTick, Action<int> onTickEnd, Action<float> onUpdateElapsedTime)
+        public void Initialize(double tickInterval, bool isSync, double timeOffset, Action<int> onTick, Action<int> onTickEnd, Action<double> onUpdateElapsedTime)
         {
             this.TickInterval = tickInterval;
             this.isSync = isSync;

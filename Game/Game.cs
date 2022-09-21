@@ -10,8 +10,8 @@ namespace GameFramework
 
         public int CurrentTick => tickUpdater.CurrentTick;
         public int SyncTick => tickUpdater.SyncTick;
-        public float TickInterval => tickUpdater.TickInterval;
-        public float GameTime => tickUpdater.ElapsedTime;
+        public double TickInterval => tickUpdater.TickInterval;
+        public double GameTime => tickUpdater.ElapsedTime;
         public bool Initialized { get; protected set; } = false;
 
         protected TickUpdater tickUpdater = null;
