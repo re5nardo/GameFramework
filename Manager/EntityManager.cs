@@ -7,7 +7,9 @@ namespace GameFramework
 {
     public class EntityManager : MonoBehaviour
     {
-        protected int entitySequence = 0;
+        public const int EMPTY_ENTITY_ID = 0;
+
+        protected int entitySequence = 1;
         protected int localEntitySequence = -1;
 
         protected Dictionary<int, IEntity> dicEntity = new Dictionary<int, IEntity>();
@@ -16,12 +18,13 @@ namespace GameFramework
 
         public virtual void Clear()
         {
-            entitySequence = 0;
+            entitySequence = 1;
+            localEntitySequence = -1;
             dicEntity.Clear();
         }
 
         /// <summary>
-        /// Generate (global) EntityID (Range: 0 ~ int.MaxValue)
+        /// Generate (global) EntityID (Range: 1 ~ int.MaxValue)
         /// </summary>
         public int GenerateEntityID()
         {
