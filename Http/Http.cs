@@ -15,30 +15,17 @@ namespace GameFramework
 
         public static string GetFullUri(string apiCall, Dictionary<string, string> queryString, ServerSettings apiSettings)
         {
-            StringBuilder sb = new StringBuilder(1000);
-
-            sb.Append(apiSettings.scheme).Append("://")
-                .Append(apiSettings.host).Append(":")
+            return new StringBuilder(1000)
+                .Append(apiSettings.scheme)
+                .Append("://")
+                .Append(apiSettings.host)
+                .Append(":")
                 .Append(apiSettings.port)
                 .Append("/")
-                .Append(apiCall);
-
-            bool firstParam = true;
-            queryString?.ForEach(pair =>
-            {
-                if (firstParam)
-                {
-                    sb.Append("?");
-                    firstParam = false;
-                }
-                else
-                {
-                    sb.Append("&");
-                }
-                sb.Append(pair.Key).Append("=").Append(pair.Value);
-            });
-
-            return sb.ToString();
+                .Append(apiCall)
+                .Append(queryString.ToQueryString())
+                .ToString()
+                ;
         }
     }
 }

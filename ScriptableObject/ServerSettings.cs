@@ -10,7 +10,7 @@ namespace GameFramework
         public string host;
         public int port;
 
-        public string GetFullUri(string apiCall, Dictionary<string, string> queryString)
+        public string GetFullUri(string apiCall, Dictionary<string, string> queryString = null)
         {
             return Http.GetFullUri(apiCall, queryString, this);
         }
