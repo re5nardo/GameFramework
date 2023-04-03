@@ -2,12 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
+using System;
 
 namespace GameFramework
 {
     public class WebRequestBuilder<T>
     {
-        private WebRequestParam webRequestParam = new WebRequestParam();
+        private WebRequestParam<T> webRequestParam = new WebRequestParam<T>();
     
         public WebRequestBuilder<T> SetMethod(HttpMethod method)
         {
@@ -36,6 +37,12 @@ namespace GameFramework
         public WebRequestBuilder<T> SetForm(List<IMultipartFormSection> form)
         {
             webRequestParam.form = form;
+            return this;
+        }
+
+        public WebRequestBuilder<T> SetDeserialize(Func<string, T> deserialize)
+        {
+            webRequestParam.deserialize = deserialize;
             return this;
         }
 

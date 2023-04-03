@@ -12,6 +12,6 @@ namespace GameFramework
         public IWebRequestParam webRequestParam { get; }
 
         public UnityWebRequest CreateUnityWebRequest();
-        public void DeserializeObject();
+        public void OnCompleted();
     }
 }

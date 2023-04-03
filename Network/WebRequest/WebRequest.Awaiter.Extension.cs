@@ -6,7 +6,7 @@ namespace GameFramework
 {
     public static class WebRequestAwaiterExtension
     {
-        public static UnityWebRequestAwaiter GetAwaiter(this WebRequest webRequest)
+        public static UnityWebRequestAwaiter GetAwaiter(this WebRequestBase webRequest)
         {
             return new UnityWebRequestAwaiter(webRequest.asyncOperation);
         }
