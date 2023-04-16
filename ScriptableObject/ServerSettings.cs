@@ -8,11 +8,10 @@ namespace GameFramework
     {
         public string scheme;
         public string host;
-        public int port;
 
-        public string GetFullUri(string apiCall, Dictionary<string, string> queryString = null)
+        public string GetFullUri(string api, Dictionary<string, string> queryString = null)
         {
-            return Http.GetFullUri(apiCall, queryString, this);
+            return Http.GetFullUri(api, queryString, this);
         }
     }
 }

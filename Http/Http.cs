@@ -13,16 +13,14 @@ namespace GameFramework
             return headers;
         }
 
-        public static string GetFullUri(string apiCall, Dictionary<string, string> queryString, ServerSettings apiSettings)
+        public static string GetFullUri(string api, Dictionary<string, string> queryString, ServerSettings apiSettings)
         {
             return new StringBuilder(1000)
                 .Append(apiSettings.scheme)
                 .Append("://")
                 .Append(apiSettings.host)
-                .Append(":")
-                .Append(apiSettings.port)
                 .Append("/")
-                .Append(apiCall)
+                .Append(api)
                 .Append(queryString.ToQueryString())
                 .ToString()
                 ;
