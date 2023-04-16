@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace GameFramework
 {
-    public static partial class HttpExtension
+    public static partial class HttpExtensions
     {
         public static void SetRequestHeader(this UnityWebRequest unityWebRequest, Dictionary<string, string> requestHeaders)
         {
