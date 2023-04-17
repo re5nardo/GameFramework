@@ -5,42 +5,42 @@ namespace GameFramework
 {
     public class Cell
     {
-        public HashSet<int> m_hashEntityID = new HashSet<int>();
+        public HashSet<int> hashEntityId = new HashSet<int>();
 
-        private Vector2Int m_vec2Position__;
-        public Vector2Int m_vec2Position
+        private Vector2Int _position;
+        public Vector2Int position
         {
-            get { return m_vec2Position__; }
-            private set { m_vec2Position__ = value; }
+            get => _position;
+            private set { _position = value; }
         }
 
-        public Cell(Vector2Int vec2Position)
+        public Cell(Vector2Int position)
         {
-            m_vec2Position = vec2Position;
+            this.position = position;
         }
 
-        public bool Add(int nEntityID)
+        public bool Add(int entityId)
         {
-            if (m_hashEntityID.Contains(nEntityID))
+            if (hashEntityId.Contains(entityId))
             {
-                Debug.LogWarning("nEntityID already exists, nEntityID : " + nEntityID);
+                Debug.LogWarning("entityId already exists, entityId : " + entityId);
                 return false;
             }
 
-            m_hashEntityID.Add(nEntityID);
+            hashEntityId.Add(entityId);
 
             return true;
         }
 
-        public bool Remove(int nEntityID)
+        public bool Remove(int entityId)
         {
-            if (!m_hashEntityID.Contains(nEntityID))
+            if (!hashEntityId.Contains(entityId))
             {
-                Debug.LogWarning("nEntityID doesn't exist, nEntityID : " + nEntityID);
+                Debug.LogWarning("entityId doesn't exist, entityId : " + entityId);
                 return false;
             }
 
-            m_hashEntityID.Remove(nEntityID);
+            hashEntityId.Remove(entityId);
 
             return true;
         }
