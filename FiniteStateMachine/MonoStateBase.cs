@@ -33,14 +33,6 @@ namespace GameFramework
             public virtual void OnExit() { }
 
             public abstract IState GetNext<I>(I input) where I : Enum;
-
-            private void OnDestroy()
-            {
-                if (IsCurrent)
-                {
-                    OnExit();
-                }
-            }
         }
     }
 }

@@ -16,12 +16,19 @@ namespace GameFramework
                 CurrentState.Enter();
             }
 
+            public void StopStateMachine()
+            {
+                CurrentState?.Exit();
+                CurrentState = null;
+            }
+
             public void MoveNext<I>(I input) where I : Enum
             {
                 var next = CurrentState.GetNext(input);
 
                 if (CurrentState == next)
                 {
+                    Debug.LogWarning($"next is same with current. next: {next}");
                     return;
                 }
 
@@ -34,6 +41,11 @@ namespace GameFramework
             }
 
             public virtual void OnStateChange() { }
+
+            private void OnDestroy()
+            {
+                StopStateMachine();
+            }
         }
     }
 }

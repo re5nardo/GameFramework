@@ -9,23 +9,8 @@ namespace GameFramework
         {
             IState InitState { get; }
             IState CurrentState { get; }
-            void MoveNext<I>(I input) where I : Enum;    //  인풋값에 따라 상태 전이
+            void MoveNext<I>(I input) where I : Enum;
             void OnStateChange();
-        }
-
-        public interface IState
-        {
-            IFiniteStateMachine FSM { get; }
-            bool IsCurrent { get; }
-
-            void Enter();
-            void Exit();
-
-            void OnEnter();
-            IEnumerator OnExecute();
-            void OnExit();
-
-            IState GetNext<I>(I input) where I : Enum; //  인풋값에 의한 다음 상태 값 반환
         }
     }
 }
