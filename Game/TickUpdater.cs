@@ -43,7 +43,7 @@ namespace GameFramework
 
         protected virtual void OnInitElapsedTime()
         {
-            ElapsedTime = CurrentTick * TickInterval + timeOffset;
+            ElapsedTime = CurrentTick * TickInterval;
         }
 
         protected virtual void OnUpdateElapsedTime()
