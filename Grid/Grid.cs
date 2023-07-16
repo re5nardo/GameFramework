@@ -9,7 +9,7 @@ namespace GameFramework
         private const int DEFAULT_CELL_SIZE = 10;
 
         protected Dictionary<Vector2Int, Cell> cells = new Dictionary<Vector2Int, Cell>();
-        protected Dictionary<int, Vector2Int> entityIDCellPosition = new Dictionary<int, Vector2Int>();
+        protected Dictionary<int, Vector2Int> entityIdCellPosition = new Dictionary<int, Vector2Int>();
 
         private int cellSize = DEFAULT_CELL_SIZE;
 
@@ -21,15 +21,15 @@ namespace GameFramework
         public void Clear()
         {
             cells.Clear();
-            entityIDCellPosition.Clear();
+            entityIdCellPosition.Clear();
             cellSize = DEFAULT_CELL_SIZE;
         }
 
-        public abstract void Add(int nEntityID, bool bPublish = true);
+        public abstract void Add(int entityId, bool bPublish = true);
 
-        public abstract void Remove(int nEntityID, bool bPublish = true);
+        public abstract void Remove(int entityId, bool bPublish = true);
 
-        public abstract void Move(int nEntityID);
+        public abstract void Move(int entityId);
 
         public abstract List<IEntity> GetEntities(Vector3 vec3Position, float fRadius, List<Predicate<IEntity>> conditions);
 
@@ -86,13 +86,13 @@ namespace GameFramework
 
         public Vector2Int GetEntityCellPosition(int entityId)
         {
-            if (!entityIDCellPosition.ContainsKey(entityId))
+            if (!entityIdCellPosition.ContainsKey(entityId))
             {
                 Debug.LogWarning("entityId doesn't exist, entityId : " + entityId);
                 return Vector2Int.zero;
             }
 
-            return entityIDCellPosition[entityId];
+            return entityIdCellPosition[entityId];
         }
     }
 }

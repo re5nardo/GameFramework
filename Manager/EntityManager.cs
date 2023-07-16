@@ -24,65 +24,65 @@ namespace GameFramework
         }
 
         /// <summary>
-        /// Generate (global) EntityID (Range: 1 ~ int.MaxValue)
+        /// Generate (global) EntityId (Range: 1 ~ int.MaxValue)
         /// </summary>
-        public int GenerateEntityID()
+        public int GenerateEntityId()
         {
             return entitySequence++;
         }
 
         /// <summary>
-        /// Generate Local EntityID (Range: -1 ~ int.MinValue)
+        /// Generate Local Entityd (Range: -1 ~ int.MinValue)
         /// </summary>
-        public int GenerateLocalEntityID()
+        public int GenerateLocalEntityId()
         {
             return localEntitySequence--;
         }
 
         public virtual void RegisterEntity(IEntity entity)
         {
-            if (dicEntity.ContainsKey(entity.EntityID))
+            if (dicEntity.ContainsKey(entity.EntityId))
             {
-                Debug.LogError("EntityID already exists! EntityID : " + entity.EntityID);
+                Debug.LogError("EntityId already exists! EntityId : " + entity.EntityId);
                 return;
             }
 
-            dicEntity.Add(entity.EntityID, entity);
+            dicEntity.Add(entity.EntityId, entity);
 
-            positionGrid.Add(entity.EntityID);
+            positionGrid.Add(entity.EntityId);
         }
 
-        public bool IsRegistered(int nEntityID)
+        public bool IsRegistered(int entityId)
         {
-            return dicEntity.ContainsKey(nEntityID);
+            return dicEntity.ContainsKey(entityId);
         }
 
-        public virtual void UnregisterEntity(int nEntityID)
+        public virtual void UnregisterEntity(int entityId)
         {
-            if (!dicEntity.ContainsKey(nEntityID))
+            if (!dicEntity.ContainsKey(entityId))
             {
-                Debug.LogError("EntityID does not exist! EntityID : " + nEntityID);
+                Debug.LogError("EntityId does not exist! EntityId : " + entityId);
                 return;
             }
 
-            positionGrid.Remove(nEntityID);
-            dicEntity.Remove(nEntityID);
+            positionGrid.Remove(entityId);
+            dicEntity.Remove(entityId);
         }
 
-        public IEntity GetEntity(int nEntityID)
+        public IEntity GetEntity(int entityId)
         {
-            if (dicEntity.TryGetValue(nEntityID, out IEntity entity))
+            if (dicEntity.TryGetValue(entityId, out IEntity entity))
             {
                 return entity;
             }
 
-            Debug.LogWarning($"There is no entity, nEntityID : {nEntityID}");
+            Debug.LogWarning($"There is no entity, EntityId : {entityId}");
             return null;
         }
 
-        public T GetEntity<T>(int nEntityID) where T : IEntity
+        public T GetEntity<T>(int entityId) where T : IEntity
         {
-            if (dicEntity.TryGetValue(nEntityID, out IEntity entity))
+            if (dicEntity.TryGetValue(entityId, out IEntity entity))
             {
                 if (entity is T target)
                 {
@@ -92,7 +92,7 @@ namespace GameFramework
                 return default;
             }
 
-            Debug.LogWarning($"There is no entity, nEntityID : {nEntityID}");
+            Debug.LogWarning($"There is no entity, EntityId : {entityId}");
             return default;
         }
 
@@ -126,7 +126,7 @@ namespace GameFramework
             return new List<T>(dicEntity.Values.Where(x => x is T).Cast<T>());
         }
 
-        public HashSet<int> GetAllEntityIDs()
+        public HashSet<int> GetAllEntityIds()
         {
             return new HashSet<int>(dicEntity.Keys);
         }
@@ -141,9 +141,9 @@ namespace GameFramework
             return positionGrid.GetCell(vec2CellPosition, bMakeCell);
         }
 
-        public Vector2Int GetEntityCellPosition(int nEntityID)
+        public Vector2Int GetEntityCellPosition(int entityId)
         {
-            return positionGrid.GetEntityCellPosition(nEntityID);
+            return positionGrid.GetEntityCellPosition(entityId);
         }
     }
 }

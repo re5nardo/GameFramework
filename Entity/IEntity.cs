@@ -5,7 +5,7 @@ namespace GameFramework
 {
     public interface IEntity
     {
-        int EntityID { get; }
+        int EntityId { get; }
         Vector3 Position { get; set; }
         Vector3 Rotation { get; set; }
         Vector3 Velocity { get; set; }

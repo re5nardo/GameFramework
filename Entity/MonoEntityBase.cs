@@ -9,7 +9,7 @@ namespace GameFramework
 	{
         private List<IEntityComponent> entityComponents = new List<IEntityComponent>();
        
-        public int EntityID { get; protected set; } = -1;
+        public int EntityId { get; protected set; } = -1;
 
         public virtual Vector3 Position { get; set; }
         public virtual Vector3 Rotation { get; set; }
