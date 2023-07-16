@@ -8,11 +8,13 @@ namespace GameFramework
     {
         private event Action<int> onTick = null;
         private event Action<int> onTickEnd = null;
-        private event Action<double> onUpdateElapsedTime = null;
+        private event Action onFrameUpdate = null;
 
         public int CurrentTick { get; private set; } = 0;
-        public double TickInterval { get; private set; } = 1 / 30f;      //  sec
-        public double ElapsedTime { get; protected set; }                //  sec
+        public double TickInterval { get; private set; } = 1 / 30f;         //  sec
+        public double ElapsedTime { get; protected set; }                   //  sec
+        public double deltaTime { get; private set; }                       //  sec
+        public int deltaTick { get; private set; }
 
         private bool isSync = false;
 
@@ -56,9 +58,12 @@ namespace GameFramework
             while (true)
             {
                 int processibleTick = GetProcessibleTick();
+                var tickCount = 0;
+
                 while (CurrentTick <= processibleTick)
                 {
                     TickBody();
+                    tickCount++;
                 }
 
                 yield return null;
@@ -67,7 +72,10 @@ namespace GameFramework
 
                 OnUpdateElapsedTime();
 
-                onUpdateElapsedTime?.Invoke(ElapsedTime - prevTime);
+                deltaTime = ElapsedTime - prevTime;
+                deltaTick = tickCount;
+
+                onFrameUpdate?.Invoke();
             }
         }
 
@@ -116,14 +124,14 @@ namespace GameFramework
             CurrentTick++;
         }
 
-        public void Initialize(double tickInterval, bool isSync, double timeOffset, Action<int> onTick, Action<int> onTickEnd, Action<double> onUpdateElapsedTime)
+        public void Initialize(double tickInterval, bool isSync, double timeOffset, Action<int> onTick, Action<int> onTickEnd, Action onFrameUpdate)
         {
             this.TickInterval = tickInterval;
             this.isSync = isSync;
             this.timeOffset = timeOffset;
             this.onTick = onTick;
             this.onTickEnd = onTickEnd;
-            this.onUpdateElapsedTime = onUpdateElapsedTime;
+            this.onFrameUpdate = onFrameUpdate;
         }
     }
 }

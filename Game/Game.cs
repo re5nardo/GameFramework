@@ -12,6 +12,9 @@ namespace GameFramework
         public int SyncTick => tickUpdater.SyncTick;
         public double TickInterval => tickUpdater.TickInterval;
         public double GameTime => tickUpdater.ElapsedTime;
+        public double deltaTime => tickUpdater.deltaTime;
+        public int deltaTick => tickUpdater.deltaTick;
+
         public bool Initialized { get; protected set; } = false;
 
         protected TickUpdater tickUpdater = null;
