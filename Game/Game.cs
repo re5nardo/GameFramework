@@ -44,9 +44,7 @@ namespace GameFramework
             tickUpdater.Run(tick);
         }
 
-        protected virtual void OnBeforeRun()
-        {
-        }
+        protected virtual void OnBeforeRun() { }
 
         public void SetSyncTick(int tick)
         {
